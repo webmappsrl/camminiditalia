@@ -24,6 +24,21 @@ docker exec -u 0 -it php_${instance name} bash
 touch /var/log/xdebug.log
 chown -R 33 /var/log/
 ```
+### Installa le dipendenze
+Avvia una bash all'interno del container php per installare tutte le dipendenze (utilizzare `APP_NAME` al posto di `$nomeApp`):
+
+```sh
+docker exec -it php_$nomeApp bash
+composer install
+php artisan key:generate
+php artisan optimize
+php artisan migrate
+composer run dev
+```
+
+### Avvia il server
+All'interno del container php, lancia il comando `composer run dev` per avviare il server.
+A questo punto l'applicativo è in ascolto su <http://127.0.0.1:8000> (la porta è quella definita in `DOCKER_SERVE_PORT`)
 
 ### Differenze ambiente produzione locale
 
