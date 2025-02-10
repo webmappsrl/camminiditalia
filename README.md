@@ -33,7 +33,16 @@ composer install
 php artisan key:generate
 php artisan optimize
 php artisan migrate
-composer run dev
+```
+
+#### Nota:
+
+- Per completare l'installazione di Laravel Nova, é necessario fornire le credenziali di accesso.
+
+### Pubblica le migrations del wm-package
+
+```sh
+php artisan vendor:publish --tag="wm-package-migrations"
 ```
 
 ### Avvia il server
