@@ -6,7 +6,7 @@ jobs:
   laravel-tests:
     runs-on: ubuntu-latest
     services:
-      postgres:
+      db:
         image: postgis/postgis:17-3.5-alpine
         env:
           POSTGRES_PASSWORD: camminiditalia
@@ -38,8 +38,6 @@ jobs:
         uses: ramsey/composer-install@v2
       - name: Generate key
         run: php artisan key:generate
-      - name: Add hosts to /etc/hosts
-        run: sudo echo "127.0.0.1 db" | sudo tee -a /etc/hosts
       - name: Migrate
         run: php artisan migrate
         env:
