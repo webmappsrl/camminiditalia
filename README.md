@@ -39,13 +39,6 @@ php artisan migrate
 
 - Per completare l'installazione di Laravel Nova, é necessario fornire le credenziali di accesso.
 
-### Pubblica le migrations del wm-package
-
-```sh
-php artisan vendor:publish --tag="wm-package-migrations"
-php artisan migrate
-```
-
 ### Avvia il server
 All'interno del container php, lancia il comando `composer run dev` per avviare il server.
 A questo punto l'applicativo è in ascolto su <http://127.0.0.1:8000> (la porta è quella definita in `DOCKER_SERVE_PORT`)
@@ -89,14 +82,12 @@ Una volta avviato il container con xdebug configurare il file `.vscode/launch.js
             "request": "launch",
             "port": 9200,
             "pathMappings": {
-                "/var/www/html/geomixer2": "${workspaceRoot}"
+                "/var/www/html/${APP_NAME}": "${workspaceRoot}"
             }
         }
     ]
 }
 ```
-
-Aggiornare `/var/www/html/geomixer2` con la path della cartella del progetto nel container phpfpm.
 
 Per utilizzare xdebug **su browser** utilizzare uno di questi 2 metodi:
 
