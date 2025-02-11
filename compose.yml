@@ -6,6 +6,7 @@ services:
     build: ./docker/configs/phpfpm
     restart: always
     container_name: "php_${APP_NAME}"
+    image: wm-phpfpm:8.4
     ports:
       - ${DOCKER_PHP_PORT}:9000
     volumes:
