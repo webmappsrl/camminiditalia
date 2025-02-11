@@ -30,7 +30,7 @@ jobs:
         with:
           submodules: recursive
       - name: Copy .env
-        run: cp .env-example .env
+        run: cp .env-deploy .env
       - name: Configure composer before install
         run: |
           composer config "http-basic.nova.laravel.com" "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
