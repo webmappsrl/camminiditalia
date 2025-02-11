@@ -1,26 +1,9 @@
-# Laravel Postgis Boilerplate
-
-Punto di partenza di Webmapp
-
-## Laravel 11 basato su Nova 5
-
-Boilerplate per Laravel 11 basato su PHP 8.4 e Postgres + PostGIS. Supporto locale per web server PHP e Xdebug oltre a:
-
--   redis
--   elasticsearch
-
-per la versione di produzione e:
-
--   mailpit
--   minio
-
-per la versione di sviluppo
-
 ## INSTALLAZIONE
 
 Prima di tutto, installa il repository [GEOBOX](https://github.com/webmappsrl/geobox) e configura il [comando ALIASES](https://github.com/webmappsrl/geobox#aliases-and-global-shell-variable).  
-Sostituisci `${instance name}` con il nome dell'istanza (APP_NAME nel file .env).
+Sostituisci `${instance name}` con il nome dell'istanza (APP_NAME nel file .env-example).
 
+### Clona il repository
 ```sh
 git clone git@github.com:webmappsrl/${repository_name}.git ${instance name}
 ```
@@ -41,6 +24,24 @@ docker exec -u 0 -it php_${instance name} bash
 touch /var/log/xdebug.log
 chown -R 33 /var/log/
 ```
+### Installa le dipendenze
+Avvia una bash all'interno del container php per installare tutte le dipendenze (utilizzare `APP_NAME` al posto di `$nomeApp`):
+
+```sh
+docker exec -it php_$nomeApp bash
+composer install
+php artisan key:generate
+php artisan optimize
+php artisan migrate
+```
+
+#### Nota:
+
+- Per completare l'installazione di Laravel Nova, é necessario fornire le credenziali di accesso.
+
+### Avvia il server
+All'interno del container php, lancia il comando `composer run dev` per avviare il server.
+A questo punto l'applicativo è in ascolto su <http://127.0.0.1:8000> (la porta è quella definita in `DOCKER_SERVE_PORT`)
 
 ### Differenze ambiente produzione locale
 
@@ -60,62 +61,10 @@ docker compose -f develop.compose.yml up -d
 
 In locale abbiamo queste caratteristiche:
 
--   la possibilità di lanciare il processo processo `composer run dev` all'interno del container phpfpm, quindi la configurazione della porta `DOCKER_SERVE_PORT` (default: `8000`) e `DOCKER_VITE_PORT` (default:`5173`) necessaria al progetto. Se servono più istanze laravel con processo artisan serve contemporaneamente in locale, valutare di dedicare una porta tcp dedicata ad ognuno di essi. Per fare questo basta solo aggiornare `DOCKER_SERVE_PORT` e `DOCKER_VITE_PORT`.
+-   la possibilità di lanciare il processo `composer run dev` all'interno del container phpfpm, quindi la configurazione della porta `DOCKER_SERVE_PORT` (default: `8000`) e `DOCKER_VITE_PORT` (default:`5173`) necessaria al progetto. Se servono più istanze laravel con processo artisan serve contemporaneamente in locale, valutare di dedicare una porta tcp dedicata ad ognuno di essi. Per fare questo basta solo aggiornare `DOCKER_SERVE_PORT` e `DOCKER_VITE_PORT`.
 -   la presenza di xdebug, definito in fase di build dell'immagine durante l'esecuzione del comando
 -   `APP_ENV=local`, `APP_DEBUG=true` e `LOG_LEVEL=debug` che istruiscono laravel su una serie di comportamenti per il debug e l'esecuzione locale dell'applicativo
 -   Una password del db con complessità minore. **In produzione usare [password complesse](https://www.avast.com/random-password-generator#pc)**
-
-### Inizializzazione tramite boilerplate
-
--   Download del codice del boilerplate in una nuova cartella `nuovoprogetto` e disattivare il collegamento tra locale/remote:
-    ```sh
-    git clone https://github.com/webmappsrl/laravel-postgis-boilerplate.git nuovoprogetto
-    cd nuovoprogetto
-    git remote remove origin
-    ```
--   Effettuare il link tra la repository locale e quella remota (repository vuota github)
-
-    ```sh
-    git remote add origin git@github.com:username/repo.git
-    ```
-
--   Copy file `.env-example` to `.env`
-
-    Questi valori nel file .env sono necessari per avviare l'ambiente docker. Hanno un valore di default e delle convenzioni associate, valutare la modifica:
-
-    -   `APP_NAME` (it's php container name and - postgrest container name, no space)
-    -   `DOCKER_PHP_PORT` (Da 9100 a 9199. Per il sistema operativo MAC si può valutare le porte già occupate con `lsof -iTCP -sTCP:LISTEN`, su linux invece `nmap -atunp | grep LISTEN`)
-    -   `DOCKER_SERVE_PORT` (default 8000, solo in locale)
-    -   `DOCKER_VITE_PORT` ( default 5173, solo in locale, la porta dove è possibile recuperare gli asset compilati da vite)
-    -   `DOCKER_PROJECT_DIR_NAME` (è il nome della cartella del progetto)
-    -   `DB_DATABASE`
-    -   `DB_USERNAME`
-    -   `DB_PASSWORD`
-
--   Una volta compilato correttamente il file .env, tirare sù l'ambiente docker:
-    ```sh
-    bash docker/init-docker.sh
-    ```
--   Rispondere alle domande poste dallo script con n o y
-
--   Verificare che i container si siano avviati
-
-    ```sh
-    docker ps
-    ```
-
--   Avvio di una bash all'interno del container php per installare tutte le dipendenze e lanciare il comando php artisan serve (utilizzare `APP_NAME` al posto di `$nomeApp`):
-
-    ```sh
-    docker exec -it php_$nomeApp bash
-    composer install
-    php artisan key:generate
-    php artisan optimize
-    php artisan migrate
-    php artisan serve --host 0.0.0.0
-    ```
-
--   A questo punto l'applicativo è in ascolto su <http://127.0.0.1:8000> (la porta è quella definita in `DOCKER_SERVE_PORT`)
 
 ### Configurazione xdebug vscode (solo in locale)
 
@@ -133,14 +82,12 @@ Una volta avviato il container con xdebug configurare il file `.vscode/launch.js
             "request": "launch",
             "port": 9200,
             "pathMappings": {
-                "/var/www/html/geomixer2": "${workspaceRoot}"
+                "/var/www/html/${APP_NAME}": "${workspaceRoot}"
             }
         }
     ]
 }
 ```
-
-Aggiornare `/var/www/html/geomixer2` con la path della cartella del progetto nel container phpfpm.
 
 Per utilizzare xdebug **su browser** utilizzare uno di questi 2 metodi:
 
