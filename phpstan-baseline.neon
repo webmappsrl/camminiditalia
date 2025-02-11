@@ -1,0 +1,5 @@
+parameters:
+  ignoreErrors:
+    -
+      identifier: larastan.noEnvCallsOutsideOfConfig
+      path: config/app.php
