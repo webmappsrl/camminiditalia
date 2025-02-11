@@ -43,6 +43,7 @@ php artisan migrate
 
 ```sh
 php artisan vendor:publish --tag="wm-package-migrations"
+php artisan migrate
 ```
 
 ### Avvia il server
