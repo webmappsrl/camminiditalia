@@ -17,8 +17,8 @@ jobs:
       - name: SSH connection and run scripts/deploy_prod.sh
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOSTPROD }}
-          username: ${{ secrets.USERNAMEPROD }}
-          port: ${{ secrets.PORTPROD }}
+          host: ${{ vars.HOSTPROD }}
+          username: ${{ vars.USERNAMEPROD }}
+          port: ${{ vars.PORTPROD }}
           key: ${{ secrets.SSHKEYPROD }}
           script: "cd /var/www/html/camminiditalia && git pull && git submodule update --init --recursive && docker exec php_camminiditalia bash scripts/deploy_prod.sh"
