@@ -2,15 +2,18 @@
 
 namespace App\Providers;
 
+use App\Nova\Media;
 use App\Models\User;
-use App\Nova\Dashboards\Main;
+use App\Nova\UgcPoi;
+use App\Nova\UgcTrack;
+use Laravel\Nova\Nova;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Gate;
+use App\Nova\Dashboards\Main;
 use Laravel\Fortify\Features;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
-use Laravel\Nova\Nova;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Blade;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
@@ -27,6 +30,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::mainMenu(function (Request $request) {
             return [
                 MenuSection::dashboard(Main::class)->icon('chart-bar'),
+
+                MenuSection::make('UGC', [
+                    MenuItem::resource(UgcPoi::class),
+                    MenuItem::resource(UgcTrack::class),
+                    MenuItem::resource(Media::class),
+                ])->icon('document'),
 
                 MenuSection::make('Tools', [
                     MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab(),
