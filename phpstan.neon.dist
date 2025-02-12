@@ -10,6 +10,4 @@ parameters:
         - routes
         - tests
     tmpDir: build/phpstan
-    checkModelProperties: true
-    checkOctaneCompatibility: true
 
