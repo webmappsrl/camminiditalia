@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Wm\WmPackage\Models\UgcTrack;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UgcTrackSeeder extends Seeder
 {

@@ -3,10 +3,6 @@
 namespace App\Nova;
 
 use Wm\WmPackage\Nova\Media as WmNovaMedia;
-use Laravel\Nova\Fields\Code;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Media extends WmNovaMedia
 {
