@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id('id');
             $table->jsonb('properties');
             $table->text('name');
-            $table->geography('geometry', 'lineString', 4326)->nullable();
+            $table->geography('geometry', 'multiLineString', 4326)->nullable();
             $table->integer('app_id');
             $table->integer('user_id');
             $table->timestamps();

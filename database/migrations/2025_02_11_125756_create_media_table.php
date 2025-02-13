@@ -36,4 +36,9 @@ return new class extends Migration
             $table->index('user_id');
         });
     }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('media');
+    }
 };
