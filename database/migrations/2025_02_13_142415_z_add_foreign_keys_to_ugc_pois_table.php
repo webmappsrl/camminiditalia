@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('ugc_pois', function (Blueprint $table) {
-            //$table->foreign(['app_id'])->references(['id'])->on('apps')->onDelete('CASCADE'); deactivated because we do not have apps table yet
+            // $table->foreign(['app_id'])->references(['id'])->on('apps')->onDelete('CASCADE'); deactivated because we do not have apps table yet
             $table->foreign(['user_id'])->references(['id'])->on('users')->onDelete('CASCADE');
         });
     }
@@ -27,7 +27,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('ugc_pois', function (Blueprint $table) {
-            //$table->dropForeign('ugc_pois_app_id_foreign'); //deactivated because we do not have apps table yet
+            // $table->dropForeign('ugc_pois_app_id_foreign'); //deactivated because we do not have apps table yet
             $table->dropForeign('ugc_pois_user_id_foreign');
         });
     }
