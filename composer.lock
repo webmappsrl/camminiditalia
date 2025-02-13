@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7bb7f38c0e9e3d882f8a9b1795ddebfd",
+    "content-hash": "6695a1078c2a8acc97116378696ecb8a",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -9522,12 +9522,102 @@
             "time": "2022-06-03T18:03:27+00:00"
         },
         {
+            "name": "wm/map-multi-linestring",
+            "version": "v0.0.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webmappsrl/map-multi-linestring.git",
+                "reference": "e491a317f0402a9a6b3c7e678ef1a89513813ead"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webmappsrl/map-multi-linestring/zipball/e491a317f0402a9a6b3c7e678ef1a89513813ead",
+                "reference": "e491a317f0402a9a6b3c7e678ef1a89513813ead",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Wm\\MapMultiLinestring\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wm\\MapMultiLinestring\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/webmappsrl/map-multi-linestring/issues",
+                "source": "https://github.com/webmappsrl/map-multi-linestring/tree/v0.0.10"
+            },
+            "time": "2024-08-20T12:56:47+00:00"
+        },
+        {
+            "name": "wm/map-point",
+            "version": "v0.0.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webmappsrl/map-point.git",
+                "reference": "b41820fc47c25b8ae131be52be327f57728872fd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webmappsrl/map-point/zipball/b41820fc47c25b8ae131be52be327f57728872fd",
+                "reference": "b41820fc47c25b8ae131be52be327f57728872fd",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Wm\\MapPoint\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wm\\MapPoint\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/webmappsrl/map-point/issues",
+                "source": "https://github.com/webmappsrl/map-point/tree/v0.0.10"
+            },
+            "time": "2024-08-20T13:22:25+00:00"
+        },
+        {
             "name": "wm/wm-package",
-            "version": "dev-feat/geometry-models-oc-4667",
+            "version": "dev-ugc_nova_resources",
             "dist": {
                 "type": "path",
                 "url": "./wm-package",
-                "reference": "e9ac34ab36892ba53c9cfc20e3ce440ad3335306"
+                "reference": "e0e84e8a509735d888b748ff6b763905c3301f9e"
             },
             "require": {
                 "chillerlan/php-qrcode": "^5.0",
@@ -9547,7 +9637,9 @@
                 "spatie/laravel-package-tools": ">1.16",
                 "spatie/laravel-permission": "*",
                 "spatie/laravel-translatable": "^6.9",
-                "tymon/jwt-auth": ">2.0"
+                "tymon/jwt-auth": ">2.0",
+                "wm/map-multi-linestring": "^0.0.10",
+                "wm/map-point": "^0.0.10"
             },
             "require-dev": {
                 "guzzlehttp/guzzle": "^7.9",
@@ -13254,9 +13346,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "wm/wm-package": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
