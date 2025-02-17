@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Nova\Dashboards\Main;
+use App\Nova\Media;
+use App\Nova\UgcPoi;
+use App\Nova\UgcTrack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
@@ -27,6 +30,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::mainMenu(function (Request $request) {
             return [
                 MenuSection::dashboard(Main::class)->icon('chart-bar'),
+
+                MenuSection::make('UGC', [
+                    MenuItem::resource(UgcPoi::class),
+                    MenuItem::resource(UgcTrack::class),
+                    MenuItem::resource(Media::class),
+                ])->icon('document'),
 
                 MenuSection::make('Tools', [
                     MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab(),
