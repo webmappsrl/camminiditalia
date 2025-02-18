@@ -56,3 +56,9 @@ jobs:
         with:
           name: test-results
           path: storage/logs/test.log
+      - name: Upload Laravel log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laravel.log
+          path: storage/logs/laravel.log
