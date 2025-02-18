@@ -3,14 +3,17 @@
 namespace App\Providers;
 
 use App\Models\User;
-use Laravel\Nova\Nova;
 use App\Nova\Dashboards\Main;
+use App\Nova\Media;
+use App\Nova\UgcPoi;
+use App\Nova\UgcTrack;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Laravel\Fortify\Features;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Request;
+use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
@@ -28,12 +31,18 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             return [
                 MenuSection::dashboard(Main::class)->icon('chart-bar'),
 
+                MenuSection::make('UGC', [
+                    MenuItem::resource(UgcPoi::class),
+                    MenuItem::resource(UgcTrack::class),
+                    MenuItem::resource(Media::class),
+                ])->icon('document'),
+
                 MenuSection::make('Tools', [
                     MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab(),
-                    MenuItem::externalLink('logs', url('logs'))->openInNewTab()
+                    MenuItem::externalLink('logs', url('logs'))->openInNewTab(),
                 ])->icon('briefcase')->canSee(function (Request $request) {
                     return $request->user()->email === 'team@webmapp.it';
-                })
+                }),
             ];
         });
     }
