@@ -14,8 +14,8 @@
         "laravel/nova": "^5.0",
         "laravel/tinker": "^2.9",
         "predis/predis": "^2.3",
-        "wm/map-multi-linestring": "^0.0.10",
-        "wm/map-point": "^0.0.10",
+        "wm/map-multi-linestring": "*",
+        "wm/map-point": "*",
         "wm/wm-package": "*"
     },
     "require-dev": {
