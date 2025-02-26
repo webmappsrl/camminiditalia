@@ -2,19 +2,22 @@
 
 namespace App\Providers;
 
-use App\Models\User;
-use App\Nova\Dashboards\Main;
 use App\Nova\Media;
+use App\Models\User;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
+use Laravel\Nova\Nova;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Gate;
+use Wm\WmPackage\Nova\EcPoi;
+use App\Nova\Dashboards\Main;
 use Laravel\Fortify\Features;
+use Wm\WmPackage\Nova\EcTrack;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
-use Laravel\Nova\Nova;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Blade;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Wm\WmPackage\Nova\App;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -36,6 +39,13 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(UgcTrack::class),
                     MenuItem::resource(Media::class),
                 ])->icon('document'),
+
+                MenuSection::make('EC', [
+                    MenuItem::resource(EcPoi::class),
+                    MenuItem::resource(EcTrack::class),
+                ])->icon('document'),
+
+
 
                 MenuSection::make('Tools', [
                     MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab(),
@@ -81,9 +91,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewNova', function (User $user) {
-            return in_array($user->email, [
-                //
-            ]);
+            return true;
         });
     }
 
