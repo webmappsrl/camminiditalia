@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Wm\WmPackage\Models\App;
 use Illuminate\Database\Seeder;
+use Wm\WmPackage\Models\App;
 
 class AppSeeder extends Seeder
 {
