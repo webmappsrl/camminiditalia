@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Relation::morphMap([
+            'App\\Models\\UgcPoi' => \Wm\WmPackage\Models\UgcPoi::class,
+            'App\\Models\\UgcTrack' => \Wm\WmPackage\Models\UgcTrack::class,
+        ]);
     }
 }
