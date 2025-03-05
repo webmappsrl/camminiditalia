@@ -13,18 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ugc_tracks', function (Blueprint $table) {
+        Schema::create('taxonomy_poi_types', function (Blueprint $table) {
             $table->id('id');
-            $table->jsonb('properties');
+            
             $table->text('name');
-            $table->geography('geometry', 'multiLineString', 4326)->nullable();
-            $table->integer('app_id');
-            $table->integer('user_id');
+            $table->text('description')->nullable();
+            $table->string('excerpt')->nullable();
+            
+            $table->text('identifier')->nullable()->unique();
             $table->timestamps();
-
-            $table->index('app_id');
-            $table->index('user_id');
-            $table->spatialIndex('geometry');
         });
     }
 
@@ -35,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ugc_tracks');
+        Schema::dropIfExists('taxonomy_poi_types');
     }
 };

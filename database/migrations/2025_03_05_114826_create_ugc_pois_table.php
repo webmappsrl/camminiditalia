@@ -17,13 +17,11 @@ return new class extends Migration
             $table->id('id');
             $table->jsonb('properties');
             $table->text('name')->default('');
-            $table->unsignedBigInteger('osmid')->nullable();
-            $table->geography('geometry', 'point', 4326);
+            $table->geography('geometry', 'point');
             $table->integer('app_id');
             $table->integer('user_id');
             $table->timestamps();
 
-            $table->index('osmid');
             $table->index('app_id');
             $table->index('user_id');
             $table->spatialIndex('geometry');

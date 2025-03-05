@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ec_pois', function (Blueprint $table) {
+        Schema::create('ec_tracks', function (Blueprint $table) {
             $table->id('id');
             $table->jsonb('properties');
             $table->text('name');
-            $table->geography('geometry', 'point', 4326);
             $table->integer('app_id');
+            $table->geography('geometry', 'multiLineString');
             $table->bigInteger('osmid')->nullable();
             $table->timestamps();
 
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ec_pois');
+        Schema::dropIfExists('ec_tracks');
     }
 };

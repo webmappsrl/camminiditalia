@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ec_poi_ec_track', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('ec_poi_id');
-            $table->integer('ec_track_id');
-            $table->integer('order')->default(0);
-            $table->index(['ec_poi_id', 'ec_track_id']);
+        Schema::table('layer_associated_app', function (Blueprint $table) {
+            $table->foreign(['layer_id'])->references(['id'])->on('layers')->onDelete('CASCADE');
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ec_poi_ec_track');
+        Schema::table('layer_associated_app', function (Blueprint $table) {
+            $table->dropForeign('layer_associated_app_layer_id_foreign');
+        });
     }
 };

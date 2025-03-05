@@ -13,16 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ec_tracks', function (Blueprint $table) {
+        Schema::create('layers', function (Blueprint $table) {
             $table->id('id');
+            $table->string('name');
+            $table->geography('geometry', 'polygon')->comment('The bbox of the layer');
             $table->jsonb('properties');
-            $table->text('name');
+            $table->string('feature_collection')->nullable();
+            $table->jsonb('configuration');
             $table->integer('app_id');
-            $table->geography('geometry', 'multiLineString', 4326)->nullable();
-            $table->bigInteger('osmid')->nullable();
+            $table->integer('rank')->default(0);
+
             $table->timestamps();
 
-            $table->index('osmid');
             $table->index('app_id');
             $table->spatialIndex('geometry');
         });
@@ -35,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ec_tracks');
+        Schema::dropIfExists('layers');
     }
 };
