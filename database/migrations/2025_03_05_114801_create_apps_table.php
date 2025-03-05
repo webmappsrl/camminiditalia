@@ -14,9 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('apps', function (Blueprint $table) {
-            $table->id('id'); 
+            $table->id('id');
             $table->timestamps();
-            
+
             // ==================== APP TAB ====================
             $table->string('customer_name');
             $table->string('api')->nullable()->default('elbrus');
@@ -48,7 +48,7 @@ return new class extends Migration
             $table->boolean('print_track_enable')->default(false);
             $table->boolean('app_pois_api_layer')->default(false);
             $table->json('classification')->nullable()->default('[]');
-            
+
             // ==================== WEBAPP TAB ====================
             $table->string('gu_id')->nullable();
             $table->text('embed_code_body')->nullable();
@@ -56,11 +56,11 @@ return new class extends Migration
             $table->boolean('editing_inline_show')->default(false);
             $table->boolean('draw_track_show')->default(false);
             $table->boolean('splash_screen_show')->default(false);
-            
+
             // ==================== TRANSLATIONS TAB ====================
             $table->json('translations_it')->nullable();
             $table->json('translations_en')->nullable();
-            
+
             // ==================== APP RELEASE DATA TAB ====================
             $table->string('name');
             $table->text('short_description')->nullable();
@@ -71,33 +71,33 @@ return new class extends Migration
             $table->string('icon')->nullable();
             $table->string('splash')->nullable();
             $table->string('icon_small')->nullable();
-            
+
             // ==================== HOME TAB ====================
             $table->text('welcome')->nullable();
             $table->text('config_home')->nullable();
-            
+
             // ==================== PAGES TAB ====================
             $table->text('page_project')->nullable();
             $table->text('page_disclaimer')->nullable()->default(json_encode([
-                "it"	=>	"L'escursionismo e, più in generale, l'attività all'aria aperta, è una attività potenzialmente rischiosa: prima di avventurarti in una escursione assicurati di avere le conoscenze e le competenze per farlo. Se non sei sicuro rivolgiti agli esperti locali che ti possono aiutare, suggerire e supportare nella pianificazione e nello svolgimento delle tue attività. I dati presentati su questa APP non possono garantire completamente la percorribilità senza rischi del percorso: potrebbero essersi verificati cambiamenti, anche importanti, dall'ultima verifica effettuata del percorso stesso. E' fondamentale quindi che chi si appresta a svolgere attività valuti attentamente l'opportunità di proseguire in base ai suggerimenti e ai consigli contenuti in questa APP, in base alla propria esperienza, alle condizioni metereologiche (anche dei giorni precedenti) e di una valutazione effettuata sul campo all'inizio dello svolgimento della attività. La società Webmapp S.r.l. non fornisce garanzie sulla sicurezza dei luoghi descritti, e non si assume alcuna responsabilità per eventuali danni causati dallo svolgimento delle attività descritte.",
-                "en"	=>	"Hiking and, more generally, outdoor activities are potentially risky endeavors. Before embarking on a hike, make sure you have the knowledge and skills to do so. If you are unsure, seek assistance from local experts who can help, advise, and support you in planning and carrying out your activities. The data presented on this app cannot guarantee the complete risk-free viability of the route; changes, even significant ones, may have occurred since the last verification of the route. It is essential, therefore, that those engaging in activities carefully consider whether to proceed based on the suggestions and advice provided in this app, taking into account their own experience, weather conditions (including those of preceding days), and on-site evaluations at the beginning of the activity. Webmapp S.r.l. does not provide guarantees regarding the safety of the described locations and assumes no responsibility for any damages caused by the execution of the described activities."
-            ],JSON_HEX_APOS));
+                'it' => "L'escursionismo e, più in generale, l'attività all'aria aperta, è una attività potenzialmente rischiosa: prima di avventurarti in una escursione assicurati di avere le conoscenze e le competenze per farlo. Se non sei sicuro rivolgiti agli esperti locali che ti possono aiutare, suggerire e supportare nella pianificazione e nello svolgimento delle tue attività. I dati presentati su questa APP non possono garantire completamente la percorribilità senza rischi del percorso: potrebbero essersi verificati cambiamenti, anche importanti, dall'ultima verifica effettuata del percorso stesso. E' fondamentale quindi che chi si appresta a svolgere attività valuti attentamente l'opportunità di proseguire in base ai suggerimenti e ai consigli contenuti in questa APP, in base alla propria esperienza, alle condizioni metereologiche (anche dei giorni precedenti) e di una valutazione effettuata sul campo all'inizio dello svolgimento della attività. La società Webmapp S.r.l. non fornisce garanzie sulla sicurezza dei luoghi descritti, e non si assume alcuna responsabilità per eventuali danni causati dallo svolgimento delle attività descritte.",
+                'en' => 'Hiking and, more generally, outdoor activities are potentially risky endeavors. Before embarking on a hike, make sure you have the knowledge and skills to do so. If you are unsure, seek assistance from local experts who can help, advise, and support you in planning and carrying out your activities. The data presented on this app cannot guarantee the complete risk-free viability of the route; changes, even significant ones, may have occurred since the last verification of the route. It is essential, therefore, that those engaging in activities carefully consider whether to proceed based on the suggestions and advice provided in this app, taking into account their own experience, weather conditions (including those of preceding days), and on-site evaluations at the beginning of the activity. Webmapp S.r.l. does not provide guarantees regarding the safety of the described locations and assumes no responsibility for any damages caused by the execution of the described activities.',
+            ], JSON_HEX_APOS));
             $table->text('page_credits')->nullable()->default(json_encode([
-                "it"	=>	"<h3>Dati cartografici</h3><p>&copy; OpenStreetMap Contributors</p><h3>Mappa</h3><p>&copy; Webmapp, distribuita con licenza CC BY-NC-SA</p><h3>Webmapp</h3><p>Questa app &egrave; sviluppata e mantenuta da Webmapp.<br />Webmapp realizza servizi cartografici web, app mobile, e cartografia stampata per il Turismo Natura &amp; Avventura.<br />Per maggiori informazioni visitate il nostro sito web&nbsp;<a href=\"http://www.webmapp.it/\" target=\"_blank\" rel=\"noopener\">webmapp.it</a><br />o scriveteci all'indirizzo&nbsp;<a href=\"mailto:info@webmapp.it\">info@webmapp.it</a></p>",
-                "en"	=>	"<h3>Cartographic Data</h3><p>&copy; OpenStreetMap Contributors</p><h3>Map</h3><p>&copy; Webmapp, distributed under CC BY-NC-SA license</p><h3>Webmapp</h3><p>This app is developed and maintained by Webmapp.<br />Webmapp provides web mapping services, mobile apps, and printed cartography for Nature &amp; Adventure Tourism.<br />For more information, visit our website&nbsp;<a href=\"http://www.webmapp.it/\" target=\"_blank\" rel=\"noopener\">webmapp.it</a><br />or contact us at&nbsp;<a href=\"mailto:info@webmapp.it\">info@webmapp.it</a></p>"
-            ],JSON_HEX_APOS));
+                'it' => "<h3>Dati cartografici</h3><p>&copy; OpenStreetMap Contributors</p><h3>Mappa</h3><p>&copy; Webmapp, distribuita con licenza CC BY-NC-SA</p><h3>Webmapp</h3><p>Questa app &egrave; sviluppata e mantenuta da Webmapp.<br />Webmapp realizza servizi cartografici web, app mobile, e cartografia stampata per il Turismo Natura &amp; Avventura.<br />Per maggiori informazioni visitate il nostro sito web&nbsp;<a href=\"http://www.webmapp.it/\" target=\"_blank\" rel=\"noopener\">webmapp.it</a><br />o scriveteci all'indirizzo&nbsp;<a href=\"mailto:info@webmapp.it\">info@webmapp.it</a></p>",
+                'en' => '<h3>Cartographic Data</h3><p>&copy; OpenStreetMap Contributors</p><h3>Map</h3><p>&copy; Webmapp, distributed under CC BY-NC-SA license</p><h3>Webmapp</h3><p>This app is developed and maintained by Webmapp.<br />Webmapp provides web mapping services, mobile apps, and printed cartography for Nature &amp; Adventure Tourism.<br />For more information, visit our website&nbsp;<a href="http://www.webmapp.it/" target="_blank" rel="noopener">webmapp.it</a><br />or contact us at&nbsp;<a href="mailto:info@webmapp.it">info@webmapp.it</a></p>',
+            ], JSON_HEX_APOS));
             $table->text('page_privacy')->nullable();
-            
+
             // ==================== ICONS TAB ====================
             $table->string('logo_homepage')->nullable();
             $table->text('qrcode_custom_url')->nullable();
             $table->text('qr_code')->nullable();
             $table->text('iconmoon_selection')->nullable();
-            
+
             // ==================== LANGUAGES TAB ====================
             $table->string('default_language', 2)->default('it');
             $table->json('available_languages')->nullable();
-            
+
             // ==================== MAP TAB ====================
             $table->string('tiles_label')->default('{"it":"Tipo di mapppa","en":"Map type"}');
             $table->json('tiles')->default('["{\\"webmapp\\":\\"https:\\/\\/api.webmapp.it\\/tiles\\/{z}\\/{x}\\/{y}.png\\"}"]');
@@ -120,7 +120,7 @@ return new class extends Migration
             $table->integer('alert_poi_radius')->default(100);
             $table->integer('flow_line_quote_orange')->default(800);
             $table->integer('flow_line_quote_red')->default(1500);
-            
+
             // ==================== FILTERS TAB ====================
             $table->text('filter_activity_label')->nullable()->default('{"it":"Attività","en":"Activity"}');
             $table->text('filter_theme_label')->nullable()->default('{"it":"Tema","en":"Theme"}');
@@ -136,14 +136,14 @@ return new class extends Migration
             $table->integer('filter_track_distance_min')->nullable();
             $table->integer('filter_track_distance_max')->nullable();
             $table->integer('filter_track_distance_steps')->nullable();
-            
+
             // ==================== SEARCHABLE TAB ====================
             $table->json('track_searchables')->nullable();
             $table->json('poi_searchables')->nullable();
-            
+
             // ==================== OPTIONS TAB ====================
             $table->jsonb('track_technical_details')->nullable()->default('{"show_ascent": true, "show_ele_to": true, "show_descent": true, "show_ele_max": true, "show_ele_min": true, "show_distance": true, "show_ele_from": true, "show_duration_forward": true, "show_duration_backward": true}');
-            
+
             // ==================== POIS TAB ====================
             $table->float('poi_min_radius', 0, 0)->default(0.5);
             $table->float('poi_max_radius', 0, 0)->default(1.2);
@@ -152,17 +152,17 @@ return new class extends Migration
             $table->float('poi_min_zoom', 0, 0)->default(13);
             $table->float('poi_label_min_zoom', 0, 0)->default(10.5);
             $table->string('poi_interaction')->default('popup');
-            
+
             // ==================== THEME TAB ====================
             $table->string('font_family_header')->default('Roboto Slab');
             $table->string('font_family_content')->default('Roboto');
             $table->string('default_feature_color')->default('#de1b0d');
             $table->string('primary_color')->default('#de1b0d');
-            
+
             // ==================== OVERLAYS TAB ====================
             $table->string('overlays_label')->default('{"it":"Dettagli Mappa","en":"Map Details"}');
             $table->text('external_overlays')->nullable();
-            
+
             // ==================== ACQUISITION FORM TAB ====================
             $table->text('poi_acquisition_form')->default('[
         {
@@ -358,14 +358,13 @@ return new class extends Migration
             ] 
         }
     ]');
-            
+
             // ==================== OTHERS ====================
             $table->boolean('generate_layers_edges')->default(false);
 
-            $table->index('user_id');    
+            $table->index('user_id');
         });
 
-        
     }
 
     /**
