@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Nova\Dashboards\Main;
+use App\Nova\Layer;
 use App\Nova\Media;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
@@ -36,6 +37,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(UgcTrack::class),
                     MenuItem::resource(Media::class),
                 ])->icon('document'),
+
+                MenuItem::resource(Layer::class),
 
                 MenuSection::make('Tools', [
                     MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab(),
