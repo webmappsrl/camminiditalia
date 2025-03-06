@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid()->nullable()->unique();
             $table->string('collection_name');
             $table->string('name');
-            $table->geography('geometry', 'point', 4326);
+            $table->geography('geometry', 'point');
             $table->integer('app_id');
             $table->integer('user_id')->nullable();
             $table->string('file_name');

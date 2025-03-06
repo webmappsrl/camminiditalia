@@ -15,6 +15,8 @@ use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Wm\WmPackage\Nova\EcPoi;
+use Wm\WmPackage\Nova\EcTrack;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -35,6 +37,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(UgcPoi::class),
                     MenuItem::resource(UgcTrack::class),
                     MenuItem::resource(Media::class),
+                ])->icon('document'),
+
+                MenuSection::make('EC', [
+                    MenuItem::resource(EcPoi::class),
+                    MenuItem::resource(EcTrack::class),
                 ])->icon('document'),
 
                 MenuSection::make('Tools', [
@@ -81,9 +88,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewNova', function (User $user) {
-            return in_array($user->email, [
-                //
-            ]);
+            return true;
         });
     }
 
