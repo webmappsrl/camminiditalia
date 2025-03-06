@@ -1,37 +1,37 @@
 <template>
-  <DefaultField
-    :field="field"
-    :errors="errors"
-    :show-help-text="showHelpText"
-    :full-width-content="fullWidthContent"
-  >
-    <template #field>
-      <input
-        :id="field.attribute"
-        type="text"
-        class="w-full form-control form-input form-control-bordered"
-        :class="errorClasses"
-        :placeholder="field.name"
-        v-model="value"
-      />
-    </template>
-  </DefaultField>
-  <div>Ciao funziono!!!</div>
+  <ul>
+    <li v-for="track in ecTracks">
+      {{track.name}}
+    </li>
+  </ul>
 </template>
 
 <script>
 import { FormField, HandlesValidationErrors } from 'laravel-nova'
+import { toRaw } from 'vue';
 
 export default {
   mixins: [FormField, HandlesValidationErrors],
 
-  props: ['resourceName', 'resourceId', 'field'],
+  props: ['resourceName', 'resourceId', 'field', 'value'],
+
+  created() {
+    console.log('__created', this.field?.tracks);
+  },
+
+  computed: {
+    ecTracks() {
+      console.log('__ecTracks', toRaw(this.field?.tracks));
+      return toRaw(this.field?.tracks) || [];
+    }
+  },
 
   methods: {
     /*
      * Set the initial, internal value for the field.
      */
     setInitialValue() {
+      console.log('__setInitialValue', this.field?.tracks);
       this.value = this.field.value || ''
     },
 

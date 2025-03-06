@@ -15,7 +15,9 @@ class Layer extends WmNovaLayer
     {
         return [
             ...parent::fields($request),
-            LayerFeatures::make("layer_features")->onlyOnForms(),
+            LayerFeatures::make("features", $this->resource)
+                ->onlyOnForms()
+                ->hideWhenCreating()
         ];
     }
 }

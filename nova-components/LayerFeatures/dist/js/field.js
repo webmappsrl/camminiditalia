@@ -30,15 +30,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var laravel_nova__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-nova */ "laravel-nova");
 /* harmony import */ var laravel_nova__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(laravel_nova__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   mixins: [laravel_nova__WEBPACK_IMPORTED_MODULE_0__.FormField, laravel_nova__WEBPACK_IMPORTED_MODULE_0__.HandlesValidationErrors],
-  props: ['resourceName', 'resourceId', 'field'],
+  props: ['resourceName', 'resourceId', 'field', 'value'],
+  created: function created() {
+    var _this$field;
+    console.log('__created', (_this$field = this.field) === null || _this$field === void 0 ? void 0 : _this$field.tracks);
+  },
+  computed: {
+    ecTracks: function ecTracks() {
+      var _this$field2, _this$field3;
+      console.log('__ecTracks', (0,vue__WEBPACK_IMPORTED_MODULE_1__.toRaw)((_this$field2 = this.field) === null || _this$field2 === void 0 ? void 0 : _this$field2.tracks));
+      return (0,vue__WEBPACK_IMPORTED_MODULE_1__.toRaw)((_this$field3 = this.field) === null || _this$field3 === void 0 ? void 0 : _this$field3.tracks) || [];
+    }
+  },
   methods: {
     /*
      * Set the initial, internal value for the field.
      */
     setInitialValue: function setInitialValue() {
+      var _this$field4;
+      console.log('__setInitialValue', (_this$field4 = this.field) === null || _this$field4 === void 0 ? void 0 : _this$field4.tracks);
       this.value = this.field.value || '';
     },
     /**
@@ -127,28 +143,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "vue");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 
-var _hoisted_1 = ["id", "placeholder"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _component_DefaultField = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("DefaultField");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_DefaultField, {
-    field: $props.field,
-    errors: _ctx.errors,
-    "show-help-text": _ctx.showHelpText,
-    "full-width-content": _ctx.fullWidthContent
-  }, {
-    field: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-        id: $props.field.attribute,
-        type: "text",
-        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["w-full form-control form-input form-control-bordered", _ctx.errorClasses]),
-        placeholder: $props.field.name,
-        "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
-          return _ctx.value = $event;
-        })
-      }, null, 10 /* CLASS, PROPS */, _hoisted_1), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.value]])];
-    }),
-    _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["field", "errors", "show-help-text", "full-width-content"]), _cache[1] || (_cache[1] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, "Ciao funziono!!!", -1 /* HOISTED */))], 64 /* STABLE_FRAGMENT */);
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("ul", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.ecTracks, function (track) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(track.name), 1 /* TEXT */);
+  }), 256 /* UNKEYED_FRAGMENT */))]);
 }
 
 /***/ }),
