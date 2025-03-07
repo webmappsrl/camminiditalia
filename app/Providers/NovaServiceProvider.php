@@ -47,6 +47,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
                 MenuItem::resource(Layer::class),
 
+                MenuItem::resource(Layer::class),
+
                 MenuSection::make('Tools', [
                     MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab(),
                     MenuItem::externalLink('logs', url('logs'))->openInNewTab(),
