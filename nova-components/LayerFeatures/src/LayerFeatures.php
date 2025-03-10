@@ -35,4 +35,10 @@ class LayerFeatures extends Field
 
         $this->withMeta(['tracks' => $ecTracks]);
     }
+
+    public function selectedEcTrackIds($layer)
+    {
+        $selectedTracks = $layer->ecTracks->pluck('id')->toArray();
+        $this->withMeta(['selectedTracks' => $selectedTracks]);
+    }
 }

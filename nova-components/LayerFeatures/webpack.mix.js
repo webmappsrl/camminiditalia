@@ -10,3 +10,6 @@ mix
   .css('resources/css/field.css', 'css')
   .nova('wm/layer-features')
   .version()
+
+mix.copy("node_modules/ag-grid-community/styles/ag-grid.css", "dist/css/ag-grid.css")
+  .copy("node_modules/ag-grid-community/styles/ag-theme-alpine.css", "dist/css/ag-theme-alpine.css");

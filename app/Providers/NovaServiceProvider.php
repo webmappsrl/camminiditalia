@@ -45,7 +45,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(EcTrack::class),
                 ])->icon('document'),
 
-                MenuItem::resource(Layer::class),
 
                 MenuItem::resource(Layer::class),
 
