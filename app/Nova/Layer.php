@@ -18,8 +18,8 @@ class Layer extends WmNovaLayer
     {
         return [
             ...parent::fields($request),
-            // MorphToMany::make("ecTracks"),
-            LayerFeatures::make("ecTracks", $this->resource, WmEcTrack::class)->hideWhenCreating(),
+            MorphToMany::make("ecTracks"),
+            //LayerFeatures::make("ecTracks", $this->resource, WmEcTrack::class)->hideWhenCreating(),
         ];
     }
 }

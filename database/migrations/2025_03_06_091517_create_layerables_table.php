@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLayerableTable extends Migration
+class CreateLayerablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateLayerableTable extends Migration
      */
     public function up()
     {
-        Schema::create('layerable', function (Blueprint $table) {
+        Schema::create('layerables', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('layer_id');
             $table->morphs('layerable');
@@ -28,6 +28,6 @@ class CreateLayerableTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('app_layer');
+        Schema::dropIfExists('layerables');
     }
 }
