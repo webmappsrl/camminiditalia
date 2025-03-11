@@ -2,10 +2,11 @@
 
 namespace Wm\LayerFeatures;
 
-use Laravel\Nova\Fields\Field;
-use Wm\WmPackage\Models\EcTrack;
+use Illuminate\Support\Facades\Log;
+use Laravel\Nova\Fields\MorphMany;
+use Wm\WmPackage\Models\Layer;
 
-class LayerFeatures extends Field
+class LayerFeatures extends MorphMany
 {
     /**
      * The field's component.
@@ -13,32 +14,33 @@ class LayerFeatures extends Field
      * @var string
      */
     public $component = 'layer-features';
-
-    public function __construct($name, $layer, $attribute = null, $resolveCallback = null)
+    public function __construct($name, $layer, string $modelClass, $attribute = null, $resolveCallback = null)
     {
+
         parent::__construct($name, $attribute, $resolveCallback);
 
-        // Carica automaticamente le EcTracks associate all'app_id del Layer
-        $this->loadEcTracks($layer->app_id);
+        // Assicuriamoci che $layer sia un'istanza di Layer
+        if (!$layer instanceof Layer) {
+            Log::error("LayerFeatures: Il parametro passato non è un'istanza di Layer.");
+            return;
+        }
+        if (!class_exists($modelClass)) {
+            Log::error("LayerFeatures: Il modello specificato non esiste: " . $modelClass);
+            return;
+        }
+        // Carica automaticamente le entità associate
+        $this->loadEcFeatures($layer, $name, $modelClass);
     }
 
-    /**
-     * Retrieve and set the EcTracks associated with the given app_id.
-     *
-     * @param int $appId
-     * @return $this
-     */
-    public function loadEcTracks($appId)
+    public function loadEcFeatures($layer, $name, $modelClass)
     {
-        // Ottieni le tracce associate all'app_id specificato
-        $ecTracks = EcTrack::where('app_id', $appId)->get()->toArray();
+        $appId = $layer->id;
+        $ecFeatures = $modelClass::where('app_id', $appId)->get()->toArray();
+        $selectedFeatureIds = [];
+        if ($layer->{$name}) {
+            $selectedFeatureIds = $layer->{$name}->pluck('id')->toArray();
+        }
 
-        $this->withMeta(['tracks' => $ecTracks]);
-    }
-
-    public function selectedEcTrackIds($layer)
-    {
-        $selectedTracks = $layer->ecTracks->pluck('id')->toArray();
-        $this->withMeta(['selectedTracks' => $selectedTracks]);
+        $this->withMeta(['ecFeatures' => $ecFeatures, 'selectedEcFeaturesIds' => $selectedFeatureIds, 'model' => $modelClass]);
     }
 }
