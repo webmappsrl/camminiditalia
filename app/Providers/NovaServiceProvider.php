@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Nova\App;
 use App\Nova\Dashboards\Main;
 use App\Nova\Media;
 use App\Nova\UgcPoi;
@@ -32,6 +33,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::mainMenu(function (Request $request) {
             return [
                 MenuSection::dashboard(Main::class)->icon('chart-bar'),
+
+                MenuItem::resource(App::class),
 
                 MenuSection::make('UGC', [
                     MenuItem::resource(UgcPoi::class),
