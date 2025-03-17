@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('taxonomy_whens', function (Blueprint $table) {
+        Schema::create('taxonomy_activities', function (Blueprint $table) {
             $table->id('id');
             
             $table->text('name');
@@ -22,6 +22,7 @@ return new class extends Migration
             
             $table->text('identifier')->nullable()->unique();
             $table->timestamps();
+            $table->jsonb('properties')->nullable();
         });
     }
 
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('taxonomy_whens');
+        Schema::dropIfExists('taxonomy_activities');
     }
 };
