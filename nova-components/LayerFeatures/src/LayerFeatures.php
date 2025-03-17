@@ -3,10 +3,10 @@
 namespace Wm\LayerFeatures;
 
 use Illuminate\Support\Facades\Log;
-use Laravel\Nova\Fields\MorphMany;
+use Laravel\Nova\Fields\Field;
 use Wm\WmPackage\Models\Layer;
 
-class LayerFeatures extends MorphMany
+class LayerFeatures extends Field
 {
     /**
      * The field's component.
@@ -34,13 +34,11 @@ class LayerFeatures extends MorphMany
 
     public function loadEcFeatures($layer, $name, $modelClass)
     {
-        $appId = $layer->id;
-        $ecFeatures = $modelClass::where('app_id', $appId)->get()->toArray();
         $selectedFeatureIds = [];
         if ($layer->{$name}) {
             $selectedFeatureIds = $layer->{$name}->pluck('id')->toArray();
         }
 
-        $this->withMeta(['ecFeatures' => $ecFeatures, 'selectedEcFeaturesIds' => $selectedFeatureIds, 'model' => $modelClass]);
+        $this->withMeta(['selectedEcFeaturesIds' => $selectedFeatureIds, 'model' => $modelClass, 'layerId' => $layer->id]);
     }
 }
