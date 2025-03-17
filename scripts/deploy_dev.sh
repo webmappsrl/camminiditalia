@@ -1,24 +1,20 @@
 #!/bin/bash
 set -e
 
-echo "Deployment started ..."
+echo "Develop deployment started ..."
 
-# Enter maintenance mode or return true
-# if already is in maintenance mode
-(php artisan down) || true
+php artisan down
 
-git submodule update --init --recursive
+composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Install composer dependencies
-composer install  --no-interaction --prefer-dist --optimize-autoloader
+# Clear and cache config
+php artisan optimize
 
-# Run database migrations
-php artisan migrate
+php artisan migrate --force
 
-php artisan optimize:clear
-php artisan config:clear
+# gracefully terminate laravel horizon
+php artisan horizon:terminate
 
-# Exit maintenance mode
 php artisan up
 
 echo "Deployment finished!"

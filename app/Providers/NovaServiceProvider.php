@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Nova\App;
 use App\Nova\Dashboards\Main;
 use App\Nova\Layer;
 use App\Nova\Media;
@@ -34,6 +35,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             return [
                 MenuSection::dashboard(Main::class)->icon('chart-bar'),
 
+                MenuItem::resource(App::class),
+
                 MenuSection::make('UGC', [
                     MenuItem::resource(UgcPoi::class),
                     MenuItem::resource(UgcTrack::class),
@@ -50,7 +53,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
                 MenuSection::make('Tools', [
                     MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab(),
-                    MenuItem::externalLink('logs', url('logs'))->openInNewTab(),
+                    MenuItem::externalLink('Telescope', url('/telescope'))->openInNewTab(),
                 ])->icon('briefcase')->canSee(function (Request $request) {
                     return $request->user()->email === 'team@webmapp.it';
                 }),
