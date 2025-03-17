@@ -13,15 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('taxonomy_whens', function (Blueprint $table) {
-            $table->id('id');
+        Schema::table('users', function (Blueprint $table) {
+            $table->float('balance', 0, 0)->default(0);
+            $table->string('fiscal_code', 16)->nullable()->unique();
+            $table->integer('app_id')->nullable();
 
-            $table->text('name');
-            $table->text('description')->nullable();
-            $table->string('excerpt')->nullable();
-
-            $table->text('identifier')->nullable()->unique();
-            $table->timestamps();
+            $table->index('app_id');
         });
     }
 
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('taxonomy_whens');
+        
     }
 };
