@@ -17,11 +17,14 @@ services:
       file: compose.yml
       service: redis
   elasticsearch:
-    security_opt:
-      - seccomp:unconfined
+    image: elasticsearch:7.17.9
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
     extends:
       file: compose.yml
       service: elasticsearch
+    platform: linux/amd64
 
   # needed for aws s3 storage testing
   minio:
