@@ -337,10 +337,10 @@ export default defineComponent({
                 const layerId = props.field.layerId;
                 const selectedIds = props.field.selectedEcFeaturesIds || [];
 
-                const filterObject = {
-                    [`features_exclude_ids_${modelName}`]: selectedIds,
-                    [`features_by_layer_${modelName}`]: layerId,
-                };
+                const filterObject = [
+                    [{ [`features_exclude_ids_${modelName}`]: selectedIds }],
+                    [{ [`features_by_layer_${modelName}`]: layerId }],
+                ];
                 console.log("Filter Object:", filterObject);
 
                 const base64Filter = btoa(JSON.stringify(filterObject));
