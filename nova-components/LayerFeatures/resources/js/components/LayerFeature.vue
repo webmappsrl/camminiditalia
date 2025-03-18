@@ -239,8 +239,8 @@ export default defineComponent({
         const isLoading = ref(true);
         const editable = ref(props.edit);
         const selectedIds = ref(props.field?.selectedEcFeaturesIds || []);
-        const model = ref(props.field.model);
-        const modelName = ref(props.field.modelName);
+        const model = ref(props.field?.model);
+        const modelName = ref(props.field?.modelName);
         const gridData = ref([]);
         const isSaving = ref(false);
         const isManual = ref(props.field?.selectedEcFeaturesIds?.length > 0);
@@ -313,6 +313,8 @@ export default defineComponent({
         console.log("Props iniziali:", {
             resourceId: props.resourceId,
             selectedEcFeaturesIds: props.field?.selectedEcFeaturesIds,
+            model: props.field?.model,
+            modelName: props.field?.modelName,
             edit: props.edit,
         });
 
@@ -331,9 +333,13 @@ export default defineComponent({
         const fetchFeatures = async (filterModel = null) => {
             try {
                 isLoading.value = true;
+                const model = props.field.modelName;
+
                 const filterObject = [
                     {
-                        features_by_layer: Number(props.resourceId),
+                        [`features_by_layer_${model}`]: Number(
+                            props.resourceId,
+                        ),
                     },
                 ];
 

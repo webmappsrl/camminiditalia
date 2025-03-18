@@ -1,15 +1,14 @@
 <template>
-    <span>{{ fieldValue }}</span>
+    <PanelItem :index="index" :field="field" />
+    <LayerFeature :field="field" :edit="true" />
 </template>
 
 <script>
+import LayerFeature from "./LayerFeature.vue"; // 👈 Importa il componente
 export default {
-    props: ["resourceName", "field"],
-
-    computed: {
-        fieldValue() {
-            return this.field.displayedAs || this.field.value;
-        },
+    components: {
+        LayerFeature, // 👈 Dichiaralo nei componenti disponibili
     },
+    props: ["index", "resource", "resourceName", "resourceId", "field"],
 };
 </script>

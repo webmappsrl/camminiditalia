@@ -1,6 +1,6 @@
 <template>
     <PanelItem :index="index" :field="field" />
-    <LayerFeature :field="field" />
+    <LayerFeature :field="field" :edit="false" />
 </template>
 
 <script>
@@ -9,6 +9,6 @@ export default {
     components: {
         LayerFeature, // 👈 Dichiaralo nei componenti disponibili
     },
-    props: ["index", "resource", "resourceName", "resourceId", "field"],
+    props: ["index", "resource", "resourceName", "resourceId", "field", "edit"],
 };
 </script>
