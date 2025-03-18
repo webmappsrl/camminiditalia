@@ -335,12 +335,12 @@ export default defineComponent({
                 isLoading.value = true;
                 const modelName = props.field.modelName;
                 const layerId = props.field.layerId;
+                const selectedIds = props.field.selectedEcFeaturesIds || [];
 
                 const filterObject = [
                     {
-                        [`features_exclude_ids_${modelName}`]: [
-                            Number(layerId),
-                        ],
+                        [`features_exclude_ids_${modelName}`]: selectedIds,
+                        [`features_by_layer_${modelName}`]: layerId,
                     },
                 ];
                 console.log("Filter Object:", filterObject);

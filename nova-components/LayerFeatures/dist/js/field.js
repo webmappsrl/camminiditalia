@@ -50828,7 +50828,9 @@ var NameFilter = {
       var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var filterModel,
           _filterModel$name,
-          _model,
+          _modelName,
+          layerId,
+          _selectedIds,
           filterObject,
           base64Filter,
           searchParam,
@@ -50842,18 +50844,21 @@ var NameFilter = {
               filterModel = _args.length > 0 && _args[0] !== undefined ? _args[0] : null;
               _context.prev = 1;
               isLoading.value = true;
-              _model = props.field.modelName;
-              filterObject = [_defineProperty({}, "features_by_layer_".concat(_model), Number(props.resourceId))];
+              _modelName = props.field.modelName;
+              layerId = props.field.layerId;
+              _selectedIds = props.field.selectedEcFeaturesIds || [];
+              filterObject = [_defineProperty(_defineProperty({}, "features_exclude_ids_".concat(_modelName), _selectedIds), "features_by_layer_".concat(_modelName), layerId)];
+              console.log("Filter Object:", filterObject);
               base64Filter = btoa(JSON.stringify(filterObject));
               searchParam = filterModel !== null && filterModel !== void 0 && (_filterModel$name = filterModel.name) !== null && _filterModel$name !== void 0 && _filterModel$name.value ? "&search=".concat(encodeURIComponent(filterModel.name.value)) : "";
               url = "/nova-api/ec-tracks?filters=".concat(encodeURIComponent(base64Filter)).concat(searchParam, "&orderBy=&perPage=100&trashed=&page=1&relationshipType=");
-              _context.next = 10;
-              return fetch(url);
-            case 10:
-              response = _context.sent;
               _context.next = 13;
-              return response.json();
+              return fetch(url);
             case 13:
+              response = _context.sent;
+              _context.next = 16;
+              return response.json();
+            case 16:
               data = _context.sent;
               gridData.value = data.resources.map(function (resource) {
                 var _resource$fields$find;
@@ -50870,28 +50875,28 @@ var NameFilter = {
                 var _agGridRef$value;
                 if ((_agGridRef$value = agGridRef.value) !== null && _agGridRef$value !== void 0 && _agGridRef$value.api) {
                   agGridRef.value.api.forEachNode(function (node) {
-                    if (selectedIds.value.includes(node.data.id)) {
+                    if (_selectedIds.value.includes(node.data.id)) {
                       node.setSelected(true);
                     }
                   });
                 }
               }, 200);
-              _context.next = 22;
+              _context.next = 25;
               break;
-            case 18:
-              _context.prev = 18;
+            case 21:
+              _context.prev = 21;
               _context.t0 = _context["catch"](1);
               console.error("Error fetching features:", _context.t0);
               gridData.value = [];
-            case 22:
-              _context.prev = 22;
-              isLoading.value = false;
-              return _context.finish(22);
             case 25:
+              _context.prev = 25;
+              isLoading.value = false;
+              return _context.finish(25);
+            case 28:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[1, 18, 22, 25]]);
+        }, _callee, null, [[1, 21, 25, 28]]);
       }));
       return function fetchFeatures() {
         return _ref.apply(this, arguments);
@@ -51081,7 +51086,7 @@ var NameFilter = {
     }();
     var handleModeChange = /*#__PURE__*/function () {
       var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-        var layerId, _model2;
+        var layerId, _model;
         return _regeneratorRuntime().wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
@@ -51092,11 +51097,11 @@ var NameFilter = {
               }
               isSaving.value = true;
               layerId = props.field.layerId;
-              _model2 = props.field.model;
+              _model = props.field.model;
               _context5.next = 7;
               return Nova.request().post("/nova-vendor/layer-features/sync/".concat(layerId), {
                 features: [],
-                model: _model2
+                model: _model
               });
             case 7:
               selectedIds.value = [];
