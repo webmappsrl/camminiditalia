@@ -50847,7 +50847,7 @@ var NameFilter = {
               _modelName = props.field.modelName;
               layerId = props.field.layerId;
               _selectedIds = props.field.selectedEcFeaturesIds || [];
-              filterObject = [_defineProperty(_defineProperty({}, "features_exclude_ids_".concat(_modelName), _selectedIds), "features_by_layer_".concat(_modelName), layerId)];
+              filterObject = _defineProperty(_defineProperty({}, "features_exclude_ids_".concat(_modelName), _selectedIds), "features_by_layer_".concat(_modelName), layerId);
               console.log("Filter Object:", filterObject);
               base64Filter = btoa(JSON.stringify(filterObject));
               searchParam = filterModel !== null && filterModel !== void 0 && (_filterModel$name = filterModel.name) !== null && _filterModel$name !== void 0 && _filterModel$name.value ? "&search=".concat(encodeURIComponent(filterModel.name.value)) : "";
@@ -50959,7 +50959,7 @@ var NameFilter = {
       }
     };
     var handleSave = /*#__PURE__*/function () {
-      var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+      var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var _agGridRef$value3, selectedNodes, selectedFeatureIds, layerId;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
@@ -50997,7 +50997,7 @@ var NameFilter = {
         }, _callee2, null, [[0, 11, 15, 18]]);
       }));
       return function handleSave() {
-        return _ref3.apply(this, arguments);
+        return _ref2.apply(this, arguments);
       };
     }();
     var statusBar = {
@@ -51023,7 +51023,7 @@ var NameFilter = {
       agGridRef.value.api.components.registerComponent("customStatsComponent", CustomStatsComponent);
     }
     var handleToggleClick = /*#__PURE__*/function () {
-      var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+      var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var newState;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
@@ -51058,7 +51058,7 @@ var NameFilter = {
         }, _callee3);
       }));
       return function handleToggleClick() {
-        return _ref4.apply(this, arguments);
+        return _ref3.apply(this, arguments);
       };
     }();
     var closeConfirmModal = function closeConfirmModal() {
@@ -51066,7 +51066,7 @@ var NameFilter = {
       isManual.value = true;
     };
     var confirmModeChange = /*#__PURE__*/function () {
-      var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+      var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
@@ -51081,11 +51081,11 @@ var NameFilter = {
         }, _callee4);
       }));
       return function confirmModeChange() {
-        return _ref5.apply(this, arguments);
+        return _ref4.apply(this, arguments);
       };
     }();
     var handleModeChange = /*#__PURE__*/function () {
-      var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+      var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
         var layerId, _model;
         return _regeneratorRuntime().wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
@@ -51128,7 +51128,7 @@ var NameFilter = {
         }, _callee5, null, [[0, 13, 18, 21]]);
       }));
       return function handleModeChange() {
-        return _ref6.apply(this, arguments);
+        return _ref5.apply(this, arguments);
       };
     }();
     return {
