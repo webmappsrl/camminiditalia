@@ -338,8 +338,8 @@ export default defineComponent({
                 const selectedIds = props.field.selectedEcFeaturesIds || [];
 
                 const filterObject = [
-                    [{ [`features_exclude_ids_${modelName}`]: selectedIds }],
-                    [{ [`features_by_layer_${modelName}`]: layerId }],
+                    { [`features_exclude_ids_${modelName}`]: selectedIds },
+                    { [`features_by_layer_${modelName}`]: layerId },
                 ];
                 console.log("Filter Object:", filterObject);
 
