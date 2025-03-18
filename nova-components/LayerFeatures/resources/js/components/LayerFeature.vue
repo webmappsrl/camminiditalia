@@ -333,15 +333,17 @@ export default defineComponent({
         const fetchFeatures = async (filterModel = null) => {
             try {
                 isLoading.value = true;
-                const model = props.field.modelName;
+                const modelName = props.field.modelName;
+                const layerId = props.field.layerId;
 
                 const filterObject = [
                     {
-                        [`features_by_layer_${model}`]: Number(
-                            props.resourceId,
-                        ),
+                        [`features_exclude_ids_${modelName}`]: [
+                            Number(layerId),
+                        ],
                     },
                 ];
+                console.log("Filter Object:", filterObject);
 
                 const base64Filter = btoa(JSON.stringify(filterObject));
                 const searchParam = filterModel?.name?.value

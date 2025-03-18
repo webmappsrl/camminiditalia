@@ -39,6 +39,9 @@ class LayerFeatures extends Field
             $selectedFeatureIds = $layer->{$name}->pluck('id')->toArray();
         }
 
-        $this->withMeta(['selectedEcFeaturesIds' => $selectedFeatureIds, 'model' => $modelClass, 'layerId' => $layer->id]);
+        $model = new $modelClass;
+        $modelName = $model->getLayerRelationName();
+
+        $this->withMeta(['selectedEcFeaturesIds' => $selectedFeatureIds, 'model' => $modelClass, 'modelName' => $modelName, 'layerId' => $layer->id]);
     }
 }
