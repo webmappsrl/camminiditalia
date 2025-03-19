@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Nova\App;
 use App\Nova\Dashboards\Main;
 use App\Nova\Media;
+use App\Nova\TaxonomyActivity;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
 use Illuminate\Http\Request;
@@ -45,6 +46,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 MenuSection::make('EC', [
                     MenuItem::resource(EcPoi::class),
                     MenuItem::resource(EcTrack::class),
+                ])->icon('document'),
+
+                MenuSection::make('Taxonomies', [
+                    MenuItem::resource(TaxonomyActivity::class),
                 ])->icon('document'),
 
                 MenuSection::make('Tools', [
