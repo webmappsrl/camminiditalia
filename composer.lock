@@ -11018,7 +11018,7 @@
         },
         {
             "name": "wm/wm-package",
-            "version": "dev-main",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./wm-package",
