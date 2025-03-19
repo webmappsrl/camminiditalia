@@ -178,14 +178,23 @@ const CustomHeader = {
 // Aggiungi questo componente custom filter prima dell'export default
 const NameFilter = {
     template: `
-        <div class="ag-filter-wrapper">
+        <div class="ag-filter-wrapper" style="display: flex; align-items: center;">
             <input
                 type="text"
                 v-model="filterText"
                 class="ag-input-field-input ag-text-field-input"
                 placeholder="Cerca..."
                 @input="onFilterChanged"
+                style="flex: 1;"
             />
+            <button
+                v-if="filterText"
+                @click="resetFilter"
+                class="reset-button"
+                style="margin-left: 4px; padding: 2px 6px; background: #e74444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;"
+            >
+                ✕
+            </button>
         </div>
     `,
     data() {
@@ -199,15 +208,15 @@ const NameFilter = {
         },
 
         doesFilterPass() {
-            return true; // La logica di filtro è gestita dal server
+            return true;
         },
 
         getModel() {
-            return this.isFilterActive() ? { value: this.filterText } : null;
+            return this.isFilterActive() ? { filter: this.filterText } : null;
         },
 
         setModel(model) {
-            this.filterText = model ? model.value : "";
+            this.filterText = model ? model.filter : "";
         },
 
         onFilterChanged() {
@@ -217,6 +226,11 @@ const NameFilter = {
             this.timeout = setTimeout(() => {
                 this.params.filterChangedCallback();
             }, 300);
+        },
+
+        resetFilter() {
+            this.filterText = "";
+            this.params.filterChangedCallback();
         },
     },
 };
@@ -263,28 +277,30 @@ export default defineComponent({
                 checkboxSelection: true,
                 headerCheckboxSelection: true,
                 suppressSizeToFit: true,
+                filter: false,
             },
             {
                 field: "id",
                 headerName: "ID",
                 width: 80,
                 suppressSizeToFit: true,
+                filter: false,
             },
             {
                 field: "name",
                 headerName: "Name",
                 flex: 1,
                 minWidth: 200,
-                filter: "text",
+                filter: NameFilter,
             },
         ]);
 
         const defaultColDef = ref({
             sortable: true,
             resizable: true,
-            suppressMenu: false,
+            suppressMenu: true,
             suppressRowClickSelection: true,
-            filter: true,
+            filter: false,
             floatingFilter: true,
         });
 
