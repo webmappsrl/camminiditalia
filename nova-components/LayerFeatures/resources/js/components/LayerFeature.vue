@@ -330,49 +330,110 @@ export default defineComponent({
             }, 300);
         };
 
+        // Utility functions
+        const buildFilterObject = (
+            filterType,
+            selectedIds,
+            modelName,
+            layerId,
+        ) => {
+            const filterKey =
+                filterType === "include"
+                    ? `features_include_ids_${modelName}`
+                    : `features_exclude_ids_${modelName}`;
+
+            return [
+                { [filterKey]: selectedIds },
+                { [`features_by_layer_${modelName}`]: layerId },
+            ];
+        };
+
+        const buildApiUrl = (filterObject, searchValue) => {
+            const base64Filter = btoa(JSON.stringify(filterObject));
+            const searchParam = searchValue
+                ? `&search=${encodeURIComponent(searchValue)}`
+                : "";
+
+            return `/nova-api/ec-tracks?filters=${encodeURIComponent(base64Filter)}${searchParam}&orderBy=&perPage=100&trashed=&page=1&relationshipType=`;
+        };
+
+        const mapResourceToTrack = (resource, isSelected) => ({
+            id: resource.id.value,
+            name:
+                resource.fields.find((f) => f.attribute === "name")?.value ||
+                "",
+            isSelected,
+        });
+
+        const fetchTracks = async (url) => {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        };
+
+        const restoreSelections = (gridApi, selectedIds) => {
+            if (!gridApi) return;
+
+            gridApi.forEachNode((node) => {
+                if (selectedIds.includes(node.data.id)) {
+                    node.setSelected(true);
+                }
+            });
+        };
+
         const fetchFeatures = async (filterModel = null) => {
             try {
                 isLoading.value = true;
                 const modelName = props.field.modelName;
                 const layerId = props.field.layerId;
                 const selectedIds = props.field.selectedEcFeaturesIds || [];
+                const searchValue = filterModel?.name?.value;
 
-                const filterObject = [
-                    { [`features_exclude_ids_${modelName}`]: selectedIds },
-                    { [`features_by_layer_${modelName}`]: layerId },
-                ];
-                console.log("Filter Object:", filterObject);
+                // Fetch selected tracks
+                const includeFilterObject = buildFilterObject(
+                    "include",
+                    selectedIds,
+                    modelName,
+                    layerId,
+                );
+                const includeUrl = buildApiUrl(
+                    includeFilterObject,
+                    searchValue,
+                );
+                const includeData = await fetchTracks(includeUrl);
+                const selectedTracks = includeData.resources.map((resource) =>
+                    mapResourceToTrack(resource, true),
+                );
 
-                const base64Filter = btoa(JSON.stringify(filterObject));
-                const searchParam = filterModel?.name?.value
-                    ? `&search=${encodeURIComponent(filterModel.name.value)}`
-                    : "";
+                // Fetch selectable tracks
+                const excludeFilterObject = buildFilterObject(
+                    "exclude",
+                    selectedIds,
+                    modelName,
+                    layerId,
+                );
+                const excludeUrl = buildApiUrl(
+                    excludeFilterObject,
+                    searchValue,
+                );
+                const excludeData = await fetchTracks(excludeUrl);
+                const selectableTracks = excludeData.resources.map((resource) =>
+                    mapResourceToTrack(resource, false),
+                );
 
-                const url = `/nova-api/ec-tracks?filters=${encodeURIComponent(base64Filter)}${searchParam}&orderBy=&perPage=100&trashed=&page=1&relationshipType=`;
+                // Update grid data
+                gridData.value = [...selectedTracks, ...selectableTracks];
 
-                const response = await fetch(url);
-                const data = await response.json();
-
-                gridData.value = data.resources.map((resource) => ({
-                    id: resource.id.value,
-                    name:
-                        resource.fields.find((f) => f.attribute === "name")
-                            ?.value || "",
-                }));
-
-                // Ripristina le selezioni
+                // Restore selections after a short delay to ensure grid is ready
                 setTimeout(() => {
-                    if (agGridRef.value?.api) {
-                        agGridRef.value.api.forEachNode((node) => {
-                            if (selectedIds.value.includes(node.data.id)) {
-                                node.setSelected(true);
-                            }
-                        });
-                    }
+                    restoreSelections(agGridRef.value?.api, selectedIds);
                 }, 200);
             } catch (error) {
                 console.error("Error fetching features:", error);
                 gridData.value = [];
+                Nova.error("Errore durante il caricamento delle features");
             } finally {
                 isLoading.value = false;
             }
@@ -380,21 +441,14 @@ export default defineComponent({
 
         // Funzione per determinare se una riga è selezionabile
         const isRowSelectable = (params) => {
-            return true; // Tutte le righe sono selezionabili
+            return true;
         };
 
         const onGridReady = (params) => {
             const gridApi = params.api;
             agGridRef.value = gridApi;
-
             gridApi.sizeColumnsToFit();
-
-            // Seleziona le righe quando la griglia è pronta
-            gridApi.forEachNode((node) => {
-                if (selectedIds.value.includes(node.data.id)) {
-                    node.setSelected(true);
-                }
-            });
+            restoreSelections(gridApi, selectedIds.value);
         };
 
         const onSelectionChanged = (params) => {
