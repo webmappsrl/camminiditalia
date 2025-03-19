@@ -348,13 +348,10 @@ export default defineComponent({
             ];
         };
 
-        const buildApiUrl = (filterObject, searchValue) => {
+        const buildApiUrl = (filterObject, searchValue = "") => {
             const base64Filter = btoa(JSON.stringify(filterObject));
-            const searchParam = searchValue
-                ? `&search=${encodeURIComponent(searchValue)}`
-                : "";
-
-            return `/nova-api/ec-tracks?filters=${encodeURIComponent(base64Filter)}${searchParam}&orderBy=&perPage=100&trashed=&page=1&relationshipType=`;
+            const searchParam = searchValue ? `&search=${searchValue}` : "";
+            return `/nova-api/ec-tracks?filters=${encodeURIComponent(base64Filter)}${searchParam}&perPage=100&trashed=&page=1$relationType=`;
         };
 
         const mapResourceToTrack = (resource, isSelected) => ({
@@ -389,47 +386,67 @@ export default defineComponent({
                 const modelName = props.field.modelName;
                 const layerId = props.field.layerId;
                 const selectedIds = props.field.selectedEcFeaturesIds || [];
-                const searchValue = filterModel?.name?.value;
+                const searchValue = filterModel?.name?.filter || "";
 
-                // Fetch selected tracks
-                const includeFilterObject = buildFilterObject(
-                    "include",
-                    selectedIds,
-                    modelName,
-                    layerId,
-                );
-                const includeUrl = buildApiUrl(
-                    includeFilterObject,
+                // Prima chiamata: Recupera le righe già selezionate
+                const selectedFilters = [
+                    { [`features_include_ids_${modelName}`]: selectedIds },
+                    { [`features_by_layer_${modelName}`]: layerId },
+                ];
+                const selectedRowsUrl = buildApiUrl(
+                    selectedFilters,
                     searchValue,
                 );
-                const includeData = await fetchTracks(includeUrl);
-                const selectedTracks = includeData.resources.map((resource) =>
-                    mapResourceToTrack(resource, true),
-                );
+                const selectedResponse = await fetchTracks(selectedRowsUrl);
 
-                // Fetch selectable tracks
-                const excludeFilterObject = buildFilterObject(
-                    "exclude",
-                    selectedIds,
-                    modelName,
-                    layerId,
+                console.log("Risposta API Selected:", selectedResponse);
+                // Mappa le righe selezionate
+                const selectedRows = selectedResponse.resources.map(
+                    (resource) => {
+                        console.log("Resource Selected:", resource);
+                        return {
+                            id: resource.id.value,
+                            name:
+                                resource.fields.find(
+                                    (f) => f.attribute === "name",
+                                )?.value || "",
+                            checked: true,
+                        };
+                    },
                 );
-                const excludeUrl = buildApiUrl(
-                    excludeFilterObject,
+                console.log("Righe Selezionate Mappate:", selectedRows);
+
+                // Seconda chiamata: Recupera le righe selezionabili
+                const unselectedFilters = [
+                    { [`features_exclude_ids_${modelName}`]: selectedIds },
+                    { [`features_by_layer_${modelName}`]: layerId },
+                ];
+                const unselectedRowsUrl = buildApiUrl(
+                    unselectedFilters,
                     searchValue,
                 );
-                const excludeData = await fetchTracks(excludeUrl);
-                const selectableTracks = excludeData.resources.map((resource) =>
-                    mapResourceToTrack(resource, false),
+                const unselectedResponse = await fetchTracks(unselectedRowsUrl);
+
+                console.log("Risposta API Unselected:", unselectedResponse);
+                // Mappa le righe selezionabili
+                const selectableRows = unselectedResponse.resources.map(
+                    (resource) => {
+                        console.log("Resource Unselected:", resource);
+                        return {
+                            id: resource.id.value,
+                            name:
+                                resource.fields.find(
+                                    (f) => f.attribute === "name",
+                                )?.value || "",
+                            checked: false,
+                        };
+                    },
                 );
+                console.log("Righe Selezionabili Mappate:", selectableRows);
 
-                // Update grid data
-                gridData.value = [...selectedTracks, ...selectableTracks];
-
-                // Restore selections after a short delay to ensure grid is ready
-                setTimeout(() => {
-                    restoreSelections(agGridRef.value?.api, selectedIds);
-                }, 200);
+                // Combina i risultati
+                gridData.value = [...selectedRows, ...selectableRows];
+                console.log("GridData Finale:", gridData.value);
             } catch (error) {
                 console.error("Error fetching features:", error);
                 gridData.value = [];
