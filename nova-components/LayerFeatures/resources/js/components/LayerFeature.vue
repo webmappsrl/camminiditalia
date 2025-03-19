@@ -259,23 +259,15 @@ export default defineComponent({
             {
                 field: "boolean",
                 headerName: "✓",
-                cellEditor: "agCheckboxCellEditor",
-                checkboxSelection: true,
-                editable: true,
-                headerCheckboxSelection: true,
                 width: 50,
-                flex: 0,
+                checkboxSelection: true,
+                headerCheckboxSelection: true,
                 suppressSizeToFit: true,
-                headerComponent: "customHeader",
-                headerComponentParams: {
-                    save: handleSave,
-                },
             },
             {
                 field: "id",
                 headerName: "ID",
                 width: 80,
-                flex: 0,
                 suppressSizeToFit: true,
             },
             {
@@ -284,10 +276,6 @@ export default defineComponent({
                 flex: 1,
                 minWidth: 200,
                 filter: "text",
-                filterParams: {
-                    debounceMs: 300,
-                    buttons: ["reset"],
-                },
             },
         ]);
 
@@ -399,22 +387,16 @@ export default defineComponent({
                 );
                 const selectedResponse = await fetchTracks(selectedRowsUrl);
 
-                console.log("Risposta API Selected:", selectedResponse);
-                // Mappa le righe selezionate
+                // Mappa le righe selezionate con boolean: true
                 const selectedRows = selectedResponse.resources.map(
-                    (resource) => {
-                        console.log("Resource Selected:", resource);
-                        return {
-                            id: resource.id.value,
-                            name:
-                                resource.fields.find(
-                                    (f) => f.attribute === "name",
-                                )?.value || "",
-                            checked: true,
-                        };
-                    },
+                    (resource) => ({
+                        id: resource.id.value,
+                        name:
+                            resource.fields.find((f) => f.attribute === "name")
+                                ?.value || "",
+                        boolean: true,
+                    }),
                 );
-                console.log("Righe Selezionate Mappate:", selectedRows);
 
                 // Seconda chiamata: Recupera le righe selezionabili
                 const unselectedFilters = [
@@ -427,26 +409,33 @@ export default defineComponent({
                 );
                 const unselectedResponse = await fetchTracks(unselectedRowsUrl);
 
-                console.log("Risposta API Unselected:", unselectedResponse);
-                // Mappa le righe selezionabili
+                // Mappa le righe selezionabili (senza boolean)
                 const selectableRows = unselectedResponse.resources.map(
-                    (resource) => {
-                        console.log("Resource Unselected:", resource);
-                        return {
-                            id: resource.id.value,
-                            name:
-                                resource.fields.find(
-                                    (f) => f.attribute === "name",
-                                )?.value || "",
-                            checked: false,
-                        };
-                    },
+                    (resource) => ({
+                        id: resource.id.value,
+                        name:
+                            resource.fields.find((f) => f.attribute === "name")
+                                ?.value || "",
+                    }),
                 );
-                console.log("Righe Selezionabili Mappate:", selectableRows);
 
                 // Combina i risultati
                 gridData.value = [...selectedRows, ...selectableRows];
-                console.log("GridData Finale:", gridData.value);
+
+                // Ripristina le selezioni
+                setTimeout(() => {
+                    if (agGridRef.value?.api) {
+                        // Deseleziona tutte le righe
+                        agGridRef.value.api.deselectAll();
+
+                        // Seleziona solo le righe che erano selezionate
+                        agGridRef.value.api.forEachNode((node) => {
+                            if (selectedIds.includes(node.data.id)) {
+                                node.setSelected(true);
+                            }
+                        });
+                    }
+                }, 200);
             } catch (error) {
                 console.error("Error fetching features:", error);
                 gridData.value = [];
@@ -471,21 +460,39 @@ export default defineComponent({
         const onSelectionChanged = (params) => {
             if (!params.api) return;
 
-            const selectedNodes = params.api.getSelectedNodes();
-            const newSelectedIds = selectedNodes.map((node) => node.data.id);
+            // Ottieni lo stato precedente delle selezioni
+            const previousSelectedIds = [...selectedIds.value];
 
-            if (
-                JSON.stringify(selectedIds.value) !==
-                JSON.stringify(newSelectedIds)
-            ) {
-                console.log("Selection Changed:", {
-                    previousSelection: selectedIds.value,
-                    newSelection: newSelectedIds,
-                });
+            // Ottieni le selezioni correnti dalla griglia
+            const currentSelectedNodes = params.api.getSelectedNodes();
+            const currentSelectedIds = currentSelectedNodes.map(
+                (node) => node.data.id,
+            );
 
-                selectedIds.value = newSelectedIds;
-                props.field.selectedEcFeaturesIds = newSelectedIds;
-            }
+            // Trova gli ID che sono stati aggiunti e rimossi in questa selezione
+            const addedIds = currentSelectedIds.filter(
+                (id) => !previousSelectedIds.includes(id),
+            );
+            const removedIds = previousSelectedIds.filter(
+                (id) => !currentSelectedIds.includes(id),
+            );
+
+            console.log("Selection Changed:", {
+                previousSelectedIds,
+                currentSelectedIds,
+                addedIds,
+                removedIds,
+            });
+
+            // Aggiorna selectedIds aggiungendo i nuovi ID e rimuovendo quelli deselezionati
+            const newSelectedIds = [
+                ...previousSelectedIds.filter((id) => !removedIds.includes(id)), // Mantieni gli ID non deselezionati
+                ...addedIds, // Aggiungi i nuovi ID selezionati
+            ];
+
+            // Aggiorna le selezioni
+            selectedIds.value = newSelectedIds;
+            props.field.selectedEcFeaturesIds = newSelectedIds;
         };
 
         // Aggiungi l'handler per il cambio di filtro
@@ -515,11 +522,11 @@ export default defineComponent({
         const handleSave = async () => {
             try {
                 isSaving.value = true;
-                const selectedNodes =
-                    agGridRef.value?.api?.getSelectedNodes() || [];
-                const selectedFeatureIds = selectedNodes.map(
-                    (node) => node.data.id,
-                );
+                const selectedFeatureIds = selectedIds.value;
+
+                console.log("=== LOG SALVATAGGIO ===");
+                console.log("ID da salvare:", selectedFeatureIds);
+                console.log("=========================");
 
                 const layerId = props.field.layerId;
                 await Nova.request().post(
@@ -532,6 +539,10 @@ export default defineComponent({
 
                 Nova.success("Features salvate con successo");
                 props.field.value = selectedFeatureIds;
+                props.field.selectedEcFeaturesIds = selectedFeatureIds;
+
+                // Ricarica i dati della griglia
+                await fetchFeatures();
             } catch (error) {
                 console.error("Errore durante il salvataggio:", error);
                 Nova.error("Errore durante il salvataggio delle features");

@@ -50635,12 +50635,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ag_grid_vue3__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ag-grid-vue3 */ "./node_modules/ag-grid-vue3/dist/main.mjs");
 /* harmony import */ var ag_grid_community__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ag-grid-community */ "./node_modules/ag-grid-community/dist/package/main.esm.mjs");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
 
 
@@ -50737,7 +50743,7 @@ var NameFilter = {
     }
   },
   setup: function setup(props) {
-    var _props$field, _props$field2, _props$field3, _props$field4, _props$field5, _props$field6, _props$field7, _agGridRef$value4;
+    var _props$field, _props$field2, _props$field3, _props$field4, _props$field5, _props$field6, _props$field7, _agGridRef$value3;
     var agGridRef = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(null);
     var isLoading = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(true);
     var editable = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(props.edit);
@@ -50758,33 +50764,21 @@ var NameFilter = {
     var columnDefs = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)([{
       field: "boolean",
       headerName: "✓",
-      cellEditor: "agCheckboxCellEditor",
-      checkboxSelection: true,
-      editable: true,
-      headerCheckboxSelection: true,
       width: 50,
-      flex: 0,
-      suppressSizeToFit: true,
-      headerComponent: "customHeader",
-      headerComponentParams: {
-        save: handleSave
-      }
+      checkboxSelection: true,
+      headerCheckboxSelection: true,
+      suppressSizeToFit: true
     }, {
       field: "id",
       headerName: "ID",
       width: 80,
-      flex: 0,
       suppressSizeToFit: true
     }, {
       field: "name",
       headerName: "Name",
       flex: 1,
       minWidth: 200,
-      filter: "text",
-      filterParams: {
-        debounceMs: 300,
-        buttons: ["reset"]
-      }
+      filter: "text"
     }]);
     var defaultColDef = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)({
       sortable: true,
@@ -50824,115 +50818,210 @@ var NameFilter = {
         fetchFeatures();
       }, 300);
     };
+
+    // Utility functions
+    var buildFilterObject = function buildFilterObject(filterType, selectedIds, modelName, layerId) {
+      var filterKey = filterType === "include" ? "features_include_ids_".concat(modelName) : "features_exclude_ids_".concat(modelName);
+      return [_defineProperty({}, filterKey, selectedIds), _defineProperty({}, "features_by_layer_".concat(modelName), layerId)];
+    };
+    var buildApiUrl = function buildApiUrl(filterObject) {
+      var searchValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+      var base64Filter = btoa(JSON.stringify(filterObject));
+      var searchParam = searchValue ? "&search=".concat(searchValue) : "";
+      return "/nova-api/ec-tracks?filters=".concat(encodeURIComponent(base64Filter)).concat(searchParam, "&perPage=100&trashed=&page=1$relationType=");
+    };
+    var mapResourceToTrack = function mapResourceToTrack(resource, isSelected) {
+      var _resource$fields$find;
+      return {
+        id: resource.id.value,
+        name: ((_resource$fields$find = resource.fields.find(function (f) {
+          return f.attribute === "name";
+        })) === null || _resource$fields$find === void 0 ? void 0 : _resource$fields$find.value) || "",
+        isSelected: isSelected
+      };
+    };
+    var fetchTracks = /*#__PURE__*/function () {
+      var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(url) {
+        var response;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return fetch(url);
+            case 2:
+              response = _context.sent;
+              if (response.ok) {
+                _context.next = 5;
+                break;
+              }
+              throw new Error("HTTP error! status: ".concat(response.status));
+            case 5:
+              _context.next = 7;
+              return response.json();
+            case 7:
+              return _context.abrupt("return", _context.sent);
+            case 8:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }));
+      return function fetchTracks(_x) {
+        return _ref3.apply(this, arguments);
+      };
+    }();
+    var restoreSelections = function restoreSelections(gridApi, selectedIds) {
+      if (!gridApi) return;
+      gridApi.forEachNode(function (node) {
+        if (selectedIds.includes(node.data.id)) {
+          node.setSelected(true);
+        }
+      });
+    };
     var fetchFeatures = /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+      var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var filterModel,
           _filterModel$name,
           _modelName,
           layerId,
           _selectedIds,
-          filterObject,
-          base64Filter,
-          searchParam,
-          url,
-          response,
-          data,
-          _args = arguments;
-        return _regeneratorRuntime().wrap(function _callee$(_context) {
-          while (1) switch (_context.prev = _context.next) {
+          searchValue,
+          selectedFilters,
+          selectedRowsUrl,
+          selectedResponse,
+          selectedRows,
+          unselectedFilters,
+          unselectedRowsUrl,
+          unselectedResponse,
+          selectableRows,
+          _args2 = arguments;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              filterModel = _args.length > 0 && _args[0] !== undefined ? _args[0] : null;
-              _context.prev = 1;
+              filterModel = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : null;
+              _context2.prev = 1;
               isLoading.value = true;
               _modelName = props.field.modelName;
               layerId = props.field.layerId;
               _selectedIds = props.field.selectedEcFeaturesIds || [];
-              filterObject = [_defineProperty({}, "features_exclude_ids_".concat(_modelName), _selectedIds), _defineProperty({}, "features_by_layer_".concat(_modelName), layerId)];
-              console.log("Filter Object:", filterObject);
-              base64Filter = btoa(JSON.stringify(filterObject));
-              searchParam = filterModel !== null && filterModel !== void 0 && (_filterModel$name = filterModel.name) !== null && _filterModel$name !== void 0 && _filterModel$name.value ? "&search=".concat(encodeURIComponent(filterModel.name.value)) : "";
-              url = "/nova-api/ec-tracks?filters=".concat(encodeURIComponent(base64Filter)).concat(searchParam, "&orderBy=&perPage=100&trashed=&page=1&relationshipType=");
-              _context.next = 13;
-              return fetch(url);
-            case 13:
-              response = _context.sent;
-              _context.next = 16;
-              return response.json();
-            case 16:
-              data = _context.sent;
-              gridData.value = data.resources.map(function (resource) {
-                var _resource$fields$find;
+              searchValue = (filterModel === null || filterModel === void 0 || (_filterModel$name = filterModel.name) === null || _filterModel$name === void 0 ? void 0 : _filterModel$name.filter) || ""; // Prima chiamata: Recupera le righe già selezionate
+              selectedFilters = [_defineProperty({}, "features_include_ids_".concat(_modelName), _selectedIds), _defineProperty({}, "features_by_layer_".concat(_modelName), layerId)];
+              selectedRowsUrl = buildApiUrl(selectedFilters, searchValue);
+              _context2.next = 11;
+              return fetchTracks(selectedRowsUrl);
+            case 11:
+              selectedResponse = _context2.sent;
+              // Mappa le righe selezionate con boolean: true
+              selectedRows = selectedResponse.resources.map(function (resource) {
+                var _resource$fields$find2;
                 return {
                   id: resource.id.value,
-                  name: ((_resource$fields$find = resource.fields.find(function (f) {
+                  name: ((_resource$fields$find2 = resource.fields.find(function (f) {
                     return f.attribute === "name";
-                  })) === null || _resource$fields$find === void 0 ? void 0 : _resource$fields$find.value) || ""
+                  })) === null || _resource$fields$find2 === void 0 ? void 0 : _resource$fields$find2.value) || "",
+                  "boolean": true
                 };
-              });
+              }); // Seconda chiamata: Recupera le righe selezionabili
+              unselectedFilters = [_defineProperty({}, "features_exclude_ids_".concat(_modelName), _selectedIds), _defineProperty({}, "features_by_layer_".concat(_modelName), layerId)];
+              unselectedRowsUrl = buildApiUrl(unselectedFilters, searchValue);
+              _context2.next = 17;
+              return fetchTracks(unselectedRowsUrl);
+            case 17:
+              unselectedResponse = _context2.sent;
+              // Mappa le righe selezionabili (senza boolean)
+              selectableRows = unselectedResponse.resources.map(function (resource) {
+                var _resource$fields$find3;
+                return {
+                  id: resource.id.value,
+                  name: ((_resource$fields$find3 = resource.fields.find(function (f) {
+                    return f.attribute === "name";
+                  })) === null || _resource$fields$find3 === void 0 ? void 0 : _resource$fields$find3.value) || ""
+                };
+              }); // Combina i risultati
+              gridData.value = [].concat(_toConsumableArray(selectedRows), _toConsumableArray(selectableRows));
 
               // Ripristina le selezioni
               setTimeout(function () {
                 var _agGridRef$value;
                 if ((_agGridRef$value = agGridRef.value) !== null && _agGridRef$value !== void 0 && _agGridRef$value.api) {
+                  // Deseleziona tutte le righe
+                  agGridRef.value.api.deselectAll();
+
+                  // Seleziona solo le righe che erano selezionate
                   agGridRef.value.api.forEachNode(function (node) {
-                    if (_selectedIds.value.includes(node.data.id)) {
+                    if (_selectedIds.includes(node.data.id)) {
                       node.setSelected(true);
                     }
                   });
                 }
               }, 200);
-              _context.next = 25;
+              _context2.next = 28;
               break;
-            case 21:
-              _context.prev = 21;
-              _context.t0 = _context["catch"](1);
-              console.error("Error fetching features:", _context.t0);
+            case 23:
+              _context2.prev = 23;
+              _context2.t0 = _context2["catch"](1);
+              console.error("Error fetching features:", _context2.t0);
               gridData.value = [];
-            case 25:
-              _context.prev = 25;
-              isLoading.value = false;
-              return _context.finish(25);
+              Nova.error("Errore durante il caricamento delle features");
             case 28:
+              _context2.prev = 28;
+              isLoading.value = false;
+              return _context2.finish(28);
+            case 31:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
-        }, _callee, null, [[1, 21, 25, 28]]);
+        }, _callee2, null, [[1, 23, 28, 31]]);
       }));
       return function fetchFeatures() {
-        return _ref.apply(this, arguments);
+        return _ref4.apply(this, arguments);
       };
     }();
 
     // Funzione per determinare se una riga è selezionabile
     var isRowSelectable = function isRowSelectable(params) {
-      return true; // Tutte le righe sono selezionabili
+      return true;
     };
     var onGridReady = function onGridReady(params) {
       var gridApi = params.api;
       agGridRef.value = gridApi;
       gridApi.sizeColumnsToFit();
-
-      // Seleziona le righe quando la griglia è pronta
-      gridApi.forEachNode(function (node) {
-        if (selectedIds.value.includes(node.data.id)) {
-          node.setSelected(true);
-        }
-      });
+      restoreSelections(gridApi, selectedIds.value);
     };
     var onSelectionChanged = function onSelectionChanged(params) {
       if (!params.api) return;
-      var selectedNodes = params.api.getSelectedNodes();
-      var newSelectedIds = selectedNodes.map(function (node) {
+
+      // Ottieni lo stato precedente delle selezioni
+      var previousSelectedIds = _toConsumableArray(selectedIds.value);
+
+      // Ottieni le selezioni correnti dalla griglia
+      var currentSelectedNodes = params.api.getSelectedNodes();
+      var currentSelectedIds = currentSelectedNodes.map(function (node) {
         return node.data.id;
       });
-      if (JSON.stringify(selectedIds.value) !== JSON.stringify(newSelectedIds)) {
-        console.log("Selection Changed:", {
-          previousSelection: selectedIds.value,
-          newSelection: newSelectedIds
-        });
-        selectedIds.value = newSelectedIds;
-        props.field.selectedEcFeaturesIds = newSelectedIds;
-      }
+
+      // Trova gli ID che sono stati aggiunti e rimossi in questa selezione
+      var addedIds = currentSelectedIds.filter(function (id) {
+        return !previousSelectedIds.includes(id);
+      });
+      var removedIds = previousSelectedIds.filter(function (id) {
+        return !currentSelectedIds.includes(id);
+      });
+      console.log("Selection Changed:", {
+        previousSelectedIds: previousSelectedIds,
+        currentSelectedIds: currentSelectedIds,
+        addedIds: addedIds,
+        removedIds: removedIds
+      });
+
+      // Aggiorna selectedIds aggiungendo i nuovi ID e rimuovendo quelli deselezionati
+      var newSelectedIds = [].concat(_toConsumableArray(previousSelectedIds.filter(function (id) {
+        return !removedIds.includes(id);
+      })), _toConsumableArray(addedIds));
+
+      // Aggiorna le selezioni
+      selectedIds.value = newSelectedIds;
+      props.field.selectedEcFeaturesIds = newSelectedIds;
     };
 
     // Aggiungi l'handler per il cambio di filtro
@@ -50959,45 +51048,51 @@ var NameFilter = {
       }
     };
     var handleSave = /*#__PURE__*/function () {
-      var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-        var _agGridRef$value3, selectedNodes, selectedFeatureIds, layerId;
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
+      var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var selectedFeatureIds, layerId;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
             case 0:
-              _context2.prev = 0;
+              _context3.prev = 0;
               isSaving.value = true;
-              selectedNodes = ((_agGridRef$value3 = agGridRef.value) === null || _agGridRef$value3 === void 0 || (_agGridRef$value3 = _agGridRef$value3.api) === null || _agGridRef$value3 === void 0 ? void 0 : _agGridRef$value3.getSelectedNodes()) || [];
-              selectedFeatureIds = selectedNodes.map(function (node) {
-                return node.data.id;
-              });
+              selectedFeatureIds = selectedIds.value;
+              console.log("=== LOG SALVATAGGIO ===");
+              console.log("ID da salvare:", selectedFeatureIds);
+              console.log("=========================");
               layerId = props.field.layerId;
-              _context2.next = 7;
+              _context3.next = 9;
               return Nova.request().post("/nova-vendor/layer-features/sync/".concat(layerId), {
                 features: selectedFeatureIds,
                 model: props.field.model
               });
-            case 7:
+            case 9:
               Nova.success("Features salvate con successo");
               props.field.value = selectedFeatureIds;
-              _context2.next = 15;
+              props.field.selectedEcFeaturesIds = selectedFeatureIds;
+
+              // Ricarica i dati della griglia
+              _context3.next = 14;
+              return fetchFeatures();
+            case 14:
+              _context3.next = 20;
               break;
-            case 11:
-              _context2.prev = 11;
-              _context2.t0 = _context2["catch"](0);
-              console.error("Errore durante il salvataggio:", _context2.t0);
+            case 16:
+              _context3.prev = 16;
+              _context3.t0 = _context3["catch"](0);
+              console.error("Errore durante il salvataggio:", _context3.t0);
               Nova.error("Errore durante il salvataggio delle features");
-            case 15:
-              _context2.prev = 15;
+            case 20:
+              _context3.prev = 20;
               isSaving.value = false;
-              return _context2.finish(15);
-            case 18:
+              return _context3.finish(20);
+            case 23:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
-        }, _callee2, null, [[0, 11, 15, 18]]);
+        }, _callee3, null, [[0, 16, 20, 23]]);
       }));
       return function handleSave() {
-        return _ref4.apply(this, arguments);
+        return _ref9.apply(this, arguments);
       };
     }();
     var statusBar = {
@@ -51019,46 +51114,46 @@ var NameFilter = {
     };
 
     // Registra il componente personalizzato
-    if ((_agGridRef$value4 = agGridRef.value) !== null && _agGridRef$value4 !== void 0 && _agGridRef$value4.api) {
+    if ((_agGridRef$value3 = agGridRef.value) !== null && _agGridRef$value3 !== void 0 && _agGridRef$value3.api) {
       agGridRef.value.api.components.registerComponent("customStatsComponent", CustomStatsComponent);
     }
     var handleToggleClick = /*#__PURE__*/function () {
-      var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+      var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
         var newState;
-        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
             case 0:
               if (!(isManual.value && selectedIds.value.length > 0)) {
-                _context3.next = 4;
+                _context4.next = 4;
                 break;
               }
               showConfirmModal.value = true;
-              _context3.next = 13;
+              _context4.next = 13;
               break;
             case 4:
               // Se stiamo passando da automatico a manuale
               newState = !isManual.value;
               isManual.value = newState;
               if (!newState) {
-                _context3.next = 11;
+                _context4.next = 11;
                 break;
               }
-              _context3.next = 9;
+              _context4.next = 9;
               return fetchFeatures();
             case 9:
-              _context3.next = 13;
+              _context4.next = 13;
               break;
             case 11:
-              _context3.next = 13;
+              _context4.next = 13;
               return handleModeChange();
             case 13:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
-        }, _callee3);
+        }, _callee4);
       }));
       return function handleToggleClick() {
-        return _ref5.apply(this, arguments);
+        return _ref10.apply(this, arguments);
       };
     }();
     var closeConfirmModal = function closeConfirmModal() {
@@ -51066,39 +51161,39 @@ var NameFilter = {
       isManual.value = true;
     };
     var confirmModeChange = /*#__PURE__*/function () {
-      var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
-            case 0:
-              showConfirmModal.value = false;
-              isManual.value = false;
-              _context4.next = 4;
-              return handleModeChange();
-            case 4:
-            case "end":
-              return _context4.stop();
-          }
-        }, _callee4);
-      }));
-      return function confirmModeChange() {
-        return _ref6.apply(this, arguments);
-      };
-    }();
-    var handleModeChange = /*#__PURE__*/function () {
-      var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-        var layerId, _model;
+      var _ref11 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
         return _regeneratorRuntime().wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
-              _context5.prev = 0;
+              showConfirmModal.value = false;
+              isManual.value = false;
+              _context5.next = 4;
+              return handleModeChange();
+            case 4:
+            case "end":
+              return _context5.stop();
+          }
+        }, _callee5);
+      }));
+      return function confirmModeChange() {
+        return _ref11.apply(this, arguments);
+      };
+    }();
+    var handleModeChange = /*#__PURE__*/function () {
+      var _ref12 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+        var layerId, _model;
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.prev = 0;
               if (isManual.value) {
-                _context5.next = 11;
+                _context6.next = 11;
                 break;
               }
               isSaving.value = true;
               layerId = props.field.layerId;
               _model = props.field.model;
-              _context5.next = 7;
+              _context6.next = 7;
               return Nova.request().post("/nova-vendor/layer-features/sync/".concat(layerId), {
                 features: [],
                 model: _model
@@ -51109,26 +51204,26 @@ var NameFilter = {
               props.field.selectedEcFeaturesIds = [];
               Nova.success("Modalità automatica attivata");
             case 11:
-              _context5.next = 18;
+              _context6.next = 18;
               break;
             case 13:
-              _context5.prev = 13;
-              _context5.t0 = _context5["catch"](0);
-              console.error("Errore durante il cambio di modalità:", _context5.t0);
+              _context6.prev = 13;
+              _context6.t0 = _context6["catch"](0);
+              console.error("Errore durante il cambio di modalità:", _context6.t0);
               Nova.error("Errore durante il cambio di modalità");
               isManual.value = !isManual.value;
             case 18:
-              _context5.prev = 18;
+              _context6.prev = 18;
               isSaving.value = false;
-              return _context5.finish(18);
+              return _context6.finish(18);
             case 21:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
-        }, _callee5, null, [[0, 13, 18, 21]]);
+        }, _callee6, null, [[0, 13, 18, 21]]);
       }));
       return function handleModeChange() {
-        return _ref7.apply(this, arguments);
+        return _ref12.apply(this, arguments);
       };
     }();
     return {
@@ -51832,13 +51927,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _DetailField_vue_vue_type_template_id_0224618e__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DetailField.vue?vue&type=template&id=0224618e */ "./resources/js/components/DetailField.vue?vue&type=template&id=0224618e");
 /* harmony import */ var _DetailField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DetailField.vue?vue&type=script&lang=js */ "./resources/js/components/DetailField.vue?vue&type=script&lang=js");
-/* harmony import */ var _home_marco_Sites_webmapp_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_html_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,_home_marco_Sites_webmapp_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_DetailField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_DetailField_vue_vue_type_template_id_0224618e__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/DetailField.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_html_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_DetailField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_DetailField_vue_vue_type_template_id_0224618e__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/DetailField.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -51889,13 +51984,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _FormField_vue_vue_type_template_id_c023248a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormField.vue?vue&type=template&id=c023248a */ "./resources/js/components/FormField.vue?vue&type=template&id=c023248a");
 /* harmony import */ var _FormField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormField.vue?vue&type=script&lang=js */ "./resources/js/components/FormField.vue?vue&type=script&lang=js");
-/* harmony import */ var _home_marco_Sites_webmapp_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_html_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,_home_marco_Sites_webmapp_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_FormField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FormField_vue_vue_type_template_id_c023248a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/FormField.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_html_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_FormField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FormField_vue_vue_type_template_id_c023248a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/FormField.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -51946,13 +52041,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _IndexField_vue_vue_type_template_id_9e63f81a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./IndexField.vue?vue&type=template&id=9e63f81a */ "./resources/js/components/IndexField.vue?vue&type=template&id=9e63f81a");
 /* harmony import */ var _IndexField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./IndexField.vue?vue&type=script&lang=js */ "./resources/js/components/IndexField.vue?vue&type=script&lang=js");
-/* harmony import */ var _home_marco_Sites_webmapp_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_html_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,_home_marco_Sites_webmapp_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_IndexField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_IndexField_vue_vue_type_template_id_9e63f81a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/IndexField.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_html_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_IndexField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_IndexField_vue_vue_type_template_id_9e63f81a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/IndexField.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -52004,7 +52099,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _LayerFeature_vue_vue_type_template_id_360b89d0_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LayerFeature.vue?vue&type=template&id=360b89d0&scoped=true */ "./resources/js/components/LayerFeature.vue?vue&type=template&id=360b89d0&scoped=true");
 /* harmony import */ var _LayerFeature_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LayerFeature.vue?vue&type=script&lang=js */ "./resources/js/components/LayerFeature.vue?vue&type=script&lang=js");
 /* harmony import */ var _LayerFeature_vue_vue_type_style_index_0_id_360b89d0_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LayerFeature.vue?vue&type=style&index=0&id=360b89d0&scoped=true&lang=css */ "./resources/js/components/LayerFeature.vue?vue&type=style&index=0&id=360b89d0&scoped=true&lang=css");
-/* harmony import */ var _home_marco_Sites_webmapp_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_html_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -52012,7 +52107,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_home_marco_Sites_webmapp_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_LayerFeature_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_LayerFeature_vue_vue_type_template_id_360b89d0_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-360b89d0"],['__file',"resources/js/components/LayerFeature.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_html_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_LayerFeature_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_LayerFeature_vue_vue_type_template_id_360b89d0_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-360b89d0"],['__file',"resources/js/components/LayerFeature.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -52074,12 +52169,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _PreviewField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PreviewField.vue?vue&type=script&lang=js */ "./resources/js/components/PreviewField.vue?vue&type=script&lang=js");
-/* harmony import */ var _home_marco_Sites_webmapp_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_html_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,_home_marco_Sites_webmapp_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(_PreviewField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"], [['__file',"resources/js/components/PreviewField.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_html_camminiditalia_nova_components_LayerFeatures_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(_PreviewField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"], [['__file',"resources/js/components/PreviewField.vue"]])
 /* hot reload */
 if (false) {}
 
