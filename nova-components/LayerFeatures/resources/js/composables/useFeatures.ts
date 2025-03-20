@@ -88,6 +88,31 @@ export function useFeatures(props: LayerFeatureProps) {
         const isSelected = persistentSelectedIds.value.includes(id);
         return { id, name, boolean: isSelected };
     };
+    const sortBySelection = (api: any): void => {
+        console.log('[Sort] Inizio ordinamento manuale');
+        
+        // Raccogliamo tutti i dati
+        const allData: any[] = [];
+        api.forEachNode((node: any) => {
+            allData.push(node.data);
+        });
+        console.log('[Sort] Dati raccolti:', allData.length, 'righe');
+
+        // Ordiniamo i dati
+        allData.sort((a, b) => {
+            if (a.isSelected === b.isSelected) {
+                // Se entrambi sono selezionati o deselezionati, mantieni l'ordine per ID
+                return a.id - b.id;
+            }
+            // Metti i selezionati in cima
+            return a.isSelected ? -1 : 1;
+        });
+        console.log('[Sort] Dati ordinati');
+
+        // Aggiorniamo la griglia
+        api.setRowData(allData);
+        console.log('[Sort] Griglia aggiornata con i dati ordinati');
+    };
 
     const fetchFeatures = async (filterModel: FilterModel | null = null): Promise<void> => {
         try {
@@ -141,6 +166,9 @@ export function useFeatures(props: LayerFeatureProps) {
         } finally {
             isLoading.value = false;
             updateSelectedNodes();
+            setTimeout(() => {
+                sortBySelection(gridApi.value);
+            }, 100);
         }
     };
 

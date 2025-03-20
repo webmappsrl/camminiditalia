@@ -87979,6 +87979,28 @@ function useFeatures(props) {
       "boolean": isSelected
     };
   };
+  var sortBySelection = function sortBySelection(api) {
+    console.log('[Sort] Inizio ordinamento manuale');
+    // Raccogliamo tutti i dati
+    var allData = [];
+    api.forEachNode(function (node) {
+      allData.push(node.data);
+    });
+    console.log('[Sort] Dati raccolti:', allData.length, 'righe');
+    // Ordiniamo i dati
+    allData.sort(function (a, b) {
+      if (a.isSelected === b.isSelected) {
+        // Se entrambi sono selezionati o deselezionati, mantieni l'ordine per ID
+        return a.id - b.id;
+      }
+      // Metti i selezionati in cima
+      return a.isSelected ? -1 : 1;
+    });
+    console.log('[Sort] Dati ordinati');
+    // Aggiorniamo la griglia
+    api.setRowData(allData);
+    console.log('[Sort] Griglia aggiornata con i dati ordinati');
+  };
   var fetchFeatures = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
       var filterModel,
@@ -88089,12 +88111,15 @@ function useFeatures(props) {
             _context2.prev = 38;
             isLoading.value = false;
             updateSelectedNodes();
+            setTimeout(function () {
+              sortBySelection(gridApi.value);
+            }, 100);
             return _context2.finish(38);
-          case 42:
+          case 43:
           case "end":
             return _context2.stop();
         }
-      }, _callee2, null, [[1, 33, 38, 42]]);
+      }, _callee2, null, [[1, 33, 38, 43]]);
     }));
     return function fetchFeatures() {
       return _ref3.apply(this, arguments);
@@ -88203,10 +88228,34 @@ function useGrid() {
     filterState: null,
     sortState: null
   });
+  // Funzione per ordinare manualmente i dati
+  var sortBySelection = function sortBySelection(api) {
+    console.log('[Sort] Inizio ordinamento manuale');
+    // Raccogliamo tutti i dati
+    var allData = [];
+    api.forEachNode(function (node) {
+      allData.push(node.data);
+    });
+    console.log('[Sort] Dati raccolti:', allData.length, 'righe');
+    // Ordiniamo i dati
+    allData.sort(function (a, b) {
+      if (a.isSelected === b.isSelected) {
+        // Se entrambi sono selezionati o deselezionati, mantieni l'ordine per ID
+        return a.id - b.id;
+      }
+      // Metti i selezionati in cima
+      return a.isSelected ? -1 : 1;
+    });
+    console.log('[Sort] Dati ordinati');
+    // Aggiorniamo la griglia
+    api.setRowData(allData);
+    console.log('[Sort] Griglia aggiornata con i dati ordinati');
+  };
   var columnDefs = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([{
     field: 'boolean',
     headerName: '✓',
     width: 50,
+    sortable: true,
     cellRenderer: function cellRenderer(params) {
       var checked = params.data.isSelected ? 'checked' : '';
       return "\n                    <input type=\"checkbox\" class=\"ag-checkbox-input\" ".concat(checked, " data-id=\"").concat(params.data.id, "\" />\n                ");
@@ -88218,7 +88267,6 @@ function useGrid() {
         var isSelected = checkbox.checked;
         var name = params.node.data.name;
         console.log("[Checkbox] ID: ".concat(id, " - Nome: ").concat(name, " - ").concat(isSelected ? 'Selezionato' : 'Deselezionato'));
-        console.log('[Debug] Context:', params.context);
         // Aggiorniamo lo stato della riga
         var updatedData = _objectSpread(_objectSpread({}, params.node.data), {}, {
           isSelected: isSelected
@@ -88246,6 +88294,8 @@ function useGrid() {
           columns: ['boolean'],
           force: true
         });
+        // Applichiamo l'ordinamento manuale
+        sortBySelection(params.api);
       }
     }
   }, {
@@ -88269,6 +88319,7 @@ function useGrid() {
     floatingFilter: true
   });
   var onGridReady = function onGridReady(params) {
+    console.log('[Grid Ready] Inizializzazione della griglia');
     gridApi.value = params.api;
     if (gridApi.value) {
       gridApi.value.sizeColumnsToFit();
@@ -88300,7 +88351,8 @@ function useGrid() {
     defaultColDef: defaultColDef,
     onGridReady: onGridReady,
     onSelectionChanged: onSelectionChanged,
-    restoreSelections: restoreSelections
+    restoreSelections: restoreSelections,
+    sortBySelection: sortBySelection
   };
 }
 

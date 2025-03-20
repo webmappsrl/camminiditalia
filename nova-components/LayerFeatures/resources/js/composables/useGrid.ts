@@ -1,5 +1,5 @@
 import { ref, Ref } from 'vue';
-import type { GridApi, ColDef, GridOptions } from 'ag-grid-community';
+import type { GridApi, ColDef, GridOptions, RowNode, ColumnApi } from 'ag-grid-community';
 import type { GridState } from '../types/interfaces';
 
 interface ColumnDefinition extends ColDef {
@@ -14,6 +14,7 @@ interface ColumnDefinition extends ColDef {
     filter?: boolean | string;
     cellRenderer?: (params: any) => string;
     onCellClicked?: (params: any) => void;
+    sortable?: boolean;
 }
 
 export function useGrid() {
@@ -24,18 +25,46 @@ export function useGrid() {
         sortState: null,
     });
 
+    // Funzione per ordinare manualmente i dati
+    const sortBySelection = (api: any): void => {
+        console.log('[Sort] Inizio ordinamento manuale');
+        
+        // Raccogliamo tutti i dati
+        const allData: any[] = [];
+        api.forEachNode((node: any) => {
+            allData.push(node.data);
+        });
+        console.log('[Sort] Dati raccolti:', allData.length, 'righe');
+
+        // Ordiniamo i dati
+        allData.sort((a, b) => {
+            if (a.isSelected === b.isSelected) {
+                // Se entrambi sono selezionati o deselezionati, mantieni l'ordine per ID
+                return a.id - b.id;
+            }
+            // Metti i selezionati in cima
+            return a.isSelected ? -1 : 1;
+        });
+        console.log('[Sort] Dati ordinati');
+
+        // Aggiorniamo la griglia
+        api.setRowData(allData);
+        console.log('[Sort] Griglia aggiornata con i dati ordinati');
+    };
+
     const columnDefs = ref<ColumnDefinition[]>([
         {
             field: 'boolean',
             headerName: '✓',
             width: 50,
-            cellRenderer: (params: any) => {
+            sortable: true,
+            cellRenderer: (params: { data: any; api: GridApi; node: any; context: any; event: any }) => {
                 const checked = params.data.isSelected ? 'checked' : '';
                 return `
                     <input type="checkbox" class="ag-checkbox-input" ${checked} data-id="${params.data.id}" />
                 `;
             },
-            onCellClicked: (params: any) => {
+            onCellClicked: (params: { data: any; api: GridApi; node: any; context: any; event: any }) => {
                 const checkbox = params.event.target;
                 if (checkbox.tagName === 'INPUT' && checkbox.type === 'checkbox') {
                     const id = parseInt(checkbox.dataset.id);
@@ -43,7 +72,6 @@ export function useGrid() {
                     const name = params.node.data.name;
                     
                     console.log(`[Checkbox] ID: ${id} - Nome: ${name} - ${isSelected ? 'Selezionato' : 'Deselezionato'}`);
-                    console.log('[Debug] Context:', params.context);
                     
                     // Aggiorniamo lo stato della riga
                     const updatedData = {
@@ -75,6 +103,9 @@ export function useGrid() {
                         columns: ['boolean'],
                         force: true
                     });
+
+                    // Applichiamo l'ordinamento manuale
+                    sortBySelection(params.api);
                 }
             }
         },
@@ -102,7 +133,8 @@ export function useGrid() {
         floatingFilter: true,
     });
 
-    const onGridReady = (params: { api: GridApi }): void => {
+    const onGridReady = (params: { api: any }): void => {
+        console.log('[Grid Ready] Inizializzazione della griglia');
         gridApi.value = params.api;
         if (gridApi.value) {
             gridApi.value.sizeColumnsToFit();
@@ -138,5 +170,6 @@ export function useGrid() {
         onGridReady,
         onSelectionChanged,
         restoreSelections,
+        sortBySelection,
     };
 } 
