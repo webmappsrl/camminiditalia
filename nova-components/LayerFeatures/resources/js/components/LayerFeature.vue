@@ -1,49 +1,10 @@
 <template>
     <div class="layer-feature-wrapper">
-        <!-- Dialog di conferma -->
-        <portal to="modals" v-if="showConfirmModal">
-            <transition name="fade">
-                <div class="fixed inset-0 z-50">
-                    <div class="fixed inset-0 bg-80 opacity-50"></div>
-                    <div
-                        class="relative h-full overflow-hidden p-4 flex items-center justify-center"
-                    >
-                        <div
-                            class="bg-white rounded-lg shadow-lg overflow-hidden w-full max-w-lg"
-                        >
-                            <div class="p-4 border-b border-40 bg-40">
-                                <h3 class="text-90 font-normal text-xl">
-                                    Conferma cambio modalità
-                                </h3>
-                            </div>
-                            <div class="p-4">
-                                <p class="text-80 leading-normal">
-                                    Passando alla modalità automatica perderai
-                                    tutte le selezioni manuali. Sei sicuro di
-                                    voler continuare?
-                                </p>
-                            </div>
-                            <div
-                                class="bg-30 px-6 py-3 flex items-center justify-end"
-                            >
-                                <button
-                                    class="btn btn-link dim cursor-pointer text-80 font-normal text-base ml-auto mr-6"
-                                    @click="closeConfirmModal"
-                                >
-                                    Annulla
-                                </button>
-                                <button
-                                    class="btn btn-default btn-danger"
-                                    @click="confirmModeChange"
-                                >
-                                    Conferma
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </transition>
-        </portal>
+        <ConfirmModal
+            v-if="showConfirmModal"
+            @confirm="confirmModeChange"
+            @close="closeConfirmModal"
+        />
 
         <div class="mb-6">
             <h3 class="text-90 font-normal text-xl">
@@ -52,24 +13,9 @@
         </div>
 
         <div class="flex items-center mb-4">
-            <div class="toggle-switch">
-                <button
-                    type="button"
-                    class="toggle-button"
-                    :class="{ 'toggle-button--active': isManual }"
-                    @click="handleToggleClick"
-                >
-                    <span class="toggle-slider"></span>
-                </button>
-                <span class="label-text ml-2">
-                    {{
-                        isManual ? "Selezione Manuale" : "Selezione Automatica"
-                    }}
-                </span>
-            </div>
+            <ToggleSwitch :is-manual="isManual" @toggle="handleToggleClick" />
         </div>
 
-        <!-- Mostra la griglia solo in modalità manuale -->
         <div v-if="isManual">
             <div class="flex justify-end mb-2">
                 <button
@@ -83,10 +29,10 @@
             </div>
             <ag-grid-vue
                 ref="agGridRef"
-                class="ag-theme-alpine"
+                class="ag-theme-alpine layer-feature-grid"
                 :columnDefs="columnDefs"
                 :defaultColDef="defaultColDef"
-                :rowSelection="rowSelection"
+                :rowSelection="'multiple'"
                 :rowData="gridData"
                 :rowHeight="25"
                 :getRowId="getRowId"
@@ -96,10 +42,9 @@
                 :overlayNoRowsTemplate="noRowsTemplate"
                 :suppressRowClickSelection="true"
                 :suppressCellSelection="true"
-                @grid-ready="onGridReady"
+                @grid-ready="handleGridReady"
                 @first-data-rendered="onFirstDataRendered"
-                @selection-changed="onSelectionChanged"
-                @column-resized="onColumnResized"
+                @selection-changed="handleSelectionChanged"
                 @filter-changed="onFilterChanged"
             />
         </div>
@@ -107,163 +52,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent, ref, watch, onMounted } from "vue";
 import { FormField, HandlesValidationErrors } from "laravel-nova";
 import { AgGridVue } from "ag-grid-vue3";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import { GridApi } from "ag-grid-community";
-import type {
-    LayerFeatureProps,
-    GridData,
-    GridState,
-    CustomHeaderProps,
-    NameFilterProps,
-    CustomStatsProps,
-} from "../types/interfaces";
-
-// Rimuovi la registrazione del modulo che non è più necessaria
-// ModuleRegistry.registerModules([ClientSideRowModelModule]);
-
-// Componente per l'header con bottone salva
-const CustomHeader = defineComponent({
-    props: {
-        params: {
-            type: Object as () => CustomHeaderProps["params"],
-            required: true,
-        },
-    },
-    template: `
-        <div class="ag-header-container">
-            <div class="ag-header-row">
-                <div class="ag-header-cell" ref="eHeaderCell">
-                    <span>{{ params.displayName }}</span>
-                </div>
-            </div>
-            <div class="ag-header-row toolbar">
-                <button
-                    class="btn btn-primary"
-                    @click="save"
-                    :disabled="saving"
-                >
-                    {{ saving ? 'Salvataggio...' : 'Salva' }}
-                </button>
-            </div>
-        </div>
-    `,
-    data() {
-        return {
-            saving: false,
-        };
-    },
-    methods: {
-        async save() {
-            this.saving = true;
-            try {
-                await this.params.save();
-            } finally {
-                this.saving = false;
-            }
-        },
-    },
-});
-
-// Componente custom filter
-const NameFilter = defineComponent({
-    props: {
-        params: {
-            type: Object as () => NameFilterProps["params"],
-            required: true,
-        },
-    },
-    template: `
-        <div class="ag-filter-wrapper" style="display: flex; align-items: center;">
-            <input
-                type="text"
-                v-model="filterText"
-                class="ag-input-field-input ag-text-field-input"
-                placeholder="Cerca..."
-                @input="onFilterChanged"
-                style="flex: 1;"
-            />
-            <button
-                v-if="filterText"
-                @click="resetFilter"
-                class="reset-button"
-                style="margin-left: 4px; padding: 2px 6px; background: #e74444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;"
-            >
-                ✕
-            </button>
-        </div>
-    `,
-    data() {
-        return {
-            filterText: "",
-            timeout: null as number | null,
-        };
-    },
-    methods: {
-        isFilterActive(): boolean {
-            return this.filterText != null && this.filterText !== "";
-        },
-
-        doesFilterPass(): boolean {
-            return true;
-        },
-
-        getModel(): { filter: string } | null {
-            return this.isFilterActive() ? { filter: this.filterText } : null;
-        },
-
-        setModel(model: { filter: string } | null): void {
-            this.filterText = model ? model.filter : "";
-        },
-
-        onFilterChanged(): void {
-            if (this.timeout) {
-                clearTimeout(this.timeout);
-            }
-            this.timeout = window.setTimeout(() => {
-                this.params.filterChangedCallback();
-            }, 300);
-        },
-
-        resetFilter(): void {
-            this.filterText = "";
-            this.params.filterChangedCallback();
-        },
-    },
-});
-
-interface ICustomStats {
-    params: {
-        api: any;
-    };
-}
-
-const CustomStatsComponent = defineComponent({
-    props: {
-        params: {
-            type: Object as () => CustomStatsProps["params"],
-            required: true,
-        },
-    },
-    template: `
-        <div class="ag-status-name-value">
-            <button class="btn btn-primary" @click="save">Salva</button>
-        </div>
-    `,
-    methods: {
-        save() {
-            this.params.api.handleSave();
-        },
-    },
-});
+import type { GridApi, IRowNode } from "ag-grid-community";
+import type { LayerFeatureProps } from "../types/interfaces";
+import { useFeatures } from "../composables/useFeatures";
+import { useGrid } from "../composables/useGrid";
+import ConfirmModal from "./layer-feature/ConfirmModal.vue";
+import ToggleSwitch from "./layer-feature/ToggleSwitch.vue";
+import CustomHeader from "./layer-feature/CustomHeader.vue";
+import NameFilter from "./layer-feature/NameFilter.vue";
+import "../styles/shared.css";
 
 export default defineComponent({
     name: "LayerFeature",
     components: {
         AgGridVue,
+        ConfirmModal,
+        ToggleSwitch,
+        CustomHeader,
+        NameFilter,
     },
     mixins: [FormField, HandlesValidationErrors],
     props: {
@@ -274,488 +83,185 @@ export default defineComponent({
         value: { type: [Array, Object], default: () => [] },
     },
     setup(props: LayerFeatureProps) {
-        const agGridRef = ref<any>(null);
-        const gridApi = ref<any>(null);
-        const isLoading = ref<boolean>(true);
-        const editable = ref<boolean>(props.edit ?? false);
-        const selectedIds = ref<number[]>(
-            props.field?.selectedEcFeaturesIds || []
-        );
-        const model = ref<string | undefined>(props.field?.model);
-        const modelName = ref<string | undefined>(props.field?.modelName);
-        const gridData = ref<GridData[]>([]);
-        const isSaving = ref<boolean>(false);
+        const {
+            isLoading,
+            gridData,
+            persistentSelectedIds,
+            isSaving,
+            fetchFeatures,
+            handleSave,
+            updateSelectedNodes,
+            setGridApi,
+            addToPersistentSelection,
+            removeFromPersistentSelection,
+        } = useFeatures(props);
+
+        const {
+            gridApi,
+            columnDefs,
+            defaultColDef,
+            onGridReady: initGrid,
+        } = useGrid();
+
         const isManual = ref<boolean>(
             (props.field?.selectedEcFeaturesIds?.length ?? 0) > 0
         );
         const showConfirmModal = ref<boolean>(false);
-        const pendingToggle = ref<boolean>(false);
-        const searchQuery = ref<string>("");
-        const searchTimeout = ref<number | null>(null);
+        const modelName = ref<string | undefined>(props.field?.modelName);
 
-        // Templates per gli stati della griglia
+        onMounted(() => {
+            const savedIds = props.field?.selectedEcFeaturesIds;
+            if (Array.isArray(savedIds) && savedIds.length > 0) {
+                persistentSelectedIds.value = savedIds;
+                console.log(
+                    "[Selection] Initialized with saved IDs:",
+                    persistentSelectedIds.value
+                );
+            }
+        });
+
+        const handleGridReady = async (params: {
+            api: GridApi;
+        }): Promise<void> => {
+            initGrid(params);
+            setGridApi(params.api);
+
+            if (isManual.value) {
+                try {
+                    await fetchFeatures();
+                } catch (error) {
+                    Nova.error(
+                        "Errore durante l'inizializzazione della griglia"
+                    );
+                }
+            }
+        };
+
         const loadingTemplate =
             '<span class="ag-overlay-loading-center">Caricamento dati...</span>';
         const noRowsTemplate =
             '<span class="ag-overlay-no-rows-center">Nessun dato disponibile</span>';
 
-        const columnDefs = ref([
-            {
-                field: "boolean",
-                headerName: "✓",
-                width: 50,
-                checkboxSelection: true,
-                headerCheckboxSelection: true,
-                suppressSizeToFit: true,
-                filter: false,
-            },
-            {
-                field: "id",
-                headerName: "ID",
-                width: 80,
-                suppressSizeToFit: true,
-                filter: false,
-            },
-            {
-                field: "name",
-                headerName: "Name",
-                flex: 1,
-                minWidth: 200,
-                filter: NameFilter,
-            },
-        ]);
+        const getRowId = (params: { data: { id: number } }) => params.data.id;
 
-        const defaultColDef = ref({
-            sortable: true,
-            resizable: true,
-            suppressMenu: true,
-            suppressRowClickSelection: true,
-            filter: false,
-            floatingFilter: true,
-        });
-
-        const rowSelection = "multiple";
-
-        // Gestione dello stato della griglia
-        const gridState = ref<GridState>({
-            columnState: null,
-            filterState: null,
-            sortState: null,
-        });
-
-        // Log iniziale dei props
-        console.log("Props iniziali:", {
-            resourceId: props.resourceId,
-            selectedEcFeaturesIds: props.field?.selectedEcFeaturesIds,
-            model: props.field?.model,
-            modelName: props.field?.modelName,
-            edit: props.edit,
-        });
-
-        // Funzione per ottenere l'ID univoco della riga
-        const getRowId = (params: { data: GridData }): number => params.data.id;
-
-        const handleSearch = (): void => {
-            if (searchTimeout.value) {
-                clearTimeout(searchTimeout.value);
-            }
-            searchTimeout.value = window.setTimeout(() => {
-                fetchFeatures();
-            }, 300);
-        };
-
-        // Utility functions
-        const buildFilterObject = (
-            filterType: "include" | "exclude",
-            selectedIds: number[],
-            modelName: string | undefined,
-            layerId: number | undefined
-        ): Array<Record<string, any>> => {
-            const filterKey =
-                filterType === "include"
-                    ? `features_include_ids_${modelName}`
-                    : `features_exclude_ids_${modelName}`;
-
-            return [
-                { [filterKey]: selectedIds },
-                { [`features_by_layer_${modelName}`]: layerId },
-            ];
-        };
-
-        const buildApiUrl = (
-            filterObject: Array<Record<string, any>>,
-            searchValue = ""
-        ): string => {
-            console.log("Costruisco URL con searchValue:", searchValue);
-
-            const base64Filter = btoa(JSON.stringify(filterObject));
-            console.log("Filtri codificati:", base64Filter);
-
-            let url = `/nova-api/ec-tracks?filters=${encodeURIComponent(
-                base64Filter
-            )}&perPage=100&trashed=&page=1$relationType=`;
-
-            // Aggiungiamo il parametro di ricerca come query parameter separato
-            if (searchValue) {
-                url += `&search=${encodeURIComponent(searchValue)}`;
-            }
-
-            console.log("URL finale:", url);
-            return url;
-        };
-
-        const mapResourceToTrack = (
-            resource: any,
-            isSelected: boolean
-        ): GridData => ({
-            id: resource.id.value,
-            name:
-                resource.fields.find((f: any) => f.attribute === "name")
-                    ?.value || "",
-            isSelected,
-        });
-
-        const fetchTracks = async (url: string): Promise<any> => {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return await response.json();
-        };
-
-        const waitForGridApi = (
-            callback: () => void,
-            attempts = 0,
-            maxAttempts = 10
-        ) => {
+        const onFirstDataRendered = () => {
             console.log(
-                `Tentativo ${
-                    attempts + 1
-                } di ${maxAttempts} per accedere all'API della griglia`
+                "onFirstDataRendered - Updating nodes with persistentSelectedIds:",
+                persistentSelectedIds.value
             );
             if (gridApi.value) {
-                console.log("API della griglia trovata, eseguo il callback");
-                callback();
-            } else if (attempts < maxAttempts) {
-                console.log(
-                    "API della griglia non ancora disponibile, riprovo tra 100ms"
-                );
-                setTimeout(
-                    () => waitForGridApi(callback, attempts + 1, maxAttempts),
-                    100
-                );
+                updateSelectedNodes();
             } else {
-                console.log(
-                    "API della griglia non disponibile dopo tutti i tentativi"
-                );
+                console.warn("onFirstDataRendered - GridApi not available");
             }
         };
 
-        const restoreSelections = () => {
-            console.log("=== RIPRISTINO SELEZIONI ===");
-            const selectedIds = props.field.selectedEcFeaturesIds || [];
-            console.log("ID da selezionare:", selectedIds);
-
-            if (gridApi.value) {
-                console.log("Deseleziono tutte le righe");
-                gridApi.value.deselectAll();
-
-                gridApi.value.forEachNode((node: any) => {
-                    if (selectedIds.includes(node.data.id)) {
-                        console.log("Seleziono riga:", node.data.id);
-                        node.setSelected(true);
-                    }
-                });
-                console.log("Ripristino selezioni completato");
-            }
-        };
-
-        const onFirstDataRendered = (params: any): void => {
-            console.log("=== FIRST DATA RENDERED ===");
-            console.log("Dati renderizzati per la prima volta");
-
-            const selectedIds = props.field.selectedEcFeaturesIds || [];
-            console.log("ID da selezionare:", selectedIds);
-
-            if (gridApi.value) {
-                console.log("API disponibile, procedo con la selezione");
-                gridApi.value.deselectAll();
-
-                gridApi.value.forEachNode((node: any) => {
-                    if (selectedIds.includes(node.data.id)) {
-                        console.log("Seleziono riga:", node.data.id);
-                        node.setSelected(true);
-                    }
-                });
-                console.log("Selezione iniziale completata");
-            } else {
-                console.log("API non disponibile durante first-data-rendered");
-            }
-        };
-
-        const onFilterChanged = (event: any): void => {
-            console.log("=== FILTER CHANGED ===");
+        const handleSelectionChanged = (event: any) => {
             if (!gridApi.value) {
-                console.log("API non disponibile durante il filtro");
+                console.log("[Debug] GridApi non disponibile");
                 return;
             }
 
-            const filterModel = gridApi.value.getFilterModel();
-            console.log("Modello filtro:", filterModel);
-
-            // Assicuriamoci che il filtro sia effettivamente cambiato
-            if (filterModel && Object.keys(filterModel).length > 0) {
-                console.log("Applico il filtro");
-                fetchFeatures(filterModel);
-            } else {
-                console.log("Nessun filtro attivo, ricarico tutti i dati");
-                fetchFeatures(null);
-            }
-        };
-
-        const fetchFeatures = async (
-            filterModel: any = null
-        ): Promise<void> => {
-            try {
-                console.log("=== INIZIO FETCH FEATURES ===");
-                console.log("Filter Model:", filterModel);
-                console.log("Selected IDs:", props.field.selectedEcFeaturesIds);
-
-                isLoading.value = true;
-                const modelName = props.field.modelName;
-                const layerId = props.field.layerId;
-                const selectedIds = props.field.selectedEcFeaturesIds || [];
-                const searchValue = filterModel?.name?.filter || "";
-
-                console.log("Valore ricerca:", searchValue);
-
-                // Prima chiamata: Recupera le righe già selezionate
-                const selectedFilters = [
-                    { [`features_include_ids_${modelName}`]: selectedIds },
-                    { [`features_by_layer_${modelName}`]: layerId },
-                ];
-
-                const selectedRowsUrl = buildApiUrl(
-                    selectedFilters,
-                    searchValue
-                );
-                console.log("URL righe selezionate:", selectedRowsUrl);
-                const selectedResponse = await fetchTracks(selectedRowsUrl);
+            // Verifichiamo se l'evento è stato generato da un'azione dell'utente
+            if (!event.source || event.source !== "checkboxSelected") {
                 console.log(
-                    "Righe selezionate ricevute:",
-                    selectedResponse.resources.length
+                    "[Debug] Ignoro evento non generato dall'utente:",
+                    event.source
                 );
-
-                // Mappa le righe selezionate con boolean: true
-                const selectedRows = selectedResponse.resources.map(
-                    (resource: any) => ({
-                        id: resource.id.value,
-                        name:
-                            resource.fields.find(
-                                (f: any) => f.attribute === "name"
-                            )?.value || "",
-                        boolean: true,
-                    })
-                );
-
-                // Seconda chiamata: Recupera le righe selezionabili
-                const unselectedFilters = [
-                    { [`features_exclude_ids_${modelName}`]: selectedIds },
-                    { [`features_by_layer_${modelName}`]: layerId },
-                ];
-
-                const unselectedRowsUrl = buildApiUrl(
-                    unselectedFilters,
-                    searchValue
-                );
-                console.log("URL righe non selezionate:", unselectedRowsUrl);
-                const unselectedResponse = await fetchTracks(unselectedRowsUrl);
-                console.log(
-                    "Righe non selezionate ricevute:",
-                    unselectedResponse.resources.length
-                );
-
-                // Mappa le righe selezionabili (senza boolean)
-                const selectableRows = unselectedResponse.resources.map(
-                    (resource: any) => ({
-                        id: resource.id.value,
-                        name:
-                            resource.fields.find(
-                                (f: any) => f.attribute === "name"
-                            )?.value || "",
-                    })
-                );
-
-                // Combina i risultati
-                gridData.value = [...selectedRows, ...selectableRows];
-                console.log(
-                    "Totale righe nella griglia:",
-                    gridData.value.length
-                );
-            } catch (error) {
-                console.error("Error fetching features:", error);
-                gridData.value = [];
-                Nova.error("Errore durante il caricamento delle features");
-            } finally {
-                isLoading.value = false;
-                console.log("=== FINE FETCH FEATURES ===");
-            }
-        };
-
-        // Funzione per determinare se una riga è selezionabile
-        const isRowSelectable = (params: any): boolean => {
-            return true;
-        };
-
-        const onGridReady = (params: any): void => {
-            console.log("=== GRID READY ===");
-            gridApi.value = params.api;
-            console.log("API griglia inizializzata");
-
-            // Imposta le larghezze delle colonne
-            gridApi.value.sizeColumnsToFit();
-            console.log("Larghezze colonne impostate");
-        };
-
-        const onSelectionChanged = (params: any): void => {
-            console.log("=== SELECTION CHANGED ===");
-            if (!gridApi.value) {
-                console.log("API non disponibile in selection changed");
                 return;
             }
 
-            // Ottieni le selezioni correnti dalla griglia
-            const currentSelectedNodes = gridApi.value.getSelectedNodes();
-            const currentSelectedIds = currentSelectedNodes.map(
-                (node: any) => node.data.id
+            // Otteniamo i nodi attualmente selezionati
+            const selectedNodes = event.api.getSelectedNodes();
+            const selectedIds = selectedNodes.map(
+                (node: IRowNode) => node.data.id
             );
-            console.log("ID selezionati:", currentSelectedIds);
 
-            // Aggiorna le selezioni
-            selectedIds.value = currentSelectedIds;
-            props.field.selectedEcFeaturesIds = currentSelectedIds;
-            console.log("Selezioni aggiornate");
-        };
+            // Troviamo la differenza
+            const addedIds = selectedIds.filter(
+                (id: number) => !persistentSelectedIds.value.includes(id)
+            );
+            const removedIds = persistentSelectedIds.value.filter(
+                (id: number) => !selectedIds.includes(id)
+            );
 
-        // Inizializza i dati
-        fetchFeatures();
+            console.log("[Debug] Selected:", selectedIds);
+            console.log("[Debug] Persistent:", persistentSelectedIds.value);
+            console.log("[Debug] Added:", addedIds);
+            console.log("[Debug] Removed:", removedIds);
 
-        // Aggiorna quando cambia il resourceId
-        watch(
-            () => props.resourceId,
-            () => {
-                fetchFeatures();
-            }
-        );
-
-        // Salva lo stato della griglia quando le colonne vengono ridimensionate
-        const onColumnResized = (params: any): void => {
-            // Temporaneamente disabilitato il salvataggio dello stato delle colonne
-            // per evitare errori con le API di AG Grid
-        };
-
-        const handleSave = async (): Promise<void> => {
-            try {
-                isSaving.value = true;
-                const selectedFeatureIds = selectedIds.value;
-
-                console.log("=== LOG SALVATAGGIO ===");
-                console.log("ID da salvare:", selectedFeatureIds);
-                console.log("=========================");
-
-                const layerId = props.field.layerId;
-                await Nova.request().post(
-                    `/nova-vendor/layer-features/sync/${layerId}`,
-                    {
-                        features: selectedFeatureIds,
-                        model: props.field.model,
-                    }
+            // Deve esserci una sola differenza (o aggiunta o rimozione)
+            if (addedIds.length === 1) {
+                const id = addedIds[0];
+                const node = event.api.getRowNode(id.toString());
+                console.log(
+                    `[Checkbox] Selezionato ID: ${id}, Nome: ${node?.data.name}`
                 );
+                addToPersistentSelection(id);
+            } else if (removedIds.length === 1) {
+                const id = removedIds[0];
+                const node = event.api.getRowNode(id.toString());
+                console.log(
+                    `[Checkbox] Deselezionato ID: ${id}, Nome: ${node?.data.name}`
+                );
+                removeFromPersistentSelection(id);
+            }
 
-                Nova.success("Features salvate con successo");
-                props.field.value = selectedFeatureIds;
-                props.field.selectedEcFeaturesIds = selectedFeatureIds;
+            props.field.selectedEcFeaturesIds = persistentSelectedIds.value;
+        };
 
-                // Ricarica i dati della griglia
-                await fetchFeatures();
+        const onFilterChanged = async () => {
+            if (!gridApi.value) return;
+            try {
+                await fetchFeatures(gridApi.value.getFilterModel());
             } catch (error) {
-                console.error("Errore durante il salvataggio:", error);
-                Nova.error("Errore durante il salvataggio delle features");
-            } finally {
-                isSaving.value = false;
+                Nova.error("Errore durante il filtraggio");
             }
         };
 
-        const statusBar = {
-            statusPanels: [
-                {
-                    statusPanel: "agTotalRowCountComponent",
-                    align: "left",
-                },
-                {
-                    statusPanel: "customStatsComponent",
-                    align: "right",
-                },
-            ],
-        };
-
-        // Registra il componente personalizzato
-        if (gridApi.value) {
-            gridApi.value.components.registerComponent(
-                "customStatsComponent",
-                CustomStatsComponent
-            );
-        }
-
-        const handleToggleClick = async (): Promise<void> => {
-            // Se stiamo passando da manuale ad automatico e ci sono selezioni
-            if (isManual.value && selectedIds.value.length > 0) {
+        const handleToggleClick = async () => {
+            if (isManual.value && persistentSelectedIds.value.length > 0) {
                 showConfirmModal.value = true;
             } else {
-                // Se stiamo passando da automatico a manuale
-                const newState = !isManual.value;
-                isManual.value = newState;
-
-                if (newState) {
-                    // Se stiamo passando a manuale, carichiamo subito i dati
-                    await fetchFeatures();
+                isManual.value = !isManual.value;
+                if (isManual.value) {
+                    try {
+                        await fetchFeatures();
+                    } catch (error) {
+                        console.error("Error during toggle mode:", error);
+                    }
                 } else {
-                    // Se stiamo passando ad automatico
                     await handleModeChange();
                 }
             }
         };
 
-        const closeConfirmModal = (): void => {
+        const closeConfirmModal = () => {
             showConfirmModal.value = false;
             isManual.value = true;
         };
 
-        const confirmModeChange = async (): Promise<void> => {
+        const confirmModeChange = async () => {
             showConfirmModal.value = false;
             isManual.value = false;
             await handleModeChange();
         };
 
-        const handleModeChange = async (): Promise<void> => {
+        const handleModeChange = async () => {
             try {
                 if (!isManual.value) {
                     isSaving.value = true;
                     const layerId = props.field.layerId;
-                    const model = props.field.model;
-
                     await Nova.request().post(
                         `/nova-vendor/layer-features/sync/${layerId}`,
                         {
                             features: [],
-                            model,
+                            model: props.field.model,
                         }
                     );
-
-                    selectedIds.value = [];
+                    persistentSelectedIds.value = [];
                     props.field.value = [];
                     props.field.selectedEcFeaturesIds = [];
-
                     Nova.success("Modalità automatica attivata");
                 }
             } catch (error) {
@@ -767,33 +273,40 @@ export default defineComponent({
             }
         };
 
+        watch(
+            () => props.resourceId,
+            async (newId, oldId) => {
+                console.log("ResourceId changed:", { newId, oldId });
+                if (isManual.value) {
+                    try {
+                        await fetchFeatures();
+                    } catch (error) {
+                        console.error("Error during resourceId change:", error);
+                    }
+                }
+            }
+        );
+
         return {
-            agGridRef,
-            gridApi,
-            columnDefs,
-            defaultColDef,
-            rowSelection,
-            gridData,
-            onGridReady,
-            onSelectionChanged,
-            onColumnResized,
-            loadingTemplate,
-            noRowsTemplate,
             isLoading,
-            isRowSelectable,
-            getRowId,
-            handleSave,
+            gridData,
             isSaving,
-            statusBar,
-            model,
-            modelName,
             isManual,
             showConfirmModal,
+            modelName,
+            columnDefs,
+            defaultColDef,
+            loadingTemplate,
+            noRowsTemplate,
+            getRowId,
+            handleSave,
+            handleGridReady,
+            onFirstDataRendered,
+            handleSelectionChanged,
+            onFilterChanged,
             handleToggleClick,
             closeConfirmModal,
             confirmModeChange,
-            onFilterChanged,
-            onFirstDataRendered,
         };
     },
 });
@@ -803,6 +316,11 @@ export default defineComponent({
 .layer-feature-wrapper {
     position: relative;
     width: 100%;
+}
+
+.layer-feature-grid {
+    width: 100%;
+    height: 500px;
 }
 
 .ag-theme-alpine {

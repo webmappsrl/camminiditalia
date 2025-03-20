@@ -58973,66 +58973,6 @@ ModuleRegistry.registerModules(AllCommunityModules);
 
 /***/ }),
 
-/***/ "./node_modules/ag-grid-community/styles/ag-grid.css":
-/*!***********************************************************!*\
-  !*** ./node_modules/ag-grid-community/styles/ag-grid.css ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
-/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _css_loader_dist_cjs_js_clonedRuleSet_11_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_ag_grid_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!../../postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./ag-grid.css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/ag-grid-community/styles/ag-grid.css");
-
-            
-
-var options = {};
-
-options.insert = "head";
-options.singleton = false;
-
-var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_ag_grid_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_ag_grid_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
-
-/***/ }),
-
-/***/ "./node_modules/ag-grid-community/styles/ag-theme-alpine.css":
-/*!*******************************************************************!*\
-  !*** ./node_modules/ag-grid-community/styles/ag-theme-alpine.css ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
-/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _css_loader_dist_cjs_js_clonedRuleSet_11_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_ag_theme_alpine_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!../../postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./ag-theme-alpine.css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/ag-grid-community/styles/ag-theme-alpine.css");
-
-            
-
-var options = {};
-
-options.insert = "head";
-options.singleton = false;
-
-var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_ag_theme_alpine_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_ag_theme_alpine_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
-
-/***/ }),
-
 /***/ "./node_modules/ag-grid-vue3/lib/AgGridVue.js":
 /*!****************************************************!*\
   !*** ./node_modules/ag-grid-vue3/lib/AgGridVue.js ***!
@@ -59564,18 +59504,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var laravel_nova__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! laravel-nova */ "./node_modules/laravel-nova/dist/index.js");
 /* harmony import */ var laravel_nova__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(laravel_nova__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var ag_grid_vue3__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ag-grid-vue3 */ "./node_modules/ag-grid-vue3/lib/AgGridVue.js");
-/* harmony import */ var ag_grid_community_styles_ag_grid_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ag-grid-community/styles/ag-grid.css */ "./node_modules/ag-grid-community/styles/ag-grid.css");
-/* harmony import */ var ag_grid_community_styles_ag_theme_alpine_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ag-grid-community/styles/ag-theme-alpine.css */ "./node_modules/ag-grid-community/styles/ag-theme-alpine.css");
+/* harmony import */ var _composables_useFeatures__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../composables/useFeatures */ "./resources/js/composables/useFeatures.ts");
+/* harmony import */ var _composables_useGrid__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../composables/useGrid */ "./resources/js/composables/useGrid.ts");
+/* harmony import */ var _layer_feature_ConfirmModal_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./layer-feature/ConfirmModal.vue */ "./resources/js/components/layer-feature/ConfirmModal.vue");
+/* harmony import */ var _layer_feature_ToggleSwitch_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./layer-feature/ToggleSwitch.vue */ "./resources/js/components/layer-feature/ToggleSwitch.vue");
+/* harmony import */ var _layer_feature_CustomHeader_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./layer-feature/CustomHeader.vue */ "./resources/js/components/layer-feature/CustomHeader.vue");
+/* harmony import */ var _layer_feature_NameFilter_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./layer-feature/NameFilter.vue */ "./resources/js/components/layer-feature/NameFilter.vue");
+/* harmony import */ var _styles_shared_css__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../styles/shared.css */ "./resources/js/styles/shared.css");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
-function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
@@ -59584,17 +59520,410 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 
-// Rimuovi la registrazione del modulo che non è più necessaria
-// ModuleRegistry.registerModules([ClientSideRowModelModule]);
-// Componente per l'header con bottone salva
-var CustomHeader = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+  name: "LayerFeature",
+  components: {
+    AgGridVue: ag_grid_vue3__WEBPACK_IMPORTED_MODULE_2__.AgGridVue,
+    ConfirmModal: _layer_feature_ConfirmModal_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+    ToggleSwitch: _layer_feature_ToggleSwitch_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+    CustomHeader: _layer_feature_CustomHeader_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+    NameFilter: _layer_feature_NameFilter_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
+  },
+  mixins: [laravel_nova__WEBPACK_IMPORTED_MODULE_1__.FormField, laravel_nova__WEBPACK_IMPORTED_MODULE_1__.HandlesValidationErrors],
+  props: {
+    resourceName: {
+      type: String,
+      required: true
+    },
+    resourceId: {
+      type: [Number, String],
+      required: true
+    },
+    field: {
+      type: Object,
+      required: true
+    },
+    edit: {
+      type: Boolean,
+      "default": true
+    },
+    value: {
+      type: [Array, Object],
+      "default": function _default() {
+        return [];
+      }
+    }
+  },
+  setup: function setup(props) {
+    var _props$field$selected, _props$field, _props$field2;
+    var _useFeatures = (0,_composables_useFeatures__WEBPACK_IMPORTED_MODULE_3__.useFeatures)(props),
+      isLoading = _useFeatures.isLoading,
+      gridData = _useFeatures.gridData,
+      persistentSelectedIds = _useFeatures.persistentSelectedIds,
+      isSaving = _useFeatures.isSaving,
+      fetchFeatures = _useFeatures.fetchFeatures,
+      handleSave = _useFeatures.handleSave,
+      updateSelectedNodes = _useFeatures.updateSelectedNodes,
+      setGridApi = _useFeatures.setGridApi,
+      addToPersistentSelection = _useFeatures.addToPersistentSelection,
+      removeFromPersistentSelection = _useFeatures.removeFromPersistentSelection;
+    var _useGrid = (0,_composables_useGrid__WEBPACK_IMPORTED_MODULE_4__.useGrid)(),
+      gridApi = _useGrid.gridApi,
+      columnDefs = _useGrid.columnDefs,
+      defaultColDef = _useGrid.defaultColDef,
+      initGrid = _useGrid.onGridReady;
+    var isManual = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(((_props$field$selected = (_props$field = props.field) === null || _props$field === void 0 || (_props$field = _props$field.selectedEcFeaturesIds) === null || _props$field === void 0 ? void 0 : _props$field.length) !== null && _props$field$selected !== void 0 ? _props$field$selected : 0) > 0);
+    var showConfirmModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
+    var modelName = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)((_props$field2 = props.field) === null || _props$field2 === void 0 ? void 0 : _props$field2.modelName);
+    (0,vue__WEBPACK_IMPORTED_MODULE_0__.onMounted)(function () {
+      var _props$field3;
+      var savedIds = (_props$field3 = props.field) === null || _props$field3 === void 0 ? void 0 : _props$field3.selectedEcFeaturesIds;
+      if (Array.isArray(savedIds) && savedIds.length > 0) {
+        persistentSelectedIds.value = savedIds;
+        console.log("[Selection] Initialized with saved IDs:", persistentSelectedIds.value);
+      }
+    });
+    var handleGridReady = /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(params) {
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              initGrid(params);
+              setGridApi(params.api);
+              if (!isManual.value) {
+                _context.next = 11;
+                break;
+              }
+              _context.prev = 3;
+              _context.next = 6;
+              return fetchFeatures();
+            case 6:
+              _context.next = 11;
+              break;
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context["catch"](3);
+              Nova.error("Errore durante l'inizializzazione della griglia");
+            case 11:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, null, [[3, 8]]);
+      }));
+      return function handleGridReady(_x) {
+        return _ref.apply(this, arguments);
+      };
+    }();
+    var loadingTemplate = '<span class="ag-overlay-loading-center">Caricamento dati...</span>';
+    var noRowsTemplate = '<span class="ag-overlay-no-rows-center">Nessun dato disponibile</span>';
+    var getRowId = function getRowId(params) {
+      return params.data.id;
+    };
+    var onFirstDataRendered = function onFirstDataRendered() {
+      console.log("onFirstDataRendered - Updating nodes with persistentSelectedIds:", persistentSelectedIds.value);
+      if (gridApi.value) {
+        updateSelectedNodes();
+      } else {
+        console.warn("onFirstDataRendered - GridApi not available");
+      }
+    };
+    var handleSelectionChanged = function handleSelectionChanged(event) {
+      if (!gridApi.value) {
+        console.log("[Debug] GridApi non disponibile");
+        return;
+      }
+      // Verifichiamo se l'evento è stato generato da un'azione dell'utente
+      if (!event.source || event.source !== "checkboxSelected") {
+        console.log("[Debug] Ignoro evento non generato dall'utente:", event.source);
+        return;
+      }
+      // Otteniamo i nodi attualmente selezionati
+      var selectedNodes = event.api.getSelectedNodes();
+      var selectedIds = selectedNodes.map(function (node) {
+        return node.data.id;
+      });
+      // Troviamo la differenza
+      var addedIds = selectedIds.filter(function (id) {
+        return !persistentSelectedIds.value.includes(id);
+      });
+      var removedIds = persistentSelectedIds.value.filter(function (id) {
+        return !selectedIds.includes(id);
+      });
+      console.log("[Debug] Selected:", selectedIds);
+      console.log("[Debug] Persistent:", persistentSelectedIds.value);
+      console.log("[Debug] Added:", addedIds);
+      console.log("[Debug] Removed:", removedIds);
+      // Deve esserci una sola differenza (o aggiunta o rimozione)
+      if (addedIds.length === 1) {
+        var id = addedIds[0];
+        var node = event.api.getRowNode(id.toString());
+        console.log("[Checkbox] Selezionato ID: ".concat(id, ", Nome: ").concat(node === null || node === void 0 ? void 0 : node.data.name));
+        addToPersistentSelection(id);
+      } else if (removedIds.length === 1) {
+        var _id = removedIds[0];
+        var _node = event.api.getRowNode(_id.toString());
+        console.log("[Checkbox] Deselezionato ID: ".concat(_id, ", Nome: ").concat(_node === null || _node === void 0 ? void 0 : _node.data.name));
+        removeFromPersistentSelection(_id);
+      }
+      props.field.selectedEcFeaturesIds = persistentSelectedIds.value;
+    };
+    var onFilterChanged = /*#__PURE__*/function () {
+      var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              if (gridApi.value) {
+                _context2.next = 2;
+                break;
+              }
+              return _context2.abrupt("return");
+            case 2:
+              _context2.prev = 2;
+              _context2.next = 5;
+              return fetchFeatures(gridApi.value.getFilterModel());
+            case 5:
+              _context2.next = 10;
+              break;
+            case 7:
+              _context2.prev = 7;
+              _context2.t0 = _context2["catch"](2);
+              Nova.error("Errore durante il filtraggio");
+            case 10:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, null, [[2, 7]]);
+      }));
+      return function onFilterChanged() {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+    var handleToggleClick = /*#__PURE__*/function () {
+      var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              if (!(isManual.value && persistentSelectedIds.value.length > 0)) {
+                _context3.next = 4;
+                break;
+              }
+              showConfirmModal.value = true;
+              _context3.next = 18;
+              break;
+            case 4:
+              isManual.value = !isManual.value;
+              if (!isManual.value) {
+                _context3.next = 16;
+                break;
+              }
+              _context3.prev = 6;
+              _context3.next = 9;
+              return fetchFeatures();
+            case 9:
+              _context3.next = 14;
+              break;
+            case 11:
+              _context3.prev = 11;
+              _context3.t0 = _context3["catch"](6);
+              console.error("Error during toggle mode:", _context3.t0);
+            case 14:
+              _context3.next = 18;
+              break;
+            case 16:
+              _context3.next = 18;
+              return handleModeChange();
+            case 18:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3, null, [[6, 11]]);
+      }));
+      return function handleToggleClick() {
+        return _ref3.apply(this, arguments);
+      };
+    }();
+    var closeConfirmModal = function closeConfirmModal() {
+      showConfirmModal.value = false;
+      isManual.value = true;
+    };
+    var confirmModeChange = /*#__PURE__*/function () {
+      var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
+            case 0:
+              showConfirmModal.value = false;
+              isManual.value = false;
+              _context4.next = 4;
+              return handleModeChange();
+            case 4:
+            case "end":
+              return _context4.stop();
+          }
+        }, _callee4);
+      }));
+      return function confirmModeChange() {
+        return _ref4.apply(this, arguments);
+      };
+    }();
+    var handleModeChange = /*#__PURE__*/function () {
+      var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+        var layerId;
+        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.prev = 0;
+              if (isManual.value) {
+                _context5.next = 10;
+                break;
+              }
+              isSaving.value = true;
+              layerId = props.field.layerId;
+              _context5.next = 6;
+              return Nova.request().post("/nova-vendor/layer-features/sync/".concat(layerId), {
+                features: [],
+                model: props.field.model
+              });
+            case 6:
+              persistentSelectedIds.value = [];
+              props.field.value = [];
+              props.field.selectedEcFeaturesIds = [];
+              Nova.success("Modalità automatica attivata");
+            case 10:
+              _context5.next = 17;
+              break;
+            case 12:
+              _context5.prev = 12;
+              _context5.t0 = _context5["catch"](0);
+              console.error("Errore durante il cambio di modalità:", _context5.t0);
+              Nova.error("Errore durante il cambio di modalità");
+              isManual.value = !isManual.value;
+            case 17:
+              _context5.prev = 17;
+              isSaving.value = false;
+              return _context5.finish(17);
+            case 20:
+            case "end":
+              return _context5.stop();
+          }
+        }, _callee5, null, [[0, 12, 17, 20]]);
+      }));
+      return function handleModeChange() {
+        return _ref5.apply(this, arguments);
+      };
+    }();
+    (0,vue__WEBPACK_IMPORTED_MODULE_0__.watch)(function () {
+      return props.resourceId;
+    }, /*#__PURE__*/function () {
+      var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(newId, oldId) {
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
+            case 0:
+              console.log("ResourceId changed:", {
+                newId: newId,
+                oldId: oldId
+              });
+              if (!isManual.value) {
+                _context6.next = 10;
+                break;
+              }
+              _context6.prev = 2;
+              _context6.next = 5;
+              return fetchFeatures();
+            case 5:
+              _context6.next = 10;
+              break;
+            case 7:
+              _context6.prev = 7;
+              _context6.t0 = _context6["catch"](2);
+              console.error("Error during resourceId change:", _context6.t0);
+            case 10:
+            case "end":
+              return _context6.stop();
+          }
+        }, _callee6, null, [[2, 7]]);
+      }));
+      return function (_x2, _x3) {
+        return _ref6.apply(this, arguments);
+      };
+    }());
+    return {
+      isLoading: isLoading,
+      gridData: gridData,
+      isSaving: isSaving,
+      isManual: isManual,
+      showConfirmModal: showConfirmModal,
+      modelName: modelName,
+      columnDefs: columnDefs,
+      defaultColDef: defaultColDef,
+      loadingTemplate: loadingTemplate,
+      noRowsTemplate: noRowsTemplate,
+      getRowId: getRowId,
+      handleSave: handleSave,
+      handleGridReady: handleGridReady,
+      onFirstDataRendered: onFirstDataRendered,
+      handleSelectionChanged: handleSelectionChanged,
+      onFilterChanged: onFilterChanged,
+      handleToggleClick: handleToggleClick,
+      closeConfirmModal: closeConfirmModal,
+      confirmModeChange: confirmModeChange
+    };
+  }
+}));
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ConfirmModal.vue?vue&type=script&lang=ts":
+/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ConfirmModal.vue?vue&type=script&lang=ts ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+  name: "ConfirmModal",
+  emits: ["confirm", "close"]
+}));
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/CustomHeader.vue?vue&type=script&lang=ts":
+/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/CustomHeader.vue?vue&type=script&lang=ts ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+  name: "CustomHeader",
   props: {
     params: {
       type: Object,
       required: true
     }
   },
-  template: "\n        <div class=\"ag-header-container\">\n            <div class=\"ag-header-row\">\n                <div class=\"ag-header-cell\" ref=\"eHeaderCell\">\n                    <span>{{ params.displayName }}</span>\n                </div>\n            </div>\n            <div class=\"ag-header-row toolbar\">\n                <button\n                    class=\"btn btn-primary\"\n                    @click=\"save\"\n                    :disabled=\"saving\"\n                >\n                    {{ saving ? 'Salvataggio...' : 'Salva' }}\n                </button>\n            </div>\n        </div>\n    ",
   data: function data() {
     return {
       saving: false
@@ -59623,16 +59952,32 @@ var CustomHeader = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
       }))();
     }
   }
-});
-// Componente custom filter
-var NameFilter = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+}));
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/NameFilter.vue?vue&type=script&lang=ts":
+/*!*********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/NameFilter.vue?vue&type=script&lang=ts ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+  name: "NameFilter",
   props: {
     params: {
       type: Object,
       required: true
     }
   },
-  template: "\n        <div class=\"ag-filter-wrapper\" style=\"display: flex; align-items: center;\">\n            <input\n                type=\"text\"\n                v-model=\"filterText\"\n                class=\"ag-input-field-input ag-text-field-input\"\n                placeholder=\"Cerca...\"\n                @input=\"onFilterChanged\"\n                style=\"flex: 1;\"\n            />\n            <button\n                v-if=\"filterText\"\n                @click=\"resetFilter\"\n                class=\"reset-button\"\n                style=\"margin-left: 4px; padding: 2px 6px; background: #e74444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;\"\n            >\n                \u2715\n            </button>\n        </div>\n    ",
   data: function data() {
     return {
       filterText: "",
@@ -59655,12 +60000,12 @@ var NameFilter = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
       this.filterText = model ? model.filter : "";
     },
     onFilterChanged: function onFilterChanged() {
-      var _this2 = this;
+      var _this = this;
       if (this.timeout) {
         clearTimeout(this.timeout);
       }
       this.timeout = window.setTimeout(function () {
-        _this2.params.filterChangedCallback();
+        _this.params.filterChangedCallback();
       }, 300);
     },
     resetFilter: function resetFilter() {
@@ -59668,586 +60013,33 @@ var NameFilter = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
       this.params.filterChangedCallback();
     }
   }
-});
-var CustomStatsComponent = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
-  props: {
-    params: {
-      type: Object,
-      required: true
-    }
-  },
-  template: "\n        <div class=\"ag-status-name-value\">\n            <button class=\"btn btn-primary\" @click=\"save\">Salva</button>\n        </div>\n    ",
-  methods: {
-    save: function save() {
-      this.params.api.handleSave();
-    }
-  }
-});
+}));
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=script&lang=ts":
+/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=script&lang=ts ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
-  name: "LayerFeature",
-  components: {
-    AgGridVue: ag_grid_vue3__WEBPACK_IMPORTED_MODULE_2__.AgGridVue
-  },
-  mixins: [laravel_nova__WEBPACK_IMPORTED_MODULE_1__.FormField, laravel_nova__WEBPACK_IMPORTED_MODULE_1__.HandlesValidationErrors],
+  name: "ToggleSwitch",
   props: {
-    resourceName: {
-      type: String,
-      required: true
-    },
-    resourceId: {
-      type: [Number, String],
-      required: true
-    },
-    field: {
-      type: Object,
-      required: true
-    },
-    edit: {
+    isManual: {
       type: Boolean,
-      "default": true
-    },
-    value: {
-      type: [Array, Object],
-      "default": function _default() {
-        return [];
-      }
+      required: true
     }
   },
-  setup: function setup(props) {
-    var _props$edit, _props$field, _props$field2, _props$field3, _props$field$selected, _props$field4, _props$field5, _props$field6, _props$field7;
-    var agGridRef = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
-    var gridApi = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
-    var isLoading = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(true);
-    var editable = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)((_props$edit = props.edit) !== null && _props$edit !== void 0 ? _props$edit : false);
-    var selectedIds = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(((_props$field = props.field) === null || _props$field === void 0 ? void 0 : _props$field.selectedEcFeaturesIds) || []);
-    var model = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)((_props$field2 = props.field) === null || _props$field2 === void 0 ? void 0 : _props$field2.model);
-    var modelName = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)((_props$field3 = props.field) === null || _props$field3 === void 0 ? void 0 : _props$field3.modelName);
-    var gridData = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([]);
-    var isSaving = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
-    var isManual = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(((_props$field$selected = (_props$field4 = props.field) === null || _props$field4 === void 0 || (_props$field4 = _props$field4.selectedEcFeaturesIds) === null || _props$field4 === void 0 ? void 0 : _props$field4.length) !== null && _props$field$selected !== void 0 ? _props$field$selected : 0) > 0);
-    var showConfirmModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
-    var pendingToggle = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
-    var searchQuery = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)("");
-    var searchTimeout = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
-    // Templates per gli stati della griglia
-    var loadingTemplate = '<span class="ag-overlay-loading-center">Caricamento dati...</span>';
-    var noRowsTemplate = '<span class="ag-overlay-no-rows-center">Nessun dato disponibile</span>';
-    var columnDefs = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([{
-      field: "boolean",
-      headerName: "✓",
-      width: 50,
-      checkboxSelection: true,
-      headerCheckboxSelection: true,
-      suppressSizeToFit: true,
-      filter: false
-    }, {
-      field: "id",
-      headerName: "ID",
-      width: 80,
-      suppressSizeToFit: true,
-      filter: false
-    }, {
-      field: "name",
-      headerName: "Name",
-      flex: 1,
-      minWidth: 200,
-      filter: NameFilter
-    }]);
-    var defaultColDef = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)({
-      sortable: true,
-      resizable: true,
-      suppressMenu: true,
-      suppressRowClickSelection: true,
-      filter: false,
-      floatingFilter: true
-    });
-    var rowSelection = "multiple";
-    // Gestione dello stato della griglia
-    var gridState = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)({
-      columnState: null,
-      filterState: null,
-      sortState: null
-    });
-    // Log iniziale dei props
-    console.log("Props iniziali:", {
-      resourceId: props.resourceId,
-      selectedEcFeaturesIds: (_props$field5 = props.field) === null || _props$field5 === void 0 ? void 0 : _props$field5.selectedEcFeaturesIds,
-      model: (_props$field6 = props.field) === null || _props$field6 === void 0 ? void 0 : _props$field6.model,
-      modelName: (_props$field7 = props.field) === null || _props$field7 === void 0 ? void 0 : _props$field7.modelName,
-      edit: props.edit
-    });
-    // Funzione per ottenere l'ID univoco della riga
-    var getRowId = function getRowId(params) {
-      return params.data.id;
-    };
-    var handleSearch = function handleSearch() {
-      if (searchTimeout.value) {
-        clearTimeout(searchTimeout.value);
-      }
-      searchTimeout.value = window.setTimeout(function () {
-        fetchFeatures();
-      }, 300);
-    };
-    // Utility functions
-    var buildFilterObject = function buildFilterObject(filterType, selectedIds, modelName, layerId) {
-      var filterKey = filterType === "include" ? "features_include_ids_".concat(modelName) : "features_exclude_ids_".concat(modelName);
-      return [_defineProperty({}, filterKey, selectedIds), _defineProperty({}, "features_by_layer_".concat(modelName), layerId)];
-    };
-    var buildApiUrl = function buildApiUrl(filterObject) {
-      var searchValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
-      console.log("Costruisco URL con searchValue:", searchValue);
-      var base64Filter = btoa(JSON.stringify(filterObject));
-      console.log("Filtri codificati:", base64Filter);
-      var url = "/nova-api/ec-tracks?filters=".concat(encodeURIComponent(base64Filter), "&perPage=100&trashed=&page=1$relationType=");
-      // Aggiungiamo il parametro di ricerca come query parameter separato
-      if (searchValue) {
-        url += "&search=".concat(encodeURIComponent(searchValue));
-      }
-      console.log("URL finale:", url);
-      return url;
-    };
-    var mapResourceToTrack = function mapResourceToTrack(resource, isSelected) {
-      var _resource$fields$find;
-      return {
-        id: resource.id.value,
-        name: ((_resource$fields$find = resource.fields.find(function (f) {
-          return f.attribute === "name";
-        })) === null || _resource$fields$find === void 0 ? void 0 : _resource$fields$find.value) || "",
-        isSelected: isSelected
-      };
-    };
-    var fetchTracks = /*#__PURE__*/function () {
-      var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(url) {
-        var response;
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.next = 2;
-              return fetch(url);
-            case 2:
-              response = _context2.sent;
-              if (response.ok) {
-                _context2.next = 5;
-                break;
-              }
-              throw new Error("HTTP error! status: ".concat(response.status));
-            case 5:
-              _context2.next = 7;
-              return response.json();
-            case 7:
-              return _context2.abrupt("return", _context2.sent);
-            case 8:
-            case "end":
-              return _context2.stop();
-          }
-        }, _callee2);
-      }));
-      return function fetchTracks(_x) {
-        return _ref3.apply(this, arguments);
-      };
-    }();
-    var _waitForGridApi = function waitForGridApi(callback) {
-      var attempts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      var maxAttempts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
-      console.log("Tentativo ".concat(attempts + 1, " di ").concat(maxAttempts, " per accedere all'API della griglia"));
-      if (gridApi.value) {
-        console.log("API della griglia trovata, eseguo il callback");
-        callback();
-      } else if (attempts < maxAttempts) {
-        console.log("API della griglia non ancora disponibile, riprovo tra 100ms");
-        setTimeout(function () {
-          return _waitForGridApi(callback, attempts + 1, maxAttempts);
-        }, 100);
-      } else {
-        console.log("API della griglia non disponibile dopo tutti i tentativi");
-      }
-    };
-    var restoreSelections = function restoreSelections() {
-      console.log("=== RIPRISTINO SELEZIONI ===");
-      var selectedIds = props.field.selectedEcFeaturesIds || [];
-      console.log("ID da selezionare:", selectedIds);
-      if (gridApi.value) {
-        console.log("Deseleziono tutte le righe");
-        gridApi.value.deselectAll();
-        gridApi.value.forEachNode(function (node) {
-          if (selectedIds.includes(node.data.id)) {
-            console.log("Seleziono riga:", node.data.id);
-            node.setSelected(true);
-          }
-        });
-        console.log("Ripristino selezioni completato");
-      }
-    };
-    var onFirstDataRendered = function onFirstDataRendered(params) {
-      console.log("=== FIRST DATA RENDERED ===");
-      console.log("Dati renderizzati per la prima volta");
-      var selectedIds = props.field.selectedEcFeaturesIds || [];
-      console.log("ID da selezionare:", selectedIds);
-      if (gridApi.value) {
-        console.log("API disponibile, procedo con la selezione");
-        gridApi.value.deselectAll();
-        gridApi.value.forEachNode(function (node) {
-          if (selectedIds.includes(node.data.id)) {
-            console.log("Seleziono riga:", node.data.id);
-            node.setSelected(true);
-          }
-        });
-        console.log("Selezione iniziale completata");
-      } else {
-        console.log("API non disponibile durante first-data-rendered");
-      }
-    };
-    var onFilterChanged = function onFilterChanged(event) {
-      console.log("=== FILTER CHANGED ===");
-      if (!gridApi.value) {
-        console.log("API non disponibile durante il filtro");
-        return;
-      }
-      var filterModel = gridApi.value.getFilterModel();
-      console.log("Modello filtro:", filterModel);
-      // Assicuriamoci che il filtro sia effettivamente cambiato
-      if (filterModel && Object.keys(filterModel).length > 0) {
-        console.log("Applico il filtro");
-        fetchFeatures(filterModel);
-      } else {
-        console.log("Nessun filtro attivo, ricarico tutti i dati");
-        fetchFeatures(null);
-      }
-    };
-    var fetchFeatures = /*#__PURE__*/function () {
-      var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-        var filterModel,
-          _filterModel$name,
-          _modelName,
-          layerId,
-          _selectedIds,
-          searchValue,
-          selectedFilters,
-          selectedRowsUrl,
-          selectedResponse,
-          selectedRows,
-          unselectedFilters,
-          unselectedRowsUrl,
-          unselectedResponse,
-          selectableRows,
-          _args3 = arguments;
-        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
-            case 0:
-              filterModel = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : null;
-              _context3.prev = 1;
-              console.log("=== INIZIO FETCH FEATURES ===");
-              console.log("Filter Model:", filterModel);
-              console.log("Selected IDs:", props.field.selectedEcFeaturesIds);
-              isLoading.value = true;
-              _modelName = props.field.modelName;
-              layerId = props.field.layerId;
-              _selectedIds = props.field.selectedEcFeaturesIds || [];
-              searchValue = (filterModel === null || filterModel === void 0 || (_filterModel$name = filterModel.name) === null || _filterModel$name === void 0 ? void 0 : _filterModel$name.filter) || "";
-              console.log("Valore ricerca:", searchValue);
-              // Prima chiamata: Recupera le righe già selezionate
-              selectedFilters = [_defineProperty({}, "features_include_ids_".concat(_modelName), _selectedIds), _defineProperty({}, "features_by_layer_".concat(_modelName), layerId)];
-              selectedRowsUrl = buildApiUrl(selectedFilters, searchValue);
-              console.log("URL righe selezionate:", selectedRowsUrl);
-              _context3.next = 16;
-              return fetchTracks(selectedRowsUrl);
-            case 16:
-              selectedResponse = _context3.sent;
-              console.log("Righe selezionate ricevute:", selectedResponse.resources.length);
-              // Mappa le righe selezionate con boolean: true
-              selectedRows = selectedResponse.resources.map(function (resource) {
-                var _resource$fields$find2;
-                return {
-                  id: resource.id.value,
-                  name: ((_resource$fields$find2 = resource.fields.find(function (f) {
-                    return f.attribute === "name";
-                  })) === null || _resource$fields$find2 === void 0 ? void 0 : _resource$fields$find2.value) || "",
-                  "boolean": true
-                };
-              }); // Seconda chiamata: Recupera le righe selezionabili
-              unselectedFilters = [_defineProperty({}, "features_exclude_ids_".concat(_modelName), _selectedIds), _defineProperty({}, "features_by_layer_".concat(_modelName), layerId)];
-              unselectedRowsUrl = buildApiUrl(unselectedFilters, searchValue);
-              console.log("URL righe non selezionate:", unselectedRowsUrl);
-              _context3.next = 24;
-              return fetchTracks(unselectedRowsUrl);
-            case 24:
-              unselectedResponse = _context3.sent;
-              console.log("Righe non selezionate ricevute:", unselectedResponse.resources.length);
-              // Mappa le righe selezionabili (senza boolean)
-              selectableRows = unselectedResponse.resources.map(function (resource) {
-                var _resource$fields$find3;
-                return {
-                  id: resource.id.value,
-                  name: ((_resource$fields$find3 = resource.fields.find(function (f) {
-                    return f.attribute === "name";
-                  })) === null || _resource$fields$find3 === void 0 ? void 0 : _resource$fields$find3.value) || ""
-                };
-              }); // Combina i risultati
-              gridData.value = [].concat(_toConsumableArray(selectedRows), _toConsumableArray(selectableRows));
-              console.log("Totale righe nella griglia:", gridData.value.length);
-              _context3.next = 36;
-              break;
-            case 31:
-              _context3.prev = 31;
-              _context3.t0 = _context3["catch"](1);
-              console.error("Error fetching features:", _context3.t0);
-              gridData.value = [];
-              Nova.error("Errore durante il caricamento delle features");
-            case 36:
-              _context3.prev = 36;
-              isLoading.value = false;
-              console.log("=== FINE FETCH FEATURES ===");
-              return _context3.finish(36);
-            case 40:
-            case "end":
-              return _context3.stop();
-          }
-        }, _callee3, null, [[1, 31, 36, 40]]);
-      }));
-      return function fetchFeatures() {
-        return _ref4.apply(this, arguments);
-      };
-    }();
-    // Funzione per determinare se una riga è selezionabile
-    var isRowSelectable = function isRowSelectable(params) {
-      return true;
-    };
-    var onGridReady = function onGridReady(params) {
-      console.log("=== GRID READY ===");
-      gridApi.value = params.api;
-      console.log("API griglia inizializzata");
-      // Imposta le larghezze delle colonne
-      gridApi.value.sizeColumnsToFit();
-      console.log("Larghezze colonne impostate");
-    };
-    var onSelectionChanged = function onSelectionChanged(params) {
-      console.log("=== SELECTION CHANGED ===");
-      if (!gridApi.value) {
-        console.log("API non disponibile in selection changed");
-        return;
-      }
-      // Ottieni le selezioni correnti dalla griglia
-      var currentSelectedNodes = gridApi.value.getSelectedNodes();
-      var currentSelectedIds = currentSelectedNodes.map(function (node) {
-        return node.data.id;
-      });
-      console.log("ID selezionati:", currentSelectedIds);
-      // Aggiorna le selezioni
-      selectedIds.value = currentSelectedIds;
-      props.field.selectedEcFeaturesIds = currentSelectedIds;
-      console.log("Selezioni aggiornate");
-    };
-    // Inizializza i dati
-    fetchFeatures();
-    // Aggiorna quando cambia il resourceId
-    (0,vue__WEBPACK_IMPORTED_MODULE_0__.watch)(function () {
-      return props.resourceId;
-    }, function () {
-      fetchFeatures();
-    });
-    // Salva lo stato della griglia quando le colonne vengono ridimensionate
-    var onColumnResized = function onColumnResized(params) {
-      // Temporaneamente disabilitato il salvataggio dello stato delle colonne
-      // per evitare errori con le API di AG Grid
-    };
-    var handleSave = /*#__PURE__*/function () {
-      var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-        var selectedFeatureIds, layerId;
-        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
-            case 0:
-              _context4.prev = 0;
-              isSaving.value = true;
-              selectedFeatureIds = selectedIds.value;
-              console.log("=== LOG SALVATAGGIO ===");
-              console.log("ID da salvare:", selectedFeatureIds);
-              console.log("=========================");
-              layerId = props.field.layerId;
-              _context4.next = 9;
-              return Nova.request().post("/nova-vendor/layer-features/sync/".concat(layerId), {
-                features: selectedFeatureIds,
-                model: props.field.model
-              });
-            case 9:
-              Nova.success("Features salvate con successo");
-              props.field.value = selectedFeatureIds;
-              props.field.selectedEcFeaturesIds = selectedFeatureIds;
-              // Ricarica i dati della griglia
-              _context4.next = 14;
-              return fetchFeatures();
-            case 14:
-              _context4.next = 20;
-              break;
-            case 16:
-              _context4.prev = 16;
-              _context4.t0 = _context4["catch"](0);
-              console.error("Errore durante il salvataggio:", _context4.t0);
-              Nova.error("Errore durante il salvataggio delle features");
-            case 20:
-              _context4.prev = 20;
-              isSaving.value = false;
-              return _context4.finish(20);
-            case 23:
-            case "end":
-              return _context4.stop();
-          }
-        }, _callee4, null, [[0, 16, 20, 23]]);
-      }));
-      return function handleSave() {
-        return _ref9.apply(this, arguments);
-      };
-    }();
-    var statusBar = {
-      statusPanels: [{
-        statusPanel: "agTotalRowCountComponent",
-        align: "left"
-      }, {
-        statusPanel: "customStatsComponent",
-        align: "right"
-      }]
-    };
-    // Registra il componente personalizzato
-    if (gridApi.value) {
-      gridApi.value.components.registerComponent("customStatsComponent", CustomStatsComponent);
-    }
-    var handleToggleClick = /*#__PURE__*/function () {
-      var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-        var newState;
-        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-          while (1) switch (_context5.prev = _context5.next) {
-            case 0:
-              if (!(isManual.value && selectedIds.value.length > 0)) {
-                _context5.next = 4;
-                break;
-              }
-              showConfirmModal.value = true;
-              _context5.next = 13;
-              break;
-            case 4:
-              // Se stiamo passando da automatico a manuale
-              newState = !isManual.value;
-              isManual.value = newState;
-              if (!newState) {
-                _context5.next = 11;
-                break;
-              }
-              _context5.next = 9;
-              return fetchFeatures();
-            case 9:
-              _context5.next = 13;
-              break;
-            case 11:
-              _context5.next = 13;
-              return handleModeChange();
-            case 13:
-            case "end":
-              return _context5.stop();
-          }
-        }, _callee5);
-      }));
-      return function handleToggleClick() {
-        return _ref10.apply(this, arguments);
-      };
-    }();
-    var closeConfirmModal = function closeConfirmModal() {
-      showConfirmModal.value = false;
-      isManual.value = true;
-    };
-    var confirmModeChange = /*#__PURE__*/function () {
-      var _ref11 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-          while (1) switch (_context6.prev = _context6.next) {
-            case 0:
-              showConfirmModal.value = false;
-              isManual.value = false;
-              _context6.next = 4;
-              return handleModeChange();
-            case 4:
-            case "end":
-              return _context6.stop();
-          }
-        }, _callee6);
-      }));
-      return function confirmModeChange() {
-        return _ref11.apply(this, arguments);
-      };
-    }();
-    var handleModeChange = /*#__PURE__*/function () {
-      var _ref12 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
-        var layerId, _model;
-        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-          while (1) switch (_context7.prev = _context7.next) {
-            case 0:
-              _context7.prev = 0;
-              if (isManual.value) {
-                _context7.next = 11;
-                break;
-              }
-              isSaving.value = true;
-              layerId = props.field.layerId;
-              _model = props.field.model;
-              _context7.next = 7;
-              return Nova.request().post("/nova-vendor/layer-features/sync/".concat(layerId), {
-                features: [],
-                model: _model
-              });
-            case 7:
-              selectedIds.value = [];
-              props.field.value = [];
-              props.field.selectedEcFeaturesIds = [];
-              Nova.success("Modalità automatica attivata");
-            case 11:
-              _context7.next = 18;
-              break;
-            case 13:
-              _context7.prev = 13;
-              _context7.t0 = _context7["catch"](0);
-              console.error("Errore durante il cambio di modalità:", _context7.t0);
-              Nova.error("Errore durante il cambio di modalità");
-              isManual.value = !isManual.value;
-            case 18:
-              _context7.prev = 18;
-              isSaving.value = false;
-              return _context7.finish(18);
-            case 21:
-            case "end":
-              return _context7.stop();
-          }
-        }, _callee7, null, [[0, 13, 18, 21]]);
-      }));
-      return function handleModeChange() {
-        return _ref12.apply(this, arguments);
-      };
-    }();
-    return {
-      agGridRef: agGridRef,
-      gridApi: gridApi,
-      columnDefs: columnDefs,
-      defaultColDef: defaultColDef,
-      rowSelection: rowSelection,
-      gridData: gridData,
-      onGridReady: onGridReady,
-      onSelectionChanged: onSelectionChanged,
-      onColumnResized: onColumnResized,
-      loadingTemplate: loadingTemplate,
-      noRowsTemplate: noRowsTemplate,
-      isLoading: isLoading,
-      isRowSelectable: isRowSelectable,
-      getRowId: getRowId,
-      handleSave: handleSave,
-      isSaving: isSaving,
-      statusBar: statusBar,
-      model: model,
-      modelName: modelName,
-      isManual: isManual,
-      showConfirmModal: showConfirmModal,
-      handleToggleClick: handleToggleClick,
-      closeConfirmModal: closeConfirmModal,
-      confirmModeChange: confirmModeChange,
-      onFilterChanged: onFilterChanged,
-      onFirstDataRendered: onFirstDataRendered
-    };
-  }
+  emits: ["toggle"]
 }));
 
 /***/ }),
@@ -60270,108 +60062,47 @@ var _hoisted_1 = {
   "class": "layer-feature-wrapper"
 };
 var _hoisted_2 = {
-  "class": "fixed inset-0 z-50"
-};
-var _hoisted_3 = {
-  "class": "relative h-full overflow-hidden p-4 flex items-center justify-center"
-};
-var _hoisted_4 = {
-  "class": "bg-white rounded-lg shadow-lg overflow-hidden w-full max-w-lg"
-};
-var _hoisted_5 = {
-  "class": "bg-30 px-6 py-3 flex items-center justify-end"
-};
-var _hoisted_6 = {
   "class": "mb-6"
 };
-var _hoisted_7 = {
+var _hoisted_3 = {
   "class": "text-90 font-normal text-xl"
 };
-var _hoisted_8 = {
+var _hoisted_4 = {
   "class": "flex items-center mb-4"
 };
-var _hoisted_9 = {
-  "class": "toggle-switch"
-};
-var _hoisted_10 = {
-  "class": "label-text ml-2"
-};
-var _hoisted_11 = {
+var _hoisted_5 = {
   key: 1
 };
-var _hoisted_12 = {
+var _hoisted_6 = {
   "class": "flex justify-end mb-2"
 };
-var _hoisted_13 = ["disabled"];
+var _hoisted_7 = ["disabled"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _component_portal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("portal");
+  var _component_ConfirmModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ConfirmModal");
+  var _component_ToggleSwitch = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ToggleSwitch");
   var _component_ag_grid_vue = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ag-grid-vue");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Dialog di conferma "), _ctx.showConfirmModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_portal, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_ctx.showConfirmModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ConfirmModal, {
     key: 0,
-    to: "modals"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
-        name: "fade"
-      }, {
-        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-            "class": "fixed inset-0 bg-80 opacity-50"
-          }, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [_cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-            "class": "p-4 border-b border-40 bg-40"
-          }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
-            "class": "text-90 font-normal text-xl"
-          }, " Conferma cambio modalità ")], -1 /* HOISTED */)), _cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-            "class": "p-4"
-          }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
-            "class": "text-80 leading-normal"
-          }, " Passando alla modalità automatica perderai tutte le selezioni manuali. Sei sicuro di voler continuare? ")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-            "class": "btn btn-link dim cursor-pointer text-80 font-normal text-base ml-auto mr-6",
-            onClick: _cache[0] || (_cache[0] =
-            //@ts-ignore
-            function () {
-              return _ctx.closeConfirmModal && _ctx.closeConfirmModal.apply(_ctx, arguments);
-            })
-          }, " Annulla "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-            "class": "btn btn-default btn-danger",
-            onClick: _cache[1] || (_cache[1] =
-            //@ts-ignore
-            function () {
-              return _ctx.confirmModeChange && _ctx.confirmModeChange.apply(_ctx, arguments);
-            })
-          }, " Conferma ")])])])])];
-        }),
-        _: 1 /* STABLE */
-      })];
-    }),
-    _: 1 /* STABLE */
-  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", _hoisted_7, " Features del modello: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.modelName), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    type: "button",
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["toggle-button", {
-      'toggle-button--active': _ctx.isManual
-    }]),
-    onClick: _cache[2] || (_cache[2] =
-    //@ts-ignore
-    function () {
-      return _ctx.handleToggleClick && _ctx.handleToggleClick.apply(_ctx, arguments);
-    })
-  }, _cache[7] || (_cache[7] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-    "class": "toggle-slider"
-  }, null, -1 /* HOISTED */)]), 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.isManual ? "Selezione Manuale" : "Selezione Automatica"), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Mostra la griglia solo in modalità manuale "), _ctx.isManual ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    onConfirm: _ctx.confirmModeChange,
+    onClose: _ctx.closeConfirmModal
+  }, null, 8 /* PROPS */, ["onConfirm", "onClose"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", _hoisted_3, " Features del modello: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.modelName), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ToggleSwitch, {
+    "is-manual": _ctx.isManual,
+    onToggle: _ctx.handleToggleClick
+  }, null, 8 /* PROPS */, ["is-manual", "onToggle"])]), _ctx.isManual ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-primary",
-    onClick: _cache[3] || (_cache[3] =
+    onClick: _cache[0] || (_cache[0] =
     //@ts-ignore
     function () {
       return _ctx.handleSave && _ctx.handleSave.apply(_ctx, arguments);
     }),
     disabled: _ctx.isSaving
-  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.isSaving ? "Salvataggio..." : "Salva"), 9 /* TEXT, PROPS */, _hoisted_13)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ag_grid_vue, {
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.isSaving ? "Salvataggio..." : "Salva"), 9 /* TEXT, PROPS */, _hoisted_7)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ag_grid_vue, {
     ref: "agGridRef",
-    "class": "ag-theme-alpine",
+    "class": "ag-theme-alpine layer-feature-grid",
     columnDefs: _ctx.columnDefs,
     defaultColDef: _ctx.defaultColDef,
-    rowSelection: _ctx.rowSelection,
+    rowSelection: 'multiple',
     rowData: _ctx.gridData,
     rowHeight: 25,
     getRowId: _ctx.getRowId,
@@ -60381,12 +60112,216 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     overlayNoRowsTemplate: _ctx.noRowsTemplate,
     suppressRowClickSelection: true,
     suppressCellSelection: true,
-    onGridReady: _ctx.onGridReady,
+    onGridReady: _ctx.handleGridReady,
     onFirstDataRendered: _ctx.onFirstDataRendered,
-    onSelectionChanged: _ctx.onSelectionChanged,
-    onColumnResized: _ctx.onColumnResized,
+    onSelectionChanged: _ctx.handleSelectionChanged,
     onFilterChanged: _ctx.onFilterChanged
-  }, null, 8 /* PROPS */, ["columnDefs", "defaultColDef", "rowSelection", "rowData", "getRowId", "overlayLoadingTemplate", "overlayNoRowsTemplate", "onGridReady", "onFirstDataRendered", "onSelectionChanged", "onColumnResized", "onFilterChanged"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
+  }, null, 8 /* PROPS */, ["columnDefs", "defaultColDef", "rowData", "getRowId", "overlayLoadingTemplate", "overlayNoRowsTemplate", "onGridReady", "onFirstDataRendered", "onSelectionChanged", "onFilterChanged"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ConfirmModal.vue?vue&type=template&id=03ca0226&ts=true":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ConfirmModal.vue?vue&type=template&id=03ca0226&ts=true ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+
+var _hoisted_1 = {
+  "class": "fixed inset-0 z-50"
+};
+var _hoisted_2 = {
+  "class": "relative h-full overflow-hidden p-4 flex items-center justify-center"
+};
+var _hoisted_3 = {
+  "class": "bg-white rounded-lg shadow-lg overflow-hidden w-full max-w-lg"
+};
+var _hoisted_4 = {
+  "class": "bg-30 px-6 py-3 flex items-center justify-end"
+};
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_portal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("portal");
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_portal, {
+    to: "modals"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
+        name: "fade"
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [_cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+            "class": "fixed inset-0 bg-80 opacity-50"
+          }, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+            "class": "p-4 border-b border-40 bg-40"
+          }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
+            "class": "text-90 font-normal text-xl"
+          }, " Conferma cambio modalità ")], -1 /* HOISTED */)), _cache[3] || (_cache[3] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+            "class": "p-4"
+          }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
+            "class": "text-80 leading-normal"
+          }, " Passando alla modalità automatica perderai tutte le selezioni manuali. Sei sicuro di voler continuare? ")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+            "class": "btn btn-link dim cursor-pointer text-80 font-normal text-base ml-auto mr-6",
+            onClick: _cache[0] || (_cache[0] = function ($event) {
+              return _ctx.$emit('close');
+            })
+          }, " Annulla "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+            "class": "btn btn-default btn-danger",
+            onClick: _cache[1] || (_cache[1] = function ($event) {
+              return _ctx.$emit('confirm');
+            })
+          }, " Conferma ")])])])])];
+        }),
+        _: 1 /* STABLE */
+      })];
+    }),
+    _: 1 /* STABLE */
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/CustomHeader.vue?vue&type=template&id=77d49804&ts=true":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/CustomHeader.vue?vue&type=template&id=77d49804&ts=true ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+
+var _hoisted_1 = {
+  "class": "ag-header-container"
+};
+var _hoisted_2 = {
+  "class": "ag-header-row"
+};
+var _hoisted_3 = {
+  "class": "ag-header-cell",
+  ref: "eHeaderCell"
+};
+var _hoisted_4 = {
+  "class": "ag-header-row toolbar"
+};
+var _hoisted_5 = ["disabled"];
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.params.displayName), 1 /* TEXT */)], 512 /* NEED_PATCH */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": "btn btn-primary",
+    onClick: _cache[0] || (_cache[0] =
+    //@ts-ignore
+    function () {
+      return _ctx.save && _ctx.save.apply(_ctx, arguments);
+    }),
+    disabled: _ctx.saving
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.saving ? "Salvataggio..." : "Salva"), 9 /* TEXT, PROPS */, _hoisted_5)])]);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/NameFilter.vue?vue&type=template&id=2decaffa&ts=true":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/NameFilter.vue?vue&type=template&id=2decaffa&ts=true ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+
+var _hoisted_1 = {
+  "class": "ag-filter-wrapper",
+  style: {
+    "display": "flex",
+    "align-items": "center"
+  }
+};
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+      return _ctx.filterText = $event;
+    }),
+    "class": "ag-input-field-input ag-text-field-input",
+    placeholder: "Cerca...",
+    onInput: _cache[1] || (_cache[1] =
+    //@ts-ignore
+    function () {
+      return _ctx.onFilterChanged && _ctx.onFilterChanged.apply(_ctx, arguments);
+    }),
+    style: {
+      "flex": "1"
+    }
+  }, null, 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.filterText]]), _ctx.filterText ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 0,
+    onClick: _cache[2] || (_cache[2] =
+    //@ts-ignore
+    function () {
+      return _ctx.resetFilter && _ctx.resetFilter.apply(_ctx, arguments);
+    }),
+    "class": "reset-button",
+    style: {
+      "margin-left": "4px",
+      "padding": "2px 6px",
+      "background": "#e74444",
+      "color": "white",
+      "border": "none",
+      "border-radius": "4px",
+      "cursor": "pointer",
+      "font-size": "12px"
+    }
+  }, " ✕ ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=template&id=b0706570&scoped=true&ts=true":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=template&id=b0706570&scoped=true&ts=true ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+
+var _hoisted_1 = {
+  "class": "toggle-switch"
+};
+var _hoisted_2 = {
+  "class": "label-text ml-2"
+};
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["toggle-button", {
+      'toggle-button--active': _ctx.isManual
+    }]),
+    onClick: _cache[0] || (_cache[0] = function ($event) {
+      return _ctx.$emit('toggle');
+    })
+  }, _cache[1] || (_cache[1] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    "class": "toggle-slider"
+  }, null, -1 /* HOISTED */)]), 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.isManual ? "Selezione Manuale" : "Selezione Automatica"), 1 /* TEXT */)]);
 }
 
 /***/ }),
@@ -60552,10 +60487,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/ag-grid-community/styles/ag-grid.css":
-/*!*********************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/ag-grid-community/styles/ag-grid.css ***!
-  \*********************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./resources/js/styles/shared.css":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./resources/js/styles/shared.css ***!
+  \**************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -60563,37 +60498,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
-/* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
 
-var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".ag-icon {\n  font-family: var(--ag-icon-font-family);\n  font-size: var(--ag-icon-size);\n  line-height: var(--ag-icon-size);\n  font-style: normal;\n  font-weight: normal;\n  font-variant: normal;\n  text-transform: none;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n\n.ag-icon-aggregation::before {\n  content: var(--ag-icon-font-code-aggregation, \"\\f101\");\n}\n\n.ag-icon-arrows::before {\n  content: var(--ag-icon-font-code-arrows, \"\\f102\");\n}\n\n.ag-icon-asc::before {\n  content: var(--ag-icon-font-code-asc, \"\\f103\");\n}\n\n.ag-icon-cancel::before {\n  content: var(--ag-icon-font-code-cancel, \"\\f104\");\n}\n\n.ag-icon-chart::before {\n  content: var(--ag-icon-font-code-chart, \"\\f105\");\n}\n\n.ag-icon-checkbox-checked::before {\n  content: var(--ag-icon-font-code-checkbox-checked, \"\\f106\");\n}\n\n.ag-icon-checkbox-indeterminate::before {\n  content: var(--ag-icon-font-code-checkbox-indeterminate, \"\\f107\");\n}\n\n.ag-icon-checkbox-unchecked::before {\n  content: var(--ag-icon-font-code-checkbox-unchecked, \"\\f108\");\n}\n\n.ag-icon-color-picker::before {\n  content: var(--ag-icon-font-code-color-picker, \"\\f109\");\n}\n\n.ag-icon-columns::before {\n  content: var(--ag-icon-font-code-columns, \"\\f10a\");\n}\n\n.ag-icon-contracted::before {\n  content: var(--ag-icon-font-code-contracted, \"\\f10b\");\n}\n\n.ag-icon-copy::before {\n  content: var(--ag-icon-font-code-copy, \"\\f10c\");\n}\n\n.ag-icon-cross::before {\n  content: var(--ag-icon-font-code-cross, \"\\f10d\");\n}\n\n.ag-icon-csv::before {\n  content: var(--ag-icon-font-code-csv, \"\\f10e\");\n}\n\n.ag-icon-cut::before {\n  content: var(--ag-icon-font-code-cut, \"\\f10f\");\n}\n\n.ag-icon-desc::before {\n  content: var(--ag-icon-font-code-desc, \"\\f110\");\n}\n\n.ag-icon-excel::before {\n  content: var(--ag-icon-font-code-excel, \"\\f111\");\n}\n\n.ag-icon-expanded::before {\n  content: var(--ag-icon-font-code-expanded, \"\\f112\");\n}\n\n.ag-icon-eye-slash::before {\n  content: var(--ag-icon-font-code-eye-slash, \"\\f113\");\n}\n\n.ag-icon-eye::before {\n  content: var(--ag-icon-font-code-eye, \"\\f114\");\n}\n\n.ag-icon-filter::before {\n  content: var(--ag-icon-font-code-filter, \"\\f115\");\n}\n\n.ag-icon-first::before {\n  content: var(--ag-icon-font-code-first, \"\\f116\");\n}\n\n.ag-icon-grip::before {\n  content: var(--ag-icon-font-code-grip, \"\\f117\");\n}\n\n.ag-icon-group::before {\n  content: var(--ag-icon-font-code-group, \"\\f118\");\n}\n\n.ag-icon-last::before {\n  content: var(--ag-icon-font-code-last, \"\\f119\");\n}\n\n.ag-icon-left::before {\n  content: var(--ag-icon-font-code-left, \"\\f11a\");\n}\n\n.ag-icon-linked::before {\n  content: var(--ag-icon-font-code-linked, \"\\f11b\");\n}\n\n.ag-icon-loading::before {\n  content: var(--ag-icon-font-code-loading, \"\\f11c\");\n}\n\n.ag-icon-maximize::before {\n  content: var(--ag-icon-font-code-maximize, \"\\f11d\");\n}\n\n.ag-icon-menu::before {\n  content: var(--ag-icon-font-code-menu, \"\\f11e\");\n}\n\n.ag-icon-minimize::before {\n  content: var(--ag-icon-font-code-minimize, \"\\f11f\");\n}\n\n.ag-icon-next::before {\n  content: var(--ag-icon-font-code-next, \"\\f120\");\n}\n\n.ag-icon-none::before {\n  content: var(--ag-icon-font-code-none, \"\\f121\");\n}\n\n.ag-icon-not-allowed::before {\n  content: var(--ag-icon-font-code-not-allowed, \"\\f122\");\n}\n\n.ag-icon-paste::before {\n  content: var(--ag-icon-font-code-paste, \"\\f123\");\n}\n\n.ag-icon-pin::before {\n  content: var(--ag-icon-font-code-pin, \"\\f124\");\n}\n\n.ag-icon-pivot::before {\n  content: var(--ag-icon-font-code-pivot, \"\\f125\");\n}\n\n.ag-icon-previous::before {\n  content: var(--ag-icon-font-code-previous, \"\\f126\");\n}\n\n.ag-icon-radio-button-off::before {\n  content: var(--ag-icon-font-code-radio-button-off, \"\\f127\");\n}\n\n.ag-icon-radio-button-on::before {\n  content: var(--ag-icon-font-code-radio-button-on, \"\\f128\");\n}\n\n.ag-icon-right::before {\n  content: var(--ag-icon-font-code-right, \"\\f129\");\n}\n\n.ag-icon-save::before {\n  content: var(--ag-icon-font-code-save, \"\\f12a\");\n}\n\n.ag-icon-small-down::before {\n  content: var(--ag-icon-font-code-small-down, \"\\f12b\");\n}\n\n.ag-icon-small-left::before {\n  content: var(--ag-icon-font-code-small-left, \"\\f12c\");\n}\n\n.ag-icon-small-right::before {\n  content: var(--ag-icon-font-code-small-right, \"\\f12d\");\n}\n\n.ag-icon-small-up::before {\n  content: var(--ag-icon-font-code-small-up, \"\\f12e\");\n}\n\n.ag-icon-tick::before {\n  content: var(--ag-icon-font-code-tick, \"\\f12f\");\n}\n\n.ag-icon-tree-closed::before {\n  content: var(--ag-icon-font-code-tree-closed, \"\\f130\");\n}\n\n.ag-icon-tree-indeterminate::before {\n  content: var(--ag-icon-font-code-tree-indeterminate, \"\\f131\");\n}\n\n.ag-icon-tree-open::before {\n  content: var(--ag-icon-font-code-tree-open, \"\\f132\");\n}\n\n.ag-icon-unlinked::before {\n  content: var(--ag-icon-font-code-unlinked, \"\\f133\");\n}\n\n.ag-icon-up::before {\n  content: var(--ag-icon-font-code-up, \"\\f134\");\n}\n\n.ag-icon-down::before {\n  content: var(--ag-icon-font-code-down, \"\\f135\");\n}\n\n.ag-icon-plus::before {\n  content: var(--ag-icon-font-code-plus, \"\\f136\");\n}\n\n.ag-icon-minus::before {\n  content: var(--ag-icon-font-code-minus, \"\\f137\");\n}\n\n.ag-icon-row-drag::before {\n  content: var(--ag-icon-font-code-grip);\n}\n\n.ag-left-arrow::before {\n  content: var(--ag-icon-font-code-left);\n}\n\n.ag-right-arrow::before {\n  content: var(--ag-icon-font-code-right);\n}\n\n[class*=ag-theme-] {\n  --ag-foreground-color: #000;\n  --ag-data-color: var(--ag-foreground-color);\n  --ag-secondary-foreground-color: var(--ag-foreground-color);\n  --ag-header-foreground-color: var(--ag-secondary-foreground-color);\n  --ag-disabled-foreground-color: rgba(0, 0, 0, 0.5);\n  --ag-background-color: #fff;\n  --ag-header-background-color: transparent;\n  --ag-tooltip-background-color: transparent;\n  --ag-subheader-background-color: transparent;\n  --ag-subheader-toolbar-background-color: transparent;\n  --ag-control-panel-background-color: transparent;\n  --ag-side-button-selected-background-color: var(--ag-control-panel-background-color);\n  --ag-selected-row-background-color: #BBB;\n  --ag-odd-row-background-color: var(--ag-background-color);\n  --ag-modal-overlay-background-color: rgba(255, 255, 255, 0.66);\n  --ag-row-hover-color: transparent;\n  --ag-column-hover-color: transparent;\n  --ag-range-selection-border-color: var(--ag-foreground-color);\n  --ag-range-selection-border-style: solid;\n  --ag-range-selection-background-color: rgba(0, 0, 0, 0.2);\n  --ag-range-selection-background-color-2: var(--ag-range-selection-background-color);\n  --ag-range-selection-background-color-3: var(--ag-range-selection-background-color);\n  --ag-range-selection-background-color-4: var(--ag-range-selection-background-color);\n  --ag-range-selection-highlight-color: var(--ag-range-selection-border-color);\n  --ag-selected-tab-underline-color: var(--ag-range-selection-border-color);\n  --ag-selected-tab-underline-width: 0;\n  --ag-selected-tab-underline-transition-speed: 0s;\n  --ag-range-selection-chart-category-background-color: rgba(0, 255, 132, 0.1);\n  --ag-range-selection-chart-background-color: rgba(0, 88, 255, 0.1);\n  --ag-header-cell-hover-background-color: transparent;\n  --ag-header-cell-moving-background-color: var(--ag-background-color);\n  --ag-value-change-value-highlight-background-color: rgba(22, 160, 133, 0.5);\n  --ag-value-change-delta-up-color: #43a047;\n  --ag-value-change-delta-down-color: #e53935;\n  --ag-chip-background-color: transparent;\n  --ag-borders: solid 1px;\n  --ag-border-color: rgba(0, 0, 0, 0.25);\n  --ag-borders-critical: var(--ag-borders);\n  --ag-borders-secondary: var(--ag-borders);\n  --ag-secondary-border-color: var(--ag-border-color);\n  --ag-row-border-style: solid;\n  --ag-row-border-color: var(--ag-secondary-border-color);\n  --ag-row-border-width: 1px;\n  --ag-cell-horizontal-border: solid transparent;\n  --ag-borders-input: var(--ag-borders-secondary);\n  --ag-input-border-color: var(--ag-secondary-border-color);\n  --ag-borders-input-invalid: solid 2px;\n  --ag-input-border-color-invalid: var(--ag-invalid-color);\n  --ag-borders-side-button: var(--ag-borders);\n  --ag-border-radius: 0px;\n  --ag-row-border-color: var(--ag-secondary-border-color);\n  --ag-header-column-separator-display: none;\n  --ag-header-column-separator-height: 100%;\n  --ag-header-column-separator-width: 1px;\n  --ag-header-column-separator-color: var(--ag-secondary-border-color);\n  --ag-header-column-resize-handle-display: none;\n  --ag-header-column-resize-handle-height: 50%;\n  --ag-header-column-resize-handle-width: 1px;\n  --ag-header-column-resize-handle-color: var(--ag-secondary-border-color);\n  --ag-invalid-color: red;\n  --ag-input-disabled-border-color: var(--ag-input-border-color);\n  --ag-input-disabled-background-color: transparent;\n  --ag-checkbox-background-color: transparent;\n  --ag-checkbox-border-radius: var(--ag-border-radius);\n  --ag-checkbox-checked-color: var(--ag-foreground-color);\n  --ag-checkbox-unchecked-color: var(--ag-foreground-color);\n  --ag-checkbox-indeterminate-color: var(--ag-checkbox-unchecked-color);\n  --ag-toggle-button-off-border-color: var(--ag-checkbox-unchecked-color);\n  --ag-toggle-button-off-background-color: var(--ag-checkbox-unchecked-color);\n  --ag-toggle-button-on-border-color: var(--ag-checkbox-checked-color);\n  --ag-toggle-button-on-background-color: var(--ag-checkbox-checked-color);\n  --ag-toggle-button-switch-background-color: var(--ag-background-color);\n  --ag-toggle-button-switch-border-color: var(--ag-toggle-button-off-border-color);\n  --ag-toggle-button-border-width: 1px;\n  --ag-toggle-button-height: var(--ag-icon-size);\n  --ag-toggle-button-width: calc(var(--ag-toggle-button-height) * 2);\n  --ag-input-focus-box-shadow: none;\n  --ag-input-focus-border-color: none;\n  --ag-minichart-selected-chart-color: var(--ag-checkbox-checked-color);\n  --ag-minichart-selected-page-color: var(--ag-checkbox-checked-color);\n  --ag-grid-size: 4px;\n  --ag-icon-size: 12px;\n  --ag-widget-container-horizontal-padding: calc(var(--ag-grid-size) * 1.5);\n  --ag-widget-container-vertical-padding: calc(var(--ag-grid-size) * 1.5);\n  --ag-widget-horizontal-spacing: calc(var(--ag-grid-size) * 2);\n  --ag-widget-vertical-spacing: var(--ag-grid-size);\n  --ag-cell-horizontal-padding: calc(var(--ag-grid-size) * 3);\n  --ag-cell-widget-spacing: var(--ag-cell-horizontal-padding);\n  --ag-row-height: calc(var(--ag-grid-size) * 6 + 1px);\n  --ag-header-height: var(--ag-row-height);\n  --ag-list-item-height: calc(var(--ag-grid-size) * 5);\n  --ag-column-select-indent-size: calc(var(--ag-grid-size) + var(--ag-icon-size));\n  --ag-set-filter-indent-size: calc(var(--ag-grid-size) + var(--ag-icon-size));\n  --ag-advanced-filter-builder-indent-size: calc(var(--ag-grid-size) * 2 + var(--ag-icon-size));\n  --ag-row-group-indent-size: calc(var(--ag-cell-widget-spacing) + var(--ag-icon-size));\n  --ag-filter-tool-panel-group-indent: 16px;\n  --ag-tab-min-width: 220px;\n  --ag-menu-min-width: 181px;\n  --ag-side-bar-panel-width: 200px;\n  --ag-font-family: \"Helvetica Neue\", sans-serif;\n  --ag-font-size: 14px;\n  --ag-card-radius: var(--ag-border-radius);\n  --ag-card-shadow: none;\n  --ag-popup-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);\n  --ag-advanced-filter-join-pill-color: #f08e8d;\n  --ag-advanced-filter-column-pill-color: #a6e194;\n  --ag-advanced-filter-option-pill-color: #f3c08b;\n  --ag-advanced-filter-value-pill-color: #85c0e4;\n}\n\n.ag-root-wrapper, .ag-sticky-top, .ag-dnd-ghost {\n  background-color: var(--ag-background-color);\n}\n\n[class*=ag-theme-] {\n  -webkit-font-smoothing: antialiased;\n  font-family: var(--ag-font-family);\n  font-size: var(--ag-font-size);\n  line-height: normal;\n  color: var(--ag-foreground-color);\n}\n\nag-grid, ag-grid-angular, ag-grid-ng2, ag-grid-polymer, ag-grid-aurelia {\n  display: block;\n}\n\n.ag-hidden {\n  display: none !important;\n}\n\n.ag-invisible {\n  visibility: hidden !important;\n}\n\n.ag-no-transition {\n  transition: none !important;\n}\n\n.ag-drag-handle {\n  cursor: grab;\n}\n\n.ag-column-drop-wrapper {\n  display: flex;\n}\n\n.ag-column-drop-horizontal-half-width {\n  display: inline-block;\n  width: 50% !important;\n}\n\n.ag-unselectable {\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n\n.ag-selectable {\n  -moz-user-select: text;\n  -webkit-user-select: text;\n  user-select: text;\n}\n\n.ag-tab {\n  position: relative;\n}\n\n.ag-tab-guard {\n  position: absolute;\n  width: 0;\n  height: 0;\n  display: block;\n}\n\n.ag-select-agg-func-popup {\n  position: absolute;\n}\n\n.ag-input-wrapper, .ag-picker-field-wrapper {\n  display: flex;\n  flex: 1 1 auto;\n  align-items: center;\n  line-height: normal;\n  position: relative;\n}\n\n.ag-shake-left-to-right {\n  animation-direction: alternate;\n  animation-duration: 0.2s;\n  animation-iteration-count: infinite;\n  animation-name: ag-shake-left-to-right;\n}\n\n@keyframes ag-shake-left-to-right {\n  from {\n    padding-left: 6px;\n    padding-right: 2px;\n  }\n  to {\n    padding-left: 2px;\n    padding-right: 6px;\n  }\n}\n.ag-root-wrapper {\n  cursor: default;\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  overflow: hidden;\n}\n.ag-root-wrapper.ag-layout-normal {\n  height: 100%;\n}\n\n.ag-watermark {\n  position: absolute;\n  bottom: 20px;\n  right: 25px;\n  opacity: 0.5;\n  transition: opacity 1s ease-out 3s;\n}\n.ag-watermark::before {\n  content: \"\";\n  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+Cjxzdmcgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDIzNSA0MCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxuczpzZXJpZj0iaHR0cDovL3d3dy5zZXJpZi5jb20vIiBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjI7Ij4KICAgIDxnIHRyYW5zZm9ybT0ibWF0cml4KDAuNjM1NzIzLDAsMCwwLjYzNTcyMywtNDkyLjkyMSwtMzIzLjYwOCkiPgogICAgICAgIDxwYXRoIGQ9Ik0xMDk5LjQsNTQ5LjRMMTA5OS40LDUzNi45TDEwNzguMSw1MzYuOUwxMDY1LjYsNTQ5LjRMMTA5OS40LDU0OS40WiIgc3R5bGU9ImZpbGw6cmdiKDI0LDI5LDMxKTtmaWxsLXJ1bGU6bm9uemVybzsiLz4KICAgICAgICA8cGF0aCBkPSJNMTEyMy40LDUxOC40TDEwOTYuNyw1MTguNEwxMDg0LjEsNTMwLjlMMTEyMy40LDUzMC45TDExMjMuNCw1MTguNFoiIHN0eWxlPSJmaWxsOnJnYigyNCwyOSwzMSk7ZmlsbC1ydWxlOm5vbnplcm87Ii8+CiAgICAgICAgPHBhdGggZD0iTTEwNTMuMiw1NjEuOUwxMDU5LjYsNTU1LjVMMTA4MS4yLDU1NS41TDEwODEuMiw1NjhMMTA1My4yLDU2OEwxMDUzLjIsNTYxLjlaIiBzdHlsZT0iZmlsbDpyZ2IoMjQsMjksMzEpO2ZpbGwtcnVsZTpub256ZXJvOyIvPgogICAgICAgIDxwYXRoIGQ9Ik0xMDU3LjksNTQzLjNMMTA3MS43LDU0My4zTDEwODQuMyw1MzAuOEwxMDU3LjksNTMwLjhMMTA1Ny45LDU0My4zWiIgc3R5bGU9ImZpbGw6cmdiKDI0LDI5LDMxKTtmaWxsLXJ1bGU6bm9uemVybzsiLz4KICAgICAgICA8cGF0aCBkPSJNMTA0Mi44LDU2MS45TDEwNTMuMiw1NjEuOUwxMDY1LjYsNTQ5LjRMMTA0Mi44LDU0OS40TDEwNDIuOCw1NjEuOVoiIHN0eWxlPSJmaWxsOnJnYigyNCwyOSwzMSk7ZmlsbC1ydWxlOm5vbnplcm87Ii8+CiAgICAgICAgPHBhdGggZD0iTTEwOTYuNyw1MTguNEwxMDkwLjMsNTI0LjhMMTA0OS41LDUyNC44TDEwNDkuNSw1MTIuM0wxMDk2LjcsNTEyLjNMMTA5Ni43LDUxOC40WiIgc3R5bGU9ImZpbGw6cmdiKDI0LDI5LDMxKTtmaWxsLXJ1bGU6bm9uemVybzsiLz4KICAgICAgICA8cGF0aCBkPSJNODI4LjYsNTU5LjdMODA5LDU1OS43TDgwNS42LDU2OC4xTDc5Nyw1NjguMUw4MTUuMSw1MjUuN0w4MjIuNiw1MjUuN0w4NDAuNyw1NjguMUw4MzIsNTY4LjFMODI4LjYsNTU5LjdaTTgyNS45LDU1M0w4MTguOCw1MzUuN0w4MTEuNyw1NTNMODI1LjksNTUzWiIgc3R5bGU9ImZpbGw6cmdiKDI0LDI5LDMxKTtmaWxsLXJ1bGU6bm9uemVybzsiLz4KICAgICAgICA8cGF0aCBkPSJNOTYwLjEsNTQxLjNDOTYyLjYsNTM3LjYgOTY4LjksNTM3LjIgOTcxLjUsNTM3LjJMOTcxLjUsNTQ0LjRDOTY4LjMsNTQ0LjQgOTY1LjEsNTQ0LjUgOTYzLjIsNTQ1LjlDOTYxLjMsNTQ3LjMgOTYwLjMsNTQ5LjIgOTYwLjMsNTUxLjVMOTYwLjMsNTY4LjFMOTUyLjUsNTY4LjFMOTUyLjUsNTM3LjJMOTYwLDUzNy4yTDk2MC4xLDU0MS4zWiIgc3R5bGU9ImZpbGw6cmdiKDI0LDI5LDMxKTtmaWxsLXJ1bGU6bm9uemVybzsiLz4KICAgICAgICA8cmVjdCB4PSI5NzUuOCIgeT0iNTM3LjIiIHdpZHRoPSI3LjgiIGhlaWdodD0iMzAuOSIgc3R5bGU9ImZpbGw6cmdiKDI0LDI5LDMxKTsiLz4KICAgICAgICA8cmVjdCB4PSI5NzUuOCIgeT0iNTIzLjQiIHdpZHRoPSI3LjgiIGhlaWdodD0iOS4yIiBzdHlsZT0iZmlsbDpyZ2IoMjQsMjksMzEpOyIvPgogICAgICAgIDxwYXRoIGQ9Ik0xMDIyLjMsNTIzLjRMMTAyMi4zLDU2OC4xTDEwMTQuOCw1NjguMUwxMDE0LjYsNTYzLjRDMTAxMy41LDU2NSAxMDEyLjEsNTY2LjMgMTAxMC40LDU2Ny4zQzEwMDguNyw1NjguMiAxMDA2LjYsNTY4LjcgMTAwNC4yLDU2OC43QzEwMDIuMSw1NjguNyAxMDAwLjEsNTY4LjMgOTk4LjQsNTY3LjZDOTk2LjYsNTY2LjggOTk1LDU2NS44IDk5My43LDU2NC40Qzk5Mi40LDU2MyA5OTEuMyw1NjEuMyA5OTAuNiw1NTkuNEM5ODkuOCw1NTcuNSA5ODkuNSw1NTUuMyA5ODkuNSw1NTIuOUM5ODkuNSw1NTAuNSA5ODkuOSw1NDguMyA5OTAuNiw1NDYuM0M5OTEuNCw1NDQuMyA5OTIuNCw1NDIuNiA5OTMuNyw1NDEuMkM5OTUsNTM5LjggOTk2LjYsNTM4LjcgOTk4LjQsNTM3LjlDMTAwMC4yLDUzNy4xIDEwMDIuMSw1MzYuNyAxMDA0LjIsNTM2LjdDMTAwNi42LDUzNi43IDEwMDguNiw1MzcuMSAxMDEwLjMsNTM4QzEwMTIsNTM4LjkgMTAxMy40LDU0MC4xIDEwMTQuNSw1NDEuOEwxMDE0LjUsNTIzLjVMMTAyMi4zLDUyMy41TDEwMjIuMyw1MjMuNFpNMTAwNS45LDU2MkMxMDA4LjUsNTYyIDEwMTAuNSw1NjEuMSAxMDEyLjEsNTU5LjRDMTAxMy43LDU1Ny43IDEwMTQuNSw1NTUuNCAxMDE0LjUsNTUyLjZDMTAxNC41LDU0OS44IDEwMTMuNyw1NDcuNiAxMDEyLjEsNTQ1LjhDMTAxMC41LDU0NC4xIDEwMDguNSw1NDMuMiAxMDA1LjksNTQzLjJDMTAwMy40LDU0My4yIDEwMDEuMyw1NDQuMSA5OTkuOCw1NDUuOEM5OTguMiw1NDcuNSA5OTcuNCw1NDkuOCA5OTcuNCw1NTIuNkM5OTcuNCw1NTUuNCA5OTguMiw1NTcuNiA5OTkuOCw1NTkuM0MxMDAxLjQsNTYxLjEgMTAwMy40LDU2MiAxMDA1LjksNTYyIiBzdHlsZT0iZmlsbDpyZ2IoMjQsMjksMzEpO2ZpbGwtcnVsZTpub256ZXJvOyIvPgogICAgICAgIDxwYXRoIGQ9Ik04ODUuOCw1NDQuMkw4NjYuNSw1NDQuMkw4NjYuNSw1NTAuOUw4NzcuNSw1NTAuOUM4NzcuMiw1NTQuMyA4NzUuOSw1NTYuOSA4NzMuNyw1NTlDODcxLjUsNTYxIDg2OC43LDU2MiA4NjUuMSw1NjJDODYzLjEsNTYyIDg2MS4yLDU2MS42IDg1OS42LDU2MC45Qzg1Ny45LDU2MC4yIDg1Ni41LDU1OS4yIDg1NS4zLDU1Ny44Qzg1NC4xLDU1Ni41IDg1My4yLDU1NC45IDg1Mi41LDU1M0M4NTEuOCw1NTEuMSA4NTEuNSw1NDkuMSA4NTEuNSw1NDYuOEM4NTEuNSw1NDQuNSA4NTEuOCw1NDIuNSA4NTIuNSw1NDAuNkM4NTMuMSw1MzguNyA4NTQuMSw1MzcuMiA4NTUuMyw1MzUuOEM4NTYuNSw1MzQuNSA4NTcuOSw1MzMuNSA4NTkuNiw1MzIuN0M4NjEuMyw1MzIgODYzLjEsNTMxLjYgODY1LjIsNTMxLjZDODY5LjQsNTMxLjYgODcyLjYsNTMyLjYgODc0LjgsNTM0LjZMODgwLDUyOS40Qzg3Ni4xLDUyNi40IDg3MS4xLDUyNC44IDg2NS4yLDUyNC44Qzg2MS45LDUyNC44IDg1OC45LDUyNS4zIDg1Ni4yLDUyNi40Qzg1My41LDUyNy41IDg1MS4yLDUyOC45IDg0OS4zLDUzMC44Qzg0Ny40LDUzMi43IDg0NS45LDUzNSA4NDQuOSw1MzcuN0M4NDMuOSw1NDAuNCA4NDMuNCw1NDMuNCA4NDMuNCw1NDYuNkM4NDMuNCw1NDkuOCA4NDMuOSw1NTIuOCA4NDUsNTU1LjVDODQ2LjEsNTU4LjIgODQ3LjUsNTYwLjUgODQ5LjQsNTYyLjRDODUxLjMsNTY0LjMgODUzLjYsNTY1LjggODU2LjMsNTY2LjhDODU5LDU2Ny45IDg2Miw1NjguNCA4NjUuMiw1NjguNEM4NjguNCw1NjguNCA4NzEuMyw1NjcuOSA4NzMuOSw1NjYuOEM4NzYuNSw1NjUuNyA4NzguNyw1NjQuMyA4ODAuNSw1NjIuNEM4ODIuMyw1NjAuNSA4ODMuNyw1NTguMiA4ODQuNyw1NTUuNUM4ODUuNyw1NTIuOCA4ODYuMiw1NDkuOCA4ODYuMiw1NDYuNkw4ODYuMiw1NDUuM0M4ODUuOSw1NDUuMSA4ODUuOCw1NDQuNiA4ODUuOCw1NDQuMiIgc3R5bGU9ImZpbGw6cmdiKDI0LDI5LDMxKTtmaWxsLXJ1bGU6bm9uemVybzsiLz4KICAgICAgICA8cGF0aCBkPSJNOTQ2LjgsNTQ0LjJMOTI3LjUsNTQ0LjJMOTI3LjUsNTUwLjlMOTM4LjUsNTUwLjlDOTM4LjIsNTU0LjMgOTM2LjksNTU2LjkgOTM0LjcsNTU5QzkzMi41LDU2MSA5MjkuNyw1NjIgOTI2LjEsNTYyQzkyNC4xLDU2MiA5MjIuMiw1NjEuNiA5MjAuNiw1NjAuOUM5MTguOSw1NjAuMiA5MTcuNSw1NTkuMiA5MTYuMyw1NTcuOEM5MTUuMSw1NTYuNSA5MTQuMiw1NTQuOSA5MTMuNSw1NTNDOTEyLjgsNTUxLjEgOTEyLjUsNTQ5LjEgOTEyLjUsNTQ2LjhDOTEyLjUsNTQ0LjUgOTEyLjgsNTQyLjUgOTEzLjUsNTQwLjZDOTE0LjEsNTM4LjcgOTE1LjEsNTM3LjIgOTE2LjMsNTM1LjhDOTE3LjUsNTM0LjUgOTE4LjksNTMzLjUgOTIwLjYsNTMyLjdDOTIyLjMsNTMyIDkyNC4xLDUzMS42IDkyNi4yLDUzMS42QzkzMC40LDUzMS42IDkzMy42LDUzMi42IDkzNS44LDUzNC42TDk0MSw1MjkuNEM5MzcuMSw1MjYuNCA5MzIuMSw1MjQuOCA5MjYuMiw1MjQuOEM5MjIuOSw1MjQuOCA5MTkuOSw1MjUuMyA5MTcuMiw1MjYuNEM5MTQuNSw1MjcuNSA5MTIuMiw1MjguOSA5MTAuMyw1MzAuOEM5MDguNCw1MzIuNyA5MDYuOSw1MzUgOTA1LjksNTM3LjdDOTA0LjksNTQwLjQgOTA0LjQsNTQzLjQgOTA0LjQsNTQ2LjZDOTA0LjQsNTQ5LjggOTA0LjksNTUyLjggOTA2LDU1NS41QzkwNy4xLDU1OC4yIDkwOC41LDU2MC41IDkxMC40LDU2Mi40QzkxMi4zLDU2NC4zIDkxNC42LDU2NS44IDkxNy4zLDU2Ni44QzkyMCw1NjcuOSA5MjMsNTY4LjQgOTI2LjIsNTY4LjRDOTI5LjQsNTY4LjQgOTMyLjMsNTY3LjkgOTM0LjksNTY2LjhDOTM3LjUsNTY1LjcgOTM5LjcsNTY0LjMgOTQxLjUsNTYyLjRDOTQzLjMsNTYwLjUgOTQ0LjcsNTU4LjIgOTQ1LjcsNTU1LjVDOTQ2LjcsNTUyLjggOTQ3LjIsNTQ5LjggOTQ3LjIsNTQ2LjZMOTQ3LjIsNTQ1LjNDOTQ2LjksNTQ1LjEgOTQ2LjgsNTQ0LjYgOTQ2LjgsNTQ0LjIiIHN0eWxlPSJmaWxsOnJnYigyNCwyOSwzMSk7ZmlsbC1ydWxlOm5vbnplcm87Ii8+CiAgICA8L2c+Cjwvc3ZnPgo=);\n  background-repeat: no-repeat;\n  background-size: 170px 40px;\n  display: block;\n  height: 40px;\n  width: 170px;\n  opacity: 0.5;\n}\n\n.ag-watermark-text {\n  opacity: 0.5;\n  font-weight: bold;\n  font-family: Impact, sans-serif;\n  font-size: 19px;\n  padding-left: 0.7rem;\n}\n\n.ag-root-wrapper-body {\n  display: flex;\n  flex-direction: row;\n}\n.ag-root-wrapper-body.ag-layout-normal {\n  flex: 1 1 auto;\n  height: 0;\n  min-height: 0;\n}\n\n.ag-root {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n}\n.ag-root.ag-layout-normal, .ag-root.ag-layout-auto-height {\n  overflow: hidden;\n  flex: 1 1 auto;\n  width: 0;\n}\n.ag-root.ag-layout-normal {\n  height: 100%;\n}\n\n.ag-header-viewport,\n.ag-floating-top-viewport,\n.ag-body-viewport,\n.ag-center-cols-viewport,\n.ag-floating-bottom-viewport,\n.ag-body-horizontal-scroll-viewport,\n.ag-body-vertical-scroll-viewport,\n.ag-virtual-list-viewport,\n.ag-sticky-top-viewport {\n  position: relative;\n  height: 100%;\n  min-width: 0px;\n  overflow: hidden;\n  flex: 1 1 auto;\n}\n\n.ag-body-viewport, .ag-center-cols-viewport {\n  -ms-overflow-style: none;\n  scrollbar-width: none;\n}\n.ag-body-viewport::-webkit-scrollbar, .ag-center-cols-viewport::-webkit-scrollbar {\n  display: none;\n}\n\n.ag-body-viewport {\n  display: flex;\n}\n.ag-body-viewport.ag-layout-normal {\n  overflow-y: auto;\n  -webkit-overflow-scrolling: touch;\n}\n\n.ag-center-cols-viewport {\n  min-height: 100%;\n  width: 100%;\n  overflow-x: auto;\n}\n\n.ag-body-horizontal-scroll-viewport {\n  overflow-x: scroll;\n}\n\n.ag-body-vertical-scroll-viewport {\n  overflow-y: scroll;\n}\n\n.ag-virtual-list-viewport {\n  overflow: auto;\n  width: 100%;\n}\n\n.ag-header-container,\n.ag-floating-top-container,\n.ag-body-container,\n.ag-pinned-right-cols-container,\n.ag-center-cols-container,\n.ag-pinned-left-cols-container,\n.ag-floating-bottom-container,\n.ag-body-horizontal-scroll-container,\n.ag-body-vertical-scroll-container,\n.ag-full-width-container,\n.ag-floating-bottom-full-width-container,\n.ag-virtual-list-container,\n.ag-sticky-top-container {\n  position: relative;\n}\n\n.ag-header-container,\n.ag-floating-top-container,\n.ag-floating-bottom-container,\n.ag-sticky-top-container {\n  height: 100%;\n  white-space: nowrap;\n}\n\n.ag-center-cols-container {\n  display: block;\n}\n\n.ag-pinned-right-cols-container {\n  display: block;\n}\n\n.ag-body-horizontal-scroll-container {\n  height: 100%;\n}\n\n.ag-body-vertical-scroll-container {\n  width: 100%;\n}\n\n.ag-full-width-container,\n.ag-floating-top-full-width-container,\n.ag-floating-bottom-full-width-container,\n.ag-sticky-top-full-width-container {\n  position: absolute;\n  top: 0px;\n  pointer-events: none;\n}\n.ag-ltr .ag-full-width-container,\n.ag-ltr .ag-floating-top-full-width-container,\n.ag-ltr .ag-floating-bottom-full-width-container,\n.ag-ltr .ag-sticky-top-full-width-container {\n  left: 0;\n}\n.ag-rtl .ag-full-width-container,\n.ag-rtl .ag-floating-top-full-width-container,\n.ag-rtl .ag-floating-bottom-full-width-container,\n.ag-rtl .ag-sticky-top-full-width-container {\n  right: 0;\n}\n\n.ag-full-width-container {\n  width: 100%;\n}\n\n.ag-floating-bottom-full-width-container, .ag-floating-top-full-width-container {\n  display: inline-block;\n  overflow: hidden;\n  height: 100%;\n  width: 100%;\n}\n\n.ag-virtual-list-container {\n  overflow: hidden;\n}\n\n.ag-body {\n  position: relative;\n  display: flex;\n  flex: 1 1 auto;\n  flex-direction: row !important;\n  min-height: 0;\n}\n\n.ag-body-horizontal-scroll,\n.ag-body-vertical-scroll {\n  min-height: 0;\n  min-width: 0;\n  display: flex;\n  position: relative;\n}\n.ag-body-horizontal-scroll.ag-scrollbar-invisible,\n.ag-body-vertical-scroll.ag-scrollbar-invisible {\n  position: absolute;\n  bottom: 0;\n}\n.ag-body-horizontal-scroll.ag-scrollbar-invisible.ag-apple-scrollbar,\n.ag-body-vertical-scroll.ag-scrollbar-invisible.ag-apple-scrollbar {\n  opacity: 0;\n  transition: opacity 400ms;\n  visibility: hidden;\n}\n.ag-body-horizontal-scroll.ag-scrollbar-invisible.ag-apple-scrollbar.ag-scrollbar-scrolling, .ag-body-horizontal-scroll.ag-scrollbar-invisible.ag-apple-scrollbar.ag-scrollbar-active,\n.ag-body-vertical-scroll.ag-scrollbar-invisible.ag-apple-scrollbar.ag-scrollbar-scrolling,\n.ag-body-vertical-scroll.ag-scrollbar-invisible.ag-apple-scrollbar.ag-scrollbar-active {\n  visibility: visible;\n  opacity: 1;\n}\n\n.ag-body-horizontal-scroll {\n  width: 100%;\n}\n.ag-body-horizontal-scroll.ag-scrollbar-invisible {\n  left: 0;\n  right: 0;\n}\n\n.ag-body-vertical-scroll {\n  height: 100%;\n}\n.ag-body-vertical-scroll.ag-scrollbar-invisible {\n  top: 0;\n  z-index: 10;\n}\n.ag-ltr .ag-body-vertical-scroll.ag-scrollbar-invisible {\n  right: 0;\n}\n.ag-rtl .ag-body-vertical-scroll.ag-scrollbar-invisible {\n  left: 0;\n}\n\n.ag-force-vertical-scroll {\n  overflow-y: scroll !important;\n}\n\n.ag-horizontal-left-spacer, .ag-horizontal-right-spacer {\n  height: 100%;\n  min-width: 0;\n  overflow-x: scroll;\n}\n.ag-horizontal-left-spacer.ag-scroller-corner, .ag-horizontal-right-spacer.ag-scroller-corner {\n  overflow-x: hidden;\n}\n\n.ag-header, .ag-pinned-left-header, .ag-pinned-right-header {\n  display: inline-block;\n  overflow: hidden;\n  position: relative;\n}\n\n.ag-header-cell-sortable .ag-header-cell-label {\n  cursor: pointer;\n}\n\n.ag-header {\n  display: flex;\n  width: 100%;\n  white-space: nowrap;\n}\n\n.ag-pinned-left-header {\n  height: 100%;\n}\n\n.ag-pinned-right-header {\n  height: 100%;\n}\n\n.ag-header-row {\n  position: absolute;\n}\n\n.ag-header-row:not(.ag-header-row-column-group) {\n  overflow: hidden;\n}\n\n.ag-header.ag-header-allow-overflow .ag-header-row {\n  overflow: visible;\n}\n\n.ag-header-cell {\n  display: inline-flex;\n  align-items: center;\n  position: absolute;\n  height: 100%;\n  overflow: hidden;\n}\n\n.ag-header-cell.ag-header-active .ag-header-cell-menu-button {\n  opacity: 1;\n}\n\n.ag-header-cell-menu-button:not(.ag-header-menu-always-show) {\n  transition: opacity 0.2s;\n  opacity: 0;\n}\n\n.ag-header-group-cell-label, .ag-header-cell-label {\n  display: flex;\n  flex: 1 1 auto;\n  overflow: hidden;\n  align-items: center;\n  text-overflow: ellipsis;\n  align-self: stretch;\n}\n\n.ag-header-group-cell-label.ag-sticky-label {\n  position: sticky;\n  flex: none;\n  max-width: 100%;\n}\n\n.ag-header-cell-text {\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n.ag-header-cell:not(.ag-header-cell-auto-height) .ag-header-cell-comp-wrapper {\n  height: 100%;\n  display: flex;\n  align-items: center;\n}\n\n.ag-header-cell-comp-wrapper {\n  width: 100%;\n  overflow: hidden;\n}\n\n.ag-header-cell-wrap-text .ag-header-cell-comp-wrapper {\n  white-space: normal;\n}\n\n.ag-right-aligned-header .ag-header-cell-label {\n  flex-direction: row-reverse;\n}\n\n.ag-header-group-text {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.ag-header-cell-resize {\n  position: absolute;\n  z-index: 2;\n  height: 100%;\n  width: 8px;\n  top: 0;\n  cursor: ew-resize;\n}\n.ag-ltr .ag-header-cell-resize {\n  right: -4px;\n}\n.ag-rtl .ag-header-cell-resize {\n  left: -4px;\n}\n\n.ag-pinned-left-header .ag-header-cell-resize {\n  right: -4px;\n}\n\n.ag-pinned-right-header .ag-header-cell-resize {\n  left: -4px;\n}\n\n.ag-header-select-all {\n  display: flex;\n}\n\n.ag-column-moving .ag-cell {\n  transition: left 0.2s;\n}\n.ag-column-moving .ag-header-cell {\n  transition: left 0.2s;\n}\n.ag-column-moving .ag-header-group-cell {\n  transition: left 0.2s, width 0.2s;\n}\n\n.ag-column-panel {\n  display: flex;\n  flex-direction: column;\n  overflow: hidden;\n  flex: 1 1 auto;\n}\n\n.ag-column-select {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  overflow: hidden;\n  flex: 3 1 0px;\n}\n\n.ag-column-select-header {\n  position: relative;\n  display: flex;\n  flex: none;\n}\n\n.ag-column-select-header-icon {\n  position: relative;\n}\n\n.ag-column-select-header-filter-wrapper {\n  flex: 1 1 auto;\n}\n\n.ag-column-select-header-filter {\n  width: 100%;\n}\n\n.ag-column-select-list {\n  flex: 1 1 0px;\n  overflow: hidden;\n}\n\n.ag-column-drop {\n  position: relative;\n  display: inline-flex;\n  align-items: center;\n  overflow: auto;\n  width: 100%;\n}\n\n.ag-column-drop-list {\n  display: flex;\n  align-items: center;\n}\n\n.ag-column-drop-cell {\n  position: relative;\n  display: flex;\n  align-items: center;\n}\n\n.ag-column-drop-cell-text {\n  overflow: hidden;\n  flex: 1 1 auto;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.ag-column-drop-vertical {\n  display: flex;\n  flex-direction: column;\n  overflow: hidden;\n  align-items: stretch;\n  flex: 1 1 0px;\n}\n\n.ag-column-drop-vertical-title-bar {\n  display: flex;\n  align-items: center;\n  flex: none;\n}\n\n.ag-column-drop-vertical-list {\n  position: relative;\n  align-items: stretch;\n  flex-grow: 1;\n  flex-direction: column;\n  overflow-x: auto;\n}\n.ag-column-drop-vertical-list > * {\n  flex: none;\n}\n\n.ag-column-drop-empty .ag-column-drop-vertical-list {\n  overflow: hidden;\n}\n\n.ag-column-drop-vertical-empty-message {\n  display: block;\n}\n\n.ag-column-drop.ag-column-drop-horizontal {\n  white-space: nowrap;\n  overflow: hidden;\n}\n\n.ag-column-drop-cell-button {\n  cursor: pointer;\n}\n\n.ag-filter-toolpanel {\n  flex: 1 1 0px;\n  min-width: 0;\n}\n\n.ag-filter-toolpanel-header {\n  position: relative;\n}\n\n.ag-filter-toolpanel-header, .ag-filter-toolpanel-search {\n  display: flex;\n  align-items: center;\n}\n.ag-filter-toolpanel-header > *, .ag-filter-toolpanel-search > * {\n  display: flex;\n  align-items: center;\n}\n\n.ag-filter-apply-panel {\n  display: flex;\n  justify-content: flex-end;\n  overflow: hidden;\n}\n\n.ag-row-animation .ag-row {\n  transition: transform 0.4s, top 0.4s, background-color 0.1s, opacity 0.2s;\n}\n\n.ag-row-animation .ag-row.ag-after-created {\n  transition: transform 0.4s, top 0.4s, height 0.4s, background-color 0.1s, opacity 0.2s;\n}\n\n.ag-row-no-animation .ag-row {\n  transition: background-color 0.1s;\n}\n\n.ag-row {\n  white-space: nowrap;\n  width: 100%;\n}\n\n.ag-row-loading {\n  display: flex;\n  align-items: center;\n}\n\n.ag-row-position-absolute {\n  position: absolute;\n}\n\n.ag-row-position-relative {\n  position: relative;\n}\n\n.ag-full-width-row {\n  overflow: hidden;\n  pointer-events: all;\n}\n\n.ag-row-inline-editing {\n  z-index: 1;\n}\n\n.ag-row-dragging {\n  z-index: 2;\n}\n\n.ag-stub-cell {\n  display: flex;\n  align-items: center;\n}\n\n.ag-cell {\n  display: inline-block;\n  position: absolute;\n  white-space: nowrap;\n  height: 100%;\n}\n\n.ag-cell-value {\n  flex: 1 1 auto;\n}\n\n.ag-cell-value, .ag-group-value {\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n.ag-cell-wrap-text {\n  white-space: normal;\n  word-break: break-all;\n}\n\n.ag-cell-wrapper {\n  display: flex;\n  align-items: center;\n}\n.ag-cell-wrapper.ag-row-group {\n  align-items: flex-start;\n}\n\n.ag-sparkline-wrapper {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  left: 0;\n  top: 0;\n}\n\n.ag-full-width-row .ag-cell-wrapper.ag-row-group {\n  height: 100%;\n  align-items: center;\n}\n\n.ag-cell-inline-editing {\n  z-index: 1;\n}\n.ag-cell-inline-editing .ag-cell-wrapper,\n.ag-cell-inline-editing .ag-cell-edit-wrapper,\n.ag-cell-inline-editing .ag-cell-editor,\n.ag-cell-inline-editing .ag-cell-editor .ag-wrapper,\n.ag-cell-inline-editing .ag-cell-editor input {\n  height: 100%;\n  width: 100%;\n  line-height: normal;\n}\n\n.ag-cell .ag-icon {\n  display: inline-block;\n  vertical-align: middle;\n}\n\n.ag-set-filter-item {\n  display: flex;\n  align-items: center;\n  height: 100%;\n}\n\n.ag-set-filter-item-checkbox {\n  display: flex;\n  overflow: hidden;\n}\n\n.ag-set-filter-group-icons {\n  display: block;\n}\n.ag-set-filter-group-icons > * {\n  cursor: pointer;\n}\n\n.ag-filter-body-wrapper {\n  display: flex;\n  flex-direction: column;\n}\n\n.ag-filter-filter {\n  flex: 1 1 0px;\n}\n\n.ag-filter-condition {\n  display: flex;\n  justify-content: center;\n}\n\n.ag-floating-filter-body {\n  position: relative;\n  display: flex;\n  flex: 1 1 auto;\n  height: 100%;\n}\n\n.ag-floating-filter-full-body {\n  display: flex;\n  flex: 1 1 auto;\n  height: 100%;\n  width: 100%;\n  align-items: center;\n  overflow: hidden;\n}\n\n.ag-floating-filter-full-body > div {\n  flex: 1 1 auto;\n}\n\n.ag-floating-filter-input {\n  align-items: center;\n  display: flex;\n  width: 100%;\n}\n.ag-floating-filter-input > * {\n  flex: 1 1 auto;\n}\n\n.ag-floating-filter-button {\n  display: flex;\n  flex: none;\n}\n\n.ag-set-floating-filter-input input[disabled] {\n  pointer-events: none;\n}\n\n.ag-dnd-ghost {\n  position: absolute;\n  display: inline-flex;\n  align-items: center;\n  cursor: move;\n  white-space: nowrap;\n  z-index: 9999;\n}\n\n.ag-overlay {\n  height: 100%;\n  left: 0;\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  width: 100%;\n  z-index: 2;\n}\n\n.ag-overlay-panel {\n  display: flex;\n  height: 100%;\n  width: 100%;\n}\n\n.ag-overlay-wrapper {\n  display: flex;\n  flex: none;\n  width: 100%;\n  height: 100%;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n}\n\n.ag-overlay-loading-wrapper {\n  pointer-events: all;\n}\n\n.ag-popup-child {\n  z-index: 5;\n  top: 0;\n}\n\n.ag-popup-editor {\n  position: absolute;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n\n.ag-large-text-input {\n  display: block;\n}\n\n.ag-virtual-list-item {\n  position: absolute;\n  width: 100%;\n}\n\n.ag-floating-top {\n  overflow: hidden;\n  white-space: nowrap;\n  width: 100%;\n  position: relative;\n  display: flex;\n}\n\n.ag-pinned-left-floating-top {\n  display: inline-block;\n  overflow: hidden;\n  position: relative;\n  min-width: 0px;\n}\n\n.ag-pinned-right-floating-top {\n  display: inline-block;\n  overflow: hidden;\n  position: relative;\n  min-width: 0px;\n}\n\n.ag-floating-bottom {\n  overflow: hidden;\n  white-space: nowrap;\n  width: 100%;\n  position: relative;\n  display: flex;\n}\n\n.ag-pinned-left-floating-bottom {\n  display: inline-block;\n  overflow: hidden;\n  position: relative;\n  min-width: 0px;\n}\n\n.ag-pinned-right-floating-bottom {\n  display: inline-block;\n  overflow: hidden;\n  position: relative;\n  min-width: 0px;\n}\n\n.ag-sticky-top {\n  position: absolute;\n  display: flex;\n  width: 100%;\n}\n\n.ag-pinned-left-sticky-top,\n.ag-pinned-right-sticky-top {\n  position: relative;\n  height: 100%;\n  overflow: hidden;\n}\n\n.ag-sticky-top-full-width-container {\n  overflow: hidden;\n  width: 100%;\n  height: 100%;\n}\n\n.ag-dialog, .ag-panel {\n  display: flex;\n  flex-direction: column;\n  position: relative;\n  overflow: hidden;\n}\n\n.ag-panel-title-bar {\n  display: flex;\n  flex: none;\n  align-items: center;\n  cursor: default;\n}\n\n.ag-panel-title-bar-title {\n  flex: 1 1 auto;\n}\n\n.ag-panel-title-bar-buttons {\n  display: flex;\n}\n\n.ag-panel-title-bar-button {\n  cursor: pointer;\n}\n\n.ag-panel-content-wrapper {\n  display: flex;\n  flex: 1 1 auto;\n  position: relative;\n  overflow: hidden;\n}\n\n.ag-dialog {\n  position: absolute;\n}\n\n.ag-resizer {\n  position: absolute;\n  pointer-events: none;\n  z-index: 1;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n.ag-resizer.ag-resizer-topLeft {\n  top: 0;\n  left: 0;\n  height: 5px;\n  width: 5px;\n  cursor: nwse-resize;\n}\n.ag-resizer.ag-resizer-top {\n  top: 0;\n  left: 5px;\n  right: 5px;\n  height: 5px;\n  cursor: ns-resize;\n}\n.ag-resizer.ag-resizer-topRight {\n  top: 0;\n  right: 0;\n  height: 5px;\n  width: 5px;\n  cursor: nesw-resize;\n}\n.ag-resizer.ag-resizer-right {\n  top: 5px;\n  right: 0;\n  bottom: 5px;\n  width: 5px;\n  cursor: ew-resize;\n}\n.ag-resizer.ag-resizer-bottomRight {\n  bottom: 0;\n  right: 0;\n  height: 5px;\n  width: 5px;\n  cursor: nwse-resize;\n}\n.ag-resizer.ag-resizer-bottom {\n  bottom: 0;\n  left: 5px;\n  right: 5px;\n  height: 5px;\n  cursor: ns-resize;\n}\n.ag-resizer.ag-resizer-bottomLeft {\n  bottom: 0;\n  left: 0;\n  height: 5px;\n  width: 5px;\n  cursor: nesw-resize;\n}\n.ag-resizer.ag-resizer-left {\n  left: 0;\n  top: 5px;\n  bottom: 5px;\n  width: 5px;\n  cursor: ew-resize;\n}\n\n.ag-tooltip {\n  position: absolute;\n  z-index: 99999;\n}\n\n.ag-tooltip-custom {\n  position: absolute;\n  z-index: 99999;\n}\n\n.ag-tooltip:not(.ag-tooltip-interactive),\n.ag-tooltip-custom:not(.ag-tooltip-interactive) {\n  pointer-events: none;\n}\n\n.ag-value-slide-out {\n  margin-right: 5px;\n  opacity: 1;\n  transition: opacity 3s, margin-right 3s;\n  transition-timing-function: linear;\n}\n\n.ag-value-slide-out-end {\n  margin-right: 10px;\n  opacity: 0;\n}\n\n.ag-opacity-zero {\n  opacity: 0 !important;\n}\n\n.ag-menu {\n  max-height: 100%;\n  overflow-y: auto;\n  position: absolute;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n\n.ag-menu-column-select-wrapper {\n  height: 265px;\n  overflow: auto;\n}\n.ag-menu-column-select-wrapper .ag-column-select {\n  height: 100%;\n}\n\n.ag-menu-list {\n  display: table;\n  width: 100%;\n}\n\n.ag-menu-option, .ag-menu-separator {\n  display: table-row;\n}\n\n.ag-menu-option-part, .ag-menu-separator-part {\n  display: table-cell;\n  vertical-align: middle;\n}\n\n.ag-menu-option-text {\n  white-space: nowrap;\n}\n\n.ag-compact-menu-option {\n  width: 100%;\n  display: flex;\n  flex-wrap: nowrap;\n}\n\n.ag-compact-menu-option-text {\n  white-space: nowrap;\n  flex: 1 1 auto;\n}\n\n.ag-rich-select {\n  cursor: default;\n  outline: none;\n  height: 100%;\n}\n\n.ag-rich-select-value {\n  display: flex;\n  align-items: center;\n  height: 100%;\n}\n.ag-rich-select-value .ag-picker-field-display {\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.ag-rich-select-value .ag-picker-field-display.ag-display-as-placeholder {\n  opacity: 0.5;\n}\n\n.ag-rich-select-list {\n  position: relative;\n}\n.ag-rich-select-list .ag-loading-text {\n  min-height: 2rem;\n}\n\n.ag-rich-select-row {\n  display: flex;\n  flex: 1 1 auto;\n  align-items: center;\n  white-space: nowrap;\n  overflow: hidden;\n  height: 100%;\n}\n\n.ag-rich-select-field-input {\n  flex: 1 1 auto;\n}\n.ag-rich-select-field-input .ag-input-field-input {\n  padding: 0 !important;\n  border: none !important;\n  box-shadow: none !important;\n  text-overflow: ellipsis;\n}\n.ag-rich-select-field-input .ag-input-field-input::-moz-placeholder {\n  opacity: 0.8;\n}\n.ag-rich-select-field-input .ag-input-field-input::placeholder {\n  opacity: 0.8;\n}\n\n.ag-autocomplete {\n  align-items: center;\n  display: flex;\n}\n.ag-autocomplete > * {\n  flex: 1 1 auto;\n}\n\n.ag-autocomplete-list-popup {\n  position: absolute;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n\n.ag-autocomplete-list {\n  position: relative;\n}\n\n.ag-autocomplete-virtual-list-item {\n  display: flex;\n}\n\n.ag-autocomplete-row {\n  display: flex;\n  flex: 1 1 auto;\n  align-items: center;\n  overflow: hidden;\n}\n\n.ag-autocomplete-row-label {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n.ag-paging-panel {\n  align-items: center;\n  display: flex;\n  justify-content: flex-end;\n}\n\n.ag-paging-page-summary-panel {\n  display: flex;\n  align-items: center;\n}\n\n.ag-paging-button {\n  position: relative;\n}\n\n.ag-disabled .ag-paging-page-summary-panel {\n  pointer-events: none;\n}\n\n.ag-tool-panel-wrapper {\n  display: flex;\n  overflow-y: auto;\n  overflow-x: hidden;\n  cursor: default;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n\n.ag-column-select-column,\n.ag-column-select-column-group,\n.ag-select-agg-func-item {\n  position: relative;\n  align-items: center;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  height: 100%;\n}\n.ag-column-select-column > *,\n.ag-column-select-column-group > *,\n.ag-select-agg-func-item > * {\n  flex: none;\n}\n\n.ag-select-agg-func-item,\n.ag-column-select-column-label {\n  flex: 1 1 auto;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.ag-column-select-checkbox {\n  display: flex;\n}\n\n.ag-tool-panel-horizontal-resize {\n  cursor: ew-resize;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  width: 5px;\n  z-index: 1;\n}\n\n.ag-ltr .ag-side-bar-left .ag-tool-panel-horizontal-resize {\n  right: -3px;\n}\n.ag-rtl .ag-side-bar-left .ag-tool-panel-horizontal-resize {\n  left: -3px;\n}\n\n.ag-ltr .ag-side-bar-right .ag-tool-panel-horizontal-resize {\n  left: -3px;\n}\n.ag-rtl .ag-side-bar-right .ag-tool-panel-horizontal-resize {\n  right: -3px;\n}\n\n.ag-details-row {\n  width: 100%;\n}\n\n.ag-details-row-fixed-height {\n  height: 100%;\n}\n\n.ag-details-grid {\n  width: 100%;\n}\n\n.ag-details-grid-fixed-height {\n  height: 100%;\n}\n\n.ag-header-group-cell {\n  display: flex;\n  align-items: center;\n  height: 100%;\n  position: absolute;\n}\n\n.ag-header-group-cell-no-group.ag-header-span-height .ag-header-cell-resize {\n  display: none;\n}\n\n.ag-cell-label-container {\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row-reverse;\n  align-items: center;\n  height: 100%;\n  width: 100%;\n  overflow: hidden;\n  padding: 5px 0px;\n}\n\n.ag-right-aligned-header .ag-cell-label-container {\n  flex-direction: row;\n}\n.ag-right-aligned-header .ag-header-cell-text {\n  text-align: end;\n}\n\n.ag-side-bar {\n  display: flex;\n  flex-direction: row-reverse;\n}\n\n.ag-side-bar-left {\n  order: -1;\n  flex-direction: row;\n}\n\n.ag-side-button-button {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  flex-wrap: nowrap;\n  white-space: nowrap;\n  outline: none;\n  cursor: pointer;\n}\n\n.ag-side-button-label {\n  writing-mode: vertical-lr;\n}\n\n.ag-status-bar {\n  display: flex;\n  justify-content: space-between;\n  overflow: hidden;\n}\n\n.ag-status-panel {\n  display: inline-flex;\n}\n\n.ag-status-name-value {\n  white-space: nowrap;\n}\n\n.ag-status-bar-left {\n  display: inline-flex;\n}\n\n.ag-status-bar-center {\n  display: inline-flex;\n}\n\n.ag-status-bar-right {\n  display: inline-flex;\n}\n\n.ag-icon {\n  display: block;\n  speak: none;\n}\n\n.ag-group {\n  position: relative;\n  width: 100%;\n}\n\n.ag-group-title-bar {\n  display: flex;\n  align-items: center;\n}\n\n.ag-group-title {\n  display: block;\n  flex: 1 1 auto;\n  min-width: 0;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n\n.ag-group-title-bar .ag-group-title {\n  cursor: default;\n}\n\n.ag-group-toolbar {\n  display: flex;\n  align-items: center;\n}\n\n.ag-group-container {\n  display: flex;\n}\n\n.ag-disabled .ag-group-container {\n  pointer-events: none;\n}\n\n.ag-group-container-horizontal {\n  flex-direction: row;\n  flex-wrap: wrap;\n}\n\n.ag-group-container-vertical {\n  flex-direction: column;\n}\n\n.ag-column-group-icons {\n  display: block;\n}\n.ag-column-group-icons > * {\n  cursor: pointer;\n}\n\n.ag-group-item-alignment-stretch .ag-group-item {\n  align-items: stretch;\n}\n\n.ag-group-item-alignment-start .ag-group-item {\n  align-items: flex-start;\n}\n\n.ag-group-item-alignment-end .ag-group-item {\n  align-items: flex-end;\n}\n\n.ag-toggle-button-icon {\n  transition: right 0.3s;\n  position: absolute;\n  top: -1px;\n}\n\n.ag-input-field, .ag-select {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n\n.ag-input-field-input {\n  flex: 1 1 auto;\n}\n\n.ag-floating-filter-input .ag-input-field-input[type=date] {\n  width: 1px;\n}\n\n.ag-range-field {\n  display: flex;\n  align-items: center;\n}\n\n.ag-angle-select {\n  display: flex;\n  align-items: center;\n}\n\n.ag-angle-select-wrapper {\n  display: flex;\n}\n\n.ag-angle-select-parent-circle {\n  display: block;\n  position: relative;\n}\n\n.ag-angle-select-child-circle {\n  position: absolute;\n}\n\n.ag-slider-wrapper {\n  display: flex;\n}\n.ag-slider-wrapper .ag-input-field {\n  flex: 1 1 auto;\n}\n\n.ag-picker-field-display {\n  flex: 1 1 auto;\n}\n\n.ag-picker-field {\n  display: flex;\n  align-items: center;\n}\n\n.ag-picker-field-icon {\n  display: flex;\n  border: 0;\n  padding: 0;\n  margin: 0;\n  cursor: pointer;\n}\n\n.ag-picker-field-wrapper {\n  overflow: hidden;\n}\n\n.ag-label-align-right .ag-label {\n  order: 1;\n}\n.ag-label-align-right > * {\n  flex: none;\n}\n\n.ag-label-align-top {\n  flex-direction: column;\n  align-items: flex-start;\n}\n.ag-label-align-top > * {\n  align-self: stretch;\n}\n\n.ag-label-ellipsis {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  flex: 1;\n}\n\n.ag-color-panel {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  text-align: center;\n}\n\n.ag-spectrum-color {\n  flex: 1 1 auto;\n  position: relative;\n  overflow: hidden;\n  cursor: default;\n}\n\n.ag-spectrum-fill {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n}\n\n.ag-spectrum-val {\n  cursor: pointer;\n}\n\n.ag-spectrum-dragger {\n  position: absolute;\n  pointer-events: none;\n  cursor: pointer;\n}\n\n.ag-spectrum-hue {\n  cursor: default;\n  background: linear-gradient(to left, #ff0000 3%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);\n}\n\n.ag-spectrum-alpha {\n  cursor: default;\n}\n\n.ag-spectrum-hue-background {\n  width: 100%;\n  height: 100%;\n}\n\n.ag-spectrum-alpha-background {\n  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgb(0, 0, 0));\n  width: 100%;\n  height: 100%;\n}\n\n.ag-spectrum-tool {\n  cursor: pointer;\n}\n\n.ag-spectrum-slider {\n  position: absolute;\n  pointer-events: none;\n}\n\n.ag-recent-colors {\n  display: flex;\n}\n\n.ag-recent-color {\n  cursor: pointer;\n}\n\n.ag-ltr .ag-column-select-indent-1 {\n  padding-left: 20px;\n}\n.ag-rtl .ag-column-select-indent-1 {\n  padding-right: 20px;\n}\n\n.ag-ltr .ag-set-filter-indent-1 {\n  padding-left: 20px;\n}\n.ag-rtl .ag-set-filter-indent-1 {\n  padding-right: 20px;\n}\n\n.ag-ltr .ag-row-group-indent-1 {\n  padding-left: 20px;\n}\n.ag-rtl .ag-row-group-indent-1 {\n  padding-right: 20px;\n}\n\n.ag-ltr .ag-column-select-indent-2 {\n  padding-left: 40px;\n}\n.ag-rtl .ag-column-select-indent-2 {\n  padding-right: 40px;\n}\n\n.ag-ltr .ag-set-filter-indent-2 {\n  padding-left: 40px;\n}\n.ag-rtl .ag-set-filter-indent-2 {\n  padding-right: 40px;\n}\n\n.ag-ltr .ag-row-group-indent-2 {\n  padding-left: 40px;\n}\n.ag-rtl .ag-row-group-indent-2 {\n  padding-right: 40px;\n}\n\n.ag-ltr .ag-column-select-indent-3 {\n  padding-left: 60px;\n}\n.ag-rtl .ag-column-select-indent-3 {\n  padding-right: 60px;\n}\n\n.ag-ltr .ag-set-filter-indent-3 {\n  padding-left: 60px;\n}\n.ag-rtl .ag-set-filter-indent-3 {\n  padding-right: 60px;\n}\n\n.ag-ltr .ag-row-group-indent-3 {\n  padding-left: 60px;\n}\n.ag-rtl .ag-row-group-indent-3 {\n  padding-right: 60px;\n}\n\n.ag-ltr .ag-column-select-indent-4 {\n  padding-left: 80px;\n}\n.ag-rtl .ag-column-select-indent-4 {\n  padding-right: 80px;\n}\n\n.ag-ltr .ag-set-filter-indent-4 {\n  padding-left: 80px;\n}\n.ag-rtl .ag-set-filter-indent-4 {\n  padding-right: 80px;\n}\n\n.ag-ltr .ag-row-group-indent-4 {\n  padding-left: 80px;\n}\n.ag-rtl .ag-row-group-indent-4 {\n  padding-right: 80px;\n}\n\n.ag-ltr .ag-column-select-indent-5 {\n  padding-left: 100px;\n}\n.ag-rtl .ag-column-select-indent-5 {\n  padding-right: 100px;\n}\n\n.ag-ltr .ag-set-filter-indent-5 {\n  padding-left: 100px;\n}\n.ag-rtl .ag-set-filter-indent-5 {\n  padding-right: 100px;\n}\n\n.ag-ltr .ag-row-group-indent-5 {\n  padding-left: 100px;\n}\n.ag-rtl .ag-row-group-indent-5 {\n  padding-right: 100px;\n}\n\n.ag-ltr .ag-column-select-indent-6 {\n  padding-left: 120px;\n}\n.ag-rtl .ag-column-select-indent-6 {\n  padding-right: 120px;\n}\n\n.ag-ltr .ag-set-filter-indent-6 {\n  padding-left: 120px;\n}\n.ag-rtl .ag-set-filter-indent-6 {\n  padding-right: 120px;\n}\n\n.ag-ltr .ag-row-group-indent-6 {\n  padding-left: 120px;\n}\n.ag-rtl .ag-row-group-indent-6 {\n  padding-right: 120px;\n}\n\n.ag-ltr .ag-column-select-indent-7 {\n  padding-left: 140px;\n}\n.ag-rtl .ag-column-select-indent-7 {\n  padding-right: 140px;\n}\n\n.ag-ltr .ag-set-filter-indent-7 {\n  padding-left: 140px;\n}\n.ag-rtl .ag-set-filter-indent-7 {\n  padding-right: 140px;\n}\n\n.ag-ltr .ag-row-group-indent-7 {\n  padding-left: 140px;\n}\n.ag-rtl .ag-row-group-indent-7 {\n  padding-right: 140px;\n}\n\n.ag-ltr .ag-column-select-indent-8 {\n  padding-left: 160px;\n}\n.ag-rtl .ag-column-select-indent-8 {\n  padding-right: 160px;\n}\n\n.ag-ltr .ag-set-filter-indent-8 {\n  padding-left: 160px;\n}\n.ag-rtl .ag-set-filter-indent-8 {\n  padding-right: 160px;\n}\n\n.ag-ltr .ag-row-group-indent-8 {\n  padding-left: 160px;\n}\n.ag-rtl .ag-row-group-indent-8 {\n  padding-right: 160px;\n}\n\n.ag-ltr .ag-column-select-indent-9 {\n  padding-left: 180px;\n}\n.ag-rtl .ag-column-select-indent-9 {\n  padding-right: 180px;\n}\n\n.ag-ltr .ag-set-filter-indent-9 {\n  padding-left: 180px;\n}\n.ag-rtl .ag-set-filter-indent-9 {\n  padding-right: 180px;\n}\n\n.ag-ltr .ag-row-group-indent-9 {\n  padding-left: 180px;\n}\n.ag-rtl .ag-row-group-indent-9 {\n  padding-right: 180px;\n}\n\n.ag-ltr {\n  direction: ltr;\n}\n.ag-ltr .ag-body, .ag-ltr .ag-floating-top, .ag-ltr .ag-floating-bottom, .ag-ltr .ag-header, .ag-ltr .ag-sticky-top, .ag-ltr .ag-body-viewport, .ag-ltr .ag-body-horizontal-scroll {\n  flex-direction: row;\n}\n\n.ag-rtl {\n  direction: rtl;\n}\n.ag-rtl .ag-body, .ag-rtl .ag-floating-top, .ag-rtl .ag-floating-bottom, .ag-rtl .ag-header, .ag-rtl .ag-sticky-top, .ag-rtl .ag-body-viewport, .ag-rtl .ag-body-horizontal-scroll {\n  flex-direction: row-reverse;\n}\n.ag-rtl .ag-icon-contracted,\n.ag-rtl .ag-icon-expanded,\n.ag-rtl .ag-icon-tree-closed {\n  display: block;\n  transform: rotate(180deg);\n}\n\n.ag-body .ag-body-viewport {\n  -webkit-overflow-scrolling: touch;\n}\n\n.ag-layout-print.ag-body {\n  display: block;\n  height: unset;\n}\n.ag-layout-print.ag-root-wrapper {\n  display: inline-block;\n}\n.ag-layout-print .ag-body-vertical-scroll {\n  display: none;\n}\n.ag-layout-print .ag-body-horizontal-scroll {\n  display: none;\n}\n.ag-layout-print.ag-force-vertical-scroll {\n  overflow-y: visible !important;\n}\n\n@media print {\n  .ag-root-wrapper.ag-layout-print {\n    display: table;\n  }\n  .ag-root-wrapper.ag-layout-print .ag-root-wrapper-body,\n  .ag-root-wrapper.ag-layout-print .ag-root,\n  .ag-root-wrapper.ag-layout-print .ag-body-viewport,\n  .ag-root-wrapper.ag-layout-print .ag-center-cols-container,\n  .ag-root-wrapper.ag-layout-print .ag-center-cols-viewport,\n  .ag-root-wrapper.ag-layout-print .ag-body-horizontal-scroll-viewport,\n  .ag-root-wrapper.ag-layout-print .ag-virtual-list-viewport {\n    height: auto !important;\n    overflow: hidden !important;\n    display: block !important;\n  }\n  .ag-root-wrapper.ag-layout-print .ag-row, .ag-root-wrapper.ag-layout-print .ag-cell {\n    -moz-column-break-inside: avoid;\n         break-inside: avoid;\n  }\n}\n[class^=ag-], [class^=ag-]:focus, [class^=ag-]:after, [class^=ag-]:before {\n  box-sizing: border-box;\n  outline: none;\n}\n\n[class^=ag-]::-ms-clear {\n  display: none;\n}\n\n.ag-checkbox .ag-input-wrapper,\n.ag-radio-button .ag-input-wrapper {\n  overflow: visible;\n}\n\n.ag-range-field .ag-input-wrapper {\n  height: 100%;\n}\n\n.ag-toggle-button {\n  flex: none;\n  width: unset;\n  min-width: unset;\n}\n\n.ag-button {\n  border-radius: 0px;\n  color: var(--ag-foreground-color);\n}\n\n.ag-button:hover {\n  background-color: transparent;\n}\n\n.ag-ltr .ag-label-align-right .ag-label {\n  margin-left: var(--ag-grid-size);\n}\n.ag-rtl .ag-label-align-right .ag-label {\n  margin-right: var(--ag-grid-size);\n}\n\ninput[class^=ag-] {\n  margin: 0;\n  background-color: var(--ag-background-color);\n}\n\ntextarea[class^=ag-],\nselect[class^=ag-] {\n  background-color: var(--ag-background-color);\n}\n\ninput[class^=ag-]:not([type]),\ninput[class^=ag-][type=text],\ninput[class^=ag-][type=number],\ninput[class^=ag-][type=tel],\ninput[class^=ag-][type=date],\ninput[class^=ag-][type=datetime-local],\ntextarea[class^=ag-] {\n  font-size: inherit;\n  line-height: inherit;\n  color: inherit;\n  border: var(--ag-borders-input) var(--ag-input-border-color);\n}\ninput[class^=ag-]:not([type]):disabled,\ninput[class^=ag-][type=text]:disabled,\ninput[class^=ag-][type=number]:disabled,\ninput[class^=ag-][type=tel]:disabled,\ninput[class^=ag-][type=date]:disabled,\ninput[class^=ag-][type=datetime-local]:disabled,\ntextarea[class^=ag-]:disabled {\n  color: var(--ag-disabled-foreground-color);\n  background-color: var(--ag-input-disabled-background-color);\n  border-color: var(--ag-input-disabled-border-color);\n}\ninput[class^=ag-]:not([type]):focus,\ninput[class^=ag-][type=text]:focus,\ninput[class^=ag-][type=number]:focus,\ninput[class^=ag-][type=tel]:focus,\ninput[class^=ag-][type=date]:focus,\ninput[class^=ag-][type=datetime-local]:focus,\ntextarea[class^=ag-]:focus {\n  outline: none;\n  box-shadow: var(--ag-input-focus-box-shadow);\n  border-color: var(--ag-input-focus-border-color);\n}\ninput[class^=ag-]:not([type]):invalid,\ninput[class^=ag-][type=text]:invalid,\ninput[class^=ag-][type=number]:invalid,\ninput[class^=ag-][type=tel]:invalid,\ninput[class^=ag-][type=date]:invalid,\ninput[class^=ag-][type=datetime-local]:invalid,\ntextarea[class^=ag-]:invalid {\n  border: var(--ag-borders-input-invalid) var(--ag-input-border-color-invalid);\n}\n\ninput[class^=ag-][type=number]:not(.ag-number-field-input-stepper) {\n  -moz-appearance: textfield;\n}\ninput[class^=ag-][type=number]:not(.ag-number-field-input-stepper)::-webkit-outer-spin-button, input[class^=ag-][type=number]:not(.ag-number-field-input-stepper)::-webkit-inner-spin-button {\n  -webkit-appearance: none;\n  margin: 0;\n}\n\ninput[class^=ag-][type=range] {\n  padding: 0;\n}\n\ninput[class^=ag-][type=button]:focus, button[class^=ag-]:focus {\n  box-shadow: var(--ag-input-focus-box-shadow);\n}\n\n.ag-drag-handle {\n  color: var(--ag-secondary-foreground-color);\n}\n\n.ag-list-item, .ag-virtual-list-item {\n  height: var(--ag-list-item-height);\n}\n\n.ag-keyboard-focus .ag-virtual-list-item:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-virtual-list-item:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 4px;\n  left: 4px;\n  display: block;\n  width: calc(100% - 8px);\n  height: calc(100% - 8px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-select-list {\n  background-color: var(--ag-background-color);\n  overflow-y: auto;\n  overflow-x: hidden;\n  border-radius: var(--ag-border-radius);\n  border: var(--ag-borders) var(--ag-border-color);\n}\n\n.ag-list-item {\n  display: flex;\n  align-items: center;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.ag-list-item.ag-active-item {\n  background-color: var(--ag-row-hover-color);\n}\n\n.ag-select-list-item {\n  padding-left: 4px;\n  padding-right: 4px;\n  cursor: default;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n.ag-select-list-item span {\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n\n.ag-row-drag,\n.ag-selection-checkbox,\n.ag-group-expanded,\n.ag-group-contracted {\n  color: var(--ag-secondary-foreground-color);\n}\n.ag-ltr .ag-row-drag,\n.ag-ltr .ag-selection-checkbox,\n.ag-ltr .ag-group-expanded,\n.ag-ltr .ag-group-contracted {\n  margin-right: var(--ag-cell-widget-spacing);\n}\n.ag-rtl .ag-row-drag,\n.ag-rtl .ag-selection-checkbox,\n.ag-rtl .ag-group-expanded,\n.ag-rtl .ag-group-contracted {\n  margin-left: var(--ag-cell-widget-spacing);\n}\n\n.ag-cell-wrapper > *:not(.ag-cell-value):not(.ag-group-value) {\n  --ag-internal-calculated-line-height: var(--ag-line-height, calc(var(--ag-row-height) - var(--ag-row-border-width)));\n  --ag-internal-padded-row-height: calc(var(--ag-row-height) - var(--ag-row-border-width));\n  height: min(var(--ag-internal-calculated-line-height), var(--ag-internal-padded-row-height));\n  display: flex;\n  align-items: center;\n  flex: none;\n}\n\n.ag-group-expanded,\n.ag-group-contracted {\n  cursor: pointer;\n}\n\n.ag-group-title-bar-icon {\n  cursor: pointer;\n  flex: none;\n  color: var(--ag-secondary-foreground-color);\n}\n\n.ag-ltr .ag-group-child-count {\n  margin-left: 2px;\n}\n.ag-rtl .ag-group-child-count {\n  margin-right: 2px;\n}\n\n.ag-group-title-bar {\n  background-color: var(--ag-subheader-background-color);\n  padding: var(--ag-grid-size);\n}\n\n.ag-group-toolbar {\n  padding: var(--ag-grid-size);\n  background-color: var(--ag-subheader-toolbar-background-color);\n}\n\n.ag-disabled-group-title-bar, .ag-disabled-group-container {\n  opacity: 0.5;\n}\n\n.group-item {\n  margin: calc(var(--ag-grid-size) * 0.5) 0;\n}\n\n.ag-label {\n  white-space: nowrap;\n}\n.ag-ltr .ag-label {\n  margin-right: var(--ag-grid-size);\n}\n.ag-rtl .ag-label {\n  margin-left: var(--ag-grid-size);\n}\n\n.ag-label-align-top .ag-label {\n  margin-bottom: calc(var(--ag-grid-size) * 0.5);\n}\n\n.ag-angle-select[disabled] {\n  color: var(--ag-disabled-foreground-color);\n  pointer-events: none;\n}\n.ag-angle-select[disabled] .ag-angle-select-field {\n  opacity: 0.4;\n}\n\n.ag-ltr .ag-slider-field,\n.ag-ltr .ag-angle-select-field {\n  margin-right: calc(var(--ag-grid-size) * 2);\n}\n.ag-rtl .ag-slider-field,\n.ag-rtl .ag-angle-select-field {\n  margin-left: calc(var(--ag-grid-size) * 2);\n}\n\n.ag-angle-select-parent-circle {\n  width: 24px;\n  height: 24px;\n  border-radius: 12px;\n  border: solid 1px;\n  border-color: var(--ag-border-color);\n  background-color: var(--ag-background-color);\n}\n\n.ag-angle-select-child-circle {\n  top: 4px;\n  left: 12px;\n  width: 6px;\n  height: 6px;\n  margin-left: -3px;\n  margin-top: -4px;\n  border-radius: 3px;\n  background-color: var(--ag-secondary-foreground-color);\n}\n\n.ag-picker-field-wrapper {\n  border: var(--ag-borders);\n  border-color: var(--ag-border-color);\n  border-radius: 5px;\n}\n.ag-picker-field-wrapper:disabled {\n  color: var(--ag-disabled-foreground-color);\n  background-color: var(--ag-input-disabled-background-color);\n  border-color: var(--ag-input-disabled-border-color);\n}\n.ag-picker-field-wrapper.ag-picker-has-focus, .ag-picker-field-wrapper:focus-within {\n  outline: none;\n  box-shadow: var(--ag-input-focus-box-shadow);\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-picker-field-button {\n  background-color: var(--ag-background-color);\n  color: var(--ag-secondary-foreground-color);\n}\n\n.ag-dialog.ag-color-dialog {\n  border-radius: 5px;\n}\n\n.ag-color-picker .ag-picker-field-display {\n  height: var(--ag-icon-size);\n}\n\n.ag-color-panel {\n  padding: var(--ag-grid-size);\n}\n\n.ag-spectrum-color {\n  background-color: rgb(255, 0, 0);\n  border-radius: 2px;\n}\n\n.ag-spectrum-tools {\n  padding: 10px;\n}\n\n.ag-spectrum-sat {\n  background-image: linear-gradient(to right, white, rgba(204, 154, 129, 0));\n}\n\n.ag-spectrum-val {\n  background-image: linear-gradient(to top, black, rgba(204, 154, 129, 0));\n}\n\n.ag-spectrum-dragger {\n  border-radius: 12px;\n  height: 12px;\n  width: 12px;\n  border: 1px solid white;\n  background: black;\n  box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.24);\n}\n\n.ag-spectrum-hue-background {\n  border-radius: 2px;\n}\n\n.ag-spectrum-alpha-background {\n  border-radius: 2px;\n}\n\n.ag-spectrum-tool {\n  margin-bottom: 10px;\n  height: 11px;\n  border-radius: 2px;\n}\n\n.ag-spectrum-slider {\n  margin-top: -12px;\n  width: 13px;\n  height: 13px;\n  border-radius: 13px;\n  background-color: rgb(248, 248, 248);\n  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);\n}\n\n.ag-recent-color {\n  margin: 0 3px;\n}\n.ag-recent-color:first-child {\n  margin-left: 0;\n}\n.ag-recent-color:last-child {\n  margin-right: 0;\n}\n\n.ag-spectrum-color:focus-visible:not(:disabled):not([readonly]),\n.ag-spectrum-slider:focus-visible:not(:disabled):not([readonly]),\n.ag-recent-color:focus-visible:not(:disabled):not([readonly]) {\n  box-shadow: var(--ag-input-focus-box-shadow);\n}\n\n.ag-dnd-ghost {\n  border: var(--ag-borders) var(--ag-border-color);\n  background: var(--ag-background-color);\n  border-radius: var(--ag-card-radius);\n  box-shadow: var(--ag-card-shadow);\n  padding: var(--ag-grid-size);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  border: var(--ag-borders-secondary) var(--ag-secondary-border-color);\n  color: var(--ag-secondary-foreground-color);\n  height: var(--ag-header-height) !important;\n  line-height: var(--ag-header-height);\n  margin: 0;\n  padding: 0 calc(var(--ag-grid-size) * 2);\n  transform: translateY(calc(var(--ag-grid-size) * 2));\n}\n\n.ag-dnd-ghost-icon {\n  margin-right: var(--ag-grid-size);\n  color: var(--ag-foreground-color);\n}\n\n.ag-popup-child:not(.ag-tooltip-custom) {\n  box-shadow: var(--ag-popup-shadow);\n}\n\n.ag-select .ag-picker-field-wrapper {\n  background-color: var(--ag-background-color);\n  min-height: var(--ag-list-item-height);\n  cursor: default;\n}\n.ag-select.ag-disabled .ag-picker-field-wrapper:focus {\n  box-shadow: none;\n}\n.ag-select:not(.ag-cell-editor, .ag-label-align-top) {\n  height: var(--ag-list-item-height);\n}\n.ag-select .ag-picker-field-display {\n  margin: 4px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.ag-select .ag-picker-field-icon {\n  display: flex;\n  align-items: center;\n}\n.ag-select.ag-disabled {\n  opacity: 0.5;\n}\n\n.ag-rich-select-value,\n.ag-rich-select-list {\n  background-color: var(--ag-background-color);\n}\n\n.ag-rich-select-list {\n  width: 100%;\n  height: auto;\n  border-radius: var(--ag-border-radius);\n  border: var(--ag-borders) var(--ag-border-color);\n}\n.ag-rich-select-list .ag-loading-text {\n  padding: var(--ag-widget-vertical-spacing) var(--ag-widget-horizontal-spacing);\n}\n\n.ag-rich-select-value {\n  border-bottom: var(--ag-borders-secondary) var(--ag-secondary-border-color);\n  padding-top: 0;\n  padding-bottom: 0;\n}\n.ag-ltr .ag-rich-select-value {\n  padding-left: var(--ag-cell-horizontal-padding);\n}\n.ag-rtl .ag-rich-select-value {\n  padding-right: var(--ag-cell-horizontal-padding);\n}\n.ag-ltr .ag-rich-select-value {\n  padding-right: var(--ag-grid-size);\n}\n.ag-rtl .ag-rich-select-value {\n  padding-left: var(--ag-grid-size);\n}\n\n.ag-ltr .ag-rich-select-field-input {\n  left: calc(var(--ag-cell-horizontal-padding));\n}\n.ag-rtl .ag-rich-select-field-input {\n  right: calc(var(--ag-cell-horizontal-padding));\n}\n\n.ag-popup-editor .ag-rich-select-value {\n  height: var(--ag-row-height);\n  min-width: 200px;\n}\n\n.ag-rich-select-virtual-list-item {\n  cursor: default;\n  height: var(--ag-list-item-height);\n}\n.ag-keyboard-focus .ag-rich-select-virtual-list-item:focus::after {\n  content: none;\n}\n.ag-rich-select-virtual-list-item:hover {\n  background-color: var(--ag-row-hover-color);\n}\n\n.ag-ltr .ag-rich-select-row {\n  padding-left: var(--ag-cell-horizontal-padding);\n}\n.ag-rtl .ag-rich-select-row {\n  padding-right: var(--ag-cell-horizontal-padding);\n}\n\n.ag-rich-select-row-selected {\n  background-color: var(--ag-selected-row-background-color);\n}\n\n.ag-rich-select-row-text-highlight {\n  font-weight: bold;\n}\n\n.ag-autocomplete {\n  width: 100%;\n}\n\n.ag-autocomplete-list {\n  width: 100%;\n  min-width: 200px;\n  height: calc(var(--ag-row-height) * 6.5);\n}\n\n.ag-autocomplete-virtual-list-item {\n  cursor: default;\n  height: var(--ag-list-item-height);\n}\n.ag-keyboard-focus .ag-autocomplete-virtual-list-item:focus::after {\n  content: none;\n}\n.ag-autocomplete-virtual-list-item:hover {\n  background-color: var(--ag-row-hover-color);\n}\n\n.ag-autocomplete-row-label {\n  margin: 0px var(--ag-widget-container-horizontal-padding);\n}\n\n.ag-autocomplete-row-selected {\n  background-color: var(--ag-selected-row-background-color);\n}\n\n.ag-dragging-range-handle .ag-dialog,\n.ag-dragging-fill-handle .ag-dialog {\n  opacity: 0.7;\n  pointer-events: none;\n}\n\n.ag-dialog {\n  border-radius: var(--ag-border-radius);\n  border: var(--ag-borders) var(--ag-border-color);\n  box-shadow: var(--ag-popup-shadow);\n}\n\n.ag-panel {\n  background-color: var(--ag-background-color);\n}\n\n.ag-panel-title-bar {\n  background-color: var(--ag-header-background-color);\n  color: var(--ag-header-foreground-color);\n  height: var(--ag-header-height);\n  padding: var(--ag-grid-size) var(--ag-cell-horizontal-padding);\n  border-bottom: var(--ag-borders) var(--ag-border-color);\n}\n\n.ag-ltr .ag-panel-title-bar-button {\n  margin-left: var(--ag-grid-size);\n}\n.ag-rtl .ag-panel-title-bar-button {\n  margin-right: var(--ag-grid-size);\n}\n\n.ag-tooltip {\n  background-color: var(--ag-tooltip-background-color);\n  color: var(--ag-foreground-color);\n  padding: var(--ag-grid-size);\n  border: var(--ag-borders) var(--ag-border-color);\n  border-radius: var(--ag-card-radius);\n  white-space: normal;\n}\n\n.ag-tooltip.ag-tooltip-animate,\n.ag-tooltip-custom.ag-tooltip-animate {\n  transition: opacity 1s;\n}\n.ag-tooltip.ag-tooltip-animate.ag-tooltip-hiding,\n.ag-tooltip-custom.ag-tooltip-animate.ag-tooltip-hiding {\n  opacity: 0;\n}\n\n.ag-ltr .ag-column-select-indent-1 {\n  padding-left: calc(1 * var(--ag-column-select-indent-size));\n}\n.ag-rtl .ag-column-select-indent-1 {\n  padding-right: calc(1 * var(--ag-column-select-indent-size));\n}\n\n.ag-ltr .ag-column-select-indent-2 {\n  padding-left: calc(2 * var(--ag-column-select-indent-size));\n}\n.ag-rtl .ag-column-select-indent-2 {\n  padding-right: calc(2 * var(--ag-column-select-indent-size));\n}\n\n.ag-ltr .ag-column-select-indent-3 {\n  padding-left: calc(3 * var(--ag-column-select-indent-size));\n}\n.ag-rtl .ag-column-select-indent-3 {\n  padding-right: calc(3 * var(--ag-column-select-indent-size));\n}\n\n.ag-ltr .ag-column-select-indent-4 {\n  padding-left: calc(4 * var(--ag-column-select-indent-size));\n}\n.ag-rtl .ag-column-select-indent-4 {\n  padding-right: calc(4 * var(--ag-column-select-indent-size));\n}\n\n.ag-ltr .ag-column-select-indent-5 {\n  padding-left: calc(5 * var(--ag-column-select-indent-size));\n}\n.ag-rtl .ag-column-select-indent-5 {\n  padding-right: calc(5 * var(--ag-column-select-indent-size));\n}\n\n.ag-ltr .ag-column-select-indent-6 {\n  padding-left: calc(6 * var(--ag-column-select-indent-size));\n}\n.ag-rtl .ag-column-select-indent-6 {\n  padding-right: calc(6 * var(--ag-column-select-indent-size));\n}\n\n.ag-ltr .ag-column-select-indent-7 {\n  padding-left: calc(7 * var(--ag-column-select-indent-size));\n}\n.ag-rtl .ag-column-select-indent-7 {\n  padding-right: calc(7 * var(--ag-column-select-indent-size));\n}\n\n.ag-ltr .ag-column-select-indent-8 {\n  padding-left: calc(8 * var(--ag-column-select-indent-size));\n}\n.ag-rtl .ag-column-select-indent-8 {\n  padding-right: calc(8 * var(--ag-column-select-indent-size));\n}\n\n.ag-ltr .ag-column-select-indent-9 {\n  padding-left: calc(9 * var(--ag-column-select-indent-size));\n}\n.ag-rtl .ag-column-select-indent-9 {\n  padding-right: calc(9 * var(--ag-column-select-indent-size));\n}\n\n.ag-column-select-header-icon {\n  cursor: pointer;\n}\n\n.ag-keyboard-focus .ag-column-select-header-icon:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-column-select-header-icon:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 0px;\n  left: 0px;\n  display: block;\n  width: calc(100% - 0px);\n  height: calc(100% - 0px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-ltr .ag-column-group-icons:not(:last-child),\n.ag-ltr .ag-column-select-header-icon:not(:last-child),\n.ag-ltr .ag-column-select-header-checkbox:not(:last-child),\n.ag-ltr .ag-column-select-header-filter-wrapper:not(:last-child),\n.ag-ltr .ag-column-select-checkbox:not(:last-child),\n.ag-ltr .ag-column-select-column-drag-handle:not(:last-child),\n.ag-ltr .ag-column-select-column-group-drag-handle:not(:last-child),\n.ag-ltr .ag-column-select-column-label:not(:last-child) {\n  margin-right: var(--ag-widget-horizontal-spacing);\n}\n.ag-rtl .ag-column-group-icons:not(:last-child),\n.ag-rtl .ag-column-select-header-icon:not(:last-child),\n.ag-rtl .ag-column-select-header-checkbox:not(:last-child),\n.ag-rtl .ag-column-select-header-filter-wrapper:not(:last-child),\n.ag-rtl .ag-column-select-checkbox:not(:last-child),\n.ag-rtl .ag-column-select-column-drag-handle:not(:last-child),\n.ag-rtl .ag-column-select-column-group-drag-handle:not(:last-child),\n.ag-rtl .ag-column-select-column-label:not(:last-child) {\n  margin-left: var(--ag-widget-horizontal-spacing);\n}\n\n.ag-keyboard-focus .ag-column-select-virtual-list-item:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-column-select-virtual-list-item:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 1px;\n  left: 1px;\n  display: block;\n  width: calc(100% - 2px);\n  height: calc(100% - 2px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-column-select-column-group:not(:last-child),\n.ag-column-select-column:not(:last-child) {\n  margin-bottom: var(--ag-widget-vertical-spacing);\n}\n\n.ag-column-select-column-readonly,\n.ag-column-select-column-group-readonly {\n  color: var(--ag-disabled-foreground-color);\n  pointer-events: none;\n}\n\n.ag-ltr .ag-column-select-add-group-indent {\n  margin-left: calc(var(--ag-icon-size) + var(--ag-grid-size) * 2);\n}\n.ag-rtl .ag-column-select-add-group-indent {\n  margin-right: calc(var(--ag-icon-size) + var(--ag-grid-size) * 2);\n}\n\n.ag-column-select-virtual-list-viewport {\n  padding: calc(var(--ag-widget-container-vertical-padding) * 0.5) 0px;\n}\n\n.ag-column-select-virtual-list-item {\n  padding: 0 var(--ag-widget-container-horizontal-padding);\n}\n\n.ag-checkbox-edit {\n  padding-left: var(--ag-cell-horizontal-padding);\n  padding-right: var(--ag-cell-horizontal-padding);\n}\n\n.ag-rtl {\n  text-align: right;\n}\n\n.ag-root-wrapper {\n  border: var(--ag-borders) var(--ag-border-color);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-1 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 1);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-1 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 1);\n}\n\n.ag-ltr .ag-row-group-indent-1 {\n  padding-left: calc(1 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-1 {\n  padding-right: calc(1 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-1 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-1 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-2 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 2);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-2 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 2);\n}\n\n.ag-ltr .ag-row-group-indent-2 {\n  padding-left: calc(2 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-2 {\n  padding-right: calc(2 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-2 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-2 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-3 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 3);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-3 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 3);\n}\n\n.ag-ltr .ag-row-group-indent-3 {\n  padding-left: calc(3 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-3 {\n  padding-right: calc(3 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-3 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-3 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-4 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 4);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-4 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 4);\n}\n\n.ag-ltr .ag-row-group-indent-4 {\n  padding-left: calc(4 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-4 {\n  padding-right: calc(4 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-4 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-4 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-5 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 5);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-5 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 5);\n}\n\n.ag-ltr .ag-row-group-indent-5 {\n  padding-left: calc(5 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-5 {\n  padding-right: calc(5 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-5 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-5 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-6 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 6);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-6 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 6);\n}\n\n.ag-ltr .ag-row-group-indent-6 {\n  padding-left: calc(6 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-6 {\n  padding-right: calc(6 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-6 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-6 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-7 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 7);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-7 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 7);\n}\n\n.ag-ltr .ag-row-group-indent-7 {\n  padding-left: calc(7 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-7 {\n  padding-right: calc(7 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-7 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-7 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-8 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 8);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-8 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 8);\n}\n\n.ag-ltr .ag-row-group-indent-8 {\n  padding-left: calc(8 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-8 {\n  padding-right: calc(8 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-8 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-8 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-9 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 9);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-9 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 9);\n}\n\n.ag-ltr .ag-row-group-indent-9 {\n  padding-left: calc(9 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-9 {\n  padding-right: calc(9 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-9 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-9 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-10 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 10);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-10 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 10);\n}\n\n.ag-ltr .ag-row-group-indent-10 {\n  padding-left: calc(10 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-10 {\n  padding-right: calc(10 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-10 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-10 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-11 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 11);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-11 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 11);\n}\n\n.ag-ltr .ag-row-group-indent-11 {\n  padding-left: calc(11 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-11 {\n  padding-right: calc(11 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-11 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-11 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-12 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 12);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-12 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 12);\n}\n\n.ag-ltr .ag-row-group-indent-12 {\n  padding-left: calc(12 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-12 {\n  padding-right: calc(12 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-12 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-12 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-13 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 13);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-13 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 13);\n}\n\n.ag-ltr .ag-row-group-indent-13 {\n  padding-left: calc(13 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-13 {\n  padding-right: calc(13 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-13 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-13 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-14 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 14);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-14 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 14);\n}\n\n.ag-ltr .ag-row-group-indent-14 {\n  padding-left: calc(14 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-14 {\n  padding-right: calc(14 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-14 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-14 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-15 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 15);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-15 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 15);\n}\n\n.ag-ltr .ag-row-group-indent-15 {\n  padding-left: calc(15 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-15 {\n  padding-right: calc(15 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-15 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-15 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-16 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 16);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-16 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 16);\n}\n\n.ag-ltr .ag-row-group-indent-16 {\n  padding-left: calc(16 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-16 {\n  padding-right: calc(16 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-16 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-16 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-17 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 17);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-17 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 17);\n}\n\n.ag-ltr .ag-row-group-indent-17 {\n  padding-left: calc(17 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-17 {\n  padding-right: calc(17 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-17 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-17 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-18 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 18);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-18 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 18);\n}\n\n.ag-ltr .ag-row-group-indent-18 {\n  padding-left: calc(18 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-18 {\n  padding-right: calc(18 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-18 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-18 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-19 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 19);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-19 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 19);\n}\n\n.ag-ltr .ag-row-group-indent-19 {\n  padding-left: calc(19 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-19 {\n  padding-right: calc(19 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-19 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-19 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-20 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 20);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-20 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 20);\n}\n\n.ag-ltr .ag-row-group-indent-20 {\n  padding-left: calc(20 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-20 {\n  padding-right: calc(20 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-20 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-20 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-21 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 21);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-21 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 21);\n}\n\n.ag-ltr .ag-row-group-indent-21 {\n  padding-left: calc(21 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-21 {\n  padding-right: calc(21 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-21 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-21 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-22 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 22);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-22 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 22);\n}\n\n.ag-ltr .ag-row-group-indent-22 {\n  padding-left: calc(22 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-22 {\n  padding-right: calc(22 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-22 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-22 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-23 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 23);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-23 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 23);\n}\n\n.ag-ltr .ag-row-group-indent-23 {\n  padding-left: calc(23 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-23 {\n  padding-right: calc(23 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-23 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-23 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-24 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 24);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-24 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 24);\n}\n\n.ag-ltr .ag-row-group-indent-24 {\n  padding-left: calc(24 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-24 {\n  padding-right: calc(24 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-24 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-24 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-25 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 25);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-25 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 25);\n}\n\n.ag-ltr .ag-row-group-indent-25 {\n  padding-left: calc(25 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-25 {\n  padding-right: calc(25 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-25 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-25 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-26 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 26);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-26 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 26);\n}\n\n.ag-ltr .ag-row-group-indent-26 {\n  padding-left: calc(26 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-26 {\n  padding-right: calc(26 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-26 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-26 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-27 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 27);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-27 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 27);\n}\n\n.ag-ltr .ag-row-group-indent-27 {\n  padding-left: calc(27 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-27 {\n  padding-right: calc(27 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-27 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-27 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-28 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 28);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-28 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 28);\n}\n\n.ag-ltr .ag-row-group-indent-28 {\n  padding-left: calc(28 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-28 {\n  padding-right: calc(28 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-28 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-28 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-29 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 29);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-29 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 29);\n}\n\n.ag-ltr .ag-row-group-indent-29 {\n  padding-left: calc(29 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-29 {\n  padding-right: calc(29 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-29 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-29 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-30 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 30);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-30 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 30);\n}\n\n.ag-ltr .ag-row-group-indent-30 {\n  padding-left: calc(30 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-30 {\n  padding-right: calc(30 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-30 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-30 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-31 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 31);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-31 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 31);\n}\n\n.ag-ltr .ag-row-group-indent-31 {\n  padding-left: calc(31 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-31 {\n  padding-right: calc(31 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-31 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-31 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-32 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 32);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-32 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 32);\n}\n\n.ag-ltr .ag-row-group-indent-32 {\n  padding-left: calc(32 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-32 {\n  padding-right: calc(32 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-32 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-32 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-33 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 33);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-33 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 33);\n}\n\n.ag-ltr .ag-row-group-indent-33 {\n  padding-left: calc(33 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-33 {\n  padding-right: calc(33 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-33 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-33 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-34 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 34);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-34 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 34);\n}\n\n.ag-ltr .ag-row-group-indent-34 {\n  padding-left: calc(34 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-34 {\n  padding-right: calc(34 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-34 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-34 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-35 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 35);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-35 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 35);\n}\n\n.ag-ltr .ag-row-group-indent-35 {\n  padding-left: calc(35 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-35 {\n  padding-right: calc(35 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-35 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-35 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-36 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 36);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-36 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 36);\n}\n\n.ag-ltr .ag-row-group-indent-36 {\n  padding-left: calc(36 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-36 {\n  padding-right: calc(36 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-36 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-36 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-37 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 37);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-37 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 37);\n}\n\n.ag-ltr .ag-row-group-indent-37 {\n  padding-left: calc(37 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-37 {\n  padding-right: calc(37 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-37 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-37 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-38 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 38);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-38 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 38);\n}\n\n.ag-ltr .ag-row-group-indent-38 {\n  padding-left: calc(38 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-38 {\n  padding-right: calc(38 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-38 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-38 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-39 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 39);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-39 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 39);\n}\n\n.ag-ltr .ag-row-group-indent-39 {\n  padding-left: calc(39 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-39 {\n  padding-right: calc(39 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-39 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-39 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-40 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 40);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-40 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 40);\n}\n\n.ag-ltr .ag-row-group-indent-40 {\n  padding-left: calc(40 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-40 {\n  padding-right: calc(40 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-40 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-40 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-41 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 41);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-41 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 41);\n}\n\n.ag-ltr .ag-row-group-indent-41 {\n  padding-left: calc(41 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-41 {\n  padding-right: calc(41 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-41 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-41 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-42 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 42);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-42 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 42);\n}\n\n.ag-ltr .ag-row-group-indent-42 {\n  padding-left: calc(42 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-42 {\n  padding-right: calc(42 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-42 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-42 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-43 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 43);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-43 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 43);\n}\n\n.ag-ltr .ag-row-group-indent-43 {\n  padding-left: calc(43 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-43 {\n  padding-right: calc(43 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-43 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-43 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-44 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 44);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-44 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 44);\n}\n\n.ag-ltr .ag-row-group-indent-44 {\n  padding-left: calc(44 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-44 {\n  padding-right: calc(44 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-44 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-44 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-45 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 45);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-45 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 45);\n}\n\n.ag-ltr .ag-row-group-indent-45 {\n  padding-left: calc(45 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-45 {\n  padding-right: calc(45 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-45 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-45 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-46 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 46);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-46 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 46);\n}\n\n.ag-ltr .ag-row-group-indent-46 {\n  padding-left: calc(46 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-46 {\n  padding-right: calc(46 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-46 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-46 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-47 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 47);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-47 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 47);\n}\n\n.ag-ltr .ag-row-group-indent-47 {\n  padding-left: calc(47 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-47 {\n  padding-right: calc(47 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-47 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-47 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-48 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 48);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-48 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 48);\n}\n\n.ag-ltr .ag-row-group-indent-48 {\n  padding-left: calc(48 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-48 {\n  padding-right: calc(48 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-48 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-48 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-49 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 49);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-49 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 49);\n}\n\n.ag-ltr .ag-row-group-indent-49 {\n  padding-left: calc(49 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-49 {\n  padding-right: calc(49 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-49 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-49 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-50 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 50);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-50 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 50);\n}\n\n.ag-ltr .ag-row-group-indent-50 {\n  padding-left: calc(50 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-50 {\n  padding-right: calc(50 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-50 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-50 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-51 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 51);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-51 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 51);\n}\n\n.ag-ltr .ag-row-group-indent-51 {\n  padding-left: calc(51 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-51 {\n  padding-right: calc(51 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-51 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-51 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-52 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 52);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-52 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 52);\n}\n\n.ag-ltr .ag-row-group-indent-52 {\n  padding-left: calc(52 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-52 {\n  padding-right: calc(52 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-52 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-52 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-53 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 53);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-53 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 53);\n}\n\n.ag-ltr .ag-row-group-indent-53 {\n  padding-left: calc(53 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-53 {\n  padding-right: calc(53 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-53 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-53 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-54 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 54);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-54 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 54);\n}\n\n.ag-ltr .ag-row-group-indent-54 {\n  padding-left: calc(54 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-54 {\n  padding-right: calc(54 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-54 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-54 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-55 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 55);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-55 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 55);\n}\n\n.ag-ltr .ag-row-group-indent-55 {\n  padding-left: calc(55 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-55 {\n  padding-right: calc(55 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-55 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-55 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-56 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 56);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-56 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 56);\n}\n\n.ag-ltr .ag-row-group-indent-56 {\n  padding-left: calc(56 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-56 {\n  padding-right: calc(56 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-56 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-56 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-57 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 57);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-57 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 57);\n}\n\n.ag-ltr .ag-row-group-indent-57 {\n  padding-left: calc(57 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-57 {\n  padding-right: calc(57 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-57 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-57 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-58 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 58);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-58 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 58);\n}\n\n.ag-ltr .ag-row-group-indent-58 {\n  padding-left: calc(58 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-58 {\n  padding-right: calc(58 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-58 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-58 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-59 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 59);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-59 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 59);\n}\n\n.ag-ltr .ag-row-group-indent-59 {\n  padding-left: calc(59 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-59 {\n  padding-right: calc(59 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-59 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-59 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-60 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 60);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-60 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 60);\n}\n\n.ag-ltr .ag-row-group-indent-60 {\n  padding-left: calc(60 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-60 {\n  padding-right: calc(60 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-60 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-60 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-61 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 61);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-61 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 61);\n}\n\n.ag-ltr .ag-row-group-indent-61 {\n  padding-left: calc(61 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-61 {\n  padding-right: calc(61 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-61 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-61 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-62 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 62);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-62 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 62);\n}\n\n.ag-ltr .ag-row-group-indent-62 {\n  padding-left: calc(62 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-62 {\n  padding-right: calc(62 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-62 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-62 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-63 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 63);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-63 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 63);\n}\n\n.ag-ltr .ag-row-group-indent-63 {\n  padding-left: calc(63 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-63 {\n  padding-right: calc(63 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-63 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-63 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-64 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 64);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-64 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 64);\n}\n\n.ag-ltr .ag-row-group-indent-64 {\n  padding-left: calc(64 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-64 {\n  padding-right: calc(64 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-64 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-64 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-65 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 65);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-65 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 65);\n}\n\n.ag-ltr .ag-row-group-indent-65 {\n  padding-left: calc(65 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-65 {\n  padding-right: calc(65 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-65 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-65 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-66 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 66);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-66 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 66);\n}\n\n.ag-ltr .ag-row-group-indent-66 {\n  padding-left: calc(66 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-66 {\n  padding-right: calc(66 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-66 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-66 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-67 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 67);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-67 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 67);\n}\n\n.ag-ltr .ag-row-group-indent-67 {\n  padding-left: calc(67 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-67 {\n  padding-right: calc(67 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-67 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-67 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-68 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 68);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-68 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 68);\n}\n\n.ag-ltr .ag-row-group-indent-68 {\n  padding-left: calc(68 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-68 {\n  padding-right: calc(68 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-68 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-68 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-69 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 69);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-69 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 69);\n}\n\n.ag-ltr .ag-row-group-indent-69 {\n  padding-left: calc(69 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-69 {\n  padding-right: calc(69 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-69 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-69 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-70 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 70);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-70 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 70);\n}\n\n.ag-ltr .ag-row-group-indent-70 {\n  padding-left: calc(70 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-70 {\n  padding-right: calc(70 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-70 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-70 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-71 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 71);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-71 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 71);\n}\n\n.ag-ltr .ag-row-group-indent-71 {\n  padding-left: calc(71 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-71 {\n  padding-right: calc(71 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-71 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-71 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-72 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 72);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-72 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 72);\n}\n\n.ag-ltr .ag-row-group-indent-72 {\n  padding-left: calc(72 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-72 {\n  padding-right: calc(72 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-72 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-72 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-73 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 73);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-73 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 73);\n}\n\n.ag-ltr .ag-row-group-indent-73 {\n  padding-left: calc(73 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-73 {\n  padding-right: calc(73 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-73 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-73 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-74 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 74);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-74 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 74);\n}\n\n.ag-ltr .ag-row-group-indent-74 {\n  padding-left: calc(74 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-74 {\n  padding-right: calc(74 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-74 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-74 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-75 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 75);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-75 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 75);\n}\n\n.ag-ltr .ag-row-group-indent-75 {\n  padding-left: calc(75 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-75 {\n  padding-right: calc(75 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-75 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-75 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-76 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 76);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-76 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 76);\n}\n\n.ag-ltr .ag-row-group-indent-76 {\n  padding-left: calc(76 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-76 {\n  padding-right: calc(76 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-76 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-76 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-77 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 77);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-77 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 77);\n}\n\n.ag-ltr .ag-row-group-indent-77 {\n  padding-left: calc(77 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-77 {\n  padding-right: calc(77 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-77 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-77 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-78 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 78);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-78 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 78);\n}\n\n.ag-ltr .ag-row-group-indent-78 {\n  padding-left: calc(78 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-78 {\n  padding-right: calc(78 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-78 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-78 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-79 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 79);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-79 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 79);\n}\n\n.ag-ltr .ag-row-group-indent-79 {\n  padding-left: calc(79 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-79 {\n  padding-right: calc(79 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-79 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-79 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-80 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 80);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-80 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 80);\n}\n\n.ag-ltr .ag-row-group-indent-80 {\n  padding-left: calc(80 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-80 {\n  padding-right: calc(80 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-80 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-80 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-81 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 81);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-81 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 81);\n}\n\n.ag-ltr .ag-row-group-indent-81 {\n  padding-left: calc(81 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-81 {\n  padding-right: calc(81 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-81 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-81 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-82 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 82);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-82 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 82);\n}\n\n.ag-ltr .ag-row-group-indent-82 {\n  padding-left: calc(82 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-82 {\n  padding-right: calc(82 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-82 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-82 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-83 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 83);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-83 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 83);\n}\n\n.ag-ltr .ag-row-group-indent-83 {\n  padding-left: calc(83 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-83 {\n  padding-right: calc(83 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-83 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-83 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-84 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 84);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-84 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 84);\n}\n\n.ag-ltr .ag-row-group-indent-84 {\n  padding-left: calc(84 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-84 {\n  padding-right: calc(84 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-84 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-84 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-85 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 85);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-85 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 85);\n}\n\n.ag-ltr .ag-row-group-indent-85 {\n  padding-left: calc(85 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-85 {\n  padding-right: calc(85 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-85 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-85 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-86 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 86);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-86 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 86);\n}\n\n.ag-ltr .ag-row-group-indent-86 {\n  padding-left: calc(86 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-86 {\n  padding-right: calc(86 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-86 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-86 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-87 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 87);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-87 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 87);\n}\n\n.ag-ltr .ag-row-group-indent-87 {\n  padding-left: calc(87 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-87 {\n  padding-right: calc(87 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-87 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-87 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-88 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 88);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-88 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 88);\n}\n\n.ag-ltr .ag-row-group-indent-88 {\n  padding-left: calc(88 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-88 {\n  padding-right: calc(88 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-88 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-88 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-89 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 89);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-89 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 89);\n}\n\n.ag-ltr .ag-row-group-indent-89 {\n  padding-left: calc(89 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-89 {\n  padding-right: calc(89 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-89 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-89 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-90 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 90);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-90 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 90);\n}\n\n.ag-ltr .ag-row-group-indent-90 {\n  padding-left: calc(90 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-90 {\n  padding-right: calc(90 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-90 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-90 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-91 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 91);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-91 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 91);\n}\n\n.ag-ltr .ag-row-group-indent-91 {\n  padding-left: calc(91 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-91 {\n  padding-right: calc(91 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-91 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-91 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-92 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 92);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-92 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 92);\n}\n\n.ag-ltr .ag-row-group-indent-92 {\n  padding-left: calc(92 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-92 {\n  padding-right: calc(92 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-92 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-92 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-93 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 93);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-93 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 93);\n}\n\n.ag-ltr .ag-row-group-indent-93 {\n  padding-left: calc(93 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-93 {\n  padding-right: calc(93 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-93 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-93 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-94 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 94);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-94 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 94);\n}\n\n.ag-ltr .ag-row-group-indent-94 {\n  padding-left: calc(94 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-94 {\n  padding-right: calc(94 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-94 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-94 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-95 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 95);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-95 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 95);\n}\n\n.ag-ltr .ag-row-group-indent-95 {\n  padding-left: calc(95 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-95 {\n  padding-right: calc(95 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-95 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-95 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-96 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 96);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-96 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 96);\n}\n\n.ag-ltr .ag-row-group-indent-96 {\n  padding-left: calc(96 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-96 {\n  padding-right: calc(96 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-96 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-96 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-97 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 97);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-97 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 97);\n}\n\n.ag-ltr .ag-row-group-indent-97 {\n  padding-left: calc(97 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-97 {\n  padding-right: calc(97 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-97 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-97 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-98 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 98);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-98 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 98);\n}\n\n.ag-ltr .ag-row-group-indent-98 {\n  padding-left: calc(98 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-98 {\n  padding-right: calc(98 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-98 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-98 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row > .ag-cell-wrapper.ag-row-group-indent-99 {\n  padding-left: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 99);\n}\n.ag-rtl .ag-row > .ag-cell-wrapper.ag-row-group-indent-99 {\n  padding-right: calc(var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * 99);\n}\n\n.ag-ltr .ag-row-group-indent-99 {\n  padding-left: calc(99 * var(--ag-row-group-indent-size));\n}\n.ag-rtl .ag-row-group-indent-99 {\n  padding-right: calc(99 * var(--ag-row-group-indent-size));\n}\n\n.ag-ltr .ag-row-level-99 .ag-pivot-leaf-group {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-level-99 .ag-pivot-leaf-group {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-ltr .ag-row-group-leaf-indent {\n  margin-left: var(--ag-row-group-indent-size);\n}\n.ag-rtl .ag-row-group-leaf-indent {\n  margin-right: var(--ag-row-group-indent-size);\n}\n\n.ag-value-change-delta {\n  padding-right: 2px;\n}\n\n.ag-value-change-delta-up {\n  color: var(--ag-value-change-delta-up-color);\n}\n\n.ag-value-change-delta-down {\n  color: var(--ag-value-change-delta-down-color);\n}\n\n.ag-value-change-value {\n  background-color: transparent;\n  border-radius: 1px;\n  padding-left: 1px;\n  padding-right: 1px;\n  transition: background-color 1s;\n}\n\n.ag-value-change-value-highlight {\n  background-color: var(--ag-value-change-value-highlight-background-color);\n  transition: background-color 0.1s;\n}\n\n.ag-cell-data-changed {\n  background-color: var(--ag-value-change-value-highlight-background-color) !important;\n}\n\n.ag-cell-data-changed-animation {\n  background-color: transparent;\n}\n\n.ag-cell-highlight {\n  background-color: var(--ag-range-selection-highlight-color) !important;\n}\n\n.ag-row {\n  height: var(--ag-row-height);\n  background-color: var(--ag-background-color);\n  color: var(--ag-data-color);\n  border-bottom: var(--ag-row-border-style) var(--ag-row-border-color) var(--ag-row-border-width);\n}\n\n.ag-row-highlight-above::after, .ag-row-highlight-below::after {\n  content: \"\";\n  position: absolute;\n  width: calc(100% - 1px);\n  height: 1px;\n  background-color: var(--ag-range-selection-border-color);\n  left: 1px;\n}\n\n.ag-row-highlight-above::after {\n  top: -1px;\n}\n\n.ag-row-highlight-above.ag-row-first::after {\n  top: 0;\n}\n\n.ag-row-highlight-below::after {\n  bottom: 0px;\n}\n\n.ag-row-odd {\n  background-color: var(--ag-odd-row-background-color);\n}\n\n.ag-body-horizontal-scroll:not(.ag-scrollbar-invisible) .ag-horizontal-left-spacer:not(.ag-scroller-corner) {\n  border-right: var(--ag-borders-critical) var(--ag-border-color);\n}\n.ag-body-horizontal-scroll:not(.ag-scrollbar-invisible) .ag-horizontal-right-spacer:not(.ag-scroller-corner) {\n  border-left: var(--ag-borders-critical) var(--ag-border-color);\n}\n\n.ag-row-selected::before {\n  content: \"\";\n  background-color: var(--ag-selected-row-background-color);\n  display: block;\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n}\n\n.ag-row-hover:not(.ag-full-width-row)::before,\n.ag-row-hover.ag-full-width-row.ag-row-group::before {\n  content: \"\";\n  background-color: var(--ag-row-hover-color);\n  display: block;\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  pointer-events: none;\n}\n\n.ag-row-hover.ag-full-width-row.ag-row-group > * {\n  position: relative;\n}\n\n.ag-row-hover.ag-row-selected::before {\n  background-color: var(--ag-row-hover-color);\n  background-image: linear-gradient(var(--ag-selected-row-background-color), var(--ag-selected-row-background-color));\n}\n\n.ag-column-hover {\n  background-color: var(--ag-column-hover-color);\n}\n\n.ag-ltr .ag-right-aligned-cell {\n  text-align: right;\n}\n.ag-rtl .ag-right-aligned-cell {\n  text-align: left;\n}\n\n.ag-ltr .ag-right-aligned-cell .ag-cell-value,\n.ag-ltr .ag-right-aligned-cell .ag-group-value {\n  margin-left: auto;\n}\n.ag-rtl .ag-right-aligned-cell .ag-cell-value,\n.ag-rtl .ag-right-aligned-cell .ag-group-value {\n  margin-right: auto;\n}\n\n.ag-cell, .ag-full-width-row .ag-cell-wrapper.ag-row-group {\n  --ag-internal-calculated-line-height: var(--ag-line-height, calc(var(--ag-row-height) - var(--ag-row-border-width)));\n  --ag-internal-padded-row-height: calc(var(--ag-row-height) - var(--ag-row-border-width));\n  border: 1px solid transparent;\n  line-height: min(var(--ag-internal-calculated-line-height), var(--ag-internal-padded-row-height));\n  padding-left: calc(var(--ag-cell-horizontal-padding) - 1px);\n  padding-right: calc(var(--ag-cell-horizontal-padding) - 1px);\n  -webkit-font-smoothing: subpixel-antialiased;\n}\n\n.ag-row > .ag-cell-wrapper {\n  padding-left: calc(var(--ag-cell-horizontal-padding) - 1px);\n  padding-right: calc(var(--ag-cell-horizontal-padding) - 1px);\n}\n\n.ag-row-dragging {\n  cursor: move;\n  opacity: 0.5;\n}\n\n.ag-cell-inline-editing {\n  border: 1px solid var(--ag-border-color);\n  border-radius: var(--ag-card-radius);\n  box-shadow: var(--ag-card-shadow);\n  padding: 0;\n  background-color: var(--ag-control-panel-background-color);\n}\n\n.ag-popup-editor .ag-large-text,\n.ag-autocomplete-list-popup {\n  border: var(--ag-borders) var(--ag-border-color);\n  background: var(--ag-background-color);\n  border-radius: var(--ag-card-radius);\n  box-shadow: var(--ag-card-shadow);\n  padding: var(--ag-grid-size);\n  background-color: var(--ag-control-panel-background-color);\n  padding: 0;\n}\n\n.ag-large-text-input {\n  height: auto;\n  padding: var(--ag-cell-horizontal-padding);\n}\n\n.ag-rtl .ag-large-text-input textarea {\n  resize: none;\n}\n\n.ag-details-row {\n  padding: calc(var(--ag-grid-size) * 5);\n  background-color: var(--ag-background-color);\n}\n\n.ag-layout-auto-height .ag-center-cols-viewport, .ag-layout-auto-height .ag-center-cols-container, .ag-layout-print .ag-center-cols-viewport, .ag-layout-print .ag-center-cols-container {\n  min-height: 50px;\n}\n\n.ag-overlay-loading-wrapper {\n  background-color: var(--ag-modal-overlay-background-color);\n}\n\n.ag-overlay-loading-center {\n  border: var(--ag-borders) var(--ag-border-color);\n  background: var(--ag-background-color);\n  border-radius: var(--ag-card-radius);\n  box-shadow: var(--ag-card-shadow);\n  padding: var(--ag-grid-size);\n}\n\n.ag-overlay-no-rows-wrapper.ag-layout-auto-height {\n  padding-top: 30px;\n}\n\n.ag-loading {\n  display: flex;\n  height: 100%;\n  align-items: center;\n}\n.ag-ltr .ag-loading {\n  padding-left: var(--ag-cell-horizontal-padding);\n}\n.ag-rtl .ag-loading {\n  padding-right: var(--ag-cell-horizontal-padding);\n}\n\n.ag-ltr .ag-loading-icon {\n  padding-right: var(--ag-cell-widget-spacing);\n}\n.ag-rtl .ag-loading-icon {\n  padding-left: var(--ag-cell-widget-spacing);\n}\n\n.ag-icon-loading {\n  animation-name: spin;\n  animation-duration: 1000ms;\n  animation-iteration-count: infinite;\n  animation-timing-function: linear;\n}\n\n@keyframes spin {\n  from {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(360deg);\n  }\n}\n.ag-floating-top {\n  border-bottom: var(--ag-borders-critical) var(--ag-border-color);\n}\n\n.ag-floating-bottom {\n  border-top: var(--ag-borders-critical) var(--ag-border-color);\n}\n\n.ag-ltr .ag-cell {\n  border-right: var(--ag-cell-horizontal-border);\n}\n.ag-rtl .ag-cell {\n  border-left: var(--ag-cell-horizontal-border);\n}\n.ag-ltr .ag-cell {\n  border-right-width: 1px;\n}\n.ag-rtl .ag-cell {\n  border-left-width: 1px;\n}\n\n.ag-cell.ag-cell-first-right-pinned:not(.ag-cell-range-left):not(.ag-cell-range-single-cell) {\n  border-left: var(--ag-borders-critical) var(--ag-border-color);\n}\n\n.ag-cell.ag-cell-last-left-pinned:not(.ag-cell-range-right):not(.ag-cell-range-single-cell) {\n  border-right: var(--ag-borders-critical) var(--ag-border-color);\n}\n\n.ag-cell-range-selected:not(.ag-cell-focus),\n.ag-body-viewport:not(.ag-has-focus) .ag-cell-range-single-cell:not(.ag-cell-inline-editing) {\n  background-color: var(--ag-range-selection-background-color);\n}\n.ag-cell-range-selected:not(.ag-cell-focus).ag-cell-range-chart,\n.ag-body-viewport:not(.ag-has-focus) .ag-cell-range-single-cell:not(.ag-cell-inline-editing).ag-cell-range-chart {\n  background-color: var(--ag-range-selection-chart-background-color) !important;\n}\n.ag-cell-range-selected:not(.ag-cell-focus).ag-cell-range-chart.ag-cell-range-chart-category,\n.ag-body-viewport:not(.ag-has-focus) .ag-cell-range-single-cell:not(.ag-cell-inline-editing).ag-cell-range-chart.ag-cell-range-chart-category {\n  background-color: var(--ag-range-selection-chart-category-background-color) !important;\n}\n\n.ag-cell-range-selected-1:not(.ag-cell-focus),\n.ag-root:not(.ag-context-menu-open) .ag-body-viewport:not(.ag-has-focus) .ag-cell-range-selected-1:not(.ag-cell-inline-editing) {\n  background-color: var(--ag-range-selection-background-color);\n}\n\n.ag-cell-range-selected-2:not(.ag-cell-focus),\n.ag-body-viewport:not(.ag-has-focus) .ag-cell-range-selected-2 {\n  background-color: var(--ag-range-selection-background-color-2);\n}\n\n.ag-cell-range-selected-3:not(.ag-cell-focus),\n.ag-body-viewport:not(.ag-has-focus) .ag-cell-range-selected-3 {\n  background-color: var(--ag-range-selection-background-color-3);\n}\n\n.ag-cell-range-selected-4:not(.ag-cell-focus),\n.ag-body-viewport:not(.ag-has-focus) .ag-cell-range-selected-4 {\n  background-color: var(--ag-range-selection-background-color-4);\n}\n\n.ag-cell.ag-cell-range-selected:not(.ag-cell-range-single-cell).ag-cell-range-top {\n  border-top-color: var(--ag-range-selection-border-color);\n  border-top-style: var(--ag-range-selection-border-style);\n}\n.ag-cell.ag-cell-range-selected:not(.ag-cell-range-single-cell).ag-cell-range-right {\n  border-right-color: var(--ag-range-selection-border-color);\n  border-right-style: var(--ag-range-selection-border-style);\n}\n.ag-cell.ag-cell-range-selected:not(.ag-cell-range-single-cell).ag-cell-range-bottom {\n  border-bottom-color: var(--ag-range-selection-border-color);\n  border-bottom-style: var(--ag-range-selection-border-style);\n}\n.ag-cell.ag-cell-range-selected:not(.ag-cell-range-single-cell).ag-cell-range-left {\n  border-left-color: var(--ag-range-selection-border-color);\n  border-left-style: var(--ag-range-selection-border-style);\n}\n\n.ag-ltr .ag-cell-focus:not(.ag-cell-range-selected):focus-within,\n.ag-ltr .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected),\n.ag-ltr .ag-full-width-row.ag-row-focus:focus .ag-cell-wrapper.ag-row-group,\n.ag-ltr .ag-cell-range-single-cell,\n.ag-ltr .ag-cell-range-single-cell.ag-cell-range-handle, .ag-rtl .ag-cell-focus:not(.ag-cell-range-selected):focus-within,\n.ag-rtl .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected),\n.ag-rtl .ag-full-width-row.ag-row-focus:focus .ag-cell-wrapper.ag-row-group,\n.ag-rtl .ag-cell-range-single-cell,\n.ag-rtl .ag-cell-range-single-cell.ag-cell-range-handle {\n  border: 1px solid;\n  border-color: var(--ag-range-selection-border-color);\n  border-style: var(--ag-range-selection-border-style);\n  outline: initial;\n}\n\n.ag-cell.ag-selection-fill-top,\n.ag-cell.ag-selection-fill-top.ag-cell-range-selected {\n  border-top: 1px dashed;\n  border-top-color: var(--ag-range-selection-border-color);\n}\n\n.ag-ltr .ag-cell.ag-selection-fill-right,\n.ag-ltr .ag-cell.ag-selection-fill-right.ag-cell-range-selected {\n  border-right: 1px dashed var(--ag-range-selection-border-color) !important;\n}\n.ag-rtl .ag-cell.ag-selection-fill-right,\n.ag-rtl .ag-cell.ag-selection-fill-right.ag-cell-range-selected {\n  border-left: 1px dashed var(--ag-range-selection-border-color) !important;\n}\n\n.ag-cell.ag-selection-fill-bottom,\n.ag-cell.ag-selection-fill-bottom.ag-cell-range-selected {\n  border-bottom: 1px dashed;\n  border-bottom-color: var(--ag-range-selection-border-color);\n}\n\n.ag-ltr .ag-cell.ag-selection-fill-left,\n.ag-ltr .ag-cell.ag-selection-fill-left.ag-cell-range-selected {\n  border-left: 1px dashed var(--ag-range-selection-border-color) !important;\n}\n.ag-rtl .ag-cell.ag-selection-fill-left,\n.ag-rtl .ag-cell.ag-selection-fill-left.ag-cell-range-selected {\n  border-right: 1px dashed var(--ag-range-selection-border-color) !important;\n}\n\n.ag-fill-handle, .ag-range-handle {\n  position: absolute;\n  width: 6px;\n  height: 6px;\n  bottom: -1px;\n  background-color: var(--ag-range-selection-border-color);\n}\n.ag-ltr .ag-fill-handle, .ag-ltr .ag-range-handle {\n  right: -1px;\n}\n.ag-rtl .ag-fill-handle, .ag-rtl .ag-range-handle {\n  left: -1px;\n}\n\n.ag-fill-handle {\n  cursor: cell;\n}\n\n.ag-range-handle {\n  cursor: nwse-resize;\n}\n\n.ag-cell-inline-editing {\n  border-color: var(--ag-input-focus-border-color) !important;\n}\n\n.ag-menu {\n  border: var(--ag-borders) var(--ag-border-color);\n  background: var(--ag-background-color);\n  border-radius: var(--ag-card-radius);\n  box-shadow: var(--ag-card-shadow);\n  padding: var(--ag-grid-size);\n  padding: 0;\n}\n\n.ag-menu-list {\n  cursor: default;\n  padding: var(--ag-grid-size) 0;\n}\n\n.ag-menu-separator {\n  height: calc(var(--ag-grid-size) * 2 + 1px);\n}\n\n.ag-menu-separator-part::after {\n  content: \"\";\n  display: block;\n  border-top: var(--ag-borders-critical) var(--ag-border-color);\n}\n\n.ag-menu-option-active, .ag-compact-menu-option-active {\n  background-color: var(--ag-row-hover-color);\n}\n\n.ag-menu-option-part, .ag-compact-menu-option-part {\n  line-height: var(--ag-icon-size);\n  padding: calc(var(--ag-grid-size) + 2px) 0;\n}\n\n.ag-menu-option-disabled, .ag-compact-menu-option-disabled {\n  opacity: 0.5;\n}\n\n.ag-menu-option-icon, .ag-compact-menu-option-icon {\n  width: var(--ag-icon-size);\n}\n.ag-ltr .ag-menu-option-icon, .ag-ltr .ag-compact-menu-option-icon {\n  padding-left: calc(var(--ag-grid-size) * 2);\n}\n.ag-rtl .ag-menu-option-icon, .ag-rtl .ag-compact-menu-option-icon {\n  padding-right: calc(var(--ag-grid-size) * 2);\n}\n\n.ag-menu-option-text, .ag-compact-menu-option-text {\n  padding-left: calc(var(--ag-grid-size) * 2);\n  padding-right: calc(var(--ag-grid-size) * 2);\n}\n\n.ag-ltr .ag-menu-option-shortcut, .ag-ltr .ag-compact-menu-option-shortcut {\n  padding-right: var(--ag-grid-size);\n}\n.ag-rtl .ag-menu-option-shortcut, .ag-rtl .ag-compact-menu-option-shortcut {\n  padding-left: var(--ag-grid-size);\n}\n\n.ag-menu-option-popup-pointer, .ag-compact-menu-option-popup-pointer {\n  padding-right: var(--ag-grid-size);\n}\n\n.ag-tabs {\n  min-width: var(--ag-tab-min-width);\n}\n\n.ag-tabs-header {\n  width: 100%;\n  display: flex;\n}\n\n.ag-tab {\n  border-bottom: var(--ag-selected-tab-underline-width) solid transparent;\n  transition: border-bottom var(--ag-selected-tab-underline-transition-speed);\n  display: flex;\n  flex: none;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n\n.ag-keyboard-focus .ag-tab:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-tab:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 4px;\n  left: 4px;\n  display: block;\n  width: calc(100% - 8px);\n  height: calc(100% - 8px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-tab-selected {\n  border-bottom-color: var(--ag-selected-tab-underline-color);\n}\n\n.ag-menu-header {\n  color: var(--ag-secondary-foreground-color);\n}\n\n.ag-filter-separator {\n  border-top: var(--ag-borders-critical) var(--ag-border-color);\n}\n\n.ag-filter-select .ag-picker-field-wrapper {\n  width: 0;\n}\n\n.ag-filter-condition-operator {\n  height: 17px;\n}\n\n.ag-ltr .ag-filter-condition-operator-or {\n  margin-left: calc(var(--ag-grid-size) * 2);\n}\n.ag-rtl .ag-filter-condition-operator-or {\n  margin-right: calc(var(--ag-grid-size) * 2);\n}\n\n.ag-set-filter-select-all {\n  padding-top: var(--ag-widget-container-vertical-padding);\n}\n\n.ag-set-filter-list, .ag-filter-no-matches {\n  height: calc(var(--ag-list-item-height) * 6);\n}\n\n.ag-set-filter-tree-list {\n  height: calc(var(--ag-list-item-height) * 10);\n}\n\n.ag-set-filter-filter {\n  margin-top: var(--ag-widget-container-vertical-padding);\n  margin-left: var(--ag-widget-container-horizontal-padding);\n  margin-right: var(--ag-widget-container-horizontal-padding);\n}\n\n.ag-filter-to {\n  margin-top: var(--ag-widget-vertical-spacing);\n}\n\n.ag-mini-filter {\n  margin: var(--ag-widget-container-vertical-padding) var(--ag-widget-container-horizontal-padding);\n}\n\n.ag-set-filter-item {\n  margin: 0px var(--ag-widget-container-horizontal-padding);\n}\n\n.ag-ltr .ag-set-filter-add-group-indent {\n  margin-left: calc(var(--ag-widget-container-horizontal-padding) + var(--ag-icon-size) + var(--ag-grid-size) * 2);\n}\n.ag-rtl .ag-set-filter-add-group-indent {\n  margin-right: calc(var(--ag-widget-container-horizontal-padding) + var(--ag-icon-size) + var(--ag-grid-size) * 2);\n}\n\n.ag-ltr .ag-set-filter-indent-1 {\n  padding-left: calc(1 * var(--ag-set-filter-indent-size));\n}\n.ag-rtl .ag-set-filter-indent-1 {\n  padding-right: calc(1 * var(--ag-set-filter-indent-size));\n}\n\n.ag-ltr .ag-set-filter-indent-2 {\n  padding-left: calc(2 * var(--ag-set-filter-indent-size));\n}\n.ag-rtl .ag-set-filter-indent-2 {\n  padding-right: calc(2 * var(--ag-set-filter-indent-size));\n}\n\n.ag-ltr .ag-set-filter-indent-3 {\n  padding-left: calc(3 * var(--ag-set-filter-indent-size));\n}\n.ag-rtl .ag-set-filter-indent-3 {\n  padding-right: calc(3 * var(--ag-set-filter-indent-size));\n}\n\n.ag-ltr .ag-set-filter-indent-4 {\n  padding-left: calc(4 * var(--ag-set-filter-indent-size));\n}\n.ag-rtl .ag-set-filter-indent-4 {\n  padding-right: calc(4 * var(--ag-set-filter-indent-size));\n}\n\n.ag-ltr .ag-set-filter-indent-5 {\n  padding-left: calc(5 * var(--ag-set-filter-indent-size));\n}\n.ag-rtl .ag-set-filter-indent-5 {\n  padding-right: calc(5 * var(--ag-set-filter-indent-size));\n}\n\n.ag-ltr .ag-set-filter-indent-6 {\n  padding-left: calc(6 * var(--ag-set-filter-indent-size));\n}\n.ag-rtl .ag-set-filter-indent-6 {\n  padding-right: calc(6 * var(--ag-set-filter-indent-size));\n}\n\n.ag-ltr .ag-set-filter-indent-7 {\n  padding-left: calc(7 * var(--ag-set-filter-indent-size));\n}\n.ag-rtl .ag-set-filter-indent-7 {\n  padding-right: calc(7 * var(--ag-set-filter-indent-size));\n}\n\n.ag-ltr .ag-set-filter-indent-8 {\n  padding-left: calc(8 * var(--ag-set-filter-indent-size));\n}\n.ag-rtl .ag-set-filter-indent-8 {\n  padding-right: calc(8 * var(--ag-set-filter-indent-size));\n}\n\n.ag-ltr .ag-set-filter-indent-9 {\n  padding-left: calc(9 * var(--ag-set-filter-indent-size));\n}\n.ag-rtl .ag-set-filter-indent-9 {\n  padding-right: calc(9 * var(--ag-set-filter-indent-size));\n}\n\n.ag-ltr .ag-set-filter-group-icons {\n  margin-right: var(--ag-widget-container-horizontal-padding);\n}\n.ag-rtl .ag-set-filter-group-icons {\n  margin-left: var(--ag-widget-container-horizontal-padding);\n}\n\n.ag-keyboard-focus .ag-filter-virtual-list-item:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-filter-virtual-list-item:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 1px;\n  left: 1px;\n  display: block;\n  width: calc(100% - 2px);\n  height: calc(100% - 2px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-filter-apply-panel {\n  padding: var(--ag-widget-container-vertical-padding) var(--ag-widget-container-horizontal-padding);\n  border-top: var(--ag-borders-secondary) var(--ag-secondary-border-color);\n}\n\n.ag-filter-apply-panel-button {\n  line-height: 1.5;\n}\n.ag-ltr .ag-filter-apply-panel-button {\n  margin-left: calc(var(--ag-grid-size) * 2);\n}\n.ag-rtl .ag-filter-apply-panel-button {\n  margin-right: calc(var(--ag-grid-size) * 2);\n}\n\n.ag-simple-filter-body-wrapper {\n  padding: var(--ag-widget-container-vertical-padding) var(--ag-widget-container-horizontal-padding);\n  padding-bottom: calc(var(--ag-widget-container-vertical-padding) - var(--ag-widget-vertical-spacing));\n  overflow-y: auto;\n  min-height: calc(var(--ag-list-item-height) + var(--ag-widget-container-vertical-padding) + var(--ag-widget-vertical-spacing));\n}\n.ag-simple-filter-body-wrapper > * {\n  margin-bottom: var(--ag-widget-vertical-spacing);\n}\n.ag-simple-filter-body-wrapper .ag-resizer-wrapper {\n  margin: 0;\n}\n\n.ag-menu:not(.ag-tabs) .ag-filter .ag-simple-filter-body-wrapper,\n.ag-menu:not(.ag-tabs) .ag-filter > *:not(.ag-filter-wrapper) {\n  min-width: calc(var(--ag-menu-min-width) - 2px);\n}\n\n.ag-filter-no-matches {\n  padding: var(--ag-widget-container-vertical-padding) var(--ag-widget-container-horizontal-padding);\n}\n\n.ag-multi-filter-menu-item {\n  margin: var(--ag-grid-size) 0;\n}\n\n.ag-multi-filter-group-title-bar {\n  padding: calc(var(--ag-grid-size) * 2) var(--ag-grid-size);\n  background-color: transparent;\n}\n\n.ag-group-filter-field-select-wrapper {\n  padding: var(--ag-widget-container-vertical-padding) var(--ag-widget-container-horizontal-padding);\n  padding-bottom: calc(var(--ag-widget-container-vertical-padding) - var(--ag-widget-vertical-spacing));\n}\n.ag-group-filter-field-select-wrapper > * {\n  margin-bottom: var(--ag-widget-vertical-spacing);\n}\n\n.ag-keyboard-focus .ag-multi-filter-group-title-bar:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-multi-filter-group-title-bar:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 4px;\n  left: 4px;\n  display: block;\n  width: calc(100% - 8px);\n  height: calc(100% - 8px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-side-bar {\n  position: relative;\n}\n\n.ag-tool-panel-wrapper {\n  width: var(--ag-side-bar-panel-width);\n  background-color: var(--ag-control-panel-background-color);\n}\n\n.ag-side-buttons {\n  padding-top: calc(var(--ag-grid-size) * 4);\n  width: calc(var(--ag-icon-size) + 4px);\n  position: relative;\n  overflow: hidden;\n}\n\nbutton.ag-side-button-button {\n  color: inherit;\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n  line-height: inherit;\n  background: transparent;\n  padding: calc(var(--ag-grid-size) * 2) 0 calc(var(--ag-grid-size) * 2) 0;\n  width: 100%;\n  margin: 0;\n  min-height: calc(var(--ag-grid-size) * 18);\n  background-position-y: center;\n  background-position-x: center;\n  background-repeat: no-repeat;\n  border: none;\n  border-top: var(--ag-borders-side-button) var(--ag-border-color);\n  border-bottom: var(--ag-borders-side-button) var(--ag-border-color);\n}\nbutton.ag-side-button-button:focus {\n  box-shadow: none;\n}\n\n.ag-keyboard-focus .ag-side-button-button:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-side-button-button:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 4px;\n  left: 4px;\n  display: block;\n  width: calc(100% - 8px);\n  height: calc(100% - 8px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-selected button.ag-side-button-button {\n  background-color: var(--ag-side-button-selected-background-color);\n}\n\n.ag-side-button-icon-wrapper {\n  margin-bottom: 3px;\n}\n\n.ag-ltr .ag-side-bar-left,\n.ag-rtl .ag-side-bar-right {\n  border-right: var(--ag-borders) var(--ag-border-color);\n}\n.ag-ltr .ag-side-bar-left .ag-tool-panel-wrapper,\n.ag-rtl .ag-side-bar-right .ag-tool-panel-wrapper {\n  border-left: var(--ag-borders) var(--ag-border-color);\n}\n.ag-ltr .ag-side-bar-left .ag-side-button-button,\n.ag-rtl .ag-side-bar-right .ag-side-button-button {\n  border-right: var(--ag-selected-tab-underline-width) solid transparent;\n  transition: border-right var(--ag-selected-tab-underline-transition-speed);\n}\n.ag-ltr .ag-side-bar-left .ag-selected .ag-side-button-button,\n.ag-rtl .ag-side-bar-right .ag-selected .ag-side-button-button {\n  border-right-color: var(--ag-selected-tab-underline-color);\n}\n\n.ag-rtl .ag-side-bar-left,\n.ag-ltr .ag-side-bar-right {\n  border-left: var(--ag-borders) var(--ag-border-color);\n}\n.ag-rtl .ag-side-bar-left .ag-tool-panel-wrapper,\n.ag-ltr .ag-side-bar-right .ag-tool-panel-wrapper {\n  border-right: var(--ag-borders) var(--ag-border-color);\n}\n.ag-rtl .ag-side-bar-left .ag-side-button-button,\n.ag-ltr .ag-side-bar-right .ag-side-button-button {\n  border-left: var(--ag-selected-tab-underline-width) solid transparent;\n  transition: border-left var(--ag-selected-tab-underline-transition-speed);\n}\n.ag-rtl .ag-side-bar-left .ag-selected .ag-side-button-button,\n.ag-ltr .ag-side-bar-right .ag-selected .ag-side-button-button {\n  border-left-color: var(--ag-selected-tab-underline-color);\n}\n\n.ag-filter-toolpanel-header {\n  height: calc(var(--ag-grid-size) * 6);\n}\n\n.ag-ltr .ag-filter-toolpanel-header,\n.ag-ltr .ag-filter-toolpanel-search {\n  padding-left: var(--ag-grid-size);\n}\n.ag-rtl .ag-filter-toolpanel-header,\n.ag-rtl .ag-filter-toolpanel-search {\n  padding-right: var(--ag-grid-size);\n}\n\n.ag-keyboard-focus .ag-filter-toolpanel-header:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-filter-toolpanel-header:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 4px;\n  left: 4px;\n  display: block;\n  width: calc(100% - 8px);\n  height: calc(100% - 8px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-filter-toolpanel-group.ag-has-filter > .ag-group-title-bar .ag-group-title::after {\n  font-family: var(--ag-icon-font-family);\n  font-size: var(--ag-icon-size);\n  line-height: var(--ag-icon-size);\n  font-style: normal;\n  font-weight: normal;\n  font-variant: normal;\n  text-transform: none;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  content: var(--ag-icon-font-code-filter, \"\\f115\");\n  position: absolute;\n}\n.ag-ltr .ag-filter-toolpanel-group.ag-has-filter > .ag-group-title-bar .ag-group-title::after {\n  padding-left: var(--ag-grid-size);\n}\n.ag-rtl .ag-filter-toolpanel-group.ag-has-filter > .ag-group-title-bar .ag-group-title::after {\n  padding-right: var(--ag-grid-size);\n}\n\n.ag-filter-toolpanel-group-level-0-header {\n  height: calc(var(--ag-grid-size) * 8);\n}\n\n.ag-filter-toolpanel-group-item {\n  margin-top: calc(var(--ag-grid-size) * 0.5);\n  margin-bottom: calc(var(--ag-grid-size) * 0.5);\n}\n\n.ag-filter-toolpanel-search {\n  height: var(--ag-header-height);\n}\n\n.ag-filter-toolpanel-search-input {\n  flex-grow: 1;\n  height: calc(var(--ag-grid-size) * 4);\n}\n.ag-ltr .ag-filter-toolpanel-search-input {\n  margin-right: var(--ag-grid-size);\n}\n.ag-rtl .ag-filter-toolpanel-search-input {\n  margin-left: var(--ag-grid-size);\n}\n\n.ag-filter-toolpanel-group-level-0 {\n  border-top: var(--ag-borders-secondary) var(--ag-secondary-border-color);\n}\n\n.ag-ltr .ag-filter-toolpanel-expand,\n.ag-ltr .ag-filter-toolpanel-group-title-bar-icon {\n  margin-right: var(--ag-grid-size);\n}\n.ag-rtl .ag-filter-toolpanel-expand,\n.ag-rtl .ag-filter-toolpanel-group-title-bar-icon {\n  margin-left: var(--ag-grid-size);\n}\n\n.ag-filter-toolpanel-group-level-1 .ag-filter-toolpanel-group-level-1-header.ag-filter-toolpanel-group-title-bar {\n  background-color: transparent;\n}\n.ag-ltr .ag-filter-toolpanel-group-level-1 .ag-filter-toolpanel-group-level-2-header {\n  padding-left: calc(var(--ag-filter-tool-panel-group-indent) * 1 + var(--ag-grid-size));\n}\n.ag-rtl .ag-filter-toolpanel-group-level-1 .ag-filter-toolpanel-group-level-2-header {\n  padding-right: calc(var(--ag-filter-tool-panel-group-indent) * 1 + var(--ag-grid-size));\n}\n\n.ag-filter-toolpanel-group-level-2 .ag-filter-toolpanel-group-level-2-header.ag-filter-toolpanel-group-title-bar {\n  background-color: transparent;\n}\n.ag-ltr .ag-filter-toolpanel-group-level-2 .ag-filter-toolpanel-group-level-3-header {\n  padding-left: calc(var(--ag-filter-tool-panel-group-indent) * 2 + var(--ag-grid-size));\n}\n.ag-rtl .ag-filter-toolpanel-group-level-2 .ag-filter-toolpanel-group-level-3-header {\n  padding-right: calc(var(--ag-filter-tool-panel-group-indent) * 2 + var(--ag-grid-size));\n}\n\n.ag-filter-toolpanel-group-level-3 .ag-filter-toolpanel-group-level-3-header.ag-filter-toolpanel-group-title-bar {\n  background-color: transparent;\n}\n.ag-ltr .ag-filter-toolpanel-group-level-3 .ag-filter-toolpanel-group-level-4-header {\n  padding-left: calc(var(--ag-filter-tool-panel-group-indent) * 3 + var(--ag-grid-size));\n}\n.ag-rtl .ag-filter-toolpanel-group-level-3 .ag-filter-toolpanel-group-level-4-header {\n  padding-right: calc(var(--ag-filter-tool-panel-group-indent) * 3 + var(--ag-grid-size));\n}\n\n.ag-filter-toolpanel-group-level-4 .ag-filter-toolpanel-group-level-4-header.ag-filter-toolpanel-group-title-bar {\n  background-color: transparent;\n}\n.ag-ltr .ag-filter-toolpanel-group-level-4 .ag-filter-toolpanel-group-level-5-header {\n  padding-left: calc(var(--ag-filter-tool-panel-group-indent) * 4 + var(--ag-grid-size));\n}\n.ag-rtl .ag-filter-toolpanel-group-level-4 .ag-filter-toolpanel-group-level-5-header {\n  padding-right: calc(var(--ag-filter-tool-panel-group-indent) * 4 + var(--ag-grid-size));\n}\n\n.ag-filter-toolpanel-group-level-5 .ag-filter-toolpanel-group-level-5-header.ag-filter-toolpanel-group-title-bar {\n  background-color: transparent;\n}\n.ag-ltr .ag-filter-toolpanel-group-level-5 .ag-filter-toolpanel-group-level-6-header {\n  padding-left: calc(var(--ag-filter-tool-panel-group-indent) * 5 + var(--ag-grid-size));\n}\n.ag-rtl .ag-filter-toolpanel-group-level-5 .ag-filter-toolpanel-group-level-6-header {\n  padding-right: calc(var(--ag-filter-tool-panel-group-indent) * 5 + var(--ag-grid-size));\n}\n\n.ag-filter-toolpanel-group-level-6 .ag-filter-toolpanel-group-level-6-header.ag-filter-toolpanel-group-title-bar {\n  background-color: transparent;\n}\n.ag-ltr .ag-filter-toolpanel-group-level-6 .ag-filter-toolpanel-group-level-7-header {\n  padding-left: calc(var(--ag-filter-tool-panel-group-indent) * 6 + var(--ag-grid-size));\n}\n.ag-rtl .ag-filter-toolpanel-group-level-6 .ag-filter-toolpanel-group-level-7-header {\n  padding-right: calc(var(--ag-filter-tool-panel-group-indent) * 6 + var(--ag-grid-size));\n}\n\n.ag-filter-toolpanel-group-level-7 .ag-filter-toolpanel-group-level-7-header.ag-filter-toolpanel-group-title-bar {\n  background-color: transparent;\n}\n.ag-ltr .ag-filter-toolpanel-group-level-7 .ag-filter-toolpanel-group-level-8-header {\n  padding-left: calc(var(--ag-filter-tool-panel-group-indent) * 7 + var(--ag-grid-size));\n}\n.ag-rtl .ag-filter-toolpanel-group-level-7 .ag-filter-toolpanel-group-level-8-header {\n  padding-right: calc(var(--ag-filter-tool-panel-group-indent) * 7 + var(--ag-grid-size));\n}\n\n.ag-filter-toolpanel-group-level-8 .ag-filter-toolpanel-group-level-8-header.ag-filter-toolpanel-group-title-bar {\n  background-color: transparent;\n}\n.ag-ltr .ag-filter-toolpanel-group-level-8 .ag-filter-toolpanel-group-level-9-header {\n  padding-left: calc(var(--ag-filter-tool-panel-group-indent) * 8 + var(--ag-grid-size));\n}\n.ag-rtl .ag-filter-toolpanel-group-level-8 .ag-filter-toolpanel-group-level-9-header {\n  padding-right: calc(var(--ag-filter-tool-panel-group-indent) * 8 + var(--ag-grid-size));\n}\n\n.ag-filter-toolpanel-group-level-9 .ag-filter-toolpanel-group-level-9-header.ag-filter-toolpanel-group-title-bar {\n  background-color: transparent;\n}\n.ag-ltr .ag-filter-toolpanel-group-level-9 .ag-filter-toolpanel-group-level-10-header {\n  padding-left: calc(var(--ag-filter-tool-panel-group-indent) * 9 + var(--ag-grid-size));\n}\n.ag-rtl .ag-filter-toolpanel-group-level-9 .ag-filter-toolpanel-group-level-10-header {\n  padding-right: calc(var(--ag-filter-tool-panel-group-indent) * 9 + var(--ag-grid-size));\n}\n\n.ag-filter-toolpanel-group-level-10 .ag-filter-toolpanel-group-level-10-header.ag-filter-toolpanel-group-title-bar {\n  background-color: transparent;\n}\n.ag-ltr .ag-filter-toolpanel-group-level-10 .ag-filter-toolpanel-group-level-11-header {\n  padding-left: calc(var(--ag-filter-tool-panel-group-indent) * 10 + var(--ag-grid-size));\n}\n.ag-rtl .ag-filter-toolpanel-group-level-10 .ag-filter-toolpanel-group-level-11-header {\n  padding-right: calc(var(--ag-filter-tool-panel-group-indent) * 10 + var(--ag-grid-size));\n}\n\n.ag-filter-toolpanel-instance-header.ag-filter-toolpanel-group-level-1-header {\n  padding-left: var(--ag-grid-size);\n}\n\n.ag-filter-toolpanel-instance-filter {\n  border-bottom: var(--ag-borders) var(--ag-border-color);\n  border-top: var(--ag-borders) var(--ag-border-color);\n  margin-top: var(--ag-grid-size);\n}\n\n.ag-ltr .ag-filter-toolpanel-instance-header-icon {\n  margin-left: var(--ag-grid-size);\n}\n.ag-rtl .ag-filter-toolpanel-instance-header-icon {\n  margin-right: var(--ag-grid-size);\n}\n\n.ag-set-filter-group-icons {\n  color: var(--ag-secondary-foreground-color);\n}\n\n.ag-pivot-mode-panel {\n  min-height: var(--ag-header-height);\n  height: var(--ag-header-height);\n  display: flex;\n}\n\n.ag-pivot-mode-select {\n  display: flex;\n  align-items: center;\n}\n.ag-ltr .ag-pivot-mode-select {\n  margin-left: var(--ag-widget-container-horizontal-padding);\n}\n.ag-rtl .ag-pivot-mode-select {\n  margin-right: var(--ag-widget-container-horizontal-padding);\n}\n\n.ag-keyboard-focus .ag-column-select-header:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-column-select-header:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 4px;\n  left: 4px;\n  display: block;\n  width: calc(100% - 8px);\n  height: calc(100% - 8px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-column-select-header {\n  height: var(--ag-header-height);\n  align-items: center;\n  padding: 0 var(--ag-widget-container-horizontal-padding);\n  border-bottom: var(--ag-borders-secondary) var(--ag-secondary-border-color);\n}\n\n.ag-column-panel-column-select {\n  border-bottom: var(--ag-borders-secondary) var(--ag-secondary-border-color);\n  border-top: var(--ag-borders-secondary) var(--ag-secondary-border-color);\n}\n\n.ag-column-group-icons,\n.ag-column-select-header-icon {\n  color: var(--ag-secondary-foreground-color);\n}\n\n.ag-column-select-list .ag-list-item-hovered::after {\n  content: \"\";\n  position: absolute;\n  left: 0;\n  right: 0;\n  height: 1px;\n  background-color: var(--ag-range-selection-border-color);\n}\n.ag-column-select-list .ag-item-highlight-top::after {\n  top: 0;\n}\n.ag-column-select-list .ag-item-highlight-bottom::after {\n  bottom: 0;\n}\n\n.ag-header, .ag-advanced-filter-header {\n  background-color: var(--ag-header-background-color);\n  border-bottom: var(--ag-borders-critical) var(--ag-border-color);\n}\n\n.ag-header-row {\n  color: var(--ag-header-foreground-color);\n  height: var(--ag-header-height);\n}\n\n.ag-pinned-right-header {\n  border-left: var(--ag-borders-critical) var(--ag-border-color);\n}\n\n.ag-pinned-left-header {\n  border-right: var(--ag-borders-critical) var(--ag-border-color);\n}\n\n.ag-ltr .ag-header-cell:not(.ag-right-aligned-header) .ag-header-label-icon {\n  margin-left: var(--ag-grid-size);\n}\n.ag-rtl .ag-header-cell:not(.ag-right-aligned-header) .ag-header-label-icon {\n  margin-right: var(--ag-grid-size);\n}\n\n.ag-ltr .ag-header-cell.ag-right-aligned-header .ag-header-label-icon {\n  margin-right: var(--ag-grid-size);\n}\n.ag-rtl .ag-header-cell.ag-right-aligned-header .ag-header-label-icon {\n  margin-left: var(--ag-grid-size);\n}\n\n.ag-header-cell,\n.ag-header-group-cell {\n  padding-left: var(--ag-cell-horizontal-padding);\n  padding-right: var(--ag-cell-horizontal-padding);\n}\n.ag-header-cell.ag-header-cell-moving,\n.ag-header-group-cell.ag-header-cell-moving {\n  background-color: var(--ag-header-cell-moving-background-color);\n}\n\n.ag-ltr .ag-header-group-cell-label.ag-sticky-label {\n  left: var(--ag-cell-horizontal-padding);\n}\n.ag-rtl .ag-header-group-cell-label.ag-sticky-label {\n  right: var(--ag-cell-horizontal-padding);\n}\n\n.ag-header-cell.ag-header-span-height::after,\n.ag-header-cell.ag-header-span-height .ag-header-cell-resize::after {\n  height: calc(100% - var(--ag-grid-size) * 4);\n  top: calc(var(--ag-grid-size) * 2);\n}\n\n.ag-keyboard-focus .ag-header-cell:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-header-cell:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 4px;\n  left: 4px;\n  display: block;\n  width: calc(100% - 8px);\n  height: calc(100% - 8px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n.ag-keyboard-focus .ag-header-group-cell:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-header-group-cell:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 4px;\n  left: 4px;\n  display: block;\n  width: calc(100% - 8px);\n  height: calc(100% - 8px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n.ag-keyboard-focus .ag-advanced-filter-header-cell:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-advanced-filter-header-cell:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 4px;\n  left: 4px;\n  display: block;\n  width: calc(100% - 8px);\n  height: calc(100% - 8px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-header-icon {\n  color: var(--ag-secondary-foreground-color);\n}\n\n.ag-header-expand-icon {\n  cursor: pointer;\n}\n.ag-ltr .ag-header-expand-icon {\n  padding-left: 4px;\n}\n.ag-rtl .ag-header-expand-icon {\n  padding-right: 4px;\n}\n\n.ag-header-row:not(:first-child) .ag-header-cell:not(.ag-header-span-height.ag-header-span-total),\n.ag-header-row:not(:first-child) .ag-header-group-cell.ag-header-group-cell-with-group {\n  border-top: var(--ag-borders-critical) var(--ag-border-color);\n}\n\n.ag-header-group-cell:not(.ag-column-resizing) + .ag-header-group-cell:not(.ag-column-hover):not(.ag-header-cell-moving):hover, .ag-header-group-cell:not(.ag-column-resizing) + .ag-header-group-cell:not(.ag-column-hover).ag-column-resizing,\n.ag-header-cell:not(.ag-column-resizing) + .ag-header-cell:not(.ag-column-hover):not(.ag-header-cell-moving):hover,\n.ag-header-cell:not(.ag-column-resizing) + .ag-header-cell:not(.ag-column-hover).ag-column-resizing,\n.ag-header-group-cell:first-of-type:not(.ag-header-cell-moving):hover,\n.ag-header-group-cell:first-of-type.ag-column-resizing,\n.ag-header-cell:not(.ag-column-hover):first-of-type:not(.ag-header-cell-moving):hover,\n.ag-header-cell:not(.ag-column-hover):first-of-type.ag-column-resizing {\n  background-color: var(--ag-header-cell-hover-background-color);\n}\n\n.ag-header-cell::after,\n.ag-header-group-cell::after {\n  content: \"\";\n  position: absolute;\n  z-index: 1;\n  display: var(--ag-header-column-separator-display);\n  width: var(--ag-header-column-separator-width);\n  height: var(--ag-header-column-separator-height);\n  top: calc(50% - var(--ag-header-column-separator-height) * 0.5);\n  background-color: var(--ag-header-column-separator-color);\n}\n.ag-ltr .ag-header-cell::after,\n.ag-ltr .ag-header-group-cell::after {\n  right: 0;\n}\n.ag-rtl .ag-header-cell::after,\n.ag-rtl .ag-header-group-cell::after {\n  left: 0;\n}\n\n.ag-header-cell-resize {\n  display: flex;\n  align-items: center;\n}\n\n.ag-header-cell-resize::after {\n  content: \"\";\n  position: absolute;\n  z-index: 1;\n  display: var(--ag-header-column-resize-handle-display);\n  width: var(--ag-header-column-resize-handle-width);\n  height: var(--ag-header-column-resize-handle-height);\n  top: calc(50% - var(--ag-header-column-resize-handle-height) * 0.5);\n  background-color: var(--ag-header-column-resize-handle-color);\n}\n\n.ag-header-cell.ag-header-span-height::after,\n.ag-header-cell.ag-header-span-height .ag-header-cell-resize::after {\n  height: calc(100% - var(--ag-grid-size) * 4);\n  top: calc(var(--ag-grid-size) * 2);\n}\n\n.ag-ltr .ag-header-viewport .ag-header-cell-resize::after {\n  left: calc(50% - var(--ag-header-column-resize-handle-width));\n}\n.ag-rtl .ag-header-viewport .ag-header-cell-resize::after {\n  right: calc(50% - var(--ag-header-column-resize-handle-width));\n}\n\n.ag-pinned-left-header .ag-header-cell-resize::after {\n  left: calc(50% - var(--ag-header-column-resize-handle-width));\n}\n\n.ag-pinned-right-header .ag-header-cell-resize::after {\n  left: 50%;\n}\n\n.ag-ltr .ag-header-select-all {\n  margin-right: var(--ag-cell-horizontal-padding);\n}\n.ag-rtl .ag-header-select-all {\n  margin-left: var(--ag-cell-horizontal-padding);\n}\n\n.ag-ltr .ag-floating-filter-button {\n  margin-left: calc(var(--ag-grid-size) * 3);\n}\n.ag-rtl .ag-floating-filter-button {\n  margin-right: calc(var(--ag-grid-size) * 3);\n}\n\n.ag-floating-filter-button-button {\n  color: inherit;\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n  line-height: inherit;\n  -webkit-appearance: none;\n     -moz-appearance: none;\n          appearance: none;\n  background: transparent;\n  border: none;\n  height: var(--ag-icon-size);\n  padding: 0;\n  width: var(--ag-icon-size);\n}\n\n.ag-filter-loading {\n  background-color: var(--ag-control-panel-background-color);\n  height: 100%;\n  padding: var(--ag-widget-container-vertical-padding) var(--ag-widget-container-horizontal-padding);\n  position: absolute;\n  width: 100%;\n  z-index: 1;\n}\n\n.ag-paging-panel {\n  border-top: 1px solid;\n  border-top-color: var(--ag-border-color);\n  color: var(--ag-secondary-foreground-color);\n  height: var(--ag-header-height);\n}\n.ag-paging-panel > * {\n  margin: 0 var(--ag-cell-horizontal-padding);\n}\n\n.ag-paging-button {\n  cursor: pointer;\n}\n\n.ag-paging-button.ag-disabled {\n  cursor: default;\n  color: var(--ag-disabled-foreground-color);\n}\n\n.ag-keyboard-focus .ag-paging-button:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-paging-button:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 0px;\n  left: 0px;\n  display: block;\n  width: calc(100% - 0px);\n  height: calc(100% - 0px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-paging-button, .ag-paging-description {\n  margin: 0 var(--ag-grid-size);\n}\n\n.ag-status-bar {\n  border-top: var(--ag-borders) var(--ag-border-color);\n  color: var(--ag-disabled-foreground-color);\n  padding-right: calc(var(--ag-grid-size) * 4);\n  padding-left: calc(var(--ag-grid-size) * 4);\n  line-height: 1.5;\n}\n\n.ag-status-name-value-value {\n  color: var(--ag-foreground-color);\n}\n\n.ag-status-bar-center {\n  text-align: center;\n}\n\n.ag-status-name-value {\n  margin-left: var(--ag-grid-size);\n  margin-right: var(--ag-grid-size);\n  padding-top: calc(var(--ag-grid-size) * 2);\n  padding-bottom: calc(var(--ag-grid-size) * 2);\n}\n\n.ag-column-drop-cell {\n  background: var(--ag-chip-background-color);\n  border-radius: calc(var(--ag-grid-size) * 4);\n  height: calc(var(--ag-grid-size) * 4);\n  padding: 0 calc(var(--ag-grid-size) * 0.5);\n  border: 1px solid transparent;\n}\n\n.ag-keyboard-focus .ag-column-drop-cell:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-column-drop-cell:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 2px;\n  left: 2px;\n  display: block;\n  width: calc(100% - 4px);\n  height: calc(100% - 4px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-column-drop-cell-text {\n  margin: 0 var(--ag-grid-size);\n}\n\n.ag-column-drop-cell-button {\n  min-width: calc(var(--ag-grid-size) * 4);\n  margin: 0 calc(var(--ag-grid-size) * 0.5);\n  color: var(--ag-secondary-foreground-color);\n}\n\n.ag-column-drop-cell-drag-handle {\n  margin-left: calc(var(--ag-grid-size) * 2);\n}\n\n.ag-column-drop-cell-ghost {\n  opacity: 0.5;\n}\n\n.ag-column-drop-horizontal {\n  background-color: var(--ag-control-panel-background-color);\n  color: var(--ag-secondary-foreground-color);\n  height: var(--ag-row-height);\n  border-bottom: var(--ag-borders) var(--ag-border-color);\n}\n.ag-ltr .ag-column-drop-horizontal {\n  padding-left: var(--ag-cell-horizontal-padding);\n}\n.ag-rtl .ag-column-drop-horizontal {\n  padding-right: var(--ag-cell-horizontal-padding);\n}\n\n.ag-ltr .ag-column-drop-horizontal-half-width:not(:last-child) {\n  border-right: var(--ag-borders) var(--ag-border-color);\n}\n.ag-rtl .ag-column-drop-horizontal-half-width:not(:last-child) {\n  border-left: var(--ag-borders) var(--ag-border-color);\n}\n\n.ag-column-drop-horizontal-cell-separator {\n  margin: 0 var(--ag-grid-size);\n  color: var(--ag-secondary-foreground-color);\n}\n\n.ag-column-drop-horizontal-empty-message {\n  color: var(--ag-disabled-foreground-color);\n}\n\n.ag-ltr .ag-column-drop-horizontal-icon {\n  margin-right: var(--ag-cell-horizontal-padding);\n}\n.ag-rtl .ag-column-drop-horizontal-icon {\n  margin-left: var(--ag-cell-horizontal-padding);\n}\n\n.ag-column-drop-vertical-list {\n  padding-bottom: var(--ag-grid-size);\n  padding-right: var(--ag-grid-size);\n  padding-left: var(--ag-grid-size);\n}\n\n.ag-column-drop-vertical-cell {\n  margin-top: var(--ag-grid-size);\n}\n\n.ag-column-drop-vertical {\n  min-height: 50px;\n  border-bottom: var(--ag-borders-secondary) var(--ag-secondary-border-color);\n}\n.ag-column-drop-vertical.ag-last-column-drop {\n  border-bottom: none;\n}\n\n.ag-column-drop-vertical-icon {\n  margin-left: var(--ag-grid-size);\n  margin-right: var(--ag-grid-size);\n}\n\n.ag-column-drop-vertical-empty-message {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  overflow: hidden;\n  color: var(--ag-disabled-foreground-color);\n  margin-top: var(--ag-grid-size);\n}\n\n.ag-select-agg-func-popup {\n  border: var(--ag-borders) var(--ag-border-color);\n  background: var(--ag-background-color);\n  border-radius: var(--ag-card-radius);\n  box-shadow: var(--ag-card-shadow);\n  padding: var(--ag-grid-size);\n  background: var(--ag-background-color);\n  height: calc(var(--ag-grid-size) * 5 * 3.5);\n  padding: 0;\n}\n\n.ag-select-agg-func-virtual-list-item {\n  cursor: default;\n}\n.ag-ltr .ag-select-agg-func-virtual-list-item {\n  padding-left: calc(var(--ag-grid-size) * 2);\n}\n.ag-rtl .ag-select-agg-func-virtual-list-item {\n  padding-right: calc(var(--ag-grid-size) * 2);\n}\n.ag-select-agg-func-virtual-list-item:hover {\n  background-color: var(--ag-selected-row-background-color);\n}\n\n.ag-keyboard-focus .ag-select-agg-func-virtual-list-item:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-select-agg-func-virtual-list-item:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: 1px;\n  left: 1px;\n  display: block;\n  width: calc(100% - 2px);\n  height: calc(100% - 2px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-sort-indicator-container {\n  display: flex;\n}\n\n.ag-ltr .ag-sort-indicator-icon {\n  padding-left: var(--ag-grid-size);\n}\n.ag-rtl .ag-sort-indicator-icon {\n  padding-right: var(--ag-grid-size);\n}\n\n.ag-chart {\n  position: relative;\n  display: flex;\n  overflow: hidden;\n  width: 100%;\n  height: 100%;\n}\n\n.ag-chart-components-wrapper {\n  position: relative;\n  display: flex;\n  flex: 1 1 auto;\n  overflow: hidden;\n}\n\n.ag-chart-title-edit {\n  position: absolute;\n  display: none;\n  top: 0;\n  left: 0;\n  text-align: center;\n}\n\n.ag-chart-title-edit.currently-editing {\n  display: inline-block;\n}\n\n.ag-chart-canvas-wrapper {\n  position: relative;\n  flex: 1 1 auto;\n  overflow: hidden;\n}\n\n.ag-charts-canvas {\n  display: block;\n}\n\n.ag-chart-menu {\n  position: absolute;\n  top: 10px;\n  width: 24px;\n  overflow: hidden;\n  display: flex;\n  flex-direction: column;\n}\n.ag-ltr .ag-chart-menu {\n  right: 20px;\n}\n.ag-rtl .ag-chart-menu {\n  left: 20px;\n}\n\n.ag-chart-docked-container {\n  position: relative;\n  width: 0;\n  min-width: 0;\n  transition: min-width 0.4s;\n}\n\n.ag-chart-menu-hidden ~ .ag-chart-docked-container {\n  max-width: 0;\n  overflow: hidden;\n}\n\n.ag-chart-tabbed-menu {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  overflow: hidden;\n}\n\n.ag-chart-tabbed-menu-header {\n  flex: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  user-select: none;\n  cursor: default;\n}\n\n.ag-chart-tabbed-menu-body {\n  display: flex;\n  flex: 1 1 auto;\n  align-items: stretch;\n  overflow: hidden;\n}\n\n.ag-chart-tab {\n  width: 100%;\n  overflow: hidden;\n  overflow-y: auto;\n}\n\n.ag-chart-settings {\n  overflow-x: hidden;\n}\n\n.ag-chart-settings-wrapper {\n  position: relative;\n  flex-direction: column;\n  width: 100%;\n  height: 100%;\n  display: flex;\n  overflow: hidden;\n}\n\n.ag-chart-settings-nav-bar {\n  display: flex;\n  align-items: center;\n  width: 100%;\n  height: 30px;\n  padding: 0 10px;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n\n.ag-chart-settings-card-selector {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  flex: 1 1 auto;\n  height: 100%;\n  padding: 0 10px;\n}\n\n.ag-chart-settings-card-item {\n  cursor: pointer;\n  width: 10px;\n  height: 10px;\n  background-color: #000;\n  position: relative;\n}\n.ag-chart-settings-card-item.ag-not-selected {\n  opacity: 0.2;\n}\n.ag-chart-settings-card-item::before {\n  content: \" \";\n  display: block;\n  position: absolute;\n  background-color: transparent;\n  left: 50%;\n  top: 50%;\n  margin-left: -10px;\n  margin-top: -10px;\n  width: 20px;\n  height: 20px;\n}\n\n.ag-chart-settings-prev,\n.ag-chart-settings-next {\n  position: relative;\n  flex: none;\n}\n\n.ag-chart-settings-prev-button,\n.ag-chart-settings-next-button {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  cursor: pointer;\n  opacity: 0;\n}\n\n.ag-chart-settings-mini-charts-container {\n  position: relative;\n  flex: 1 1 auto;\n  overflow-x: hidden;\n  overflow-y: auto;\n}\n\n.ag-chart-settings-mini-wrapper {\n  position: absolute;\n  top: 0;\n  left: 0;\n  display: flex;\n  flex-direction: column;\n  width: 100%;\n  min-height: 100%;\n  overflow: hidden;\n}\n.ag-chart-settings-mini-wrapper.ag-animating {\n  transition: left 0.3s;\n  transition-timing-function: ease-in-out;\n}\n\n.ag-chart-mini-thumbnail {\n  cursor: pointer;\n}\n\n.ag-chart-mini-thumbnail-canvas {\n  display: block;\n}\n\n.ag-chart-data-wrapper,\n.ag-chart-format-wrapper {\n  display: flex;\n  flex-direction: column;\n  position: relative;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n\n.ag-chart-data-wrapper {\n  height: 100%;\n  overflow-y: auto;\n}\n\n.ag-chart-data-section,\n.ag-chart-format-section {\n  display: flex;\n  margin: 0;\n}\n\n.ag-chart-empty-text {\n  display: flex;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.ag-chart .ag-chart-menu {\n  display: none;\n}\n\n.ag-chart-menu-hidden:hover .ag-chart-menu {\n  display: block;\n}\n\n.ag-chart .ag-chart-tool-panel-button-enable .ag-chart-menu {\n  display: flex;\n  flex-direction: row;\n  overflow: auto;\n  top: 5px;\n  gap: calc(var(--ag-grid-size) * 3 - 8px);\n  width: auto;\n}\n.ag-ltr .ag-chart .ag-chart-tool-panel-button-enable .ag-chart-menu {\n  right: calc(var(--ag-cell-horizontal-padding) + var(--ag-grid-size) - 4px);\n  justify-content: right;\n}\n.ag-rtl .ag-chart .ag-chart-tool-panel-button-enable .ag-chart-menu {\n  left: calc(var(--ag-cell-horizontal-padding) + var(--ag-grid-size) - 4px);\n  justify-content: left;\n}\n\n.ag-chart-menu-close {\n  display: none;\n}\n\n.ag-chart-tool-panel-button-enable .ag-chart-menu-close {\n  position: absolute;\n  top: 50%;\n  transition: transform 0.33s ease-in-out;\n  padding: 0;\n  display: block;\n  cursor: pointer;\n  border: none;\n}\n.ag-ltr .ag-chart-tool-panel-button-enable .ag-chart-menu-close {\n  right: 0px;\n}\n.ag-rtl .ag-chart-tool-panel-button-enable .ag-chart-menu-close {\n  left: 0px;\n}\n.ag-chart-tool-panel-button-enable .ag-chart-menu-close .ag-icon {\n  padding: 14px 5px 14px 2px;\n}\n.ag-chart-tool-panel-button-enable .ag-chart-menu-close:before {\n  content: \"\";\n  position: absolute;\n  top: -40px;\n  bottom: -40px;\n}\n.ag-ltr .ag-chart-tool-panel-button-enable .ag-chart-menu-close:before {\n  right: 0px;\n}\n.ag-rtl .ag-chart-tool-panel-button-enable .ag-chart-menu-close:before {\n  left: 0px;\n}\n.ag-ltr .ag-chart-tool-panel-button-enable .ag-chart-menu-close:before {\n  left: -10px;\n}\n.ag-rtl .ag-chart-tool-panel-button-enable .ag-chart-menu-close:before {\n  right: -10px;\n}\n.ag-chart-tool-panel-button-enable .ag-icon-menu {\n  display: none;\n}\n\n.ag-ltr .ag-chart-tool-panel-button-enable .ag-chart-menu-close {\n  transform: translate(3px, -50%);\n}\n.ag-ltr .ag-chart-tool-panel-button-enable .ag-chart-menu-close:hover {\n  transform: translate(0, -50%);\n}\n.ag-ltr .ag-chart-menu-visible .ag-chart-tool-panel-button-enable .ag-chart-menu-close:hover {\n  transform: translate(5px, -50%);\n}\n\n.ag-rtl .ag-chart-tool-panel-button-enable .ag-chart-menu-close {\n  transform: translate(-3px, -50%);\n}\n.ag-rtl .ag-chart-tool-panel-button-enable .ag-chart-menu-close:hover {\n  transform: translate(0, -50%);\n}\n.ag-rtl .ag-chart-menu-visible .ag-chart-tool-panel-button-enable .ag-chart-menu-close:hover {\n  transform: translate(-5px, -50%);\n}\n\n.ag-charts-font-size-color {\n  display: flex;\n  align-self: stretch;\n  justify-content: space-between;\n}\n\n.ag-charts-data-group-item {\n  position: relative;\n}\n\n.ag-chart-menu {\n  border-radius: var(--ag-card-radius);\n  background: var(--ag-background-color);\n}\n\n.ag-chart-menu-icon {\n  opacity: 0.5;\n  line-height: 24px;\n  font-size: 24px;\n  width: 24px;\n  height: 24px;\n  margin: 2px 0;\n  cursor: pointer;\n  border-radius: var(--ag-card-radius);\n  color: var(--ag-secondary-foreground-color);\n}\n.ag-chart-menu-icon:hover {\n  opacity: 1;\n}\n\n.ag-chart-mini-thumbnail {\n  border: 1px solid var(--ag-secondary-border-color);\n  border-radius: 5px;\n  margin: 5px;\n}\n.ag-chart-mini-thumbnail:nth-last-child(3), .ag-chart-mini-thumbnail:nth-last-child(3) ~ .ag-chart-mini-thumbnail {\n  margin-left: auto;\n  margin-right: auto;\n}\n.ag-ltr .ag-chart-mini-thumbnail:first-child {\n  margin-left: 0;\n}\n.ag-rtl .ag-chart-mini-thumbnail:first-child {\n  margin-right: 0;\n}\n.ag-ltr .ag-chart-mini-thumbnail:last-child {\n  margin-right: 0;\n}\n.ag-rtl .ag-chart-mini-thumbnail:last-child {\n  margin-left: 0;\n}\n.ag-chart-mini-thumbnail.ag-selected {\n  border-color: var(--ag-minichart-selected-chart-color);\n}\n\n.ag-chart-settings-card-item {\n  background: var(--ag-foreground-color);\n  width: 8px;\n  height: 8px;\n  border-radius: 4px;\n}\n.ag-chart-settings-card-item.ag-selected {\n  background-color: var(--ag-minichart-selected-page-color);\n}\n\n.ag-chart-data-column-drag-handle {\n  margin-left: var(--ag-grid-size);\n}\n\n.ag-charts-settings-group-title-bar,\n.ag-charts-data-group-title-bar,\n.ag-charts-format-top-level-group-title-bar {\n  border-top: var(--ag-borders-secondary) var(--ag-secondary-border-color);\n}\n\n.ag-charts-settings-group-container {\n  padding: var(--ag-grid-size);\n}\n\n.ag-charts-data-group-container {\n  padding: calc(var(--ag-widget-container-vertical-padding) * 0.5) var(--ag-widget-container-horizontal-padding);\n}\n.ag-charts-data-group-container .ag-charts-data-group-item:not(.ag-charts-format-sub-level-group) {\n  height: var(--ag-list-item-height);\n}\n.ag-charts-data-group-container .ag-list-item-hovered::after {\n  content: \"\";\n  position: absolute;\n  left: 0;\n  right: 0;\n  height: 1px;\n  background-color: var(--ag-range-selection-border-color);\n}\n.ag-charts-data-group-container .ag-item-highlight-top::after {\n  top: 0;\n}\n.ag-charts-data-group-container .ag-item-highlight-bottom::after {\n  bottom: 0;\n}\n\n.ag-charts-format-top-level-group-container {\n  margin-left: calc(var(--ag-grid-size) * 2);\n  padding: var(--ag-grid-size);\n}\n\n.ag-charts-format-top-level-group-item {\n  margin: var(--ag-grid-size) 0;\n}\n\n.ag-charts-format-sub-level-group-container {\n  padding: var(--ag-widget-container-vertical-padding) var(--ag-widget-container-horizontal-padding);\n  padding-bottom: calc(var(--ag-widget-container-vertical-padding) - var(--ag-widget-vertical-spacing));\n}\n.ag-charts-format-sub-level-group-container > * {\n  margin-bottom: var(--ag-widget-vertical-spacing);\n}\n\n.ag-charts-group-container.ag-group-container-horizontal {\n  padding: var(--ag-grid-size);\n}\n\n.ag-chart-data-section,\n.ag-chart-format-section {\n  display: flex;\n  margin: 0;\n}\n\n.ag-chart-menu-panel {\n  background-color: var(--ag-control-panel-background-color);\n}\n.ag-ltr .ag-chart-menu-panel {\n  border-left: solid 1px var(--ag-border-color);\n}\n.ag-rtl .ag-chart-menu-panel {\n  border-right: solid 1px var(--ag-border-color);\n}\n\n.ag-date-time-list-page-title-bar {\n  display: flex;\n}\n\n.ag-date-time-list-page-title {\n  flex-grow: 1;\n  text-align: center;\n}\n\n.ag-date-time-list-page-column-labels-row,\n.ag-date-time-list-page-entries-row {\n  display: flex;\n}\n\n.ag-date-time-list-page-column-label,\n.ag-date-time-list-page-entry {\n  flex-basis: 0;\n  flex-grow: 1;\n}\n\n.ag-date-time-list-page-entry {\n  cursor: pointer;\n  text-align: center;\n}\n\n.ag-date-time-list-page-column-label {\n  text-align: center;\n}\n\n.ag-advanced-filter-header {\n  position: relative;\n  display: flex;\n  align-items: center;\n  padding-left: var(--ag-cell-horizontal-padding);\n  padding-right: var(--ag-cell-horizontal-padding);\n}\n\n.ag-advanced-filter {\n  display: flex;\n  align-items: center;\n  width: 100%;\n}\n\n.ag-advanced-filter-apply-button, .ag-advanced-filter-builder-button {\n  line-height: normal;\n  white-space: nowrap;\n}\n.ag-ltr .ag-advanced-filter-apply-button, .ag-ltr .ag-advanced-filter-builder-button {\n  margin-left: calc(var(--ag-grid-size) * 2);\n}\n.ag-rtl .ag-advanced-filter-apply-button, .ag-rtl .ag-advanced-filter-builder-button {\n  margin-right: calc(var(--ag-grid-size) * 2);\n}\n\n.ag-advanced-filter-builder-button {\n  display: flex;\n  align-items: center;\n  border: 0;\n  background-color: unset;\n}\n.ag-advanced-filter-builder-button:hover:not(:disabled) {\n  background-color: var(--ag-row-hover-color);\n}\n.ag-advanced-filter-builder-button:not(:disabled) {\n  cursor: pointer;\n}\n\n.ag-advanced-filter-builder-button-label {\n  margin-left: var(--ag-grid-size);\n}\n\n.ag-advanced-filter-builder {\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  user-select: none;\n  width: 100%;\n  background-color: var(--ag-control-panel-background-color);\n  display: flex;\n  flex-direction: column;\n}\n\n.ag-advanced-filter-builder-list {\n  flex: 1;\n  overflow: auto;\n}\n.ag-advanced-filter-builder-list .ag-list-item-hovered::after {\n  content: \"\";\n  position: absolute;\n  left: 0;\n  right: 0;\n  height: 1px;\n  background-color: var(--ag-range-selection-border-color);\n}\n.ag-advanced-filter-builder-list .ag-item-highlight-top::after {\n  top: 0;\n}\n.ag-advanced-filter-builder-list .ag-item-highlight-bottom::after {\n  bottom: 0;\n}\n\n.ag-advanced-filter-builder-button-panel {\n  display: flex;\n  justify-content: flex-end;\n  padding: var(--ag-widget-container-vertical-padding) var(--ag-widget-container-horizontal-padding);\n  border-top: var(--ag-borders-secondary) var(--ag-secondary-border-color);\n}\n\n.ag-advanced-filter-builder .ag-advanced-filter-builder-button-panel .ag-advanced-filter-builder-apply-button,\n.ag-advanced-filter-builder .ag-advanced-filter-builder-button-panel .ag-advanced-filter-builder-cancel-button {\n  margin-left: calc(var(--ag-grid-size) * 2);\n}\n\n.ag-advanced-filter-builder-item-wrapper {\n  display: flex;\n  flex: 1 1 auto;\n  align-items: center;\n  justify-content: space-between;\n  overflow: hidden;\n  padding-left: calc(var(--ag-icon-size) / 2);\n  padding-right: var(--ag-icon-size);\n}\n\n.ag-advanced-filter-builder-item-tree-lines > * {\n  width: var(--ag-advanced-filter-builder-indent-size);\n}\n\n.ag-advanced-filter-builder-item-tree-lines .ag-advanced-filter-builder-item-tree-line-root {\n  width: var(--ag-icon-size);\n}\n.ag-advanced-filter-builder-item-tree-lines .ag-advanced-filter-builder-item-tree-line-root::before {\n  top: 50%;\n  height: 50%;\n}\n\n.ag-advanced-filter-builder-item-tree-line-horizontal,\n.ag-advanced-filter-builder-item-tree-line-vertical,\n.ag-advanced-filter-builder-item-tree-line-vertical-top,\n.ag-advanced-filter-builder-item-tree-line-vertical-bottom {\n  position: relative;\n  height: 100%;\n  display: flex;\n  align-items: center;\n}\n.ag-advanced-filter-builder-item-tree-line-horizontal::before, .ag-advanced-filter-builder-item-tree-line-horizontal::after,\n.ag-advanced-filter-builder-item-tree-line-vertical::before,\n.ag-advanced-filter-builder-item-tree-line-vertical::after,\n.ag-advanced-filter-builder-item-tree-line-vertical-top::before,\n.ag-advanced-filter-builder-item-tree-line-vertical-top::after,\n.ag-advanced-filter-builder-item-tree-line-vertical-bottom::before,\n.ag-advanced-filter-builder-item-tree-line-vertical-bottom::after {\n  content: \"\";\n  position: absolute;\n  height: 100%;\n}\n\n.ag-advanced-filter-builder-item-tree-line-horizontal::after {\n  height: 50%;\n  width: calc(var(--ag-advanced-filter-builder-indent-size) - var(--ag-icon-size));\n  top: 0;\n  left: calc(var(--ag-icon-size) / 2);\n  border-bottom: 1px solid;\n  border-color: var(--ag-border-color);\n}\n\n.ag-advanced-filter-builder-item-tree-line-vertical::before {\n  width: calc(var(--ag-advanced-filter-builder-indent-size) - var(--ag-icon-size) / 2);\n  top: 0;\n  left: calc(var(--ag-icon-size) / 2);\n  border-left: 1px solid;\n  border-color: var(--ag-border-color);\n}\n\n.ag-advanced-filter-builder-item-tree-line-vertical-top::before {\n  height: 50%;\n  width: calc(var(--ag-advanced-filter-builder-indent-size) - var(--ag-icon-size) / 2);\n  top: 0;\n  left: calc(var(--ag-icon-size) / 2);\n  border-left: 1px solid;\n  border-color: var(--ag-border-color);\n}\n\n.ag-advanced-filter-builder-item-tree-line-vertical-bottom::before {\n  height: calc((100% - 1.5 * var(--ag-icon-size)) / 2);\n  width: calc(var(--ag-icon-size) / 2);\n  top: calc((100% + 1.5 * var(--ag-icon-size)) / 2);\n  left: calc(var(--ag-icon-size) / 2);\n  border-left: 1px solid;\n  border-color: var(--ag-border-color);\n}\n\n.ag-advanced-filter-builder-item-condition {\n  padding-top: var(--ag-grid-size);\n  padding-bottom: var(--ag-grid-size);\n}\n\n.ag-advanced-filter-builder-item,\n.ag-advanced-filter-builder-item-condition,\n.ag-advanced-filter-builder-pill-wrapper,\n.ag-advanced-filter-builder-pill,\n.ag-advanced-filter-builder-item-buttons,\n.ag-advanced-filter-builder-item-tree-lines {\n  display: flex;\n  align-items: center;\n  height: 100%;\n}\n\n.ag-advanced-filter-builder-pill-wrapper {\n  margin: 0px var(--ag-grid-size);\n}\n\n.ag-advanced-filter-builder-pill {\n  position: relative;\n  border-radius: var(--ag-border-radius);\n  padding: var(--ag-grid-size) calc(var(--ag-grid-size) * 2);\n  min-height: calc(100% - var(--ag-grid-size) * 3);\n  min-width: calc(var(--ag-grid-size) * 2);\n}\n.ag-advanced-filter-builder-pill .ag-picker-field-display {\n  margin-right: var(--ag-grid-size);\n}\n.ag-advanced-filter-builder-pill .ag-advanced-filter-builder-value-number {\n  font-family: monospace;\n  font-weight: 700;\n}\n.ag-advanced-filter-builder-pill .ag-advanced-filter-builder-value-empty {\n  color: var(--ag-disabled-foreground-color);\n}\n\n.ag-keyboard-focus .ag-advanced-filter-builder-pill:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-advanced-filter-builder-pill:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: -4px;\n  left: -4px;\n  display: block;\n  width: calc(100% - -8px);\n  height: calc(100% - -8px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n.ag-keyboard-focus .ag-advanced-filter-builder-item-button:focus {\n  outline: none;\n}\n.ag-keyboard-focus .ag-advanced-filter-builder-item-button:focus::after {\n  content: \"\";\n  position: absolute;\n  background-color: transparent;\n  pointer-events: none;\n  top: -4px;\n  left: -4px;\n  display: block;\n  width: calc(100% - -8px);\n  height: calc(100% - -8px);\n  border: 1px solid;\n  border-color: var(--ag-input-focus-border-color);\n}\n\n.ag-advanced-filter-builder-pill-display {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  font-weight: 500;\n}\n\n.ag-advanced-filter-builder-join-pill {\n  color: var(--ag-foreground-color);\n  background-color: var(--ag-advanced-filter-join-pill-color);\n  cursor: pointer;\n}\n\n.ag-advanced-filter-builder-column-pill {\n  color: var(--ag-foreground-color);\n  background-color: var(--ag-advanced-filter-column-pill-color);\n  cursor: pointer;\n}\n\n.ag-advanced-filter-builder-option-pill {\n  color: var(--ag-foreground-color);\n  background-color: var(--ag-advanced-filter-option-pill-color);\n  cursor: pointer;\n}\n\n.ag-advanced-filter-builder-value-pill {\n  color: var(--ag-foreground-color);\n  background-color: var(--ag-advanced-filter-value-pill-color);\n  cursor: text;\n  max-width: 140px;\n}\n.ag-advanced-filter-builder-value-pill .ag-advanced-filter-builder-pill-display {\n  display: block;\n}\n\n.ag-advanced-filter-builder-item-buttons > * {\n  margin: 0 calc(var(--ag-grid-size) * 0.5);\n}\n\n.ag-advanced-filter-builder-item-button {\n  position: relative;\n  cursor: pointer;\n  color: var(--ag-secondary-foreground-color);\n  opacity: 50%;\n}\n\n.ag-advanced-filter-builder-item-button-disabled {\n  color: var(--ag-disabled-foreground-color);\n  cursor: default;\n}\n\n.ag-advanced-filter-builder-virtual-list-container {\n  top: var(--ag-grid-size);\n}\n\n.ag-advanced-filter-builder-virtual-list-item {\n  display: flex;\n  cursor: default;\n  height: var(--ag-list-item-height);\n}\n.ag-advanced-filter-builder-virtual-list-item:hover {\n  background-color: var(--ag-row-hover-color);\n}\n.ag-advanced-filter-builder-virtual-list-item:hover .ag-advanced-filter-builder-item-button {\n  opacity: 100%;\n}\n\n.ag-keyboard-focus .ag-advanced-filter-builder-virtual-list-item-highlight .ag-advanced-filter-builder-item-button,\n.ag-advanced-filter-builder-validation .ag-advanced-filter-builder-invalid {\n  opacity: 100%;\n}\n\n.ag-advanced-filter-builder-invalid {\n  margin: 0 var(--ag-grid-size);\n  color: var(--ag-invalid-color);\n  cursor: default;\n}\n\n.ag-input-field-input {\n  width: 100%;\n  min-width: 0;\n}\n\n.ag-checkbox-input-wrapper {\n  font-family: var(--ag-icon-font-family);\n  font-size: var(--ag-icon-size);\n  line-height: var(--ag-icon-size);\n  font-style: normal;\n  font-weight: normal;\n  font-variant: normal;\n  text-transform: none;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  width: var(--ag-icon-size);\n  height: var(--ag-icon-size);\n  background-color: var(--ag-checkbox-background-color);\n  border-radius: var(--ag-checkbox-border-radius);\n  display: inline-block;\n  vertical-align: middle;\n  flex: none;\n}\n.ag-checkbox-input-wrapper input, .ag-checkbox-input-wrapper input {\n  -webkit-appearance: none;\n  opacity: 0;\n  width: 100%;\n  height: 100%;\n}\n.ag-checkbox-input-wrapper:focus-within, .ag-checkbox-input-wrapper:active {\n  outline: none;\n  box-shadow: var(--ag-input-focus-box-shadow);\n}\n.ag-checkbox-input-wrapper.ag-disabled {\n  opacity: 0.5;\n}\n.ag-checkbox-input-wrapper::after {\n  content: var(--ag-icon-font-code-checkbox-unchecked, \"\\f108\");\n  color: var(--ag-checkbox-unchecked-color);\n  position: absolute;\n  top: 0;\n  left: 0;\n  pointer-events: none;\n}\n.ag-checkbox-input-wrapper.ag-checked::after {\n  content: var(--ag-icon-font-code-checkbox-checked, \"\\f106\");\n  color: var(--ag-checkbox-checked-color);\n  position: absolute;\n  top: 0;\n  left: 0;\n  pointer-events: none;\n}\n.ag-checkbox-input-wrapper.ag-indeterminate::after {\n  content: var(--ag-icon-font-code-checkbox-indeterminate, \"\\f107\");\n  color: var(--ag-checkbox-indeterminate-color);\n  position: absolute;\n  top: 0;\n  left: 0;\n  pointer-events: none;\n}\n\n.ag-toggle-button-input-wrapper {\n  box-sizing: border-box;\n  width: var(--ag-toggle-button-width);\n  height: var(--ag-toggle-button-height);\n  background-color: var(--ag-toggle-button-off-background-color);\n  border-radius: calc(var(--ag-toggle-button-height) * 0.5);\n  position: relative;\n  flex: none;\n  border: var(--ag-toggle-button-border-width) solid;\n  border-color: var(--ag-toggle-button-off-border-color);\n}\n.ag-toggle-button-input-wrapper input {\n  opacity: 0;\n  height: 100%;\n  width: 100%;\n}\n.ag-toggle-button-input-wrapper:focus-within {\n  outline: none;\n  box-shadow: var(--ag-input-focus-box-shadow);\n}\n.ag-toggle-button-input-wrapper.ag-disabled {\n  opacity: 0.5;\n}\n.ag-toggle-button-input-wrapper.ag-checked {\n  background-color: var(--ag-toggle-button-on-background-color);\n  border-color: var(--ag-toggle-button-on-border-color);\n}\n.ag-toggle-button-input-wrapper::before {\n  content: \" \";\n  position: absolute;\n  top: calc(0px - var(--ag-toggle-button-border-width));\n  left: calc(0px - var(--ag-toggle-button-border-width));\n  display: block;\n  box-sizing: border-box;\n  height: var(--ag-toggle-button-height);\n  width: var(--ag-toggle-button-height);\n  background-color: var(--ag-toggle-button-switch-background-color);\n  border-radius: 100%;\n  transition: left 100ms;\n  border: var(--ag-toggle-button-border-width) solid;\n  border-color: var(--ag-toggle-button-switch-border-color);\n}\n.ag-toggle-button-input-wrapper.ag-checked::before {\n  left: calc(100% - var(--ag-toggle-button-height));\n  border-color: var(--ag-toggle-button-on-border-color);\n}\n\n.ag-radio-button-input-wrapper {\n  font-family: var(--ag-icon-font-family);\n  font-size: var(--ag-icon-size);\n  line-height: var(--ag-icon-size);\n  font-style: normal;\n  font-weight: normal;\n  font-variant: normal;\n  text-transform: none;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  width: var(--ag-icon-size);\n  height: var(--ag-icon-size);\n  background-color: var(--ag-checkbox-background-color);\n  border-radius: var(--ag-checkbox-border-radius);\n  display: inline-block;\n  vertical-align: middle;\n  flex: none;\n  border-radius: var(--ag-icon-size);\n}\n.ag-radio-button-input-wrapper input, .ag-radio-button-input-wrapper input {\n  -webkit-appearance: none;\n  opacity: 0;\n  width: 100%;\n  height: 100%;\n}\n.ag-radio-button-input-wrapper:focus-within, .ag-radio-button-input-wrapper:active {\n  outline: none;\n  box-shadow: var(--ag-input-focus-box-shadow);\n}\n.ag-radio-button-input-wrapper.ag-disabled {\n  opacity: 0.5;\n}\n.ag-radio-button-input-wrapper::after {\n  content: var(--ag-icon-font-code-radio-button-off, \"\\f127\");\n  color: var(--ag-checkbox-unchecked-color);\n  position: absolute;\n  top: 0;\n  left: 0;\n  pointer-events: none;\n}\n.ag-radio-button-input-wrapper.ag-checked::after {\n  content: var(--ag-icon-font-code-radio-button-on, \"\\f128\");\n  color: var(--ag-checkbox-checked-color);\n  position: absolute;\n  top: 0;\n  left: 0;\n  pointer-events: none;\n}\n\ninput[class^=ag-][type=range] {\n  -webkit-appearance: none;\n  width: 100%;\n  height: 100%;\n  background: none;\n  overflow: visible;\n}\ninput[class^=ag-][type=range]::-webkit-slider-runnable-track {\n  margin: 0;\n  padding: 0;\n  width: 100%;\n  height: 3px;\n  background-color: var(--ag-border-color);\n  border-radius: var(--ag-border-radius);\n  border-radius: var(--ag-checkbox-border-radius);\n}\ninput[class^=ag-][type=range]::-moz-range-track {\n  margin: 0;\n  padding: 0;\n  width: 100%;\n  height: 3px;\n  background-color: var(--ag-border-color);\n  border-radius: var(--ag-border-radius);\n  border-radius: var(--ag-checkbox-border-radius);\n}\ninput[class^=ag-][type=range]::-ms-track {\n  margin: 0;\n  padding: 0;\n  width: 100%;\n  height: 3px;\n  background-color: var(--ag-border-color);\n  border-radius: var(--ag-border-radius);\n  border-radius: var(--ag-checkbox-border-radius);\n  color: transparent;\n  width: calc(100% - 2px);\n}\ninput[class^=ag-][type=range]::-webkit-slider-thumb {\n  margin: 0;\n  padding: 0;\n  -webkit-appearance: none;\n  width: var(--ag-icon-size);\n  height: var(--ag-icon-size);\n  background-color: var(--ag-background-color);\n  border: 1px solid;\n  border-color: var(--ag-checkbox-unchecked-color);\n  border-radius: var(--ag-icon-size);\n  transform: translateY(calc(var(--ag-icon-size) * -0.5 + 1.5px));\n}\ninput[class^=ag-][type=range]::-ms-thumb {\n  margin: 0;\n  padding: 0;\n  -webkit-appearance: none;\n  width: var(--ag-icon-size);\n  height: var(--ag-icon-size);\n  background-color: var(--ag-background-color);\n  border: 1px solid;\n  border-color: var(--ag-checkbox-unchecked-color);\n  border-radius: var(--ag-icon-size);\n}\ninput[class^=ag-][type=range]::-moz-ag-range-thumb {\n  margin: 0;\n  padding: 0;\n  -webkit-appearance: none;\n  width: var(--ag-icon-size);\n  height: var(--ag-icon-size);\n  background-color: var(--ag-background-color);\n  border: 1px solid;\n  border-color: var(--ag-checkbox-unchecked-color);\n  border-radius: var(--ag-icon-size);\n}\ninput[class^=ag-][type=range]:focus {\n  outline: none;\n}\ninput[class^=ag-][type=range]:focus::-webkit-slider-thumb {\n  box-shadow: var(--ag-input-focus-box-shadow);\n  border-color: var(--ag-checkbox-checked-color);\n}\ninput[class^=ag-][type=range]:focus::-ms-thumb {\n  box-shadow: var(--ag-input-focus-box-shadow);\n  border-color: var(--ag-checkbox-checked-color);\n}\ninput[class^=ag-][type=range]:focus::-moz-ag-range-thumb {\n  box-shadow: var(--ag-input-focus-box-shadow);\n  border-color: var(--ag-checkbox-checked-color);\n}\ninput[class^=ag-][type=range]:active::-webkit-slider-runnable-track {\n  background-color: var(--ag-input-focus-border-color);\n}\ninput[class^=ag-][type=range]:active::-moz-ag-range-track {\n  background-color: var(--ag-input-focus-border-color);\n}\ninput[class^=ag-][type=range]:active::-ms-track {\n  background-color: var(--ag-input-focus-border-color);\n}\ninput[class^=ag-][type=range]:disabled {\n  opacity: 0.5;\n}\n", ""]);
-// Exports
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/ag-grid-community/styles/ag-theme-alpine.css":
-/*!*****************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/ag-grid-community/styles/ag-theme-alpine.css ***!
-  \*****************************************************************************************************************************************************************************************************/
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
-/* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-// Imports
-
-var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
-// Module
-___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"agGridAlpine\";\n  src: url(data:font/woff2;charset=utf-8;base64,d09GMgABAAAAABJ0AAsAAAAAJ2gAABIjAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHIkuBmAAi2IKqHChZAE2AiQDgjgLgR4ABCAFhEYHhSsbdiJVBDYOABJzRUD2/3XyZChr0A8dMuIgaNGSwoZJwnMhJOiNBx1PI4tUlx68riIWf/imgpi0poPyf6NIBoaWDaUkqNbI3rsHUqiRwAEF6XVkKkJFqAhPQkbICDsGzUXOQnJEmGQTPqL/V9yyIlI1qpKcqa5RgMb1B9zWP5xRCRYid58aYGw2/rMuhhGNkeyiQryo3FUFdgfApM6UgneSnTzUnxLCGhA8gaHIWqRVXosIhmsnGtzmqFDF6h8bkm8ayr2OPMzvHpLY/tT8U3qbPSz2JRmzJb/tddeBwCRY4gnhKxHw/6/1agNMNzghoePj9Js37/+de9+dxdBkPtFkQpMJTQDZtqyId7M5p7sFJNXaKmBZV19JQvdUqDpbF6dTocdTmOVwLoMAm9MDR7uhWNhihIgRIkSMlFfXm5FAmTkHXTqGExB9/n5FMRRx3sUJsvXT849y0sC/yeEV/RL/e1ywR1TTS9/6NeXIt+RAZsra7D1Wx67mn/lgMH51U0SI6j83jaBS6AwmCyXTFtOabA7mOVxBkJQnCYufXeRwGsNFWbGhq4E4xVHF5gc7Zzr91T8w3f0rHYpVvneWEYlBtaHjgqrmLCkBV8KBw6Nw1nMn+e1dKC/sSDhKkOy5BE8ak5bNw3Nnb1niacSrY7xGdYLmVNTKurYhJBF1eUyO2tqVgOipTReCZYEzuLbG7D/U2tykO1B4DTvaxRs4YU/XxPvYXjxVWJvhmQ/MhJzk9cGcqvftJzuI9FHVxZbpy9f1CHe6Of/igz67GOMUN0JY0dnnvv/513NfNesnpAQ+WRuiB7d/x7Q3zKX9kpLtzynXvePCkSwusYvKICDMNM0KzcHFgFFBExIkqtMo3BaDoyCfbLGzE4uDk8dcjTNKbL2h0OgitjmVwxGG5tq7itpvcBPDrK0YF1TUt1RWqqzRt6hKyETpqAvG8xz6JFQm1rRvOl70HG6ixkQqfKKyKUOFn2LPMJz/INTWFxqskq5bedRy5qgqktnXp2R5a34WT4uAoS72UqxqSOXp81ujvk0jqaC6TdLUE7qK9c0SvR5utsDRwdRFKVlapp+ON8Y6K621piuIKGVW0Lqxoy7P0cmmXswdz35OqxVC9kgv41v03af/4CQKZKQc3kvauwvOhF+wQ0P+A7goCIA0f+2AVwuCa+egCxRAVlndmCrAkqALExRNxf0GvDE/ipv4yJe+C21iQrf3feLrIIVKz03CfrSsS4Vp6u241q7vU24qw5ZHW5ajjIFnnott7+qBoBhOIi9eqF9AUEhYRFRMXEJSyrThrJy8An8zlpRVVNU0NLW0dXT1DQyNjE1MzcwtNCytrDFxPXVIRfDm87Jyw4vuUdzVjYHtnMTHvOT//xn9fPPdXyOAdSuA/B8r9kB3AMvgEobBFSyCa5gFN7ACbmEM3MEWuIcR8ADz4AlMgGewAJ7DHHgBq+AlTIFXMAlewzp4C6PgHcyA9zAOPsAa+Aib4BNMg8+wBL7ABnictA1BSMQUAjMIzCGwBIFlCOyDwH4IHIDAQQgcgsBhCByBwFEIHIPAcQicgMBJCJyCwGkInIHAWQicg8B5CFyAwEUIXILAZQhcgcBVCFyDwHVAPQRogACNEKAJAjRDgBYIgzaInkE7RN+gA2Jg0AkxNOiCGBl0Q4wNeiAmBr0QU4M+iJlBP8Tc0p0XgAEIMAgBhiAMcgjFGjdWIXqzxmbqADufT/CD7wp/UXIMrzp9FS8kzbSa+gHDkdlfy4kqqArlSlJ+adVMblLBgnrdyT+3jFdXUSRz1wUzYY6laTm9dVmcU1YOJHg4wYIjUelFAv5gGh/L5VQsloz45XfrrCfzQJZnCrlAYIuJU+eRM5FINuBvl/LIX5CkwN9kM+lqI9PDMo3oNJj0TA3ejdpUX2EAegRMaHBmthE6W+Zr5klkrtJJCaunfM64bXOVfSWaSjyBk7Ti2kKTQP0kDfv5PO6nWPQH2FJkpMxZhfISETiFGAbIwwkkquC7ayAjrz9wtf/xJsyqG8/tLqcefX+QzTmYF5mq7OY92OQWqe00ckp3dZt0XwD53f8J1VhrZCuXzrejBG4K0ji5XeHYWhQRhv4GUjht0rhefsembIG0+oFajLS5ylNTmLg281wu9rCorv0FMzXa5z/zVgS3Z026zzIxbumU+yYTXJ+ZWZaHqZPrO+HfXwK5C2q0dQHX14A8PFXngr5XRZK8dMH1UO3RLJQ2TUT4FzF1YESPLqwG6/nyTk/No/JrB+AEyN2ISp+20H8NhfK9BaxxGPVBN7JrV7Wv0XIdfYq4WXP3HJ0fqUqbTxqGMgh0FEG1iJHz10Hheao4xv6UjL636C+v6n09WN3q+pthSqgfHm3ae2R2IFtlklw3hBUd70IznGkWV2PCP89JvNAjs8MhIIeLdLfWfgJHtNy1x09wfQFT61yvROiq8jwp7tazphZ5LZg9Z3Y5QEEUsTrmZkzvBePDrsc+L5tE6twwTy49vIS20VLMo2rSm/w4doOASKU7Y6rT6OCyXFaXOajVsp38bQUBJGcwv5qCSuKbGC8T6uIE4ghiGhzN2uLcAhiwC+RgQ3uIDNxQRuKgGdW3UVKaCNJyCxu8bDsVZjapl19xTdUJK6n/8gLSe+ZqXQhg//Pz8NknhNXVZSiPkngqxNcUWaXLgObqAHmGa8rYLhZwkxjcfiEszASCjxkkrN6BQappT6IOfTsnhorlyhyKkAMMKIo6fvfeNkbmKJQSNk/ikzJrq9S8PlefYz+JHB3N9R6HQNbaSqAjX/Sn3mhqdMo/N8M/35/A2WBeyaUxMCH2WEH3vwrrZXeX8CPj5rPGhcLwxfDLVNFCPcLRi+kpRubWTnUzLI68mfzK3SnM+9kDeW4hvLsw7iWL22HY51fsoSCY/Cf9ThT1/Z1wNI6n/U/LpUJ+92e/uFBa7vcpQ6DX7UuG6FvanYysL6Hf1Tnka+Fb1sV+TTmAgCzojyHX+t+bYIi7AO575MfUzlNoMsD8DQLDsxQBdG2FcmDbCMqhUSu1Uitzld2uB8lakj9wlmF41Tir0Tx27DhzVFwDmI85d9NLfH0e5FbhFGqbeuVsp8tzmzzH8+hml7cJs9vIXcnbbGgTcDiYXPoYw/V9E0TxRvouALfbeHXzN4wi/YhVsqRq0i92Lz7kNWC92MbI3QjN84Zgd+pmzpcVxqiNG7fFxMTGsBjXONCH5VsY9vU0KJUjxMg/5aFwSoBD4AZZqigZRZNFqT8tcuvJaKroZ0k8S7ZsWC/cQnJD8irAJkOP5JLUEDlMVlWR1SQI1ym17dkv7XftS7Y93x8nhraZWUTEvbt790ZEVvvLWZ6lnuJ0rXZf7r8dJZX5ofnGjh0N6ekqKr4+9/Ta7t29d9z3yJEVzVIrOgQD3YpoWQHc58MynuysXI8sVbVtV90GFuVsUfcXfhl6jsBCrvYygC4hJL3y6Y/owJDQgR7V0SUMUN6GR5JH0COIjQsIiCtzZSIzATsWzwnQl/9ysipL5gSdpLnluHHcst3Q4PoavPj0c5tfVTVLaK813f0MP9JKdrzVXWn30tQwhzO8PciMfrsSMbHwdjXW2qZX61PBM7A4zXW8lOUYE2M1U3/rCX0rSzNzO/2HvcY6K/TrcktbdI2ijfV3WPShu2CS6U9zY7lqtdl2vTyvyB/2xnpa8QcCzM333DVu9F7hcYlJWXqAWa1OVbi2miX/lWXxJoMLSZbcJ5M0tbcby+CormDmVfTdjKev/P2YPCmHK812Pyk3+7E5Uh7ml1aTVO6W4Mgr29l4DVIOz9VuR5j1g0aB4oHgokLQeBGhuVVHVUe6IbUc7ynDfGV3IOMq8I16bWifDMyn9/JebM2U/BWFU8xxAyP6gHccHrftBXFb02CyrlF4ROGMmqvrjVdYmloKYmZG1woWqWkaOBoYQykl7Jyo/fp9eSx2P6YkEql7SrQisLzONorpgQYm3nxCZSVyC6JBEVReaxPlJQ6LyEzVfBw4nWPll5o+Gw2dFso4uE3ACmUyQ1gCbY2Uat6MrKCE4EkkEV6MeEu/NIm2FYBYSiKOuNXGXuWm1HQrv+Zbe/22iSqvUwQebfMEpm0+YhMlXqjwUCYskpImLqCnulzXeImKnTb8+DTsY2/c1vjhI/Tzr10VHepN6GEP0UvAlN6WxCg5TuKX5MnpuFh5Hr7mGUrIMBEmpHAuLj9L4mTXY+SQPA4fq8JFuHwoj2cP1kLnqRaperkm39h+RKk8OHp48FqWhF09DOtTjH1R+8QpQmFymUVQXLgW45Q14yAzkois2ruohWCPOj1TZHnAOpwfvtilvz+7yGM7V3acDz+cfzosm1hezDWjBzK857VKw1msujr2C43m70+jfdF4ZfLpFfe50GfgvhDLMBkpw4ObYzLAzroXoifeHrUR6L6yacA37/O4iorN+D6RnQqFlCgxTIDFDPahMW/agyIh/Lbr7E7dXsxakO6TGfCVXtmR4BnOCgtjhXsmiHMYO1++tGbkhJuQEh8qB5x5Bcdej00du32cDnRFwKFRKMRoEWMRnS8+vy1UQZA7SAKmkmvWaFp7RS6716DMT09dfcAHs39vZxd29mdISE6mmqqls1fU3fwNG379on6vnLzqFNmnUCSVGWtbWVVmmGuUG63fUL5O5/tbi65Xr4BjcrA0iMkM0kBsZWtQvFgaHwYpv4e1I2Jhu1qbphPPWLNt4LGRgTHPqbP+ov5miiBmENTiUndmSLCHrGIxlX+PCGpLJ9987Rst1C5EQz6z7gr8r0rOwgb5YZWq8E4djl+ul9fRGv8w7VROiFfLZ12Vl0pmzroyi169+miAo12HZmj34NjYlcivzE50jXVZutQl1jXxMUXEEfflE10fC/KrZ8wvSkTj+Pw4NPGjRW49jp+IfixtDD1tQWUBAWWLKZhanPznAofaaXQI9D/41VhxZ9XCb+WNVso29gR+QtSGcTH43aAfoXpgnkbCkfpw/537K1zw/PKsBwYCArzE9vb+/kD5y5Jl0HXUhjMNQiNVw61bd2URHTSo4bEXluYjnoK/xH1v4owZmpKCObM3SXL9xPfvs3R6F9AjlToQZclJoaH79vEuXAT5rIkesn0QVqPtCHtiRN1Y21QAAAuwInsDKqq0ftGrQTKx2WWJ+EQ0ks1GrtmruRnA/6OsGGl1LtiOfFK1A4kmzjKVlZFTwMCBrN1hs0tRQreMyh03mECaECX2Ie3chJ//Hpjog3NMxUV/EEPRQlaouydH6rGPabdNEm164UgBAxAVhZiTECSqFDWzvYiJLk6gU6nSKfhX7uXhw1YH0xQDnz5NHUQJQOK1fl2d7ew4HtV+oL93OOgnKyt29ct4xW8mslquVfQvH/zzfU0Mx9t+SbZMjUH3BOCfgeo43HU0kVCZS8G3USBLnBTteecaSBCCEcgQBhWDAieApw5BCooAAaKqBQTyMHsBFKLwA7LXzvuQ0/kqSJCFtyjTuRWC8Jym+quFoEuLl2D8pcm/55KYflNsGXV3J+eb/CetSbh7GZ73vbpfxKRo5LvVtqtzfDULXVCZup/C6yXlLF1R+SRnw2hW3pbL4L7mwcm0wPhLk3/PJTH9ps1d1zKqxB457n9aY+X7Jty9DM+S7X/JSLaBRth3q+1nvM7x1Xw3dIGvMiX6p1IpidlHedFF7H+Sc71hbOCXt6V/qCDrDU6JmsLaqnbrPTF/hxJGOJGITHzETwLfbs2fFqwfDq6P8UQylc5kc/lCsVSuVGv1RrPV7nR7/cFwNJ5MZ/PFcrVWVE3ohmnZjutttrv94Xg6X663++PJ03WLEMaoFNGS8BGqyrruY3VHDtlRPnQjqt1MlNzXSjZ9XEv+aecZEnsy0ikxGt3tW9hYKn7hJIv2JeW66/F72CauZ07YFJ2RP3BStodOpdZ9V+d91+zAU3WHtDm3fTKZgsoL+lPaUl8z1nE/qT8KKZ/RPszGWu0gaiqHu15aOThoG8IU7Cgnbvm5HmdBnzieTLhJU9rRwUTcTjS1CngYv4ZWD5g2dsDCdM5iPeYsa/KHRc2zpf2S+LCkWeyg5FZPitKcBJkbVfntSL9qZsK9hHC9U44PNcXRDirOdFYndSt6L2tOpXZ8jlWHT57NzqOZ6FbuTIkGVZ/uri2F+KTxZX0ugBBBgcAggQDDGio4yDDCF6xgA72HCRoU2MIMAXYLAAA=);\n  font-weight: normal;\n  font-style: normal;\n}\n.ag-theme-alpine, .ag-theme-alpine-dark {\n  --ag-alpine-active-color: #2196f3;\n  --ag-selected-row-background-color: rgba(33, 150, 243, 0.3);\n  --ag-row-hover-color: rgba(33, 150, 243, 0.1);\n  --ag-column-hover-color: rgba(33, 150, 243, 0.1);\n  --ag-input-focus-border-color: rgba(33, 150, 243, 0.4);\n  --ag-range-selection-background-color: rgba(33, 150, 243, 0.2);\n  --ag-range-selection-background-color-2: rgba(33, 150, 243, 0.36);\n  --ag-range-selection-background-color-3: rgba(33, 150, 243, 0.49);\n  --ag-range-selection-background-color-4: rgba(33, 150, 243, 0.59);\n  --ag-background-color: #fff;\n  --ag-foreground-color: #181d1f;\n  --ag-border-color: #babfc7;\n  --ag-secondary-border-color: #dde2eb;\n  --ag-header-background-color: #f8f8f8;\n  --ag-tooltip-background-color: #f8f8f8;\n  --ag-odd-row-background-color: #fcfcfc;\n  --ag-control-panel-background-color: #f8f8f8;\n  --ag-subheader-background-color: #fff;\n  --ag-invalid-color: #e02525;\n  --ag-checkbox-unchecked-color: #999;\n  --ag-advanced-filter-join-pill-color: #f08e8d;\n  --ag-advanced-filter-column-pill-color: #a6e194;\n  --ag-advanced-filter-option-pill-color: #f3c08b;\n  --ag-advanced-filter-value-pill-color: #85c0e4;\n  --ag-checkbox-background-color: var(--ag-background-color);\n  --ag-checkbox-checked-color: var(--ag-alpine-active-color);\n  --ag-range-selection-border-color: var(--ag-alpine-active-color);\n  --ag-secondary-foreground-color: var(--ag-foreground-color);\n  --ag-input-border-color: var(--ag-border-color);\n  --ag-input-border-color-invalid: var(--ag-invalid-color);\n  --ag-input-focus-box-shadow: 0 0 2px 0.1rem var(--ag-input-focus-border-color);\n  --ag-disabled-foreground-color: rgba(24, 29, 31, 0.5);\n  --ag-chip-background-color: rgba(24, 29, 31, 0.07);\n  --ag-input-disabled-border-color: rgba(186, 191, 199, 0.3);\n  --ag-input-disabled-background-color: rgba(186, 191, 199, 0.15);\n  --ag-borders: solid 1px;\n  --ag-border-radius: 3px;\n  --ag-borders-side-button: none;\n  --ag-side-button-selected-background-color: transparent;\n  --ag-header-column-resize-handle-display: block;\n  --ag-header-column-resize-handle-width: 2px;\n  --ag-header-column-resize-handle-height: 30%;\n  --ag-grid-size: 6px;\n  --ag-icon-size: 16px;\n  --ag-row-height: calc(var(--ag-grid-size) * 7);\n  --ag-header-height: calc(var(--ag-grid-size) * 8);\n  --ag-list-item-height: calc(var(--ag-grid-size) * 4);\n  --ag-column-select-indent-size: var(--ag-icon-size);\n  --ag-set-filter-indent-size: var(--ag-icon-size);\n  --ag-advanced-filter-builder-indent-size: calc(var(--ag-icon-size) + var(--ag-grid-size) * 2);\n  --ag-cell-horizontal-padding: calc(var(--ag-grid-size) * 3);\n  --ag-cell-widget-spacing: calc(var(--ag-grid-size) * 2);\n  --ag-widget-container-vertical-padding: calc(var(--ag-grid-size) * 2);\n  --ag-widget-container-horizontal-padding: calc(var(--ag-grid-size) * 2);\n  --ag-widget-vertical-spacing: calc(var(--ag-grid-size) * 1.5);\n  --ag-toggle-button-height: 18px;\n  --ag-toggle-button-width: 28px;\n  --ag-font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen-Sans, Ubuntu, Cantarell, \"Helvetica Neue\", sans-serif;\n  --ag-font-size: 13px;\n  --ag-icon-font-family: agGridAlpine;\n  --ag-selected-tab-underline-color: var(--ag-alpine-active-color);\n  --ag-selected-tab-underline-width: 2px;\n  --ag-selected-tab-underline-transition-speed: 0.3s;\n  --ag-tab-min-width: 240px;\n  --ag-card-shadow: 0 1px 4px 1px rgba(186, 191, 199, 0.4);\n  --ag-popup-shadow: var(--ag-card-shadow);\n  --ag-side-bar-panel-width: 250px;\n}\n\n.ag-theme-alpine-dark {\n  --ag-background-color: #181d1f;\n  --ag-foreground-color: #fff;\n  --ag-border-color: #68686e;\n  --ag-secondary-border-color: rgba(88, 86, 82, 0.5);\n  --ag-modal-overlay-background-color: rgba(24, 29, 31, 0.66);\n  --ag-header-background-color: #222628;\n  --ag-tooltip-background-color: #222628;\n  --ag-odd-row-background-color: #222628;\n  --ag-control-panel-background-color: #222628;\n  --ag-subheader-background-color: #000;\n  --ag-input-disabled-background-color: #282c2f;\n  --ag-input-focus-box-shadow:\n      0 0 2px 0.5px rgba(255, 255, 255, 0.5),\n      0 0 4px 3px var(--ag-input-focus-border-color);\n  --ag-card-shadow: 0 1px 20px 1px black;\n  --ag-disabled-foreground-color: rgba(255, 255, 255, 0.5);\n  --ag-chip-background-color: rgba(255, 255, 255, 0.07);\n  --ag-input-disabled-border-color: rgba(104, 104, 110, 0.3);\n  --ag-input-disabled-background-color: rgba(104, 104, 110, 0.07);\n  --ag-advanced-filter-join-pill-color: #7a3a37;\n  --ag-advanced-filter-column-pill-color: #355f2d;\n  --ag-advanced-filter-option-pill-color: #5a3168;\n  --ag-advanced-filter-value-pill-color: #374c86;\n}\n\n.ag-theme-alpine .ag-filter-toolpanel-header,\n.ag-theme-alpine .ag-filter-toolpanel-search,\n.ag-theme-alpine .ag-status-bar,\n.ag-theme-alpine .ag-header-row,\n.ag-theme-alpine .ag-panel-title-bar-title,\n.ag-theme-alpine .ag-multi-filter-group-title-bar, .ag-theme-alpine-dark .ag-filter-toolpanel-header,\n.ag-theme-alpine-dark .ag-filter-toolpanel-search,\n.ag-theme-alpine-dark .ag-status-bar,\n.ag-theme-alpine-dark .ag-header-row,\n.ag-theme-alpine-dark .ag-panel-title-bar-title,\n.ag-theme-alpine-dark .ag-multi-filter-group-title-bar {\n  font-weight: 700;\n  color: var(--ag-header-foreground-color);\n}\n.ag-theme-alpine .ag-row, .ag-theme-alpine-dark .ag-row {\n  font-size: calc(var(--ag-font-size) + 1px);\n}\n.ag-theme-alpine input[class^=ag-]:not([type]),\n.ag-theme-alpine input[class^=ag-][type=text],\n.ag-theme-alpine input[class^=ag-][type=number],\n.ag-theme-alpine input[class^=ag-][type=tel],\n.ag-theme-alpine input[class^=ag-][type=date],\n.ag-theme-alpine input[class^=ag-][type=datetime-local],\n.ag-theme-alpine textarea[class^=ag-], .ag-theme-alpine-dark input[class^=ag-]:not([type]),\n.ag-theme-alpine-dark input[class^=ag-][type=text],\n.ag-theme-alpine-dark input[class^=ag-][type=number],\n.ag-theme-alpine-dark input[class^=ag-][type=tel],\n.ag-theme-alpine-dark input[class^=ag-][type=date],\n.ag-theme-alpine-dark input[class^=ag-][type=datetime-local],\n.ag-theme-alpine-dark textarea[class^=ag-] {\n  min-height: calc(var(--ag-grid-size) * 4);\n  border-radius: var(--ag-border-radius);\n}\n.ag-theme-alpine .ag-ltr input[class^=ag-]:not([type]), .ag-theme-alpine .ag-ltr input[class^=ag-][type=text], .ag-theme-alpine .ag-ltr input[class^=ag-][type=number], .ag-theme-alpine .ag-ltr input[class^=ag-][type=tel], .ag-theme-alpine .ag-ltr input[class^=ag-][type=date], .ag-theme-alpine .ag-ltr input[class^=ag-][type=datetime-local], .ag-theme-alpine .ag-ltr textarea[class^=ag-], .ag-theme-alpine-dark .ag-ltr input[class^=ag-]:not([type]), .ag-theme-alpine-dark .ag-ltr input[class^=ag-][type=text], .ag-theme-alpine-dark .ag-ltr input[class^=ag-][type=number], .ag-theme-alpine-dark .ag-ltr input[class^=ag-][type=tel], .ag-theme-alpine-dark .ag-ltr input[class^=ag-][type=date], .ag-theme-alpine-dark .ag-ltr input[class^=ag-][type=datetime-local], .ag-theme-alpine-dark .ag-ltr textarea[class^=ag-] {\n  padding-left: var(--ag-grid-size);\n}\n\n.ag-theme-alpine .ag-rtl input[class^=ag-]:not([type]), .ag-theme-alpine .ag-rtl input[class^=ag-][type=text], .ag-theme-alpine .ag-rtl input[class^=ag-][type=number], .ag-theme-alpine .ag-rtl input[class^=ag-][type=tel], .ag-theme-alpine .ag-rtl input[class^=ag-][type=date], .ag-theme-alpine .ag-rtl input[class^=ag-][type=datetime-local], .ag-theme-alpine .ag-rtl textarea[class^=ag-], .ag-theme-alpine-dark .ag-rtl input[class^=ag-]:not([type]), .ag-theme-alpine-dark .ag-rtl input[class^=ag-][type=text], .ag-theme-alpine-dark .ag-rtl input[class^=ag-][type=number], .ag-theme-alpine-dark .ag-rtl input[class^=ag-][type=tel], .ag-theme-alpine-dark .ag-rtl input[class^=ag-][type=date], .ag-theme-alpine-dark .ag-rtl input[class^=ag-][type=datetime-local], .ag-theme-alpine-dark .ag-rtl textarea[class^=ag-] {\n  padding-right: var(--ag-grid-size);\n}\n\n.ag-theme-alpine .ag-tab, .ag-theme-alpine-dark .ag-tab {\n  padding: calc(var(--ag-grid-size) * 1.5);\n  transition: color 0.4s;\n  flex: 1 1 auto;\n}\n.ag-theme-alpine .ag-tab-selected, .ag-theme-alpine-dark .ag-tab-selected {\n  color: var(--ag-alpine-active-color);\n}\n.ag-theme-alpine .ag-menu, .ag-theme-alpine-dark .ag-menu {\n  background-color: var(--ag-control-panel-background-color);\n}\n.ag-theme-alpine .ag-menu-header, .ag-theme-alpine-dark .ag-menu-header {\n  background-color: var(--ag-control-panel-background-color);\n  padding-top: 1px;\n}\n.ag-theme-alpine .ag-tabs-header, .ag-theme-alpine-dark .ag-tabs-header {\n  border-bottom: var(--ag-borders) var(--ag-border-color);\n}\n.ag-theme-alpine .ag-charts-settings-group-title-bar,\n.ag-theme-alpine .ag-charts-data-group-title-bar,\n.ag-theme-alpine .ag-charts-format-top-level-group-title-bar, .ag-theme-alpine-dark .ag-charts-settings-group-title-bar,\n.ag-theme-alpine-dark .ag-charts-data-group-title-bar,\n.ag-theme-alpine-dark .ag-charts-format-top-level-group-title-bar {\n  padding: var(--ag-grid-size) calc(var(--ag-grid-size) * 2);\n  line-height: calc(var(--ag-icon-size) + var(--ag-grid-size) - 2px);\n}\n.ag-theme-alpine .ag-chart-mini-thumbnail, .ag-theme-alpine-dark .ag-chart-mini-thumbnail {\n  background-color: var(--ag-background-color);\n}\n.ag-theme-alpine .ag-chart-settings-nav-bar, .ag-theme-alpine-dark .ag-chart-settings-nav-bar {\n  border-top: var(--ag-borders-secondary) var(--ag-secondary-border-color);\n}\n.ag-theme-alpine .ag-ltr .ag-group-title-bar-icon, .ag-theme-alpine-dark .ag-ltr .ag-group-title-bar-icon {\n  margin-right: var(--ag-grid-size);\n}\n\n.ag-theme-alpine .ag-rtl .ag-group-title-bar-icon, .ag-theme-alpine-dark .ag-rtl .ag-group-title-bar-icon {\n  margin-left: var(--ag-grid-size);\n}\n\n.ag-theme-alpine .ag-charts-format-top-level-group-toolbar, .ag-theme-alpine-dark .ag-charts-format-top-level-group-toolbar {\n  margin-top: var(--ag-grid-size);\n}\n.ag-theme-alpine .ag-ltr .ag-charts-format-top-level-group-toolbar, .ag-theme-alpine-dark .ag-ltr .ag-charts-format-top-level-group-toolbar {\n  padding-left: calc(var(--ag-icon-size) * 0.5 + var(--ag-grid-size) * 2);\n}\n\n.ag-theme-alpine .ag-rtl .ag-charts-format-top-level-group-toolbar, .ag-theme-alpine-dark .ag-rtl .ag-charts-format-top-level-group-toolbar {\n  padding-right: calc(var(--ag-icon-size) * 0.5 + var(--ag-grid-size) * 2);\n}\n\n.ag-theme-alpine .ag-charts-format-sub-level-group, .ag-theme-alpine-dark .ag-charts-format-sub-level-group {\n  border-left: dashed 1px;\n  border-left-color: var(--ag-border-color);\n  padding-left: var(--ag-grid-size);\n  margin-bottom: calc(var(--ag-grid-size) * 2);\n}\n.ag-theme-alpine .ag-charts-format-sub-level-group-title-bar, .ag-theme-alpine-dark .ag-charts-format-sub-level-group-title-bar {\n  padding-top: 0;\n  padding-bottom: 0;\n  background: none;\n  font-weight: 700;\n}\n.ag-theme-alpine .ag-charts-format-sub-level-group-container, .ag-theme-alpine-dark .ag-charts-format-sub-level-group-container {\n  padding-bottom: 0;\n}\n.ag-theme-alpine .ag-charts-format-sub-level-group-item:last-child, .ag-theme-alpine-dark .ag-charts-format-sub-level-group-item:last-child {\n  margin-bottom: 0;\n}\n.ag-theme-alpine.ag-dnd-ghost, .ag-theme-alpine-dark.ag-dnd-ghost {\n  font-size: calc(var(--ag-font-size) - 1px);\n  font-weight: 700;\n}\n.ag-theme-alpine .ag-side-buttons, .ag-theme-alpine-dark .ag-side-buttons {\n  width: calc(var(--ag-grid-size) * 5);\n}\n.ag-theme-alpine .ag-standard-button, .ag-theme-alpine-dark .ag-standard-button {\n  -moz-appearance: none;\n       appearance: none;\n  -webkit-appearance: none;\n  border-radius: var(--ag-border-radius);\n  border: 1px solid;\n  border-color: var(--ag-alpine-active-color);\n  color: var(--ag-alpine-active-color);\n  background-color: var(--ag-background-color);\n  font-weight: 600;\n  padding: var(--ag-grid-size) calc(var(--ag-grid-size) * 2);\n}\n.ag-theme-alpine .ag-standard-button:hover, .ag-theme-alpine-dark .ag-standard-button:hover {\n  border-color: var(--ag-alpine-active-color);\n  background-color: var(--ag-row-hover-color);\n}\n.ag-theme-alpine .ag-standard-button:active, .ag-theme-alpine-dark .ag-standard-button:active {\n  border-color: var(--ag-alpine-active-color);\n  background-color: var(--ag-alpine-active-color);\n  color: var(--ag-background-color);\n}\n.ag-theme-alpine .ag-standard-button:disabled, .ag-theme-alpine-dark .ag-standard-button:disabled {\n  color: var(--ag-disabled-foreground-color);\n  background-color: var(--ag-input-disabled-background-color);\n  border-color: var(--ag-input-disabled-border-color);\n}\n.ag-theme-alpine .ag-column-drop-vertical, .ag-theme-alpine-dark .ag-column-drop-vertical {\n  min-height: 75px;\n}\n.ag-theme-alpine .ag-column-drop-vertical-title-bar, .ag-theme-alpine-dark .ag-column-drop-vertical-title-bar {\n  padding: calc(var(--ag-grid-size) * 2);\n  padding-bottom: 0px;\n}\n.ag-theme-alpine .ag-column-drop-vertical-empty-message, .ag-theme-alpine-dark .ag-column-drop-vertical-empty-message {\n  display: flex;\n  align-items: center;\n  border: dashed 1px;\n  border-color: var(--ag-border-color);\n  margin: calc(var(--ag-grid-size) * 2);\n  padding: calc(var(--ag-grid-size) * 2);\n}\n.ag-theme-alpine .ag-column-drop-empty-message, .ag-theme-alpine-dark .ag-column-drop-empty-message {\n  color: var(--ag-foreground-color);\n  opacity: 0.75;\n}\n.ag-theme-alpine .ag-status-bar, .ag-theme-alpine-dark .ag-status-bar {\n  font-weight: normal;\n}\n.ag-theme-alpine .ag-status-name-value-value, .ag-theme-alpine-dark .ag-status-name-value-value {\n  font-weight: 700;\n}\n.ag-theme-alpine .ag-paging-number, .ag-theme-alpine .ag-paging-row-summary-panel-number, .ag-theme-alpine-dark .ag-paging-number, .ag-theme-alpine-dark .ag-paging-row-summary-panel-number {\n  font-weight: 700;\n}\n.ag-theme-alpine .ag-column-drop-cell-button, .ag-theme-alpine-dark .ag-column-drop-cell-button {\n  opacity: 0.5;\n}\n.ag-theme-alpine .ag-column-drop-cell-button:hover, .ag-theme-alpine-dark .ag-column-drop-cell-button:hover {\n  opacity: 0.75;\n}\n.ag-theme-alpine .ag-header-cell-menu-button:hover,\n.ag-theme-alpine .ag-side-button-button:hover,\n.ag-theme-alpine .ag-tab:hover,\n.ag-theme-alpine .ag-panel-title-bar-button:hover,\n.ag-theme-alpine .ag-header-expand-icon:hover,\n.ag-theme-alpine .ag-column-group-icons:hover,\n.ag-theme-alpine .ag-set-filter-group-icons:hover,\n.ag-theme-alpine .ag-group-expanded .ag-icon:hover,\n.ag-theme-alpine .ag-group-contracted .ag-icon:hover,\n.ag-theme-alpine .ag-chart-settings-prev:hover,\n.ag-theme-alpine .ag-chart-settings-next:hover,\n.ag-theme-alpine .ag-group-title-bar-icon:hover,\n.ag-theme-alpine .ag-column-select-header-icon:hover,\n.ag-theme-alpine .ag-floating-filter-button-button:hover,\n.ag-theme-alpine .ag-filter-toolpanel-expand:hover,\n.ag-theme-alpine .ag-chart-menu-icon:hover,\n.ag-theme-alpine .ag-chart-menu-close:hover, .ag-theme-alpine-dark .ag-header-cell-menu-button:hover,\n.ag-theme-alpine-dark .ag-side-button-button:hover,\n.ag-theme-alpine-dark .ag-tab:hover,\n.ag-theme-alpine-dark .ag-panel-title-bar-button:hover,\n.ag-theme-alpine-dark .ag-header-expand-icon:hover,\n.ag-theme-alpine-dark .ag-column-group-icons:hover,\n.ag-theme-alpine-dark .ag-set-filter-group-icons:hover,\n.ag-theme-alpine-dark .ag-group-expanded .ag-icon:hover,\n.ag-theme-alpine-dark .ag-group-contracted .ag-icon:hover,\n.ag-theme-alpine-dark .ag-chart-settings-prev:hover,\n.ag-theme-alpine-dark .ag-chart-settings-next:hover,\n.ag-theme-alpine-dark .ag-group-title-bar-icon:hover,\n.ag-theme-alpine-dark .ag-column-select-header-icon:hover,\n.ag-theme-alpine-dark .ag-floating-filter-button-button:hover,\n.ag-theme-alpine-dark .ag-filter-toolpanel-expand:hover,\n.ag-theme-alpine-dark .ag-chart-menu-icon:hover,\n.ag-theme-alpine-dark .ag-chart-menu-close:hover {\n  color: var(--ag-alpine-active-color);\n}\n.ag-theme-alpine .ag-chart-menu-close, .ag-theme-alpine-dark .ag-chart-menu-close {\n  background: var(--ag-background-color);\n}\n.ag-theme-alpine .ag-chart-menu-close:hover .ag-icon, .ag-theme-alpine-dark .ag-chart-menu-close:hover .ag-icon {\n  border-color: var(--ag-alpine-active-color);\n}\n.ag-theme-alpine .ag-chart-menu-close .ag-icon, .ag-theme-alpine-dark .ag-chart-menu-close .ag-icon {\n  background: var(--ag-header-background-color);\n  border: 1px solid var(--ag-border-color);\n  border-right: none;\n}\n.ag-theme-alpine .ag-chart-settings-card-item.ag-not-selected:hover, .ag-theme-alpine-dark .ag-chart-settings-card-item.ag-not-selected:hover {\n  opacity: 0.35;\n}\n.ag-theme-alpine .ag-ltr .ag-panel-title-bar-button, .ag-theme-alpine-dark .ag-ltr .ag-panel-title-bar-button {\n  margin-left: calc(var(--ag-grid-size) * 2);\n  margin-right: var(--ag-grid-size);\n}\n\n.ag-theme-alpine .ag-rtl .ag-panel-title-bar-button, .ag-theme-alpine-dark .ag-rtl .ag-panel-title-bar-button {\n  margin-right: calc(var(--ag-grid-size) * 2);\n  margin-left: var(--ag-grid-size);\n}\n\n.ag-theme-alpine .ag-ltr .ag-filter-toolpanel-group-container, .ag-theme-alpine-dark .ag-ltr .ag-filter-toolpanel-group-container {\n  padding-left: var(--ag-grid-size);\n}\n\n.ag-theme-alpine .ag-rtl .ag-filter-toolpanel-group-container, .ag-theme-alpine-dark .ag-rtl .ag-filter-toolpanel-group-container {\n  padding-right: var(--ag-grid-size);\n}\n\n.ag-theme-alpine .ag-filter-toolpanel-instance-filter, .ag-theme-alpine-dark .ag-filter-toolpanel-instance-filter {\n  border: none;\n  background-color: var(--ag-control-panel-background-color);\n}\n.ag-theme-alpine .ag-ltr .ag-filter-toolpanel-instance-filter, .ag-theme-alpine-dark .ag-ltr .ag-filter-toolpanel-instance-filter {\n  border-left: dashed 1px;\n  border-left-color: var(--ag-border-color);\n  margin-left: calc(var(--ag-icon-size) * 0.5);\n}\n\n.ag-theme-alpine .ag-rtl .ag-filter-toolpanel-instance-filter, .ag-theme-alpine-dark .ag-rtl .ag-filter-toolpanel-instance-filter {\n  border-right: dashed 1px;\n  border-right-color: var(--ag-border-color);\n  margin-right: calc(var(--ag-icon-size) * 0.5);\n}\n\n.ag-theme-alpine .ag-set-filter-list, .ag-theme-alpine-dark .ag-set-filter-list {\n  padding-top: calc(var(--ag-grid-size) * 0.5);\n  padding-bottom: calc(var(--ag-grid-size) * 0.5);\n}\n.ag-theme-alpine .ag-layout-auto-height .ag-center-cols-viewport, .ag-theme-alpine .ag-layout-auto-height .ag-center-cols-container, .ag-theme-alpine .ag-layout-print .ag-center-cols-viewport, .ag-theme-alpine .ag-layout-print .ag-center-cols-container, .ag-theme-alpine-dark .ag-layout-auto-height .ag-center-cols-viewport, .ag-theme-alpine-dark .ag-layout-auto-height .ag-center-cols-container, .ag-theme-alpine-dark .ag-layout-print .ag-center-cols-viewport, .ag-theme-alpine-dark .ag-layout-print .ag-center-cols-container {\n  min-height: 150px;\n}\n.ag-theme-alpine .ag-overlay-no-rows-wrapper.ag-layout-auto-height, .ag-theme-alpine-dark .ag-overlay-no-rows-wrapper.ag-layout-auto-height {\n  padding-top: 60px;\n}\n.ag-theme-alpine .ag-date-time-list-page-entry-is-current, .ag-theme-alpine-dark .ag-date-time-list-page-entry-is-current {\n  background-color: var(--ag-alpine-active-color);\n}\n.ag-theme-alpine .ag-advanced-filter-builder-button, .ag-theme-alpine-dark .ag-advanced-filter-builder-button {\n  padding: var(--ag-grid-size);\n  font-weight: 600;\n}\n\n.ag-theme-alpine-dark {\n  color-scheme: dark;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "/* Buttons */\n.btn {\n    padding: 0.5rem 1rem;\n    border-radius: 0.375rem;\n    font-weight: 500;\n    cursor: pointer;\n    transition: all 0.2s;\n}\n\n.btn:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n}\n\n.btn-primary {\n    background-color: #4099de;\n    color: white;\n    padding: 4px 8px;\n    border-radius: 4px;\n    border: none;\n    cursor: pointer;\n}\n\n.btn-primary:hover:not(:disabled) {\n    background-color: #357abd;\n}\n\n.btn-danger {\n    background-color: #e74444;\n    color: white;\n}\n\n.btn-danger:hover {\n    background-color: #e01e1e;\n}\n\n.btn-link {\n    background: transparent;\n    border: 0;\n    color: #666;\n    text-decoration: underline;\n    padding: 0.5rem;\n}\n\n.btn-link:hover {\n    color: #333;\n}\n\n/* Layout */\n.flex { display: flex; }\n.justify-end { justify-content: flex-end; }\n.justify-between { justify-content: space-between; }\n.items-center { align-items: center; }\n\n/* Margins */\n.mt-4 { margin-top: 1rem; }\n.mb-2 { margin-bottom: 0.5rem; }\n.mb-6 { margin-bottom: 1.5rem; }\n.ml-2 { margin-left: 0.5rem; }\n\n/* Typography */\n.text-90 { color: var(--90); }\n.text-xl { font-size: 1.25rem; line-height: 1.75rem; }\n.font-normal { font-weight: 400; }\n\n/* Transitions */\n.fade-enter-active,\n.fade-leave-active {\n    transition: opacity 0.3s;\n}\n\n.fade-enter,\n.fade-leave-to {\n    opacity: 0;\n}\n\n/* AG Grid Theme Customization */\n.ag-theme-alpine {\n    --ag-header-height: 30px;\n    --ag-header-foreground-color: #000;\n    --ag-header-background-color: #f8f9fa;\n    --ag-row-hover-color: #f5f5f5;\n    --ag-selected-row-background-color: #e7f4ff;\n}\n\n.ag-overlay-loading-center,\n.ag-overlay-no-rows-center {\n    padding: 10px;\n    color: #666;\n    font-size: 14px;\n} ", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -60617,7 +60528,31 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.layer-feature-wrapper[data-v-360b89d0] {\n    position: relative;\n    width: 100%;\n}\n.ag-theme-alpine[data-v-360b89d0] {\n    width: 100%;\n    height: 500px;\n    --ag-header-height: 30px;\n    --ag-header-foreground-color: #000;\n    --ag-header-background-color: #f8f9fa;\n    --ag-row-hover-color: #f5f5f5;\n    --ag-selected-row-background-color: #e7f4ff;\n}\n\n/* Stili per gli overlay */\n.ag-overlay-loading-center[data-v-360b89d0],\n.ag-overlay-no-rows-center[data-v-360b89d0] {\n    padding: 10px;\n    color: #666;\n    font-size: 14px;\n}\n.btn[data-v-360b89d0] {\n    padding: 0.5rem 1rem;\n    border-radius: 0.375rem;\n    font-weight: 500;\n    cursor: pointer;\n    transition: all 0.2s;\n}\n.btn[data-v-360b89d0]:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n}\n.btn-primary[data-v-360b89d0] {\n    background-color: #4099de;\n    color: white;\n    padding: 4px 8px;\n    border-radius: 4px;\n    border: none;\n    cursor: pointer;\n    margin-right: 10px;\n}\n.btn-primary[data-v-360b89d0]:hover {\n    background-color: #357abd;\n}\n.flex[data-v-360b89d0] {\n    display: flex;\n}\n.justify-end[data-v-360b89d0] {\n    justify-content: flex-end;\n}\n.items-center[data-v-360b89d0] {\n    align-items: center;\n}\n.mt-4[data-v-360b89d0] {\n    margin-top: 1rem;\n}\n.ag-header-container[data-v-360b89d0] {\n    display: flex;\n    flex-direction: column;\n}\n.toolbar[data-v-360b89d0] {\n    display: flex;\n    justify-content: flex-end;\n    padding: 5px;\n    border-bottom: 1px solid #ddd;\n}\n.mb-2[data-v-360b89d0] {\n    margin-bottom: 0.5rem;\n}\n.btn-primary[data-v-360b89d0]:hover:not(:disabled) {\n    background-color: #357abd;\n}\n.toggle-switch[data-v-360b89d0] {\n    display: inline-flex;\n    align-items: center;\n    cursor: pointer;\n}\n.toggle-button[data-v-360b89d0] {\n    position: relative;\n    width: 50px;\n    height: 24px;\n    background-color: #ccc;\n    border-radius: 24px;\n    border: none;\n    padding: 0;\n    cursor: pointer;\n    transition: background-color 0.3s;\n}\n.toggle-button--active[data-v-360b89d0] {\n    background-color: #4099de;\n}\n.toggle-slider[data-v-360b89d0] {\n    position: absolute;\n    top: 4px;\n    left: 4px;\n    width: 16px;\n    height: 16px;\n    background-color: white;\n    border-radius: 50%;\n    transition: transform 0.3s;\n}\n.toggle-button--active .toggle-slider[data-v-360b89d0] {\n    transform: translateX(26px);\n}\n.label-text[data-v-360b89d0] {\n    margin-left: 10px;\n}\n.fade-enter-active[data-v-360b89d0],\n.fade-leave-active[data-v-360b89d0] {\n    transition: opacity 0.3s;\n}\n.fade-enter[data-v-360b89d0],\n.fade-leave-to[data-v-360b89d0] {\n    opacity: 0;\n}\n.btn-danger[data-v-360b89d0] {\n    background-color: #e74444;\n    color: white;\n}\n.btn-danger[data-v-360b89d0]:hover {\n    background-color: #e01e1e;\n}\n.btn-link[data-v-360b89d0] {\n    background: transparent;\n    border: 0;\n    color: #666;\n    text-decoration: underline;\n    padding: 0.5rem;\n}\n.btn-link[data-v-360b89d0]:hover {\n    color: #333;\n}\n.mb-6[data-v-360b89d0] {\n    margin-bottom: 1.5rem;\n}\n.text-90[data-v-360b89d0] {\n    color: var(--90);\n}\n.text-xl[data-v-360b89d0] {\n    font-size: 1.25rem;\n    line-height: 1.75rem;\n}\n.font-normal[data-v-360b89d0] {\n    font-weight: 400;\n}\n.search-wrapper[data-v-360b89d0] {\n    position: relative;\n}\n.search-input[data-v-360b89d0] {\n    padding: 0.5rem;\n    border: 1px solid #e2e8f0;\n    border-radius: 0.375rem;\n    width: 250px;\n    font-size: 0.875rem;\n    outline: none;\n    transition: border-color 0.2s;\n}\n.search-input[data-v-360b89d0]:focus {\n    border-color: #4099de;\n}\n.justify-between[data-v-360b89d0] {\n    justify-content: space-between;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.layer-feature-wrapper[data-v-360b89d0] {\n    position: relative;\n    width: 100%;\n}\n.layer-feature-grid[data-v-360b89d0] {\n    width: 100%;\n    height: 500px;\n}\n.ag-theme-alpine[data-v-360b89d0] {\n    width: 100%;\n    height: 500px;\n    --ag-header-height: 30px;\n    --ag-header-foreground-color: #000;\n    --ag-header-background-color: #f8f9fa;\n    --ag-row-hover-color: #f5f5f5;\n    --ag-selected-row-background-color: #e7f4ff;\n}\n\n/* Stili per gli overlay */\n.ag-overlay-loading-center[data-v-360b89d0],\n.ag-overlay-no-rows-center[data-v-360b89d0] {\n    padding: 10px;\n    color: #666;\n    font-size: 14px;\n}\n.btn[data-v-360b89d0] {\n    padding: 0.5rem 1rem;\n    border-radius: 0.375rem;\n    font-weight: 500;\n    cursor: pointer;\n    transition: all 0.2s;\n}\n.btn[data-v-360b89d0]:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n}\n.btn-primary[data-v-360b89d0] {\n    background-color: #4099de;\n    color: white;\n    padding: 4px 8px;\n    border-radius: 4px;\n    border: none;\n    cursor: pointer;\n    margin-right: 10px;\n}\n.btn-primary[data-v-360b89d0]:hover {\n    background-color: #357abd;\n}\n.flex[data-v-360b89d0] {\n    display: flex;\n}\n.justify-end[data-v-360b89d0] {\n    justify-content: flex-end;\n}\n.items-center[data-v-360b89d0] {\n    align-items: center;\n}\n.mt-4[data-v-360b89d0] {\n    margin-top: 1rem;\n}\n.ag-header-container[data-v-360b89d0] {\n    display: flex;\n    flex-direction: column;\n}\n.toolbar[data-v-360b89d0] {\n    display: flex;\n    justify-content: flex-end;\n    padding: 5px;\n    border-bottom: 1px solid #ddd;\n}\n.mb-2[data-v-360b89d0] {\n    margin-bottom: 0.5rem;\n}\n.btn-primary[data-v-360b89d0]:hover:not(:disabled) {\n    background-color: #357abd;\n}\n.toggle-switch[data-v-360b89d0] {\n    display: inline-flex;\n    align-items: center;\n    cursor: pointer;\n}\n.toggle-button[data-v-360b89d0] {\n    position: relative;\n    width: 50px;\n    height: 24px;\n    background-color: #ccc;\n    border-radius: 24px;\n    border: none;\n    padding: 0;\n    cursor: pointer;\n    transition: background-color 0.3s;\n}\n.toggle-button--active[data-v-360b89d0] {\n    background-color: #4099de;\n}\n.toggle-slider[data-v-360b89d0] {\n    position: absolute;\n    top: 4px;\n    left: 4px;\n    width: 16px;\n    height: 16px;\n    background-color: white;\n    border-radius: 50%;\n    transition: transform 0.3s;\n}\n.toggle-button--active .toggle-slider[data-v-360b89d0] {\n    transform: translateX(26px);\n}\n.label-text[data-v-360b89d0] {\n    margin-left: 10px;\n}\n.fade-enter-active[data-v-360b89d0],\n.fade-leave-active[data-v-360b89d0] {\n    transition: opacity 0.3s;\n}\n.fade-enter[data-v-360b89d0],\n.fade-leave-to[data-v-360b89d0] {\n    opacity: 0;\n}\n.btn-danger[data-v-360b89d0] {\n    background-color: #e74444;\n    color: white;\n}\n.btn-danger[data-v-360b89d0]:hover {\n    background-color: #e01e1e;\n}\n.btn-link[data-v-360b89d0] {\n    background: transparent;\n    border: 0;\n    color: #666;\n    text-decoration: underline;\n    padding: 0.5rem;\n}\n.btn-link[data-v-360b89d0]:hover {\n    color: #333;\n}\n.mb-6[data-v-360b89d0] {\n    margin-bottom: 1.5rem;\n}\n.text-90[data-v-360b89d0] {\n    color: var(--90);\n}\n.text-xl[data-v-360b89d0] {\n    font-size: 1.25rem;\n    line-height: 1.75rem;\n}\n.font-normal[data-v-360b89d0] {\n    font-weight: 400;\n}\n.search-wrapper[data-v-360b89d0] {\n    position: relative;\n}\n.search-input[data-v-360b89d0] {\n    padding: 0.5rem;\n    border: 1px solid #e2e8f0;\n    border-radius: 0.375rem;\n    width: 250px;\n    font-size: 0.875rem;\n    outline: none;\n    transition: border-color 0.2s;\n}\n.search-input[data-v-360b89d0]:focus {\n    border-color: #4099de;\n}\n.justify-between[data-v-360b89d0] {\n    justify-content: space-between;\n}\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=style&index=0&id=b0706570&scoped=true&lang=css":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=style&index=0&id=b0706570&scoped=true&lang=css ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\n.toggle-switch[data-v-b0706570] {\n    display: inline-flex;\n    align-items: center;\n    cursor: pointer;\n}\n.toggle-button[data-v-b0706570] {\n    position: relative;\n    width: 50px;\n    height: 24px;\n    background-color: #ccc;\n    border-radius: 24px;\n    border: none;\n    padding: 0;\n    cursor: pointer;\n    transition: background-color 0.3s;\n}\n.toggle-button--active[data-v-b0706570] {\n    background-color: #4099de;\n}\n.toggle-slider[data-v-b0706570] {\n    position: absolute;\n    top: 4px;\n    left: 4px;\n    width: 16px;\n    height: 16px;\n    background-color: white;\n    border-radius: 50%;\n    transition: transform 0.3s;\n}\n.toggle-button--active .toggle-slider[data-v-b0706570] {\n    transform: translateX(26px);\n}\n.label-text[data-v-b0706570] {\n    margin-left: 10px;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -87048,6 +86983,36 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=style&index=0&id=b0706570&scoped=true&lang=css":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=style&index=0&id=b0706570&scoped=true&lang=css ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ToggleSwitch_vue_vue_type_style_index_0_id_b0706570_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./ToggleSwitch.vue?vue&type=style&index=0&id=b0706570&scoped=true&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=style&index=0&id=b0706570&scoped=true&lang=css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ToggleSwitch_vue_vue_type_style_index_0_id_b0706570_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ToggleSwitch_vue_vue_type_style_index_0_id_b0706570_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js":
 /*!****************************************************************************!*\
   !*** ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js ***!
@@ -87679,6 +87644,588 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/layer-feature/ConfirmModal.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/layer-feature/ConfirmModal.vue ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ConfirmModal_vue_vue_type_template_id_03ca0226_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ConfirmModal.vue?vue&type=template&id=03ca0226&ts=true */ "./resources/js/components/layer-feature/ConfirmModal.vue?vue&type=template&id=03ca0226&ts=true");
+/* harmony import */ var _ConfirmModal_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ConfirmModal.vue?vue&type=script&lang=ts */ "./resources/js/components/layer-feature/ConfirmModal.vue?vue&type=script&lang=ts");
+/* harmony import */ var _node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+const __exports__ = /*#__PURE__*/(0,_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_ConfirmModal_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ConfirmModal_vue_vue_type_template_id_03ca0226_ts_true__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/layer-feature/ConfirmModal.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/components/layer-feature/ConfirmModal.vue?vue&type=script&lang=ts":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/layer-feature/ConfirmModal.vue?vue&type=script&lang=ts ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ConfirmModal_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ConfirmModal_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./ConfirmModal.vue?vue&type=script&lang=ts */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ConfirmModal.vue?vue&type=script&lang=ts");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/components/layer-feature/ConfirmModal.vue?vue&type=template&id=03ca0226&ts=true":
+/*!******************************************************************************************************!*\
+  !*** ./resources/js/components/layer-feature/ConfirmModal.vue?vue&type=template&id=03ca0226&ts=true ***!
+  \******************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ConfirmModal_vue_vue_type_template_id_03ca0226_ts_true__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ConfirmModal_vue_vue_type_template_id_03ca0226_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./ConfirmModal.vue?vue&type=template&id=03ca0226&ts=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ConfirmModal.vue?vue&type=template&id=03ca0226&ts=true");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/layer-feature/CustomHeader.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/layer-feature/CustomHeader.vue ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _CustomHeader_vue_vue_type_template_id_77d49804_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CustomHeader.vue?vue&type=template&id=77d49804&ts=true */ "./resources/js/components/layer-feature/CustomHeader.vue?vue&type=template&id=77d49804&ts=true");
+/* harmony import */ var _CustomHeader_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CustomHeader.vue?vue&type=script&lang=ts */ "./resources/js/components/layer-feature/CustomHeader.vue?vue&type=script&lang=ts");
+/* harmony import */ var _node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+const __exports__ = /*#__PURE__*/(0,_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_CustomHeader_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_CustomHeader_vue_vue_type_template_id_77d49804_ts_true__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/layer-feature/CustomHeader.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/components/layer-feature/CustomHeader.vue?vue&type=script&lang=ts":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/layer-feature/CustomHeader.vue?vue&type=script&lang=ts ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_CustomHeader_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_CustomHeader_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./CustomHeader.vue?vue&type=script&lang=ts */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/CustomHeader.vue?vue&type=script&lang=ts");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/components/layer-feature/CustomHeader.vue?vue&type=template&id=77d49804&ts=true":
+/*!******************************************************************************************************!*\
+  !*** ./resources/js/components/layer-feature/CustomHeader.vue?vue&type=template&id=77d49804&ts=true ***!
+  \******************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_CustomHeader_vue_vue_type_template_id_77d49804_ts_true__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_CustomHeader_vue_vue_type_template_id_77d49804_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./CustomHeader.vue?vue&type=template&id=77d49804&ts=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/CustomHeader.vue?vue&type=template&id=77d49804&ts=true");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/layer-feature/NameFilter.vue":
+/*!**************************************************************!*\
+  !*** ./resources/js/components/layer-feature/NameFilter.vue ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _NameFilter_vue_vue_type_template_id_2decaffa_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NameFilter.vue?vue&type=template&id=2decaffa&ts=true */ "./resources/js/components/layer-feature/NameFilter.vue?vue&type=template&id=2decaffa&ts=true");
+/* harmony import */ var _NameFilter_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NameFilter.vue?vue&type=script&lang=ts */ "./resources/js/components/layer-feature/NameFilter.vue?vue&type=script&lang=ts");
+/* harmony import */ var _node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+const __exports__ = /*#__PURE__*/(0,_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_NameFilter_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_NameFilter_vue_vue_type_template_id_2decaffa_ts_true__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/layer-feature/NameFilter.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/components/layer-feature/NameFilter.vue?vue&type=script&lang=ts":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/layer-feature/NameFilter.vue?vue&type=script&lang=ts ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_NameFilter_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_NameFilter_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./NameFilter.vue?vue&type=script&lang=ts */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/NameFilter.vue?vue&type=script&lang=ts");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/components/layer-feature/NameFilter.vue?vue&type=template&id=2decaffa&ts=true":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/components/layer-feature/NameFilter.vue?vue&type=template&id=2decaffa&ts=true ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_NameFilter_vue_vue_type_template_id_2decaffa_ts_true__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_NameFilter_vue_vue_type_template_id_2decaffa_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./NameFilter.vue?vue&type=template&id=2decaffa&ts=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/NameFilter.vue?vue&type=template&id=2decaffa&ts=true");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/layer-feature/ToggleSwitch.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/layer-feature/ToggleSwitch.vue ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ToggleSwitch_vue_vue_type_template_id_b0706570_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ToggleSwitch.vue?vue&type=template&id=b0706570&scoped=true&ts=true */ "./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=template&id=b0706570&scoped=true&ts=true");
+/* harmony import */ var _ToggleSwitch_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ToggleSwitch.vue?vue&type=script&lang=ts */ "./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=script&lang=ts");
+/* harmony import */ var _ToggleSwitch_vue_vue_type_style_index_0_id_b0706570_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ToggleSwitch.vue?vue&type=style&index=0&id=b0706570&scoped=true&lang=css */ "./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=style&index=0&id=b0706570&scoped=true&lang=css");
+/* harmony import */ var _node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+
+
+const __exports__ = /*#__PURE__*/(0,_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ToggleSwitch_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ToggleSwitch_vue_vue_type_template_id_b0706570_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-b0706570"],['__file',"resources/js/components/layer-feature/ToggleSwitch.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=script&lang=ts":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=script&lang=ts ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ToggleSwitch_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ToggleSwitch_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./ToggleSwitch.vue?vue&type=script&lang=ts */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=script&lang=ts");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=style&index=0&id=b0706570&scoped=true&lang=css":
+/*!************************************************************************************************************************!*\
+  !*** ./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=style&index=0&id=b0706570&scoped=true&lang=css ***!
+  \************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ToggleSwitch_vue_vue_type_style_index_0_id_b0706570_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./ToggleSwitch.vue?vue&type=style&index=0&id=b0706570&scoped=true&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=style&index=0&id=b0706570&scoped=true&lang=css");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=template&id=b0706570&scoped=true&ts=true":
+/*!******************************************************************************************************************!*\
+  !*** ./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=template&id=b0706570&scoped=true&ts=true ***!
+  \******************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ToggleSwitch_vue_vue_type_template_id_b0706570_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ToggleSwitch_vue_vue_type_template_id_b0706570_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./ToggleSwitch.vue?vue&type=template&id=b0706570&scoped=true&ts=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/layer-feature/ToggleSwitch.vue?vue&type=template&id=b0706570&scoped=true&ts=true");
+
+
+/***/ }),
+
+/***/ "./resources/js/composables/useFeatures.ts":
+/*!*************************************************!*\
+  !*** ./resources/js/composables/useFeatures.ts ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useFeatures: () => (/* binding */ useFeatures)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+function useFeatures(props) {
+  var isLoading = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(true);
+  var gridData = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([]);
+  var persistentSelectedIds = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([]);
+  var isSaving = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
+  var gridApi = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
+  var updateSelectedNodes = function updateSelectedNodes() {
+    setTimeout(function () {
+      console.log('[Selection] updateSelectedNodes called - Current persistentSelectedIds:', persistentSelectedIds.value);
+      if (!gridApi.value) return;
+      gridApi.value.forEachNode(function (node) {
+        var shouldBeSelected = persistentSelectedIds.value.includes(node.data.id);
+        node.setSelected(shouldBeSelected);
+      });
+    }, 100);
+  };
+  var setGridApi = function setGridApi(api) {
+    gridApi.value = api;
+  };
+  var buildFilterObject = function buildFilterObject(modelName, layerId) {
+    if (!modelName || !layerId) {
+      throw new Error('ModelName and LayerId are required');
+    }
+    return [_defineProperty({}, "features_by_layer_".concat(modelName), layerId)];
+  };
+  var buildApiUrl = function buildApiUrl(filterObject) {
+    var searchValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+    var base64Filter = btoa(JSON.stringify(filterObject));
+    var url = "/nova-api/ec-tracks?filters=".concat(encodeURIComponent(base64Filter), "&perPage=100&trashed=&page=1&relationType=");
+    if (searchValue) {
+      url += "&search=".concat(encodeURIComponent(searchValue));
+    }
+    return url;
+  };
+  var fetchTracks = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(url) {
+      var response;
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return fetch(url);
+          case 2:
+            response = _context.sent;
+            if (response.ok) {
+              _context.next = 5;
+              break;
+            }
+            throw new Error("HTTP error! status: ".concat(response.status));
+          case 5:
+            _context.next = 7;
+            return response.json();
+          case 7:
+            return _context.abrupt("return", _context.sent);
+          case 8:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return function fetchTracks(_x) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  var mapResourceToGridData = function mapResourceToGridData(resource) {
+    var _resource$fields$find;
+    var name = ((_resource$fields$find = resource.fields.find(function (f) {
+      return f.attribute === 'name';
+    })) === null || _resource$fields$find === void 0 ? void 0 : _resource$fields$find.value) || '';
+    var id = resource.id.value;
+    var isSelected = persistentSelectedIds.value.includes(id);
+    return {
+      id: id,
+      name: name,
+      "boolean": isSelected
+    };
+  };
+  var fetchFeatures = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+      var filterModel,
+        _props$field,
+        _props$field2,
+        _filterModel$name,
+        modelName,
+        layerId,
+        searchValue,
+        filters,
+        apiUrl,
+        response,
+        _args2 = arguments;
+      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) switch (_context2.prev = _context2.next) {
+          case 0:
+            filterModel = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : null;
+            _context2.prev = 1;
+            isLoading.value = true;
+            if (!(!((_props$field = props.field) !== null && _props$field !== void 0 && _props$field.modelName) || !((_props$field2 = props.field) !== null && _props$field2 !== void 0 && _props$field2.layerId))) {
+              _context2.next = 5;
+              break;
+            }
+            throw new Error('Required field properties are missing');
+          case 5:
+            modelName = props.field.modelName;
+            layerId = props.field.layerId;
+            searchValue = (filterModel === null || filterModel === void 0 || (_filterModel$name = filterModel.name) === null || _filterModel$name === void 0 ? void 0 : _filterModel$name.filter) || '';
+            filters = buildFilterObject(modelName, layerId);
+            apiUrl = buildApiUrl(filters, searchValue);
+            _context2.next = 12;
+            return fetchTracks(apiUrl);
+          case 12:
+            response = _context2.sent;
+            gridData.value = response.resources.map(mapResourceToGridData);
+            _context2.next = 21;
+            break;
+          case 16:
+            _context2.prev = 16;
+            _context2.t0 = _context2["catch"](1);
+            gridData.value = [];
+            Nova.error('Errore durante il caricamento delle features');
+            throw _context2.t0;
+          case 21:
+            _context2.prev = 21;
+            isLoading.value = false;
+            updateSelectedNodes();
+            return _context2.finish(21);
+          case 25:
+          case "end":
+            return _context2.stop();
+        }
+      }, _callee2, null, [[1, 16, 21, 25]]);
+    }));
+    return function fetchFeatures() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+  var handleSave = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+      var layerId;
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            isSaving.value = true;
+            layerId = props.field.layerId;
+            if (layerId) {
+              _context3.next = 5;
+              break;
+            }
+            throw new Error('LayerId is required for saving');
+          case 5:
+            _context3.next = 7;
+            return Nova.request().post("/nova-vendor/layer-features/sync/".concat(layerId), {
+              features: persistentSelectedIds.value,
+              model: props.field.model
+            });
+          case 7:
+            Nova.success('Features salvate con successo');
+            props.field.value = persistentSelectedIds.value;
+            props.field.selectedEcFeaturesIds = persistentSelectedIds.value;
+            _context3.next = 12;
+            return fetchFeatures();
+          case 12:
+            _context3.next = 18;
+            break;
+          case 14:
+            _context3.prev = 14;
+            _context3.t0 = _context3["catch"](0);
+            Nova.error('Errore durante il salvataggio delle features');
+            throw _context3.t0;
+          case 18:
+            _context3.prev = 18;
+            isSaving.value = false;
+            return _context3.finish(18);
+          case 21:
+          case "end":
+            return _context3.stop();
+        }
+      }, _callee3, null, [[0, 14, 18, 21]]);
+    }));
+    return function handleSave() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+  var addToPersistentSelection = function addToPersistentSelection(id) {
+    if (!persistentSelectedIds.value.includes(id)) {
+      persistentSelectedIds.value = [].concat(_toConsumableArray(persistentSelectedIds.value), [id]);
+      console.log('[Selection] Added ID to persistentSelectedIds:', id, '- Current array:', persistentSelectedIds.value);
+    }
+  };
+  var removeFromPersistentSelection = function removeFromPersistentSelection(id) {
+    persistentSelectedIds.value = persistentSelectedIds.value.filter(function (selectedId) {
+      return selectedId !== id;
+    });
+    console.log('[Selection] Removed ID from persistentSelectedIds:', id, '- Current array:', persistentSelectedIds.value);
+  };
+  return {
+    isLoading: isLoading,
+    gridData: gridData,
+    persistentSelectedIds: persistentSelectedIds,
+    isSaving: isSaving,
+    fetchFeatures: fetchFeatures,
+    handleSave: handleSave,
+    updateSelectedNodes: updateSelectedNodes,
+    setGridApi: setGridApi,
+    addToPersistentSelection: addToPersistentSelection,
+    removeFromPersistentSelection: removeFromPersistentSelection
+  };
+}
+
+/***/ }),
+
+/***/ "./resources/js/composables/useGrid.ts":
+/*!*********************************************!*\
+  !*** ./resources/js/composables/useGrid.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useGrid: () => (/* binding */ useGrid)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+
+function useGrid() {
+  var gridApi = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
+  var gridState = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)({
+    columnState: null,
+    filterState: null,
+    sortState: null
+  });
+  var columnDefs = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([{
+    field: 'boolean',
+    headerName: '✓',
+    width: 50,
+    checkboxSelection: true,
+    headerCheckboxSelection: true,
+    suppressSizeToFit: true,
+    filter: false
+  }, {
+    field: 'id',
+    headerName: 'ID',
+    width: 80,
+    suppressSizeToFit: true,
+    filter: false
+  }, {
+    field: 'name',
+    headerName: 'Name',
+    flex: 1,
+    minWidth: 200,
+    filter: 'NameFilter'
+  }]);
+  var defaultColDef = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)({
+    sortable: true,
+    resizable: true,
+    suppressMenu: true,
+    suppressRowClickSelection: true,
+    filter: false,
+    floatingFilter: true
+  });
+  var onGridReady = function onGridReady(params) {
+    gridApi.value = params.api;
+    if (gridApi.value) {
+      gridApi.value.sizeColumnsToFit();
+    }
+  };
+  var onSelectionChanged = function onSelectionChanged(callback) {
+    return function () {
+      if (!gridApi.value) return;
+      var selectedNodes = gridApi.value.getSelectedNodes();
+      var selectedIds = selectedNodes.map(function (node) {
+        return node.data.id;
+      });
+      callback(selectedIds);
+    };
+  };
+  var restoreSelections = function restoreSelections(selectedIds) {
+    if (!gridApi.value) return;
+    gridApi.value.deselectAll();
+    gridApi.value.forEachNode(function (node) {
+      if (selectedIds.includes(node.data.id)) {
+        node.setSelected(true);
+      }
+    });
+  };
+  return {
+    gridApi: gridApi,
+    gridState: gridState,
+    columnDefs: columnDefs,
+    defaultColDef: defaultColDef,
+    onGridReady: onGridReady,
+    onSelectionChanged: onSelectionChanged,
+    restoreSelections: restoreSelections
+  };
+}
+
+/***/ }),
+
 /***/ "./resources/js/field.js":
 /*!*******************************!*\
   !*** ./resources/js/field.js ***!
@@ -87719,6 +88266,36 @@ __webpack_require__.r(__webpack_exports__);
 Nova.booting(function (Vue, router, store) {
   Vue.component('layer-feature', _components_LayerFeature_vue__WEBPACK_IMPORTED_MODULE_1__["default"]);
 });
+
+/***/ }),
+
+/***/ "./resources/js/styles/shared.css":
+/*!****************************************!*\
+  !*** ./resources/js/styles/shared.css ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_shared_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./shared.css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-11.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-11.use[2]!./resources/js/styles/shared.css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_shared_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_11_use_1_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_11_use_2_shared_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
