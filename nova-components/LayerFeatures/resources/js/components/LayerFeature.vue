@@ -112,14 +112,7 @@ import { FormField, HandlesValidationErrors } from "laravel-nova";
 import { AgGridVue } from "ag-grid-vue3";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import {
-    ClientSideRowModelModule,
-    ModuleRegistry,
-    Grid,
-    GridApi,
-    TextFilter,
-    NumberFilter,
-} from "ag-grid-community";
+import { GridApi } from "ag-grid-community";
 import type {
     LayerFeatureProps,
     GridData,
@@ -128,7 +121,8 @@ import type {
     NameFilterProps,
 } from "../types/interfaces";
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+// Rimuovi la registrazione del modulo che non è più necessaria
+// ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 // Componente per l'header con bottone salva
 const CustomHeader = defineComponent({

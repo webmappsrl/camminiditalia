@@ -59566,7 +59566,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ag_grid_vue3__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ag-grid-vue3 */ "./node_modules/ag-grid-vue3/lib/AgGridVue.js");
 /* harmony import */ var ag_grid_community_styles_ag_grid_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ag-grid-community/styles/ag-grid.css */ "./node_modules/ag-grid-community/styles/ag-grid.css");
 /* harmony import */ var ag_grid_community_styles_ag_theme_alpine_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ag-grid-community/styles/ag-theme-alpine.css */ "./node_modules/ag-grid-community/styles/ag-theme-alpine.css");
-/* harmony import */ var ag_grid_community__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ag-grid-community */ "./node_modules/ag-grid-community/dist/ag-grid-community.auto.esm.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -59585,8 +59584,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 
-
-ag_grid_community__WEBPACK_IMPORTED_MODULE_5__.ModuleRegistry.registerModules([ag_grid_community__WEBPACK_IMPORTED_MODULE_5__.ClientSideRowModelModule]);
+// Rimuovi la registrazione del modulo che non è più necessaria
+// ModuleRegistry.registerModules([ClientSideRowModelModule]);
 // Componente per l'header con bottone salva
 var CustomHeader = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
   props: {
