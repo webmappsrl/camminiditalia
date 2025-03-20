@@ -1,0 +1,34 @@
+---
+description: Gestione degli asset e processo di build
+globs:
+alwaysApply: true
+---
+
+# Asset Pipeline
+
+Gestione della compilazione e degli asset per i componenti Nova.
+
+## Build
+- npm install --legacy-peer-deps
+- npm run dev
+- Output in dist/
+
+## Dipendenze
+- Vue 3.2.31
+- AG Grid Community
+- AG Grid Vue3
+
+# Gestione Asset
+
+## Laravel Mix
+- Configurazione in webpack.mix.js
+- Supporto per:
+  - JavaScript/TypeScript
+  - Vue 3 components
+  - SASS/CSS
+  - Asset versioning
+
+## Processo di build
+1. npm install con --legacy-peer-deps
+2. npm run dev per development
+3. Gli asset compilati vengono salvati in dist/ 

@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Structure
+
+Struttura principale del progetto.
+
+## Directories:
+- nova-components/LayerFeatures
+- wm-package: Models, Services, Jobs
