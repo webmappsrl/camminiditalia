@@ -97,6 +97,7 @@
                 :suppressRowClickSelection="true"
                 :suppressCellSelection="true"
                 @grid-ready="onGridReady"
+                @first-data-rendered="onFirstDataRendered"
                 @selection-changed="onSelectionChanged"
                 @column-resized="onColumnResized"
                 @filter-changed="onFilterChanged"
@@ -105,42 +106,38 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, ref, watch } from "vue";
 import { FormField, HandlesValidationErrors } from "laravel-nova";
-import { ref, defineComponent, watch } from "vue";
 import { AgGridVue } from "ag-grid-vue3";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import {
-    CheckboxEditorModule,
     ClientSideRowModelModule,
-    ColumnAutoSizeModule,
-    ColumnApiModule,
-    provideGlobalGridOptions,
     ModuleRegistry,
-    ValidationModule,
-    RowSelectionModule,
-    TextFilterModule,
-    CustomFilterModule,
-    NumberFilterModule,
+    Grid,
+    GridApi,
+    TextFilter,
+    NumberFilter,
 } from "ag-grid-community";
+import type {
+    LayerFeatureProps,
+    GridData,
+    GridState,
+    CustomHeaderProps,
+    NameFilterProps,
+} from "../types/interfaces";
 
-provideGlobalGridOptions({ theme: "legacy" });
-
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    CheckboxEditorModule,
-    RowSelectionModule,
-    ValidationModule,
-    ColumnAutoSizeModule,
-    ColumnApiModule,
-    TextFilterModule,
-    CustomFilterModule,
-    NumberFilterModule,
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 // Componente per l'header con bottone salva
-const CustomHeader = {
+const CustomHeader = defineComponent({
+    props: {
+        params: {
+            type: Object as () => CustomHeaderProps["params"],
+            required: true,
+        },
+    },
     template: `
         <div class="ag-header-container">
             <div class="ag-header-row">
@@ -165,18 +162,25 @@ const CustomHeader = {
         };
     },
     methods: {
-        save() {
+        async save() {
             this.saving = true;
-            // Chiamiamo la funzione di salvataggio passata come parametro
-            this.params.save().finally(() => {
+            try {
+                await this.params.save();
+            } finally {
                 this.saving = false;
-            });
+            }
         },
     },
-};
+});
 
-// Aggiungi questo componente custom filter prima dell'export default
-const NameFilter = {
+// Componente custom filter
+const NameFilter = defineComponent({
+    props: {
+        params: {
+            type: Object as () => NameFilterProps["params"],
+            required: true,
+        },
+    },
     template: `
         <div class="ag-filter-wrapper" style="display: flex; align-items: center;">
             <input
@@ -200,40 +204,41 @@ const NameFilter = {
     data() {
         return {
             filterText: "",
+            timeout: null as number | null,
         };
     },
     methods: {
-        isFilterActive() {
+        isFilterActive(): boolean {
             return this.filterText != null && this.filterText !== "";
         },
 
-        doesFilterPass() {
+        doesFilterPass(): boolean {
             return true;
         },
 
-        getModel() {
+        getModel(): { filter: string } | null {
             return this.isFilterActive() ? { filter: this.filterText } : null;
         },
 
-        setModel(model) {
+        setModel(model: { filter: string } | null): void {
             this.filterText = model ? model.filter : "";
         },
 
-        onFilterChanged() {
+        onFilterChanged(): void {
             if (this.timeout) {
                 clearTimeout(this.timeout);
             }
-            this.timeout = setTimeout(() => {
+            this.timeout = window.setTimeout(() => {
                 this.params.filterChangedCallback();
             }, 300);
         },
 
-        resetFilter() {
+        resetFilter(): void {
             this.filterText = "";
             this.params.filterChangedCallback();
         },
     },
-};
+});
 
 export default defineComponent({
     name: "LayerFeature",
@@ -248,20 +253,25 @@ export default defineComponent({
         edit: { type: Boolean, default: true },
         value: { type: [Array, Object], default: () => [] },
     },
-    setup(props) {
-        const agGridRef = ref(null);
-        const isLoading = ref(true);
-        const editable = ref(props.edit);
-        const selectedIds = ref(props.field?.selectedEcFeaturesIds || []);
-        const model = ref(props.field?.model);
-        const modelName = ref(props.field?.modelName);
-        const gridData = ref([]);
-        const isSaving = ref(false);
-        const isManual = ref(props.field?.selectedEcFeaturesIds?.length > 0);
-        const showConfirmModal = ref(false);
-        const pendingToggle = ref(false);
-        const searchQuery = ref("");
-        const searchTimeout = ref(null);
+    setup(props: LayerFeatureProps) {
+        const agGridRef = ref<any>(null);
+        const gridApi = ref<any>(null);
+        const isLoading = ref<boolean>(true);
+        const editable = ref<boolean>(props.edit ?? false);
+        const selectedIds = ref<number[]>(
+            props.field?.selectedEcFeaturesIds || []
+        );
+        const model = ref<string | undefined>(props.field?.model);
+        const modelName = ref<string | undefined>(props.field?.modelName);
+        const gridData = ref<GridData[]>([]);
+        const isSaving = ref<boolean>(false);
+        const isManual = ref<boolean>(
+            (props.field?.selectedEcFeaturesIds?.length ?? 0) > 0
+        );
+        const showConfirmModal = ref<boolean>(false);
+        const pendingToggle = ref<boolean>(false);
+        const searchQuery = ref<string>("");
+        const searchTimeout = ref<number | null>(null);
 
         // Templates per gli stati della griglia
         const loadingTemplate =
@@ -307,7 +317,7 @@ export default defineComponent({
         const rowSelection = "multiple";
 
         // Gestione dello stato della griglia
-        const gridState = ref({
+        const gridState = ref<GridState>({
             columnState: null,
             filterState: null,
             sortState: null,
@@ -323,24 +333,24 @@ export default defineComponent({
         });
 
         // Funzione per ottenere l'ID univoco della riga
-        const getRowId = (params) => params.data.id;
+        const getRowId = (params: { data: GridData }): number => params.data.id;
 
-        const handleSearch = () => {
+        const handleSearch = (): void => {
             if (searchTimeout.value) {
                 clearTimeout(searchTimeout.value);
             }
-            searchTimeout.value = setTimeout(() => {
+            searchTimeout.value = window.setTimeout(() => {
                 fetchFeatures();
             }, 300);
         };
 
         // Utility functions
         const buildFilterObject = (
-            filterType,
-            selectedIds,
-            modelName,
-            layerId,
-        ) => {
+            filterType: "include" | "exclude",
+            selectedIds: number[],
+            modelName: string | undefined,
+            layerId: number | undefined
+        ): Array<Record<string, any>> => {
             const filterKey =
                 filterType === "include"
                     ? `features_include_ids_${modelName}`
@@ -352,21 +362,29 @@ export default defineComponent({
             ];
         };
 
-        const buildApiUrl = (filterObject, searchValue = "") => {
+        const buildApiUrl = (
+            filterObject: Array<Record<string, any>>,
+            searchValue = ""
+        ): string => {
             const base64Filter = btoa(JSON.stringify(filterObject));
             const searchParam = searchValue ? `&search=${searchValue}` : "";
-            return `/nova-api/ec-tracks?filters=${encodeURIComponent(base64Filter)}${searchParam}&perPage=100&trashed=&page=1$relationType=`;
+            return `/nova-api/ec-tracks?filters=${encodeURIComponent(
+                base64Filter
+            )}${searchParam}&perPage=100&trashed=&page=1$relationType=`;
         };
 
-        const mapResourceToTrack = (resource, isSelected) => ({
+        const mapResourceToTrack = (
+            resource: any,
+            isSelected: boolean
+        ): GridData => ({
             id: resource.id.value,
             name:
-                resource.fields.find((f) => f.attribute === "name")?.value ||
-                "",
+                resource.fields.find((f: any) => f.attribute === "name")
+                    ?.value || "",
             isSelected,
         });
 
-        const fetchTracks = async (url) => {
+        const fetchTracks = async (url: string): Promise<any> => {
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -374,18 +392,84 @@ export default defineComponent({
             return await response.json();
         };
 
-        const restoreSelections = (gridApi, selectedIds) => {
-            if (!gridApi) return;
-
-            gridApi.forEachNode((node) => {
-                if (selectedIds.includes(node.data.id)) {
-                    node.setSelected(true);
-                }
-            });
+        const waitForGridApi = (
+            callback: () => void,
+            attempts = 0,
+            maxAttempts = 10
+        ) => {
+            console.log(
+                `Tentativo ${
+                    attempts + 1
+                } di ${maxAttempts} per accedere all'API della griglia`
+            );
+            if (gridApi.value) {
+                console.log("API della griglia trovata, eseguo il callback");
+                callback();
+            } else if (attempts < maxAttempts) {
+                console.log(
+                    "API della griglia non ancora disponibile, riprovo tra 100ms"
+                );
+                setTimeout(
+                    () => waitForGridApi(callback, attempts + 1, maxAttempts),
+                    100
+                );
+            } else {
+                console.log(
+                    "API della griglia non disponibile dopo tutti i tentativi"
+                );
+            }
         };
 
-        const fetchFeatures = async (filterModel = null) => {
+        const restoreSelections = () => {
+            console.log("=== RIPRISTINO SELEZIONI ===");
+            const selectedIds = props.field.selectedEcFeaturesIds || [];
+            console.log("ID da selezionare:", selectedIds);
+
+            if (gridApi.value) {
+                console.log("Deseleziono tutte le righe");
+                gridApi.value.deselectAll();
+
+                gridApi.value.forEachNode((node: any) => {
+                    if (selectedIds.includes(node.data.id)) {
+                        console.log("Seleziono riga:", node.data.id);
+                        node.setSelected(true);
+                    }
+                });
+                console.log("Ripristino selezioni completato");
+            }
+        };
+
+        const onFirstDataRendered = (params: any): void => {
+            console.log("=== FIRST DATA RENDERED ===");
+            console.log("Dati renderizzati per la prima volta");
+
+            const selectedIds = props.field.selectedEcFeaturesIds || [];
+            console.log("ID da selezionare:", selectedIds);
+
+            if (gridApi.value) {
+                console.log("API disponibile, procedo con la selezione");
+                gridApi.value.deselectAll();
+
+                gridApi.value.forEachNode((node: any) => {
+                    if (selectedIds.includes(node.data.id)) {
+                        console.log("Seleziono riga:", node.data.id);
+                        node.setSelected(true);
+                    }
+                });
+                console.log("Selezione iniziale completata");
+            } else {
+                console.log("API non disponibile durante first-data-rendered");
+            }
+        };
+
+        const fetchFeatures = async (
+            filterModel: any = null
+        ): Promise<void> => {
             try {
+                console.log("=== INIZIO FETCH FEATURES ===");
+                console.log("Filter Model:", filterModel);
+                console.log("Selected IDs:", props.field.selectedEcFeaturesIds);
+
                 isLoading.value = true;
                 const modelName = props.field.modelName;
                 const layerId = props.field.layerId;
@@ -399,19 +483,25 @@ export default defineComponent({
                 ];
                 const selectedRowsUrl = buildApiUrl(
                     selectedFilters,
-                    searchValue,
+                    searchValue
                 );
+                console.log("URL righe selezionate:", selectedRowsUrl);
                 const selectedResponse = await fetchTracks(selectedRowsUrl);
+                console.log(
+                    "Righe selezionate ricevute:",
+                    selectedResponse.resources.length
+                );
 
                 // Mappa le righe selezionate con boolean: true
                 const selectedRows = selectedResponse.resources.map(
-                    (resource) => ({
+                    (resource: any) => ({
                         id: resource.id.value,
                         name:
-                            resource.fields.find((f) => f.attribute === "name")
-                                ?.value || "",
+                            resource.fields.find(
+                                (f: any) => f.attribute === "name"
+                            )?.value || "",
                         boolean: true,
-                    }),
+                    })
                 );
 
                 // Seconda chiamata: Recupera le righe selezionabili
@@ -421,99 +511,80 @@ export default defineComponent({
                 ];
                 const unselectedRowsUrl = buildApiUrl(
                     unselectedFilters,
-                    searchValue,
+                    searchValue
                 );
+                console.log("URL righe non selezionate:", unselectedRowsUrl);
                 const unselectedResponse = await fetchTracks(unselectedRowsUrl);
+                console.log(
+                    "Righe non selezionate ricevute:",
+                    unselectedResponse.resources.length
+                );
 
                 // Mappa le righe selezionabili (senza boolean)
                 const selectableRows = unselectedResponse.resources.map(
-                    (resource) => ({
+                    (resource: any) => ({
                         id: resource.id.value,
                         name:
-                            resource.fields.find((f) => f.attribute === "name")
-                                ?.value || "",
-                    }),
+                            resource.fields.find(
+                                (f: any) => f.attribute === "name"
+                            )?.value || "",
+                    })
                 );
 
                 // Combina i risultati
                 gridData.value = [...selectedRows, ...selectableRows];
-
-                // Ripristina le selezioni
-                setTimeout(() => {
-                    if (agGridRef.value?.api) {
-                        // Deseleziona tutte le righe
-                        agGridRef.value.api.deselectAll();
-
-                        // Seleziona solo le righe che erano selezionate
-                        agGridRef.value.api.forEachNode((node) => {
-                            if (selectedIds.includes(node.data.id)) {
-                                node.setSelected(true);
-                            }
-                        });
-                    }
-                }, 200);
+                console.log(
+                    "Totale righe nella griglia:",
+                    gridData.value.length
+                );
             } catch (error) {
                 console.error("Error fetching features:", error);
                 gridData.value = [];
                 Nova.error("Errore durante il caricamento delle features");
             } finally {
                 isLoading.value = false;
+                console.log("=== FINE FETCH FEATURES ===");
             }
         };
 
         // Funzione per determinare se una riga è selezionabile
-        const isRowSelectable = (params) => {
+        const isRowSelectable = (params: any): boolean => {
             return true;
         };
 
-        const onGridReady = (params) => {
-            const gridApi = params.api;
-            agGridRef.value = gridApi;
-            gridApi.sizeColumnsToFit();
-            restoreSelections(gridApi, selectedIds.value);
+        const onGridReady = (params: any): void => {
+            console.log("=== GRID READY ===");
+            gridApi.value = params.api;
+            console.log("API griglia inizializzata");
+
+            // Imposta le larghezze delle colonne
+            gridApi.value.sizeColumnsToFit();
+            console.log("Larghezze colonne impostate");
         };
 
-        const onSelectionChanged = (params) => {
-            if (!params.api) return;
-
-            // Ottieni lo stato precedente delle selezioni
-            const previousSelectedIds = [...selectedIds.value];
+        const onSelectionChanged = (params: any): void => {
+            console.log("=== SELECTION CHANGED ===");
+            if (!gridApi.value) {
+                console.log("API non disponibile in selection changed");
+                return;
+            }
 
             // Ottieni le selezioni correnti dalla griglia
-            const currentSelectedNodes = params.api.getSelectedNodes();
+            const currentSelectedNodes = gridApi.value.getSelectedNodes();
             const currentSelectedIds = currentSelectedNodes.map(
-                (node) => node.data.id,
+                (node: any) => node.data.id
             );
-
-            // Trova gli ID che sono stati aggiunti e rimossi in questa selezione
-            const addedIds = currentSelectedIds.filter(
-                (id) => !previousSelectedIds.includes(id),
-            );
-            const removedIds = previousSelectedIds.filter(
-                (id) => !currentSelectedIds.includes(id),
-            );
-
-            console.log("Selection Changed:", {
-                previousSelectedIds,
-                currentSelectedIds,
-                addedIds,
-                removedIds,
-            });
-
-            // Aggiorna selectedIds aggiungendo i nuovi ID e rimuovendo quelli deselezionati
-            const newSelectedIds = [
-                ...previousSelectedIds.filter((id) => !removedIds.includes(id)), // Mantieni gli ID non deselezionati
-                ...addedIds, // Aggiungi i nuovi ID selezionati
-            ];
+            console.log("ID selezionati:", currentSelectedIds);
 
             // Aggiorna le selezioni
-            selectedIds.value = newSelectedIds;
-            props.field.selectedEcFeaturesIds = newSelectedIds;
+            selectedIds.value = currentSelectedIds;
+            props.field.selectedEcFeaturesIds = currentSelectedIds;
+            console.log("Selezioni aggiornate");
         };
 
         // Aggiungi l'handler per il cambio di filtro
-        const onFilterChanged = () => {
-            const filterModel = agGridRef.value?.api?.getFilterModel();
+        const onFilterChanged = (): void => {
+            const filterModel = gridApi.value?.getFilterModel();
             fetchFeatures(filterModel);
         };
 
@@ -525,17 +596,16 @@ export default defineComponent({
             () => props.resourceId,
             () => {
                 fetchFeatures();
-            },
+            }
         );
 
         // Salva lo stato della griglia quando le colonne vengono ridimensionate
-        const onColumnResized = (params) => {
-            if (params.api) {
-                gridState.value.columnState = params.api.getColumnState();
-            }
+        const onColumnResized = (params: any): void => {
+            // Temporaneamente disabilitato il salvataggio dello stato delle colonne
+            // per evitare errori con le API di AG Grid
         };
 
-        const handleSave = async () => {
+        const handleSave = async (): Promise<void> => {
             try {
                 isSaving.value = true;
                 const selectedFeatureIds = selectedIds.value;
@@ -550,7 +620,7 @@ export default defineComponent({
                     {
                         features: selectedFeatureIds,
                         model: props.field.model,
-                    },
+                    }
                 );
 
                 Nova.success("Features salvate con successo");
@@ -580,7 +650,7 @@ export default defineComponent({
             ],
         };
 
-        const CustomStatsComponent = {
+        const CustomStatsComponent = defineComponent({
             template: `
                 <div class="ag-status-name-value">
                     <button class="btn btn-primary" @click="save">Salva</button>
@@ -591,17 +661,17 @@ export default defineComponent({
                     this.params.api.handleSave();
                 },
             },
-        };
+        });
 
         // Registra il componente personalizzato
-        if (agGridRef.value?.api) {
-            agGridRef.value.api.components.registerComponent(
+        if (gridApi.value) {
+            gridApi.value.components.registerComponent(
                 "customStatsComponent",
-                CustomStatsComponent,
+                CustomStatsComponent
             );
         }
 
-        const handleToggleClick = async () => {
+        const handleToggleClick = async (): Promise<void> => {
             // Se stiamo passando da manuale ad automatico e ci sono selezioni
             if (isManual.value && selectedIds.value.length > 0) {
                 showConfirmModal.value = true;
@@ -620,18 +690,18 @@ export default defineComponent({
             }
         };
 
-        const closeConfirmModal = () => {
+        const closeConfirmModal = (): void => {
             showConfirmModal.value = false;
             isManual.value = true;
         };
 
-        const confirmModeChange = async () => {
+        const confirmModeChange = async (): Promise<void> => {
             showConfirmModal.value = false;
             isManual.value = false;
             await handleModeChange();
         };
 
-        const handleModeChange = async () => {
+        const handleModeChange = async (): Promise<void> => {
             try {
                 if (!isManual.value) {
                     isSaving.value = true;
@@ -643,7 +713,7 @@ export default defineComponent({
                         {
                             features: [],
                             model,
-                        },
+                        }
                     );
 
                     selectedIds.value = [];
@@ -663,6 +733,7 @@ export default defineComponent({
 
         return {
             agGridRef,
+            gridApi,
             columnDefs,
             defaultColDef,
             rowSelection,
@@ -686,6 +757,7 @@ export default defineComponent({
             closeConfirmModal,
             confirmModeChange,
             onFilterChanged,
+            onFirstDataRendered,
         };
     },
 });
