@@ -29,13 +29,11 @@ export function useGrid() {
             field: 'boolean',
             headerName: '✓',
             width: 50,
-            suppressSizeToFit: true,
-            filter: false,
             cellRenderer: (params: any) => {
                 const checked = params.data.isSelected ? 'checked' : '';
-                return `<div class="ag-checkbox-input-wrapper${params.data.isSelected ? ' ag-checked' : ''}">
+                return `
                     <input type="checkbox" class="ag-checkbox-input" ${checked} data-id="${params.data.id}" />
-                </div>`;
+                `;
             },
             onCellClicked: (params: any) => {
                 const checkbox = params.event.target;

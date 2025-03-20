@@ -88207,11 +88207,9 @@ function useGrid() {
     field: 'boolean',
     headerName: '✓',
     width: 50,
-    suppressSizeToFit: true,
-    filter: false,
     cellRenderer: function cellRenderer(params) {
       var checked = params.data.isSelected ? 'checked' : '';
-      return "<div class=\"ag-checkbox-input-wrapper".concat(params.data.isSelected ? ' ag-checked' : '', "\">\n                    <input type=\"checkbox\" class=\"ag-checkbox-input\" ").concat(checked, " data-id=\"").concat(params.data.id, "\" />\n                </div>");
+      return "\n                    <input type=\"checkbox\" class=\"ag-checkbox-input\" ".concat(checked, " data-id=\"").concat(params.data.id, "\" />\n                ");
     },
     onCellClicked: function onCellClicked(params) {
       var checkbox = params.event.target;
