@@ -59782,9 +59782,16 @@ var NameFilter = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
     };
     var buildApiUrl = function buildApiUrl(filterObject) {
       var searchValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+      console.log("Costruisco URL con searchValue:", searchValue);
       var base64Filter = btoa(JSON.stringify(filterObject));
-      var searchParam = searchValue ? "&search=".concat(searchValue) : "";
-      return "/nova-api/ec-tracks?filters=".concat(encodeURIComponent(base64Filter)).concat(searchParam, "&perPage=100&trashed=&page=1$relationType=");
+      console.log("Filtri codificati:", base64Filter);
+      var url = "/nova-api/ec-tracks?filters=".concat(encodeURIComponent(base64Filter), "&perPage=100&trashed=&page=1$relationType=");
+      // Aggiungiamo il parametro di ricerca come query parameter separato
+      if (searchValue) {
+        url += "&search=".concat(encodeURIComponent(searchValue));
+      }
+      console.log("URL finale:", url);
+      return url;
     };
     var mapResourceToTrack = function mapResourceToTrack(resource, isSelected) {
       var _resource$fields$find;
@@ -59877,6 +59884,23 @@ var NameFilter = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
         console.log("API non disponibile durante first-data-rendered");
       }
     };
+    var onFilterChanged = function onFilterChanged(event) {
+      console.log("=== FILTER CHANGED ===");
+      if (!gridApi.value) {
+        console.log("API non disponibile durante il filtro");
+        return;
+      }
+      var filterModel = gridApi.value.getFilterModel();
+      console.log("Modello filtro:", filterModel);
+      // Assicuriamoci che il filtro sia effettivamente cambiato
+      if (filterModel && Object.keys(filterModel).length > 0) {
+        console.log("Applico il filtro");
+        fetchFeatures(filterModel);
+      } else {
+        console.log("Nessun filtro attivo, ricarico tutti i dati");
+        fetchFeatures(null);
+      }
+    };
     var fetchFeatures = /*#__PURE__*/function () {
       var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var filterModel,
@@ -59906,13 +59930,15 @@ var NameFilter = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
               _modelName = props.field.modelName;
               layerId = props.field.layerId;
               _selectedIds = props.field.selectedEcFeaturesIds || [];
-              searchValue = (filterModel === null || filterModel === void 0 || (_filterModel$name = filterModel.name) === null || _filterModel$name === void 0 ? void 0 : _filterModel$name.filter) || ""; // Prima chiamata: Recupera le righe già selezionate
+              searchValue = (filterModel === null || filterModel === void 0 || (_filterModel$name = filterModel.name) === null || _filterModel$name === void 0 ? void 0 : _filterModel$name.filter) || "";
+              console.log("Valore ricerca:", searchValue);
+              // Prima chiamata: Recupera le righe già selezionate
               selectedFilters = [_defineProperty({}, "features_include_ids_".concat(_modelName), _selectedIds), _defineProperty({}, "features_by_layer_".concat(_modelName), layerId)];
               selectedRowsUrl = buildApiUrl(selectedFilters, searchValue);
               console.log("URL righe selezionate:", selectedRowsUrl);
-              _context3.next = 15;
+              _context3.next = 16;
               return fetchTracks(selectedRowsUrl);
-            case 15:
+            case 16:
               selectedResponse = _context3.sent;
               console.log("Righe selezionate ricevute:", selectedResponse.resources.length);
               // Mappa le righe selezionate con boolean: true
@@ -59929,9 +59955,9 @@ var NameFilter = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
               unselectedFilters = [_defineProperty({}, "features_exclude_ids_".concat(_modelName), _selectedIds), _defineProperty({}, "features_by_layer_".concat(_modelName), layerId)];
               unselectedRowsUrl = buildApiUrl(unselectedFilters, searchValue);
               console.log("URL righe non selezionate:", unselectedRowsUrl);
-              _context3.next = 23;
+              _context3.next = 24;
               return fetchTracks(unselectedRowsUrl);
-            case 23:
+            case 24:
               unselectedResponse = _context3.sent;
               console.log("Righe non selezionate ricevute:", unselectedResponse.resources.length);
               // Mappa le righe selezionabili (senza boolean)
@@ -59946,24 +59972,24 @@ var NameFilter = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
               }); // Combina i risultati
               gridData.value = [].concat(_toConsumableArray(selectedRows), _toConsumableArray(selectableRows));
               console.log("Totale righe nella griglia:", gridData.value.length);
-              _context3.next = 35;
+              _context3.next = 36;
               break;
-            case 30:
-              _context3.prev = 30;
+            case 31:
+              _context3.prev = 31;
               _context3.t0 = _context3["catch"](1);
               console.error("Error fetching features:", _context3.t0);
               gridData.value = [];
               Nova.error("Errore durante il caricamento delle features");
-            case 35:
-              _context3.prev = 35;
+            case 36:
+              _context3.prev = 36;
               isLoading.value = false;
               console.log("=== FINE FETCH FEATURES ===");
-              return _context3.finish(35);
-            case 39:
+              return _context3.finish(36);
+            case 40:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, null, [[1, 30, 35, 39]]);
+        }, _callee3, null, [[1, 31, 36, 40]]);
       }));
       return function fetchFeatures() {
         return _ref4.apply(this, arguments);
@@ -59997,12 +60023,6 @@ var NameFilter = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
       selectedIds.value = currentSelectedIds;
       props.field.selectedEcFeaturesIds = currentSelectedIds;
       console.log("Selezioni aggiornate");
-    };
-    // Aggiungi l'handler per il cambio di filtro
-    var onFilterChanged = function onFilterChanged() {
-      var _gridApi$value;
-      var filterModel = (_gridApi$value = gridApi.value) === null || _gridApi$value === void 0 ? void 0 : _gridApi$value.getFilterModel();
-      fetchFeatures(filterModel);
     };
     // Inizializza i dati
     fetchFeatures();

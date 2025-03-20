@@ -366,11 +366,22 @@ export default defineComponent({
             filterObject: Array<Record<string, any>>,
             searchValue = ""
         ): string => {
+            console.log("Costruisco URL con searchValue:", searchValue);
+
             const base64Filter = btoa(JSON.stringify(filterObject));
-            const searchParam = searchValue ? `&search=${searchValue}` : "";
-            return `/nova-api/ec-tracks?filters=${encodeURIComponent(
+            console.log("Filtri codificati:", base64Filter);
+
+            let url = `/nova-api/ec-tracks?filters=${encodeURIComponent(
                 base64Filter
-            )}${searchParam}&perPage=100&trashed=&page=1$relationType=`;
+            )}&perPage=100&trashed=&page=1$relationType=`;
+
+            // Aggiungiamo il parametro di ricerca come query parameter separato
+            if (searchValue) {
+                url += `&search=${encodeURIComponent(searchValue)}`;
+            }
+
+            console.log("URL finale:", url);
+            return url;
         };
 
         const mapResourceToTrack = (
@@ -462,6 +473,26 @@ export default defineComponent({
             }
         };
 
+        const onFilterChanged = (event: any): void => {
+            console.log("=== FILTER CHANGED ===");
+            if (!gridApi.value) {
+                console.log("API non disponibile durante il filtro");
+                return;
+            }
+
+            const filterModel = gridApi.value.getFilterModel();
+            console.log("Modello filtro:", filterModel);
+
+            // Assicuriamoci che il filtro sia effettivamente cambiato
+            if (filterModel && Object.keys(filterModel).length > 0) {
+                console.log("Applico il filtro");
+                fetchFeatures(filterModel);
+            } else {
+                console.log("Nessun filtro attivo, ricarico tutti i dati");
+                fetchFeatures(null);
+            }
+        };
+
         const fetchFeatures = async (
             filterModel: any = null
         ): Promise<void> => {
@@ -476,11 +507,14 @@ export default defineComponent({
                 const selectedIds = props.field.selectedEcFeaturesIds || [];
                 const searchValue = filterModel?.name?.filter || "";
 
+                console.log("Valore ricerca:", searchValue);
+
                 // Prima chiamata: Recupera le righe già selezionate
                 const selectedFilters = [
                     { [`features_include_ids_${modelName}`]: selectedIds },
                     { [`features_by_layer_${modelName}`]: layerId },
                 ];
+
                 const selectedRowsUrl = buildApiUrl(
                     selectedFilters,
                     searchValue
@@ -509,6 +543,7 @@ export default defineComponent({
                     { [`features_exclude_ids_${modelName}`]: selectedIds },
                     { [`features_by_layer_${modelName}`]: layerId },
                 ];
+
                 const unselectedRowsUrl = buildApiUrl(
                     unselectedFilters,
                     searchValue
@@ -580,12 +615,6 @@ export default defineComponent({
             selectedIds.value = currentSelectedIds;
             props.field.selectedEcFeaturesIds = currentSelectedIds;
             console.log("Selezioni aggiornate");
-        };
-
-        // Aggiungi l'handler per il cambio di filtro
-        const onFilterChanged = (): void => {
-            const filterModel = gridApi.value?.getFilterModel();
-            fetchFeatures(filterModel);
         };
 
         // Inizializza i dati
