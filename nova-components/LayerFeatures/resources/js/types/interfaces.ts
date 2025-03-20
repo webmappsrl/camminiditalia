@@ -36,4 +36,12 @@ export interface NameFilterProps {
     params: {
         filterChangedCallback: () => void;
     };
+}
+
+export interface CustomStatsProps {
+    params: {
+        api: {
+            handleSave: () => void;
+        };
+    };
 } 

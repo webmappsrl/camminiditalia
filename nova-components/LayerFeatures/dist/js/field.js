@@ -59669,6 +59669,20 @@ var NameFilter = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
     }
   }
 });
+var CustomStatsComponent = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+  props: {
+    params: {
+      type: Object,
+      required: true
+    }
+  },
+  template: "\n        <div class=\"ag-status-name-value\">\n            <button class=\"btn btn-primary\" @click=\"save\">Salva</button>\n        </div>\n    ",
+  methods: {
+    save: function save() {
+      this.params.api.handleSave();
+    }
+  }
+});
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
   name: "LayerFeature",
   components: {
@@ -60092,14 +60106,6 @@ var NameFilter = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
         align: "right"
       }]
     };
-    var CustomStatsComponent = (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
-      template: "\n                <div class=\"ag-status-name-value\">\n                    <button class=\"btn btn-primary\" @click=\"save\">Salva</button>\n                </div>\n            ",
-      methods: {
-        save: function save() {
-          this.params.api.handleSave();
-        }
-      }
-    });
     // Registra il componente personalizzato
     if (gridApi.value) {
       gridApi.value.components.registerComponent("customStatsComponent", CustomStatsComponent);

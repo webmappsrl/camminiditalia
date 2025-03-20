@@ -119,6 +119,7 @@ import type {
     GridState,
     CustomHeaderProps,
     NameFilterProps,
+    CustomStatsProps,
 } from "../types/interfaces";
 
 // Rimuovi la registrazione del modulo che non è più necessaria
@@ -230,6 +231,31 @@ const NameFilter = defineComponent({
         resetFilter(): void {
             this.filterText = "";
             this.params.filterChangedCallback();
+        },
+    },
+});
+
+interface ICustomStats {
+    params: {
+        api: any;
+    };
+}
+
+const CustomStatsComponent = defineComponent({
+    props: {
+        params: {
+            type: Object as () => CustomStatsProps["params"],
+            required: true,
+        },
+    },
+    template: `
+        <div class="ag-status-name-value">
+            <button class="btn btn-primary" @click="save">Salva</button>
+        </div>
+    `,
+    methods: {
+        save() {
+            this.params.api.handleSave();
         },
     },
 });
@@ -672,19 +698,6 @@ export default defineComponent({
                 },
             ],
         };
-
-        const CustomStatsComponent = defineComponent({
-            template: `
-                <div class="ag-status-name-value">
-                    <button class="btn btn-primary" @click="save">Salva</button>
-                </div>
-            `,
-            methods: {
-                save() {
-                    this.params.api.handleSave();
-                },
-            },
-        });
 
         // Registra il componente personalizzato
         if (gridApi.value) {
