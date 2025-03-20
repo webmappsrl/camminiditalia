@@ -27,26 +27,30 @@
                     {{ isSaving ? "Salvataggio..." : "Salva" }}
                 </button>
             </div>
-            <ag-grid-vue
-                ref="agGridRef"
-                class="ag-theme-alpine layer-feature-grid"
-                :columnDefs="columnDefs"
-                :defaultColDef="defaultColDef"
-                :rowSelection="'multiple'"
-                :rowData="gridData"
-                :rowHeight="25"
-                :getRowId="getRowId"
-                :suppressLoadingOverlay="false"
-                :suppressNoRowsOverlay="false"
-                :overlayLoadingTemplate="loadingTemplate"
-                :overlayNoRowsTemplate="noRowsTemplate"
-                :suppressRowClickSelection="true"
-                :suppressCellSelection="true"
-                @grid-ready="handleGridReady"
-                @first-data-rendered="onFirstDataRendered"
-                @selection-changed="handleSelectionChanged"
-                @filter-changed="onFilterChanged"
-            />
+            <div>
+                <ag-grid-vue
+                    ref="agGridRef"
+                    class="ag-theme-alpine layer-feature-grid"
+                    :columnDefs="columnDefs"
+                    :defaultColDef="defaultColDef"
+                    :rowData="gridData"
+                    :rowHeight="25"
+                    :getRowId="getRowId"
+                    :suppressLoadingOverlay="false"
+                    :suppressNoRowsOverlay="false"
+                    :overlayLoadingTemplate="loadingTemplate"
+                    :overlayNoRowsTemplate="noRowsTemplate"
+                    :suppressRowClickSelection="true"
+                    :suppressCellSelection="true"
+                    :context="{
+                        addToPersistentSelection,
+                        removeFromPersistentSelection,
+                    }"
+                    @grid-ready="handleGridReady"
+                    @first-data-rendered="onFirstDataRendered"
+                    @filter-changed="onFilterChanged"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -156,60 +160,6 @@ export default defineComponent({
             }
         };
 
-        const handleSelectionChanged = (event: any) => {
-            if (!gridApi.value) {
-                console.log("[Debug] GridApi non disponibile");
-                return;
-            }
-
-            // Verifichiamo se l'evento è stato generato da un'azione dell'utente
-            if (!event.source || event.source !== "checkboxSelected") {
-                console.log(
-                    "[Debug] Ignoro evento non generato dall'utente:",
-                    event.source
-                );
-                return;
-            }
-
-            // Otteniamo i nodi attualmente selezionati
-            const selectedNodes = event.api.getSelectedNodes();
-            const selectedIds = selectedNodes.map(
-                (node: IRowNode) => node.data.id
-            );
-
-            // Troviamo la differenza
-            const addedIds = selectedIds.filter(
-                (id: number) => !persistentSelectedIds.value.includes(id)
-            );
-            const removedIds = persistentSelectedIds.value.filter(
-                (id: number) => !selectedIds.includes(id)
-            );
-
-            console.log("[Debug] Selected:", selectedIds);
-            console.log("[Debug] Persistent:", persistentSelectedIds.value);
-            console.log("[Debug] Added:", addedIds);
-            console.log("[Debug] Removed:", removedIds);
-
-            // Deve esserci una sola differenza (o aggiunta o rimozione)
-            if (addedIds.length === 1) {
-                const id = addedIds[0];
-                const node = event.api.getRowNode(id.toString());
-                console.log(
-                    `[Checkbox] Selezionato ID: ${id}, Nome: ${node?.data.name}`
-                );
-                addToPersistentSelection(id);
-            } else if (removedIds.length === 1) {
-                const id = removedIds[0];
-                const node = event.api.getRowNode(id.toString());
-                console.log(
-                    `[Checkbox] Deselezionato ID: ${id}, Nome: ${node?.data.name}`
-                );
-                removeFromPersistentSelection(id);
-            }
-
-            props.field.selectedEcFeaturesIds = persistentSelectedIds.value;
-        };
-
         const onFilterChanged = async () => {
             if (!gridApi.value) return;
             try {
@@ -302,11 +252,12 @@ export default defineComponent({
             handleSave,
             handleGridReady,
             onFirstDataRendered,
-            handleSelectionChanged,
             onFilterChanged,
             handleToggleClick,
             closeConfirmModal,
             confirmModeChange,
+            addToPersistentSelection,
+            removeFromPersistentSelection,
         };
     },
 });

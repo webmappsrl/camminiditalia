@@ -36,8 +36,20 @@ export function useFeatures(props: LayerFeatureProps) {
             if (!gridApi.value) return;
             
             gridApi.value.forEachNode(node => {
-                const shouldBeSelected = persistentSelectedIds.value.includes(node.data.id);
-                node.setSelected(shouldBeSelected);
+                const isSelected = persistentSelectedIds.value.includes(node.data.id);
+                if (node.data.isSelected !== isSelected) {
+                    const updatedData = {
+                        ...node.data,
+                        isSelected: isSelected
+                    };
+                    node.setData(updatedData);
+                }
+            });
+
+            // Forziamo il refresh delle celle checkbox
+            gridApi.value.refreshCells({
+                columns: ['boolean'],
+                force: true
             });
         }, 100);
     };
@@ -89,11 +101,38 @@ export function useFeatures(props: LayerFeatureProps) {
             const layerId = props.field.layerId;
             const searchValue = filterModel?.name?.filter || '';
 
-            const filters = buildFilterObject(modelName, layerId);
-            const apiUrl = buildApiUrl(filters, searchValue);
-            const response = await fetchTracks(apiUrl);
-            
-            gridData.value = response.resources.map(mapResourceToGridData);
+            // Prima chiamata: record selezionati (include)
+            const includeFilters = [
+                { [`features_by_layer_${modelName}`]: layerId },
+                { id: { in: persistentSelectedIds.value } }
+            ];
+            const baseIncludeUrl = `/nova-api/ec-tracks?filters=${encodeURIComponent(btoa(JSON.stringify(includeFilters)))}&perPage=100&trashed=&page=1&relationType=`;
+            const includeUrl = searchValue ? `${baseIncludeUrl}&search=${encodeURIComponent(searchValue)}` : baseIncludeUrl;
+            const includeResponse = await fetch(includeUrl);
+            const includeData = await includeResponse.json();
+            const selectedRows = includeData.resources.map((resource: Resource) => {
+                const name = resource.fields.find((f: { attribute: string }) => f.attribute === 'name')?.value || '';
+                return { id: resource.id.value, name, isSelected: true };
+            });
+
+            // Seconda chiamata: record non selezionati (exclude)
+            const excludeFilters = [
+                { [`features_by_layer_${modelName}`]: layerId },
+                { id: { notIn: persistentSelectedIds.value } }
+            ];
+            const baseExcludeUrl = `/nova-api/ec-tracks?filters=${encodeURIComponent(btoa(JSON.stringify(excludeFilters)))}&perPage=100&trashed=&page=1&relationType=`;
+            const excludeUrl = searchValue ? `${baseExcludeUrl}&search=${encodeURIComponent(searchValue)}` : baseExcludeUrl;
+            const excludeResponse = await fetch(excludeUrl);
+            const excludeData = await excludeResponse.json();
+            const unselectedRows = excludeData.resources.map((resource: Resource) => {
+                const name = resource.fields.find((f: { attribute: string }) => f.attribute === 'name')?.value || '';
+                return { id: resource.id.value, name, isSelected: false };
+            });
+
+            // Combiniamo i risultati: prima i selezionati, poi i non selezionati
+            const selectedIds = new Set(selectedRows.map((row: GridData) => row.id));
+            const filteredUnselectedRows = unselectedRows.filter((row: GridData) => !selectedIds.has(row.id));
+            gridData.value = [...selectedRows, ...filteredUnselectedRows];
             
         } catch (error) {
             gridData.value = [];

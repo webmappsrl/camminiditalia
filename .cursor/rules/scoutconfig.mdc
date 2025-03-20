@@ -10,4 +10,4 @@ Configurazione Laravel Scout per la ricerca.
 ## EcTrack Model:
 - Usa Laravel Scout Searchable
 - Campi indicizzati: name, ref, cai_scale
-- Comando: php artisan scout:import
+- Comando: php artisan scout:import 'namespace del modello da importare'
