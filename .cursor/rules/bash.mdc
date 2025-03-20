@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+the source code run in to a docker container. You can access to him with "docker exec -u 0 -it php_camminiditalia bash"
