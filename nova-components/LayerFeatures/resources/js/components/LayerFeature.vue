@@ -198,6 +198,7 @@ export default defineComponent({
         };
 
         const handleModeChange = async () => {
+            console.log("[Handle Mode Change] Cambio di modalità");
             try {
                 if (!isManual.value) {
                     isSaving.value = true;

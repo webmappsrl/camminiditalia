@@ -14,7 +14,7 @@ class LayerFeatureController
         $layer = Layer::findOrFail($layerId);
 
         $validatedData = $request->validate([
-            'features' => 'required|array',
+            'features' => 'array',
             'model' => 'required|string'
         ]);
 

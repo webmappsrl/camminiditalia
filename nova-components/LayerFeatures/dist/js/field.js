@@ -59736,41 +59736,42 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return _regeneratorRuntime().wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
-              _context5.prev = 0;
+              console.log("[Handle Mode Change] Cambio di modalità");
+              _context5.prev = 1;
               if (isManual.value) {
-                _context5.next = 10;
+                _context5.next = 11;
                 break;
               }
               isSaving.value = true;
               layerId = props.field.layerId;
-              _context5.next = 6;
+              _context5.next = 7;
               return Nova.request().post("/nova-vendor/layer-features/sync/".concat(layerId), {
                 features: [],
                 model: props.field.model
               });
-            case 6:
+            case 7:
               persistentSelectedIds.value = [];
               props.field.value = [];
               props.field.selectedEcFeaturesIds = [];
               Nova.success("Modalità automatica attivata");
-            case 10:
-              _context5.next = 17;
+            case 11:
+              _context5.next = 18;
               break;
-            case 12:
-              _context5.prev = 12;
-              _context5.t0 = _context5["catch"](0);
+            case 13:
+              _context5.prev = 13;
+              _context5.t0 = _context5["catch"](1);
               console.error("Errore durante il cambio di modalità:", _context5.t0);
               Nova.error("Errore durante il cambio di modalità");
               isManual.value = !isManual.value;
-            case 17:
-              _context5.prev = 17;
+            case 18:
+              _context5.prev = 18;
               isSaving.value = false;
-              return _context5.finish(17);
-            case 20:
+              return _context5.finish(18);
+            case 21:
             case "end":
               return _context5.stop();
           }
-        }, _callee5, null, [[0, 12, 17, 20]]);
+        }, _callee5, null, [[1, 13, 18, 21]]);
       }));
       return function handleModeChange() {
         return _ref5.apply(this, arguments);
