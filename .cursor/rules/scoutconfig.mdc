@@ -3,11 +3,39 @@ description:
 globs: 
 alwaysApply: true
 ---
+---
+description: Configurazione Laravel Scout per la ricerca
+globs: app/Models/**/*.php,wm-package/src/Models/**/*.php
+alwaysApply: true
+---
+
 # Scout Config
 
-Configurazione Laravel Scout per la ricerca.
+Configurazione del sistema di ricerca con Laravel Scout.
 
-## EcTrack Model:
-- Usa Laravel Scout Searchable
-- Campi indicizzati: name, ref, cai_scale
-- Comando: php artisan scout:import 'namespace del modello da importare'
+## EcTrack Model
+- Usa Laravel Scout Searchable trait
+- Campi indicizzati: name, ref, cai_scale, taxonomyActivities
+- Importazione: php artisan scout:import "Wm\WmPackage\Models\EcTrack"
+
+## Ricerca
+- La ricerca è case-insensitive
+- Supporta ricerca full-text
+- Indicizzazione automatica alla modifica del modello
+
+## Campi indicizzati:
+- id
+- ref
+- name
+- cai_scale
+- taxonomyActivities
+- taxonomyWheres
+- distance
+- duration_forward
+- ascent
+- activities
+- layers
+- searchable (campo JSON con tutti i campi ricercabili)
+
+## Comandi importanti:
+- Importazione indice: php artisan scout:import "Wm\WmPackage\Models\EcTrack" 
