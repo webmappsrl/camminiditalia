@@ -88044,19 +88044,18 @@ function useFeatures(props) {
             layerId = props.field.layerId;
             searchValue = (filterModel === null || filterModel === void 0 || (_filterModel$name = filterModel.name) === null || _filterModel$name === void 0 ? void 0 : _filterModel$name.filter) || ''; // Prima chiamata: record selezionati (include)
             includeFilters = [_defineProperty({}, "features_by_layer_".concat(modelName), layerId), {
-              id: {
-                "in": persistentSelectedIds.value
-              }
+              "features_include_ids_ecTracks": persistentSelectedIds.value
             }];
+            console.log('[Filters] Include filters non encodati:', JSON.stringify(includeFilters, null, 2));
             baseIncludeUrl = "/nova-api/ec-tracks?filters=".concat(encodeURIComponent(btoa(JSON.stringify(includeFilters))), "&perPage=100&trashed=&page=1&relationType=");
             includeUrl = searchValue ? "".concat(baseIncludeUrl, "&search=").concat(encodeURIComponent(searchValue)) : baseIncludeUrl;
-            _context2.next = 13;
+            _context2.next = 14;
             return fetch(includeUrl);
-          case 13:
+          case 14:
             includeResponse = _context2.sent;
-            _context2.next = 16;
+            _context2.next = 17;
             return includeResponse.json();
-          case 16:
+          case 17:
             includeData = _context2.sent;
             selectedRows = includeData.resources.map(function (resource) {
               var _resource$fields$find2;
@@ -88068,21 +88067,24 @@ function useFeatures(props) {
                 name: name,
                 isSelected: true
               };
-            }); // Seconda chiamata: record non selezionati (exclude)
+            }); // Seconda chiamata: record non selezionati (exclude) - solo se siamo in modalità edit
+            if (!props.edit) {
+              _context2.next = 36;
+              break;
+            }
             excludeFilters = [_defineProperty({}, "features_by_layer_".concat(modelName), layerId), {
-              id: {
-                notIn: persistentSelectedIds.value
-              }
+              "features_exclude_ids_ecTracks": persistentSelectedIds.value
             }];
+            console.log('[Filters] Exclude filters non encodati:', JSON.stringify(excludeFilters, null, 2));
             baseExcludeUrl = "/nova-api/ec-tracks?filters=".concat(encodeURIComponent(btoa(JSON.stringify(excludeFilters))), "&perPage=100&trashed=&page=1&relationType=");
             excludeUrl = searchValue ? "".concat(baseExcludeUrl, "&search=").concat(encodeURIComponent(searchValue)) : baseExcludeUrl;
-            _context2.next = 23;
-            return fetch(excludeUrl);
-          case 23:
-            excludeResponse = _context2.sent;
             _context2.next = 26;
-            return excludeResponse.json();
+            return fetch(excludeUrl);
           case 26:
+            excludeResponse = _context2.sent;
+            _context2.next = 29;
+            return excludeResponse.json();
+          case 29:
             excludeData = _context2.sent;
             unselectedRows = excludeData.resources.map(function (resource) {
               var _resource$fields$find3;
@@ -88102,27 +88104,33 @@ function useFeatures(props) {
               return !selectedIds.has(row.id);
             });
             gridData.value = [].concat(_toConsumableArray(selectedRows), _toConsumableArray(filteredUnselectedRows));
-            _context2.next = 38;
+            _context2.next = 37;
             break;
-          case 33:
-            _context2.prev = 33;
+          case 36:
+            // In modalità NON edit, mostriamo solo i record selezionati
+            gridData.value = selectedRows;
+          case 37:
+            _context2.next = 44;
+            break;
+          case 39:
+            _context2.prev = 39;
             _context2.t0 = _context2["catch"](1);
             gridData.value = [];
             Nova.error('Errore durante il caricamento delle features');
             throw _context2.t0;
-          case 38:
-            _context2.prev = 38;
+          case 44:
+            _context2.prev = 44;
             isLoading.value = false;
             updateSelectedNodes();
             setTimeout(function () {
               sortBySelection(gridApi.value);
             }, 100);
-            return _context2.finish(38);
-          case 43:
+            return _context2.finish(44);
+          case 49:
           case "end":
             return _context2.stop();
         }
-      }, _callee2, null, [[1, 33, 38, 43]]);
+      }, _callee2, null, [[1, 39, 44, 49]]);
     }));
     return function fetchFeatures() {
       return _ref3.apply(this, arguments);

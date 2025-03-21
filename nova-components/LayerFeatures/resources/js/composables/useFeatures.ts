@@ -129,8 +129,9 @@ export function useFeatures(props: LayerFeatureProps) {
             // Prima chiamata: record selezionati (include)
             const includeFilters = [
                 { [`features_by_layer_${modelName}`]: layerId },
-                { id: { in: persistentSelectedIds.value } }
+                { "features_include_ids_ecTracks": persistentSelectedIds.value }
             ];
+            console.log('[Filters] Include filters non encodati:', JSON.stringify(includeFilters, null, 2));
             const baseIncludeUrl = `/nova-api/ec-tracks?filters=${encodeURIComponent(btoa(JSON.stringify(includeFilters)))}&perPage=100&trashed=&page=1&relationType=`;
             const includeUrl = searchValue ? `${baseIncludeUrl}&search=${encodeURIComponent(searchValue)}` : baseIncludeUrl;
             const includeResponse = await fetch(includeUrl);
@@ -140,24 +141,30 @@ export function useFeatures(props: LayerFeatureProps) {
                 return { id: resource.id.value, name, isSelected: true };
             });
 
-            // Seconda chiamata: record non selezionati (exclude)
-            const excludeFilters = [
-                { [`features_by_layer_${modelName}`]: layerId },
-                { id: { notIn: persistentSelectedIds.value } }
-            ];
-            const baseExcludeUrl = `/nova-api/ec-tracks?filters=${encodeURIComponent(btoa(JSON.stringify(excludeFilters)))}&perPage=100&trashed=&page=1&relationType=`;
-            const excludeUrl = searchValue ? `${baseExcludeUrl}&search=${encodeURIComponent(searchValue)}` : baseExcludeUrl;
-            const excludeResponse = await fetch(excludeUrl);
-            const excludeData = await excludeResponse.json();
-            const unselectedRows = excludeData.resources.map((resource: Resource) => {
-                const name = resource.fields.find((f: { attribute: string }) => f.attribute === 'name')?.value || '';
-                return { id: resource.id.value, name, isSelected: false };
-            });
+            // Seconda chiamata: record non selezionati (exclude) - solo se siamo in modalità edit
+            if (props.edit) {
+                const excludeFilters = [
+                    { [`features_by_layer_${modelName}`]: layerId },
+                    { "features_exclude_ids_ecTracks": persistentSelectedIds.value }
+                ];
+                console.log('[Filters] Exclude filters non encodati:', JSON.stringify(excludeFilters, null, 2));
+                const baseExcludeUrl = `/nova-api/ec-tracks?filters=${encodeURIComponent(btoa(JSON.stringify(excludeFilters)))}&perPage=100&trashed=&page=1&relationType=`;
+                const excludeUrl = searchValue ? `${baseExcludeUrl}&search=${encodeURIComponent(searchValue)}` : baseExcludeUrl;
+                const excludeResponse = await fetch(excludeUrl);
+                const excludeData = await excludeResponse.json();
+                const unselectedRows = excludeData.resources.map((resource: Resource) => {
+                    const name = resource.fields.find((f: { attribute: string }) => f.attribute === 'name')?.value || '';
+                    return { id: resource.id.value, name, isSelected: false };
+                });
 
-            // Combiniamo i risultati: prima i selezionati, poi i non selezionati
-            const selectedIds = new Set(selectedRows.map((row: GridData) => row.id));
-            const filteredUnselectedRows = unselectedRows.filter((row: GridData) => !selectedIds.has(row.id));
-            gridData.value = [...selectedRows, ...filteredUnselectedRows];
+                // Combiniamo i risultati: prima i selezionati, poi i non selezionati
+                const selectedIds = new Set(selectedRows.map((row: GridData) => row.id));
+                const filteredUnselectedRows = unselectedRows.filter((row: GridData) => !selectedIds.has(row.id));
+                gridData.value = [...selectedRows, ...filteredUnselectedRows];
+            } else {
+                // In modalità NON edit, mostriamo solo i record selezionati
+                gridData.value = selectedRows;
+            }
             
         } catch (error) {
             gridData.value = [];
