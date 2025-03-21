@@ -1,0 +1,25 @@
+---
+description: Gestione degli asset e processo di build
+globs: 
+alwaysApply: true
+---
+
+# Gestione Asset
+
+## Laravel Mix
+- Configurazione in webpack.mix.js
+- Supporto per:
+  - JavaScript/TypeScript
+  - Vue 3 components
+  - SASS/CSS
+  - Asset versioning
+
+## Dipendenze principali
+- Vue 3.2.31
+- AG Grid Community
+- AG Grid Vue3
+
+## Processo di build
+1. npm install con --legacy-peer-deps
+2. npm run dev per development
+3. Gli asset compilati vengono salvati in dist/ 
