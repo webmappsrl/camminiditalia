@@ -60305,10 +60305,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _LayerFeature_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LayerFeature.vue */ "./resources/js/components/LayerFeature.vue");
- // 👈 Importa il componente
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    LayerFeature: _LayerFeature_vue__WEBPACK_IMPORTED_MODULE_0__["default"] // 👈 Dichiaralo nei componenti disponibili
+    LayerFeature: _LayerFeature_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   props: ["index", "resource", "resourceName", "resourceId", "field", "edit"]
 });
@@ -60356,25 +60356,6 @@ __webpack_require__.r(__webpack_exports__);
       return ((_this$field = this.field) === null || _this$field === void 0 || (_this$field = _this$field.selectedEcFeaturesIds) === null || _this$field === void 0 ? void 0 : _this$field.length) || 0;
     }
   }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/PreviewField.vue?vue&type=script&lang=js":
-/*!******************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/PreviewField.vue?vue&type=script&lang=js ***!
-  \******************************************************************************************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _DetailField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DetailField */ "./resources/js/components/DetailField.vue");
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  "extends": _DetailField__WEBPACK_IMPORTED_MODULE_0__["default"]
 });
 
 /***/ }),
@@ -87566,48 +87547,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/PreviewField.vue":
-/*!**************************************************!*\
-  !*** ./resources/js/components/PreviewField.vue ***!
-  \**************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _PreviewField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PreviewField.vue?vue&type=script&lang=js */ "./resources/js/components/PreviewField.vue?vue&type=script&lang=js");
-/* harmony import */ var _node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
-
-
-
-;
-const __exports__ = /*#__PURE__*/(0,_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(_PreviewField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"], [['__file',"resources/js/components/PreviewField.vue"]])
-/* hot reload */
-if (false) {}
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
-
-/***/ }),
-
-/***/ "./resources/js/components/PreviewField.vue?vue&type=script&lang=js":
-/*!**************************************************************************!*\
-  !*** ./resources/js/components/PreviewField.vue?vue&type=script&lang=js ***!
-  \**************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PreviewField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
-/* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PreviewField_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PreviewField.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/PreviewField.vue?vue&type=script&lang=js");
- 
-
-/***/ }),
-
 /***/ "./resources/js/components/layer-feature/ConfirmModal.vue":
 /*!****************************************************************!*\
   !*** ./resources/js/components/layer-feature/ConfirmModal.vue ***!
@@ -88383,8 +88322,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_IndexField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/IndexField */ "./resources/js/components/IndexField.vue");
 /* harmony import */ var _components_DetailField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/DetailField */ "./resources/js/components/DetailField.vue");
 /* harmony import */ var _components_FormField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/FormField */ "./resources/js/components/FormField.vue");
-/* harmony import */ var _components_PreviewField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/PreviewField */ "./resources/js/components/PreviewField.vue");
-
 
 
 
@@ -88392,7 +88329,6 @@ Nova.booting(function (app, store) {
   app.component('index-layer-features', _components_IndexField__WEBPACK_IMPORTED_MODULE_0__["default"]);
   app.component('detail-layer-features', _components_DetailField__WEBPACK_IMPORTED_MODULE_1__["default"]);
   app.component('form-layer-features', _components_FormField__WEBPACK_IMPORTED_MODULE_2__["default"]);
-  // app.component('preview-layer-features', PreviewField)
 });
 
 /***/ }),
