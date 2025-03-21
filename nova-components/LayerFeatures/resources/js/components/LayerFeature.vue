@@ -45,6 +45,7 @@
                     :context="{
                         addToPersistentSelection,
                         removeFromPersistentSelection,
+                        edit,
                     }"
                     @grid-ready="handleGridReady"
                     @first-data-rendered="onFirstDataRendered"

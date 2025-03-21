@@ -60077,7 +60077,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     suppressCellSelection: true,
     context: {
       addToPersistentSelection: _ctx.addToPersistentSelection,
-      removeFromPersistentSelection: _ctx.removeFromPersistentSelection
+      removeFromPersistentSelection: _ctx.removeFromPersistentSelection,
+      edit: _ctx.edit
     },
     onGridReady: _ctx.handleGridReady,
     onFirstDataRendered: _ctx.onFirstDataRendered,
@@ -88274,6 +88275,11 @@ function useGrid() {
     onCellClicked: function onCellClicked(params) {
       var checkbox = params.event.target;
       if (checkbox.tagName === 'INPUT' && checkbox.type === 'checkbox') {
+        // Se siamo in modalità non-edit e la checkbox è checked, non permettiamo la deselection
+        if (!params.context.edit && params.node.data.isSelected) {
+          checkbox.checked = true;
+          return;
+        }
         var id = parseInt(checkbox.dataset.id);
         var isSelected = checkbox.checked;
         var name = params.node.data.name;

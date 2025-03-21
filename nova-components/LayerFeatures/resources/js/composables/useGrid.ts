@@ -67,6 +67,12 @@ export function useGrid() {
             onCellClicked: (params: { data: any; api: GridApi; node: any; context: any; event: any }) => {
                 const checkbox = params.event.target;
                 if (checkbox.tagName === 'INPUT' && checkbox.type === 'checkbox') {
+                    // Se siamo in modalità non-edit e la checkbox è checked, non permettiamo la deselection
+                    if (!params.context.edit && params.node.data.isSelected) {
+                        checkbox.checked = true;
+                        return;
+                    }
+
                     const id = parseInt(checkbox.dataset.id);
                     const isSelected = checkbox.checked;
                     const name = params.node.data.name;
