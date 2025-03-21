@@ -1,5 +1,4 @@
 <template>
-    <PanelItem :index="index" :field="field" />
     <LayerFeature :field="field" :edit="false" />
 </template>
 
