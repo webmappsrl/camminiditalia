@@ -12,12 +12,12 @@
             </h3>
         </div>
 
-        <div class="flex items-center mb-4">
+        <div v-if="edit" class="flex items-center mb-4">
             <ToggleSwitch :is-manual="isManual" @toggle="handleToggleClick" />
         </div>
 
         <div v-if="isManual">
-            <div class="flex justify-end mb-2">
+            <div v-if="edit" class="flex justify-end mb-2">
                 <button
                     type="button"
                     class="btn btn-primary"
