@@ -6,25 +6,18 @@ services:
     ports:
       - ${DOCKER_SERVE_PORT}:8000
       - ${DOCKER_VITE_PORT}:5173
-    platform: linux/amd64
   db:
     extends:
       file: compose.yml
       service: db
-    platform: linux/amd64
   redis:
     extends:
       file: compose.yml
       service: redis
   elasticsearch:
-    image: elasticsearch:7.17.9
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
     extends:
       file: compose.yml
       service: elasticsearch
-    platform: linux/amd64
 
   # needed for aws s3 storage testing
   minio:

@@ -31,17 +31,13 @@ services:
     container_name: "redis_${APP_NAME}"
     restart: always
   elasticsearch:
-    image: elasticsearch:8.17.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
     container_name: "elasticsearch_${APP_NAME}"
     environment:
       - node.name=elasticsearch
-      - cluster.name=elasticsearch-cluster
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      # https://stackoverflow.com/questions/73508356/cannot-setup-elasticsearch-kibana-from-docker-kibana-missing-authentication-cr
       - xpack.security.enabled=false
-      - xpack.security.enrollment.enabled=false
     ulimits:
       memlock:
         soft: -1
