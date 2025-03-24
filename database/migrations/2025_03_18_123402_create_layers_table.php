@@ -19,7 +19,7 @@ return new class extends Migration
             $table->geography('geometry', 'polygon')->comment('The bbox of the layer');
             $table->jsonb('properties');
             $table->string('feature_collection')->nullable();
-            $table->jsonb('configuration');
+            $table->jsonb('configuration')->nullable();
             $table->integer('app_id');
             $table->integer('rank')->default(0);
 

@@ -10,8 +10,6 @@ use \Wm\WmPackage\Models\EcTrack as WmEcTrack;
 
 class Layer extends WmNovaLayer
 {
-    public static $model = \Wm\WmPackage\Models\Layer::class;
-
 
     public function fields(NovaRequest $request): array
     {

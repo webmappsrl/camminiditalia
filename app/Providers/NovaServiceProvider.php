@@ -2,23 +2,24 @@
 
 namespace App\Providers;
 
-use App\Models\User;
 use App\Nova\App;
-use App\Nova\Dashboards\Main;
-use App\Nova\Layer;
 use App\Nova\Media;
+use App\Models\User;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
+use Laravel\Nova\Nova;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Gate;
+use Wm\WmPackage\Nova\EcPoi;
+use Wm\WmPackage\Nova\Layer;
+use App\Nova\Dashboards\Main;
 use Laravel\Fortify\Features;
+use App\Nova\TaxonomyActivity;
+use Wm\WmPackage\Nova\EcTrack;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
-use Laravel\Nova\Nova;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Blade;
 use Laravel\Nova\NovaApplicationServiceProvider;
-use Wm\WmPackage\Nova\EcPoi;
-use Wm\WmPackage\Nova\EcTrack;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -48,8 +49,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(EcTrack::class),
                 ])->icon('document'),
 
-
                 MenuItem::resource(Layer::class),
+
+                MenuSection::make('Taxonomies', [
+                    MenuItem::resource(TaxonomyActivity::class),
+                ])->icon('document'),
 
                 MenuSection::make('Tools', [
                     MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab(),
