@@ -27,12 +27,17 @@ class LayerFeatures extends Field
             return;
         }
         if (! class_exists($modelClass)) {
-            Log::error('LayerFeatures: Il modello specificato non esiste: '.$modelClass);
+            Log::error('LayerFeatures: Il modello specificato non esiste: ' . $modelClass);
 
             return;
         }
         // Carica automaticamente le entità associate
         $this->loadEcFeatures($layer, $name, $modelClass);
+    }
+
+    public function fillModelWithData(object $model, mixed $value, string $attribute): void
+    {
+        //the save is done via api
     }
 
     public function loadEcFeatures($layer, $name, $modelClass)

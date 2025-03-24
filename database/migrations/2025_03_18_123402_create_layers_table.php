@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('layers', function (Blueprint $table) {
             $table->id('id');
             $table->string('name');
-            $table->geography('geometry', 'polygon')->comment('The bbox of the layer');
+            $table->geography('geometry', 'polygon')->nullable()->comment('The bbox of the layer');
             $table->jsonb('properties');
             $table->string('feature_collection')->nullable();
             $table->jsonb('configuration')->nullable();
