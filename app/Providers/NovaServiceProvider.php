@@ -2,24 +2,24 @@
 
 namespace App\Providers;
 
-use App\Nova\App;
-use App\Nova\Media;
 use App\Models\User;
+use App\Nova\App;
+use App\Nova\Dashboards\Main;
+use App\Nova\Media;
+use App\Nova\TaxonomyActivity;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
-use Laravel\Nova\Nova;
 use Illuminate\Http\Request;
-use Wm\WmPackage\Nova\EcPoi;
-use Wm\WmPackage\Nova\Layer;
-use App\Nova\Dashboards\Main;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Laravel\Fortify\Features;
-use App\Nova\TaxonomyActivity;
-use Wm\WmPackage\Nova\EcTrack;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Blade;
+use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Wm\WmPackage\Nova\EcPoi;
+use Wm\WmPackage\Nova\EcTrack;
+use Wm\WmPackage\Nova\Layer;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {

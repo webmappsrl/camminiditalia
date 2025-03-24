@@ -3,10 +3,9 @@
 namespace Wm\LayerFeatures;
 
 use Illuminate\Support\Facades\Route;
-use Laravel\Nova\Fields\Field;
-use Laravel\Nova\Nova;
-use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Nova\Events\ServingNova;
+use Laravel\Nova\Nova;
 
 class FieldServiceProvider extends ServiceProvider
 {
@@ -16,12 +15,12 @@ class FieldServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Nova::serving(function (ServingNova $event) {
-            Nova::mix('layer-features', __DIR__ . '/../dist/mix-manifest.json');
+            Nova::mix('layer-features', __DIR__.'/../dist/mix-manifest.json');
         });
 
         Route::middleware(['nova'])
             ->prefix('nova-vendor/layer-features')
-            ->group(__DIR__ . '/../routes/api.php');
+            ->group(__DIR__.'/../routes/api.php');
     }
 
     /**
