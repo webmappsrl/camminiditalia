@@ -18,8 +18,6 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 
         $this->hideSensitiveRequestDetails();
 
-
-
         Telescope::filter(function (IncomingEntry $entry) {
             return $entry->isReportableException() ||
                 $entry->isFailedRequest() ||

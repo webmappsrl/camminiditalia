@@ -1,0 +1,20 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+
+# Struttura del Progetto
+
+## Directories principali
+- /nova-components: Contiene i componenti Nova personalizzati
+  - /LayerFeatures: Componente per la gestione delle feature dei layer
+    - resources/js/components: Componenti Vue
+    - webpack.mix.js: Configurazione build
+    - package.json: Dipendenze npm
+
+## Package principale
+- wm-package: Package core con modelli e logica di business
+  - Models: Contiene i modelli principali (EcTrack, EcPoi, Layer)
+  - Services: Servizi per la gestione della logica di business
+  - Jobs: Job asincroni per operazioni in background 

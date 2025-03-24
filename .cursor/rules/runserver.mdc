@@ -1,0 +1,24 @@
+---
+description: Comandi per avviare il server di sviluppo
+globs: 
+alwaysApply: true
+---
+
+# Server Commands
+
+Gestione del server di sviluppo nel container Docker.
+
+## Avvio Server
+- Comando: composer run dev
+- Ambiente: container php_camminiditalia
+- Directory: /var/www/html/camminiditalia
+
+## Prerequisiti
+- Container Docker attivo
+- Dipendenze composer installate
+- Configurazione .env corretta
+
+## Troubleshooting
+- Verificare che il container sia in esecuzione
+- Controllare i log di Laravel
+- Assicurarsi che le porte non siano in conflitto
