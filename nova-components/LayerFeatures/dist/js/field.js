@@ -59560,7 +59560,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     }
   },
   setup: function setup(props) {
-    var _props$field$selected, _props$field, _props$field2;
+    var _props$field, _props$field$selected, _props$field2, _props$field3;
     var _useFeatures = (0,_composables_useFeatures__WEBPACK_IMPORTED_MODULE_3__.useFeatures)(props),
       isLoading = _useFeatures.isLoading,
       gridData = _useFeatures.gridData,
@@ -59572,17 +59572,20 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       setGridApi = _useFeatures.setGridApi,
       addToPersistentSelection = _useFeatures.addToPersistentSelection,
       removeFromPersistentSelection = _useFeatures.removeFromPersistentSelection;
-    var _useGrid = (0,_composables_useGrid__WEBPACK_IMPORTED_MODULE_4__.useGrid)(),
+    var _useGrid = (0,_composables_useGrid__WEBPACK_IMPORTED_MODULE_4__.useGrid)({
+        resourceName: props.resourceName,
+        modelName: (_props$field = props.field) === null || _props$field === void 0 ? void 0 : _props$field.modelName
+      }),
       gridApi = _useGrid.gridApi,
       columnDefs = _useGrid.columnDefs,
       defaultColDef = _useGrid.defaultColDef,
       initGrid = _useGrid.onGridReady;
-    var isManual = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(((_props$field$selected = (_props$field = props.field) === null || _props$field === void 0 || (_props$field = _props$field.selectedEcFeaturesIds) === null || _props$field === void 0 ? void 0 : _props$field.length) !== null && _props$field$selected !== void 0 ? _props$field$selected : 0) > 0);
+    var isManual = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(((_props$field$selected = (_props$field2 = props.field) === null || _props$field2 === void 0 || (_props$field2 = _props$field2.selectedEcFeaturesIds) === null || _props$field2 === void 0 ? void 0 : _props$field2.length) !== null && _props$field$selected !== void 0 ? _props$field$selected : 0) > 0);
     var showConfirmModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
-    var modelName = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)((_props$field2 = props.field) === null || _props$field2 === void 0 ? void 0 : _props$field2.modelName);
+    var modelName = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)((_props$field3 = props.field) === null || _props$field3 === void 0 ? void 0 : _props$field3.modelName);
     (0,vue__WEBPACK_IMPORTED_MODULE_0__.onMounted)(function () {
-      var _props$field3;
-      var savedIds = (_props$field3 = props.field) === null || _props$field3 === void 0 ? void 0 : _props$field3.selectedEcFeaturesIds;
+      var _props$field4;
+      var savedIds = (_props$field4 = props.field) === null || _props$field4 === void 0 ? void 0 : _props$field4.selectedEcFeaturesIds;
       if (Array.isArray(savedIds) && savedIds.length > 0) {
         persistentSelectedIds.value = savedIds;
         console.log("[Selection] Initialized with saved IDs:", persistentSelectedIds.value);
@@ -60399,15 +60402,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _component_PanelItem = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("PanelItem");
   var _component_LayerFeature = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("LayerFeature");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PanelItem, {
-    index: $props.index,
-    field: $props.field
-  }, null, 8 /* PROPS */, ["index", "field"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_LayerFeature, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_LayerFeature, {
     field: $props.field,
     edit: true
-  }, null, 8 /* PROPS */, ["field"])], 64 /* STABLE_FRAGMENT */);
+  }, null, 8 /* PROPS */, ["field"]);
 }
 
 /***/ }),
@@ -88085,6 +88084,7 @@ function useFeatures(props) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   camelToKebabCase: () => (/* binding */ camelToKebabCase),
 /* harmony export */   useGrid: () => (/* binding */ useGrid)
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "vue");
@@ -88096,7 +88096,21 @@ function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
-function useGrid() {
+/**
+ * Converte una stringa da camelCase a kebab-case
+ * @param str Stringa in formato camelCase (es. ecTracks)
+ * @returns Stringa in formato kebab-case (es. ec-tracks)
+ */
+var camelToKebabCase = function camelToKebabCase(str) {
+  // Gestisce il caso specifico di 'ecTracks'
+  var result = str
+  // trova le sequenze di lettere maiuscole e minuscole
+  .replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  console.log('Input:', str);
+  console.log('Output:', result);
+  return result;
+};
+function useGrid(props) {
   var gridApi = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
   var gridState = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)({
     columnState: null,
@@ -88197,7 +88211,8 @@ function useGrid() {
     sortable: false,
     filter: false,
     cellRenderer: function cellRenderer(params) {
-      return "\n                    <div class=\"flex items-center justify-center h-full\">\n                        <a \n                            class=\"inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150 ease-in-out\" \n                            href=\"/nova/resources/ec-tracks/".concat(params.data.id, "\"\n                            target=\"_blank\"\n                            title=\"Visualizza\"\n                        >\n                            <svg \n                                xmlns=\"http://www.w3.org/2000/svg\" \n                                fill=\"none\" \n                                viewBox=\"0 0 24 24\" \n                                stroke-width=\"2\" \n                                stroke=\"currentColor\" \n                                class=\"w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-500\"\n                            >\n                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z\"></path>\n                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z\"></path>\n                            </svg>\n                        </a>\n                    </div>\n                ");
+      var resourcePath = props.modelName ? camelToKebabCase(props.modelName) : 'ec-tracks';
+      return "\n                    <a href=\"/nova/resources/".concat(resourcePath, "/").concat(params.data.id, "\"\n                       target=\"_blank\"\n                       class=\"flex items-center justify-center\"\n                       style=\"color: rgb(var(--colors-gray-500))\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 20 20\" fill=\"currentColor\" class=\"w-5 h-5\">\n                            <path d=\"M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z\" />\n                            <path fill-rule=\"evenodd\" d=\"M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z\" clip-rule=\"evenodd\" />\n                        </svg>\n                    </a>\n                ");
     }
   }]);
   var defaultColDef = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)({

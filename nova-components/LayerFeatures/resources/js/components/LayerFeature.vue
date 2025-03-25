@@ -106,7 +106,10 @@ export default defineComponent({
             columnDefs,
             defaultColDef,
             onGridReady: initGrid,
-        } = useGrid();
+        } = useGrid({
+            resourceName: props.resourceName,
+            modelName: props.field?.modelName,
+        });
 
         const isManual = ref<boolean>(
             (props.field?.selectedEcFeaturesIds?.length ?? 0) > 0
