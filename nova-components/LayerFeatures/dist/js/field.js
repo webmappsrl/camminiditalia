@@ -88190,6 +88190,15 @@ function useGrid() {
     flex: 1,
     minWidth: 200,
     filter: 'NameFilter'
+  }, {
+    field: 'actions',
+    headerName: '',
+    width: 50,
+    sortable: false,
+    filter: false,
+    cellRenderer: function cellRenderer(params) {
+      return "\n                    <div class=\"flex items-center justify-center h-full\">\n                        <a \n                            class=\"inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150 ease-in-out\" \n                            href=\"/nova/resources/ec-tracks/".concat(params.data.id, "\"\n                            target=\"_blank\"\n                            title=\"Visualizza\"\n                        >\n                            <svg \n                                xmlns=\"http://www.w3.org/2000/svg\" \n                                fill=\"none\" \n                                viewBox=\"0 0 24 24\" \n                                stroke-width=\"2\" \n                                stroke=\"currentColor\" \n                                class=\"w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-500\"\n                            >\n                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z\"></path>\n                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z\"></path>\n                            </svg>\n                        </a>\n                    </div>\n                ");
+    }
   }]);
   var defaultColDef = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)({
     sortable: true,
