@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
 use Wm\LayerFeatures\LayerFeatures;
 use Wm\WmPackage\Models\EcTrack as WmEcTrack;
 use Wm\WmPackage\Nova\Layer as WmNovaLayer;
@@ -14,8 +15,9 @@ class Layer extends WmNovaLayer
     {
         return [
             ...parent::fields($request),
-            //  MorphToMany::make("ecTracks"),
-            LayerFeatures::make('ecTracks', $this->resource, WmEcTrack::class)->hideWhenCreating(),
+            Panel::make('Ec Tracks', [
+                LayerFeatures::make('ecTracks', $this->resource, WmEcTrack::class)->hideWhenCreating(),
+            ]),
         ];
     }
 }

@@ -1,10 +1,21 @@
 ---
-description: 
+description: Struttura e organizzazione del progetto
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 
-# Struttura del Progetto
+# Project Structure
+
+Organizzazione delle directory e dei componenti principali.
+
+## Directories
+- nova-components/LayerFeatures: Componente per gestione feature
+- wm-package: Core package con Models, Services e Jobs
+
+## Componenti
+- Models: EcTrack, EcPoi, Layer
+- Services: Gestione logica di business
+- Jobs: Operazioni asincrone e batch
 
 ## Directories principali
 - /nova-components: Contiene i componenti Nova personalizzati
