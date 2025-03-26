@@ -36,20 +36,23 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             return [
                 MenuSection::dashboard(Main::class)->icon('chart-bar'),
 
-                MenuItem::resource(App::class),
-
-                MenuSection::make('UGC', [
-                    MenuItem::resource(UgcPoi::class),
-                    MenuItem::resource(UgcTrack::class),
+                MenuSection::make(' ', [
+                    MenuItem::resource(App::class),
                     MenuItem::resource(Media::class),
-                ])->icon('document'),
+                ])->icon(''),
+
+                // MenuSection::make('UGC', [
+                //     MenuItem::resource(UgcPoi::class),
+                //     MenuItem::resource(UgcTrack::class),
+                // ])->icon('document'),
 
                 MenuSection::make('EC', [
                     MenuItem::resource(EcPoi::class),
                     MenuItem::resource(EcTrack::class),
+                    MenuItem::resource(Layer::class),
                 ])->icon('document'),
 
-                MenuItem::resource(Layer::class),
+
 
                 MenuSection::make('Taxonomies', [
                     MenuItem::resource(TaxonomyActivity::class),
