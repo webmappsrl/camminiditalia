@@ -37,6 +37,8 @@ services:
       - node.name=elasticsearch
       - discovery.type=single-node
       - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
       - ES_JAVA_OPTS=-Xms750m -Xmx750m
     ulimits:
       memlock:
