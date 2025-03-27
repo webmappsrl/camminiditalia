@@ -37,10 +37,8 @@ services:
       - node.name=elasticsearch
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # Aggiungi esplicitamente i limiti di heap
+      - ES_JAVA_OPTS=-Xms750m -Xmx750m
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    mem_limit: 1G # Limite totale di memoria per il container
-    mem_reservation: 512M # Memoria minima riservata
