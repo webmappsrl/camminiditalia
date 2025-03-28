@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8932f3ce4991c74c62255444475fb63c",
+    "content-hash": "7be76b0921a5efcae48403e773e764b6",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -11101,16 +11101,16 @@
         },
         {
             "name": "wm/map-multi-linestring",
-            "version": "v1.0.0",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmappsrl/map-multi-linestring.git",
-                "reference": "59bc292a89157ba44fd7fefd268104db8ec0976c"
+                "reference": "86c1185470984dcddfb5607cc7502751ae607902"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmappsrl/map-multi-linestring/zipball/59bc292a89157ba44fd7fefd268104db8ec0976c",
-                "reference": "59bc292a89157ba44fd7fefd268104db8ec0976c",
+                "url": "https://api.github.com/repos/webmappsrl/map-multi-linestring/zipball/86c1185470984dcddfb5607cc7502751ae607902",
+                "reference": "86c1185470984dcddfb5607cc7502751ae607902",
                 "shasum": ""
             },
             "require": {
@@ -11140,9 +11140,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webmappsrl/map-multi-linestring/issues",
-                "source": "https://github.com/webmappsrl/map-multi-linestring/tree/wm/map-multi-linestring-v1.0.0"
+                "source": "https://github.com/webmappsrl/map-multi-linestring/tree/wm/map-multi-linestring-v1.0.2"
             },
-            "time": "2025-02-20T08:29:19+00:00"
+            "time": "2025-03-10T07:07:25+00:00"
         },
         {
             "name": "wm/map-multi-polygon",
@@ -11236,7 +11236,7 @@
         },
         {
             "name": "wm/wm-package",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./wm-package",

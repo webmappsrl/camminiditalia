@@ -15,10 +15,10 @@
         "laravel/telescope": "^5.5",
         "laravel/tinker": "^2.9",
         "predis/predis": "^2.3",
-        "wm/map-multi-linestring": "*",
+        "wm/layer-features": "@dev",
+        "wm/map-multi-linestring": "1.0.2",
         "wm/map-point": "*",
-        "wm/wm-package": "*",
-        "wm/layer-features": "@dev"
+        "wm/wm-package": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
