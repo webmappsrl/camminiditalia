@@ -207,4 +207,18 @@ return [
         'stopped' => '/',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Nova Admin Credentials
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to specify the admin credentials for
+    | Nova. These credentials will be used to create the admin user if it does
+    | not already exist in the database.
+    |
+    */
+
+    'admin_password' => env('ADMIN_NOVA_PASSWORD'),
+    'admin_email' => env('ADMIN_NOVA_EMAIL'),
+
 ];
