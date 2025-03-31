@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -24,8 +25,11 @@ return new class extends Migration
 
             $table->index('osmid');
             $table->index('app_id');
-            $table->spatialIndex('geometry');
+            $table->spatialIndex('geometry')->comment('for geography queries');
         });
+
+        // Used on pbf generations
+        DB::statement('CREATE INDEX ec_tracks_geometry_3857_index ON ec_tracks USING GIST (ST_Transform(geometry::geometry, 3857));');
     }
 
     /**
