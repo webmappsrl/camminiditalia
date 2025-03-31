@@ -16,7 +16,7 @@
         "laravel/tinker": "^2.9",
         "predis/predis": "^2.3",
         "wm/layer-features": "@dev",
-        "wm/map-multi-linestring": "1.0.2",
+        "wm/map-multi-linestring": "*",
         "wm/map-point": "*",
         "wm/wm-package": "*"
     },
