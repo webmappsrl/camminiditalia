@@ -1,8 +1,10 @@
 <?php
 
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Wm\WmPackage\Models\Layer;
 
 class CreateLayerablesTable extends Migration
 {
@@ -15,9 +17,11 @@ class CreateLayerablesTable extends Migration
     {
         Schema::create('layerables', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('layer_id');
+            $table->foreignIdFor(Layer::class);
             $table->morphs('layerable');
             $table->timestamps();
+
+            $table->index('layer_id');
         });
     }
 

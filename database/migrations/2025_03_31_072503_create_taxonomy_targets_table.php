@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('taxonomy_poi_types', function (Blueprint $table) {
+        Schema::create('taxonomy_targets', function (Blueprint $table) {
             $table->id('id');
-
+            
             $table->text('name');
             $table->text('description')->nullable();
             $table->string('excerpt')->nullable();
-
+            
             $table->text('identifier')->nullable()->unique();
             $table->timestamps();
             $table->jsonb('properties')->nullable();
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('taxonomy_poi_types');
+        Schema::dropIfExists('taxonomy_targets');
     }
 };

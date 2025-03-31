@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Wm\WmPackage\Models\App;
+use Wm\WmPackage\Models\Layer;
 
 class CreateLayerAssociatedApp extends Migration
 {
@@ -15,9 +17,12 @@ class CreateLayerAssociatedApp extends Migration
     {
         Schema::create('layer_associated_app', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('layer_id');
-            $table->bigInteger('app_id');
+            $table->foreignIdFor(Layer::class);
+            $table->foreignIdFor(App::class);
             $table->timestamps();
+
+            $table->index('layer_id');
+            $table->index('app_id');
         });
     }
 
