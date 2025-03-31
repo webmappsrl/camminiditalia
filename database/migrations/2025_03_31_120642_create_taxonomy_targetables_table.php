@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('taxonomy_activityables', function (Blueprint $table) {
-            $table->integer('taxonomy_activity_id');
-            $table->morphs('taxonomy_activityable');
-            $table->integer('duration_forward')->nullable()->default(0);
-            $table->integer('duration_backward')->nullable()->default(0);
+        Schema::create('taxonomy_targetables', function (Blueprint $table) {
+            $table->id();
+            $table->integer('taxonomy_target_id');
+            $table->morphs('taxonomy_targetable');
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('taxonomy_activityables');
+        Schema::dropIfExists('taxonomy_targetables');
     }
 };
