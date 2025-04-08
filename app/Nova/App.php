@@ -13,7 +13,7 @@ class App extends NovaApp
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
-    public function actions(\Laravel\Nova\Http\Requests\NovaRequest $request)
+    public function actions(\Laravel\Nova\Http\Requests\NovaRequest $request): array
     {
         return array_merge(parent::actions($request), [
             (new UpdateAppTracksOnAws)
