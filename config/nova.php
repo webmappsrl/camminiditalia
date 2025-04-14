@@ -165,7 +165,6 @@ return [
     | the absolute path to an SVG logo within the local filesystem.
     |
     */
-
     // 'brand' => [
     //     'logo' => resource_path('/img/example-logo.svg'),
 
