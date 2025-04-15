@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a4f4e602274e98f45feda984d64f644e",
+    "content-hash": "c0a3fb1071d27d2491b44b96b3222cdc",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -11067,7 +11067,7 @@
         },
         {
             "name": "wm/layer-features",
-            "version": "dev-develop",
+            "version": "dev-app",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/LayerFeatures",
@@ -11243,7 +11243,7 @@
         },
         {
             "name": "wm/wm-package",
-            "version": "dev-main",
+            "version": "dev-app",
             "dist": {
                 "type": "path",
                 "url": "./wm-package",

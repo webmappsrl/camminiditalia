@@ -15,9 +15,6 @@ class Layer extends WmNovaLayer
     {
         return [
             ...parent::fields($request),
-            Panel::make('Ec Tracks', [
-                LayerFeatures::make('ecTracks', $this->resource, WmEcTrack::class)->hideWhenCreating(),
-            ]),
         ];
     }
 }
