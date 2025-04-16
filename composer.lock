@@ -4556,6 +4556,55 @@
             "time": "2022-12-02T22:17:43+00:00"
         },
         {
+            "name": "marshmallow/nova-tiptap",
+            "version": "5.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marshmallow-packages/nova-tiptap.git",
+                "reference": "4a5e4952669a958b6187f079b94b47cfc4556677"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marshmallow-packages/nova-tiptap/zipball/4a5e4952669a958b6187f079b94b47cfc4556677",
+                "reference": "4a5e4952669a958b6187f079b94b47cfc4556677",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/nova": "^4.0|^5.0",
+                "php": "^8.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Marshmallow\\Tiptap\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marshmallow\\Tiptap\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova tiptap editor field.",
+            "keywords": [
+                "editor",
+                "laravel",
+                "nova",
+                "tiptap",
+                "vue"
+            ],
+            "support": {
+                "issues": "https://github.com/marshmallow-packages/nova-tiptap/issues",
+                "source": "https://github.com/marshmallow-packages/nova-tiptap/tree/5.1.0"
+            },
+            "time": "2025-02-18T19:52:35+00:00"
+        },
+        {
             "name": "matchish/laravel-scout-elasticsearch",
             "version": "v7.11.0",
             "source": {
@@ -11067,7 +11116,7 @@
         },
         {
             "name": "wm/layer-features",
-            "version": "dev-app",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/LayerFeatures",
@@ -11243,11 +11292,11 @@
         },
         {
             "name": "wm/wm-package",
-            "version": "dev-app",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./wm-package",
-                "reference": "734aaa7d2b15c57553cee3feb9d9dfede0c86d30"
+                "reference": "17f0d33973c759a2a164b3340c28784eb45f7479"
             },
             "require": {
                 "chillerlan/php-qrcode": "^5.0",
@@ -11266,6 +11315,7 @@
                 "laravel/scout": "^10.11",
                 "league/flysystem-aws-s3-v3": "^3.0",
                 "maatwebsite/excel": "^3.1",
+                "marshmallow/nova-tiptap": "^5.1",
                 "matchish/laravel-scout-elasticsearch": "^7.10",
                 "ndamiens/gisconverter": "^1.0",
                 "php": ">8.1",
@@ -11277,6 +11327,7 @@
                 "spatie/laravel-permission": "*",
                 "spatie/laravel-translatable": "^6.9",
                 "tymon/jwt-auth": ">2.0",
+                "whitecube/nova-flexible-content": "^2.0.1",
                 "wm/map-multi-linestring": "^1.0",
                 "wm/map-multi-polygon": "^1.0",
                 "wm/map-point": "^1.0"
