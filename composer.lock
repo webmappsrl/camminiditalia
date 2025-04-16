@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "64187ca21ad1d483546ea47dc61fd4d2",
+    "content-hash": "c0a3fb1071d27d2491b44b96b3222cdc",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -10996,8 +10996,78 @@
             "time": "2022-06-03T18:03:27+00:00"
         },
         {
+            "name": "whitecube/nova-flexible-content",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/whitecube/nova-flexible-content.git",
+                "reference": "d48d607686fad3dfc8b2fe725789857e6eeaa6e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/whitecube/nova-flexible-content/zipball/d48d607686fad3dfc8b2fe725789857e6eeaa6e4",
+                "reference": "d48d607686fad3dfc8b2fe725789857e6eeaa6e4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "laravel/nova": "^5.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "laravel/nova-devtool": "^1.1.5",
+                "laravel/pint": "^1.2",
+                "phpunit/phpunit": "^9.6",
+                "psalm/plugin-laravel": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Whitecube\\NovaFlexibleContent\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Whitecube\\NovaFlexibleContent\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Toon Van den Bos",
+                    "email": "toon@whitecube.be"
+                }
+            ],
+            "description": "Flexible Content & Repeater Fields for Laravel Nova.",
+            "keywords": [
+                "Flexible",
+                "field",
+                "group",
+                "laravel",
+                "layout",
+                "nova",
+                "repeat"
+            ],
+            "support": {
+                "issues": "https://github.com/whitecube/nova-flexible-content/issues",
+                "source": "https://github.com/whitecube/nova-flexible-content/tree/v2.0.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/whitecube",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-02-11T20:04:34+00:00"
+        },
+        {
             "name": "wm/layer-features",
-            "version": "dev-develop",
+            "version": "dev-app",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/LayerFeatures",
@@ -11173,7 +11243,7 @@
         },
         {
             "name": "wm/wm-package",
-            "version": "dev-develop",
+            "version": "dev-app",
             "dist": {
                 "type": "path",
                 "url": "./wm-package",
