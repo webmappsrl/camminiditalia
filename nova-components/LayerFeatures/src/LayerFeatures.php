@@ -27,7 +27,7 @@ class LayerFeatures extends Field
             return;
         }
         if (! class_exists($modelClass)) {
-            Log::error('LayerFeatures: Il modello specificato non esiste: ' . $modelClass);
+            Log::error('LayerFeatures: Il modello specificato non esiste: '.$modelClass);
 
             return;
         }
@@ -37,7 +37,7 @@ class LayerFeatures extends Field
 
     public function fillModelWithData(object $model, mixed $value, string $attribute): void
     {
-        //the save is done via api
+        // the save is done via api
     }
 
     public function loadEcFeatures($layer, $name, $modelClass)

@@ -52,8 +52,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(Layer::class),
                 ])->icon('document'),
 
-
-
                 // MenuSection::make('Taxonomies', [
                 //     MenuItem::resource(TaxonomyActivity::class),
                 // ])->icon('document'),
