@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.1](https://github.com/webmappsrl/camminiditalia/compare/v1.1.0...v1.1.1) (2025-04-17)
+
+
+### Miscellaneous Chores
+
+* udpated wm-package ([0e43e6f](https://github.com/webmappsrl/camminiditalia/commit/0e43e6f88d7eb226df9751b4a1e816eb85449bef))
+* udpated wm-package ([302b544](https://github.com/webmappsrl/camminiditalia/commit/302b544c997fe6c1b60f5fd804c43e97d05d45c0))
+* udpated wm-package ([3d65f4d](https://github.com/webmappsrl/camminiditalia/commit/3d65f4d732e5d0d8488c9ffd4a24c20344cae982))
+* udpated wm-package ([3daddc7](https://github.com/webmappsrl/camminiditalia/commit/3daddc79759b519531c08defe99ea84603619c89))
+* updated wm-package ([cf3f737](https://github.com/webmappsrl/camminiditalia/commit/cf3f73789ee55ee64d8da87911455d6a3aea3441))
+
 ## [1.1.0](https://github.com/webmappsrl/camminiditalia/compare/v1.0.0...v1.1.0) (2025-04-17)
 
 
