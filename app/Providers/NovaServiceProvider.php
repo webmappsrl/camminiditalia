@@ -47,16 +47,16 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 // ])->icon('document'),
 
                 MenuSection::make('EC', [
-                    MenuItem::resource(EcPoi::class),
+                    // MenuItem::resource(EcPoi::class),
                     MenuItem::resource(EcTrack::class),
                     MenuItem::resource(Layer::class),
                 ])->icon('document'),
 
 
 
-                MenuSection::make('Taxonomies', [
-                    MenuItem::resource(TaxonomyActivity::class),
-                ])->icon('document'),
+                // MenuSection::make('Taxonomies', [
+                //     MenuItem::resource(TaxonomyActivity::class),
+                // ])->icon('document'),
 
                 MenuSection::make('Tools', [
                     MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab(),
