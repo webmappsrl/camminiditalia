@@ -1,0 +1,24 @@
+name: Laravel deploy DEV
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  tests:
+    uses: ./.github/workflows/run-tests.yml
+    secrets: inherit
+  deploy:
+    name: Deploy
+    needs: [tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH connection and run scripts/deploy_dev.sh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ vars.HOSTDEV }}
+          username: ${{ vars.USERNAMEDEV }}
+          port: ${{ vars.PORTDEV }}
+          key: ${{ secrets.SSHKEYDEV }}
+          script: "cd /var/www/html/camminiditalia && git pull && git submodule update --init --recursive && docker exec php_camminiditalia bash scripts/deploy_prod.sh"
