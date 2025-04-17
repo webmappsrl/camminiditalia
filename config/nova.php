@@ -165,16 +165,15 @@ return [
     | the absolute path to an SVG logo within the local filesystem.
     |
     */
+    'brand' => [
+        //     'logo' => resource_path('/img/example-logo.svg'),
 
-    // 'brand' => [
-    //     'logo' => resource_path('/img/example-logo.svg'),
-
-    //     'colors' => [
-    //         "400" => "24, 182, 155, 0.5",
-    //         "500" => "24, 182, 155",
-    //         "600" => "24, 182, 155, 0.75",
-    //     ]
-    // ],
+        'colors' => [
+            '400' => '24, 182, 155, 0.5',
+            '500' => '24, 182, 155',
+            '600' => '24, 182, 155, 0.75',
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -206,5 +205,19 @@ return [
         'started' => '/',
         'stopped' => '/',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Nova Admin Credentials
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to specify the admin credentials for
+    | Nova. These credentials will be used to create the admin user if it does
+    | not already exist in the database.
+    |
+    */
+
+    'admin_password' => env('ADMIN_NOVA_PASSWORD'),
+    'admin_email' => env('ADMIN_NOVA_EMAIL'),
 
 ];

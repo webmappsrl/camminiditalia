@@ -12,13 +12,17 @@
         "php": "^8.2",
         "laravel/framework": "^11.31",
         "laravel/nova": "^5.0",
+        "laravel/telescope": "^5.5",
         "laravel/tinker": "^2.9",
         "predis/predis": "^2.3",
-        "wm/map-multi-linestring": "^0.0.10",
-        "wm/map-point": "^0.0.10",
+        "whitecube/nova-flexible-content": "^2.0.1",
+        "wm/layer-features": "@dev",
+        "wm/map-multi-linestring": "*",
+        "wm/map-point": "*",
         "wm/wm-package": "*"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.15",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
         "laravel/pail": "^1.1",
@@ -66,10 +70,11 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve --host 0.0.0.0\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve --host 0.0.0.0\" \"php artisan horizon\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
         ]
     },
     "extra": {
+        "enable-patching": true,
         "laravel": {
             "dont-discover": []
         }
@@ -79,6 +84,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
+            "cweagans/composer-patches": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true,
             "phpstan/extension-installer": true
@@ -94,6 +100,10 @@
         {
             "type": "path",
             "url": "./wm-package"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/LayerFeatures"
         }
     ]
 }

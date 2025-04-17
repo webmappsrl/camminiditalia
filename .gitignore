@@ -23,3 +23,6 @@ yarn-error.log
 /.zed
 /docker/volumes/*
 /build
+auth.json
+storage/logs/wm-package
+storage/media-library

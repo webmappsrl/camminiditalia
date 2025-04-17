@@ -1,0 +1,24 @@
+---
+description: Accesso e gestione del container Docker
+globs: 
+alwaysApply: true
+---
+
+# Docker Setup
+
+Configurazione e accesso all'ambiente Docker.
+
+## Container Principale
+- Nome: php_camminiditalia
+- Accesso: docker exec -u 0 -it php_camminiditalia bash
+- Path progetto: /var/www/html/camminiditalia
+
+## Ambiente
+- Node.js: versione 18.19.0
+- PHP: ultima versione stabile
+- Composer: ultima versione
+
+## Note
+- Mantenere la compatibilità Node.js tra container e ambiente locale
+- Eseguire i comandi npm all'interno del container
+- Verificare sempre di essere nella directory corretta

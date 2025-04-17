@@ -3,7 +3,9 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite --host"
+        "dev": "vite --host",
+        "build-layer-features": "cd nova-components/LayerFeatures && npm run dev",
+        "build-layer-features-prod": "cd nova-components/LayerFeatures && npm run prod"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.20",

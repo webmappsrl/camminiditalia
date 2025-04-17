@@ -1,0 +1,22 @@
+# Configurazione Laravel Scout
+
+## EcTrack Model
+- Namespace: Wm\WmPackage\Models\EcTrack
+- Trait utilizzato: Laravel\Scout\Searchable
+
+## Campi indicizzati:
+- id
+- ref
+- name
+- cai_scale
+- taxonomyActivities
+- taxonomyWheres
+- distance
+- duration_forward
+- ascent
+- activities
+- layers
+- searchable (campo JSON con tutti i campi ricercabili)
+
+## Comandi importanti:
+- Importazione indice: php artisan scout:import "Wm\WmPackage\Models\EcTrack" 

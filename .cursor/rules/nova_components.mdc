@@ -1,0 +1,26 @@
+---
+description: Sviluppo e gestione dei componenti Nova
+globs: nova-components/**/*
+alwaysApply: true
+---
+
+# Sviluppo Componenti Nova
+
+## LayerFeatures
+- Path: nova-components/LayerFeatures
+- Dipendenze principali:
+  - ag-grid-community
+  - ag-grid-vue3
+  - vue@3.2.31
+  - @vue/compiler-sfc@3.2.31
+
+## Compilazione
+- Usare --legacy-peer-deps per l'installazione npm
+- Comando di build: npm run dev
+- Necessario eseguire npm install sia nel container che localmente
+- Verificare la compatibilità delle versioni Node.js tra ambiente locale e container
+
+## Troubleshooting
+- In caso di errori di compilazione, verificare prima package.json e webpack.mix.js
+- Per problemi con le dipendenze, provare a rimuovere package-lock.json e node_modules
+- Utilizzare il flag --legacy-peer-deps per risolvere conflitti di dipendenze 

@@ -1,26 +1,24 @@
-
 services:
   php:
-    extends: 
+    extends:
       file: compose.yml
       service: php
     ports:
       - ${DOCKER_SERVE_PORT}:8000
       - ${DOCKER_VITE_PORT}:5173
   db:
-    extends: 
+    extends:
       file: compose.yml
       service: db
   redis:
-    extends: 
+    extends:
       file: compose.yml
       service: redis
   elasticsearch:
-    extends: 
+    extends:
       file: compose.yml
       service: elasticsearch
-  
-    
+
   # needed for aws s3 storage testing
   minio:
     image: "minio/minio:latest"
@@ -35,6 +33,7 @@ services:
     volumes:
       - "./docker/volumes/minio/data:/data/minio"
     command: 'minio server /data/minio --console-address ":8900"'
+    platform: linux/amd64
     healthcheck:
       test:
         - CMD
@@ -48,5 +47,5 @@ services:
     container_name: "mailpit_${APP_NAME}"
     image: "axllent/mailpit:latest"
     ports:
-    - "${FORWARD_MAILPIT_PORT:-1025}:1025"
-    - "${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025"
+      - "${FORWARD_MAILPIT_PORT:-1025}:1025"
+      - "${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025"

@@ -1,0 +1,20 @@
+---
+description: Gestione dei componenti Nova
+globs: nova-components/**/*
+alwaysApply: true
+---
+
+# Nova Components
+
+Gestione e configurazione dei componenti Nova.
+
+## LayerFeatures
+- Componente per gestione tabelle con AG Grid
+- Richiede Vue 3.2.31
+- Installare dipendenze con --legacy-peer-deps
+- Compilare con npm run dev
+
+## Troubleshooting
+- Verificare package.json e webpack.mix.js
+- Se necessario, rimuovere node_modules e package-lock.json
+- Usare sempre --legacy-peer-deps 

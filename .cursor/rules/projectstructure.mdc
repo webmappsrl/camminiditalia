@@ -1,0 +1,31 @@
+---
+description: Struttura e organizzazione del progetto
+globs: 
+alwaysApply: true
+---
+
+# Project Structure
+
+Organizzazione delle directory e dei componenti principali.
+
+## Directories
+- nova-components/LayerFeatures: Componente per gestione feature
+- wm-package: Core package con Models, Services e Jobs
+
+## Componenti
+- Models: EcTrack, EcPoi, Layer
+- Services: Gestione logica di business
+- Jobs: Operazioni asincrone e batch
+
+## Directories principali
+- /nova-components: Contiene i componenti Nova personalizzati
+  - /LayerFeatures: Componente per la gestione delle feature dei layer
+    - resources/js/components: Componenti Vue
+    - webpack.mix.js: Configurazione build
+    - package.json: Dipendenze npm
+
+## Package principale
+- wm-package: Package core con modelli e logica di business
+  - Models: Contiene i modelli principali (EcTrack, EcPoi, Layer)
+  - Services: Servizi per la gestione della logica di business
+  - Jobs: Job asincroni per operazioni in background 
