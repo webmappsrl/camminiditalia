@@ -12,6 +12,7 @@ interface Resource {
     id: {
         value: number;
     };
+    title : string,
     fields: Array<{
         attribute: string;
         value: string;
@@ -90,7 +91,7 @@ export function useFeatures(props: LayerFeatureProps) {
             const includeResponse = await fetch(includeUrl);
             const includeData = await includeResponse.json();
             const selectedRows = includeData.resources.map((resource: Resource) => {
-                const name = resource.fields.find((f: { attribute: string }) => f.attribute === 'name')?.value || '';
+                const name = resource.title;
                 return { id: resource.id.value, name, isSelected: true };
             });
 
@@ -104,7 +105,7 @@ export function useFeatures(props: LayerFeatureProps) {
                 const excludeResponse = await fetch(excludeUrl);
                 const excludeData = await excludeResponse.json();
                 const unselectedRows = excludeData.resources.map((resource: Resource) => {
-                    const name = resource.fields.find((f: { attribute: string }) => f.attribute === 'name')?.value || '';
+                    const name = resource.title;
                     return { id: resource.id.value, name, isSelected: false };
                 });
 
