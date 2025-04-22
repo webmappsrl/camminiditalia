@@ -41,10 +41,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(Media::class),
                 ])->icon(''),
 
-                // MenuSection::make('UGC', [
-                //     MenuItem::resource(UgcPoi::class),
-                //     MenuItem::resource(UgcTrack::class),
-                // ])->icon('document'),
+                MenuSection::make('UGC', [
+                    MenuItem::resource(UgcPoi::class),
+                    MenuItem::resource(UgcTrack::class),
+                ])->icon('document'),
 
                 MenuSection::make('EC', [
                     // MenuItem::resource(EcPoi::class),
