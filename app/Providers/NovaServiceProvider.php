@@ -9,6 +9,7 @@ use App\Nova\Media;
 use App\Nova\TaxonomyActivity;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
+use App\Nova\User as NovaUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
@@ -38,6 +39,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
                 MenuSection::make(' ', [
                     MenuItem::resource(App::class),
+                    MenuItem::resource(NovaUser::class),
                     MenuItem::resource(Media::class),
                 ])->icon(''),
 
