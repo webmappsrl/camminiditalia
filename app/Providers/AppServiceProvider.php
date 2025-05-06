@@ -3,13 +3,13 @@
 namespace App\Providers;
 
 use App\Policies\LayerPolicy;
-use Wm\WmPackage\Models\Layer;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Gate;
-use Wm\WmPackage\Policies\RolePolicy;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Policies\PermissionPolicy;
+use Wm\WmPackage\Policies\RolePolicy;
 
 class AppServiceProvider extends ServiceProvider
 {

@@ -2,10 +2,8 @@
 
 namespace App\Nova;
 
-use Spatie\Permission\Traits\HasRoles;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Wm\WmPackage\Nova\AbstractUserResource;
 use Laravel\Nova\Auth\PasswordValidationRules;
+use Wm\WmPackage\Nova\AbstractUserResource;
 
 class User extends AbstractUserResource
 {

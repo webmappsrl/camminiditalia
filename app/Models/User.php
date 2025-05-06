@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
-use Wm\WmPackage\Models\User as WmUser;
 use Laravel\Nova\Auth\Impersonatable;
+use Wm\WmPackage\Models\User as WmUser;
+
 class User extends WmUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, Impersonatable;
+    use HasFactory, Impersonatable, Notifiable;
 
     /**
      * The attributes that are mass assignable.

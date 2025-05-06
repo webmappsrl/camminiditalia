@@ -2,12 +2,12 @@
 
 namespace App\Nova;
 
-use Laravel\Nova\Panel;
-use Wm\LayerFeatures\LayerFeatures;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Wm\WmPackage\Nova\Layer as WmNovaLayer;
+use Laravel\Nova\Panel;
+use Wm\LayerFeatures\LayerFeatures;
 use Wm\WmPackage\Models\EcTrack as WmEcTrack;
+use Wm\WmPackage\Nova\Layer as WmNovaLayer;
 
 class Layer extends WmNovaLayer
 {
@@ -15,13 +15,12 @@ class Layer extends WmNovaLayer
     {
         $user = Auth::user();
 
-        if ($user && !$user->hasRole('Administrator')) {
+        if ($user && ! $user->hasRole('Administrator')) {
             return $query->where('user_id', $user->id);
         }
 
         return $query;
     }
-
 
     public function fields(NovaRequest $request): array
     {
