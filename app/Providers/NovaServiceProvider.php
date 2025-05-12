@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Nova\App;
 use App\Nova\Dashboards\Main;
 use App\Nova\Media;
-use App\Nova\TaxonomyActivity;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
 use App\Nova\User as NovaUser;
@@ -102,7 +101,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewNova', function (User $user) {
-            return true;
+            return ! $user->hasRole('Guest');
         });
     }
 

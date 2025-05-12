@@ -147,7 +147,7 @@ return [
     'required_claims' => [
         'iss',
         'iat',
-        //'exp',//because TTL is null
+        // 'exp',//because TTL is null
         'nbf',
         'sub',
         'jti',
