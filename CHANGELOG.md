@@ -1,5 +1,51 @@
 # Changelog
 
+## [1.2.0](https://github.com/webmappsrl/camminiditalia/compare/v1.1.0...v1.2.0) (2025-08-21)
+
+
+### Features
+
+* added layer policy and registered custom policy for layer model in appServiceProvider ([070e380](https://github.com/webmappsrl/camminiditalia/commit/070e38047cbdcab53f169d4abe6051809086b8c1))
+* **nova:** ✨ add trait to hide 'app' field from index OC:6092 ([#20](https://github.com/webmappsrl/camminiditalia/issues/20)) ([8ff09f2](https://github.com/webmappsrl/camminiditalia/commit/8ff09f2f1c8c643d35bee0d7923f8ceb23d8f1c9))
+* register policies for Role and Permission models in AppServiceProvider ([6a0736f](https://github.com/webmappsrl/camminiditalia/commit/6a0736f63459488fb0527a8e78ac28b662e934f0))
+
+
+### Bug Fixes
+
+* add users ([60aa166](https://github.com/webmappsrl/camminiditalia/commit/60aa166be636925c6638a2b40cf87905befeb8f0))
+* jwt lifetime ([b5d2b77](https://github.com/webmappsrl/camminiditalia/commit/b5d2b77921d4f89f26d5c72739a51a30c090603d))
+* name on layer custom field ([b93610d](https://github.com/webmappsrl/camminiditalia/commit/b93610d3995578b178e75d83b1c115d490d80995))
+
+
+### Miscellaneous Chores
+
+* add format command to composer.json for code formatting ([eb85095](https://github.com/webmappsrl/camminiditalia/commit/eb850953e03f2fcd1fbd83b7b8f8af0e7178ea7a))
+* add impersonate ([3032552](https://github.com/webmappsrl/camminiditalia/commit/303255222b305fffd46b1f38b16f55e2cc0a4815))
+* add ugc section on nova ([4071a8c](https://github.com/webmappsrl/camminiditalia/commit/4071a8c4ed4a77014490a103f8368d0478c5f392))
+* **dependencies:** 🔧 update wm/map-multi-linestring to version 1.0.4 ([f49922d](https://github.com/webmappsrl/camminiditalia/commit/f49922dcbfd09f393e615a85f0a48eafa95d5bfc))
+* udpated wm-package ([f1e3ee6](https://github.com/webmappsrl/camminiditalia/commit/f1e3ee6c25dff6601f87bbcaf8dd3896e0fc9053))
+* udpated wm-package ([80d7621](https://github.com/webmappsrl/camminiditalia/commit/80d76219f07db561e7cf79f4f193ce04dae11893))
+* udpated wm-package ([10eb9e8](https://github.com/webmappsrl/camminiditalia/commit/10eb9e814dbc693eff939ef54c03fd7d74eb53b8))
+* udpated wm-package ([9fe3b6f](https://github.com/webmappsrl/camminiditalia/commit/9fe3b6ffb6c5dd8315cd9a40dcbaf9e861a93747))
+* udpated wm-package ([3bfb087](https://github.com/webmappsrl/camminiditalia/commit/3bfb08771bafd2a97c06298c67d29c4844e1880e))
+* udpated wm-package ([f2ff67d](https://github.com/webmappsrl/camminiditalia/commit/f2ff67d949a5619c265837462fd2340020f956bb))
+* udpated wm-package ([31a064c](https://github.com/webmappsrl/camminiditalia/commit/31a064c90a76b6f7a804d47e6da9428e20a62caa))
+* udpated wm-package ([c92980e](https://github.com/webmappsrl/camminiditalia/commit/c92980e172f18f7305fd3676f0c0207bd0dbfc5a))
+* udpated wm-package ([a0cacf6](https://github.com/webmappsrl/camminiditalia/commit/a0cacf6c19e24cf61083d142d98caa90e6f03537))
+* udpated wm-package ([0e43e6f](https://github.com/webmappsrl/camminiditalia/commit/0e43e6f88d7eb226df9751b4a1e816eb85449bef))
+* udpated wm-package ([302b544](https://github.com/webmappsrl/camminiditalia/commit/302b544c997fe6c1b60f5fd804c43e97d05d45c0))
+* udpated wm-package ([3d65f4d](https://github.com/webmappsrl/camminiditalia/commit/3d65f4d732e5d0d8488c9ffd4a24c20344cae982))
+* udpated wm-package ([3daddc7](https://github.com/webmappsrl/camminiditalia/commit/3daddc79759b519531c08defe99ea84603619c89))
+* updated wm-package ([cf3f737](https://github.com/webmappsrl/camminiditalia/commit/cf3f73789ee55ee64d8da87911455d6a3aea3441))
+* **wm-package:** 🔧 update submodule reference to latest commit ([e68538e](https://github.com/webmappsrl/camminiditalia/commit/e68538e8ef5f448c20a9428c2685e79d5725d2e3))
+* **wm-package:** 🔧 update submodule reference to latest commit ([9744974](https://github.com/webmappsrl/camminiditalia/commit/97449745a86c72fbbedf8991983e9538533bc02b))
+* **wm-package:** 🔧 update submodule reference to latest commit ([990fde1](https://github.com/webmappsrl/camminiditalia/commit/990fde1062101374d7da0c893d1c821f630850d8))
+* **wm-package:** 🔧 update submodule reference to latest commit ([f8b85d6](https://github.com/webmappsrl/camminiditalia/commit/f8b85d63582f6193f5e336190a8d9876fbc79e89))
+* **wm-package:** 🔧 update submodule reference to latest commit ([ffcb36e](https://github.com/webmappsrl/camminiditalia/commit/ffcb36e2b8c539a12db8b1a44dbf4bb97276fcfc))
+* **wm-package:** 🔧 update submodule reference to latest commit ([1428c23](https://github.com/webmappsrl/camminiditalia/commit/1428c23dc0c8bc908748b00e66d776c978a69af3))
+* **wm-package:** 🔧 update submodule reference to latest commit ([d537634](https://github.com/webmappsrl/camminiditalia/commit/d53763491297d3c60449c4075293cd8f6807cb52))
+* **wm-package:** update submodule reference to latest commit ([4e2b847](https://github.com/webmappsrl/camminiditalia/commit/4e2b847ab6b919d4ee46363abcda256d82efda4b))
+
 ## [1.1.0](https://github.com/webmappsrl/camminiditalia/compare/v1.0.0...v1.1.0) (2025-04-17)
 
 
