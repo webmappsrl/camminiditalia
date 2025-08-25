@@ -38,7 +38,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
                 MenuSection::make(' ', [
                     MenuItem::resource(App::class)
-                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')), ,
+                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
                     MenuItem::resource(NovaUser::class)
                         ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
                     MenuItem::resource(Media::class)
