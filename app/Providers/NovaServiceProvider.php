@@ -37,9 +37,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 MenuSection::dashboard(Main::class)->icon('chart-bar'),
 
                 MenuSection::make(' ', [
-                    MenuItem::resource(App::class),
-                    MenuItem::resource(NovaUser::class),
-                    MenuItem::resource(Media::class),
+                    MenuItem::resource(App::class)
+                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')), ,
+                    MenuItem::resource(NovaUser::class)
+                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
+                    MenuItem::resource(Media::class)
+                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
                 ])->icon(''),
 
                 MenuSection::make('UGC', [
@@ -58,8 +61,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 // ])->icon('document'),
 
                 MenuSection::make('Tools', [
-                    MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab(),
-                    MenuItem::externalLink('Telescope', url('/telescope'))->openInNewTab(),
+                    MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab()
+                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
+                    MenuItem::externalLink('Telescope', url('/telescope'))->openInNewTab()
+                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
                 ])->icon('briefcase')->canSee(function (Request $request) {
                     return $request->user()->email === 'team@webmapp.it';
                 }),
