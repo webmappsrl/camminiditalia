@@ -65,9 +65,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
                     MenuItem::externalLink('Telescope', url('/telescope'))->openInNewTab()
                         ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
-                ])->icon('briefcase')->canSee(function (Request $request) {
-                    return $request->user()->email === 'team@webmapp.it';
-                }),
+                ])->icon('briefcase'),
             ];
         });
     }
