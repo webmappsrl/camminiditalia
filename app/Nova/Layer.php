@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Traits\FiltersUsersByRoleTrait;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
@@ -11,6 +12,8 @@ use Wm\WmPackage\Nova\Layer as WmNovaLayer;
 
 class Layer extends WmNovaLayer
 {
+    use FiltersUsersByRoleTrait;
+
     public static function indexQuery(NovaRequest $request, $query)
     {
         $user = Auth::user();
