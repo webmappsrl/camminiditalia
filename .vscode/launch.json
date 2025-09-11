@@ -8,10 +8,13 @@
             "name": "Listen for Xdebug",
             "type": "php",
             "request": "launch",
-            "port": 9200,
+            "port": 9003,
             "pathMappings": {
               "/var/www/html/camminiditalia": "${workspaceRoot}"
             },
+            "ignore": [
+                "**/vendor/**/*.php"
+            ]
         }
     ]
 }

@@ -79,7 +79,7 @@ DB_PASSWORD=password
 - Verifica che il file di backup non sia corrotto
 - Controlla i log del container PostgreSQL:
   ```bash
-  docker logs postgres_camminiditalia
+  docker logs postgres-${APP_NAME:-camminiditalia}
   ```
 
 ## Note di Sicurezza
