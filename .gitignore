@@ -26,3 +26,5 @@ yarn-error.log
 auth.json
 storage/logs/wm-package
 storage/media-library
+
+storage/db-dumps/
