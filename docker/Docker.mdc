@@ -1,0 +1,89 @@
+# Docker Container Naming Convention
+
+## Regola per i nomi dei container
+
+I nomi dei container devono seguire il formato: `servizio-${APP_NAME}`
+
+Dove `${APP_NAME}` è la variabile d'ambiente definita nel file `.env` del progetto.
+
+### Formato corretto ✅
+- `php-${APP_NAME}` (es. `php-camminiditalia`)
+- `postgres-${APP_NAME}` (es. `postgres-camminiditalia`)
+- `redis-${APP_NAME}` (es. `redis-camminiditalia`)
+- `elasticsearch-${APP_NAME}` (es. `elasticsearch-camminiditalia`)
+- `minio-${APP_NAME}` (es. `minio-camminiditalia`)
+
+### Formato errato ❌
+- `php_${APP_NAME}` (usa underscore invece di trattino)
+- `postgres_${APP_NAME}` (usa underscore invece di trattino)
+- `redis_${APP_NAME}` (usa underscore invece di trattino)
+- `elasticsearch_${APP_NAME}` (usa underscore invece di trattino)
+- `minio_${APP_NAME}` (usa underscore invece di trattino)
+
+## Pattern di identificazione
+
+### Regex per identificare nomi corretti (con trattino)
+```regex
+^[a-z]+-${APP_NAME}$
+```
+
+### Regex per identificare nomi errati (con underscore)
+```regex
+^[a-z]+_${APP_NAME}$
+```
+
+### Esempi pratici con APP_NAME=camminiditalia
+```regex
+# Corretti
+^[a-z]+-camminiditalia$
+
+# Errati  
+^[a-z]+_camminiditalia$
+```
+
+## Esempi di utilizzo
+
+### Comandi Docker corretti
+```bash
+# Accesso al container PHP
+docker exec -u 0 -it php-camminiditalia bash
+
+# Accesso al container PostgreSQL
+docker exec -it postgres-camminiditalia psql -U username -d database
+
+# Accesso al container Redis
+docker exec -it redis-camminiditalia redis-cli
+```
+
+### Comandi Docker errati
+```bash
+# ❌ SBAGLIATO - usa underscore
+docker exec -u 0 -it php_camminiditalia bash
+docker exec -it postgres_camminiditalia psql -U username -d database
+```
+
+## Container attivi nel progetto
+
+Basandosi sul file `compose.yml`, i container utilizzano la variabile `${APP_NAME}`:
+
+- **php**: `php-${APP_NAME}` (es. `php-camminiditalia`)
+- **postgres**: `postgres-${APP_NAME}` (es. `postgres-camminiditalia`)
+- **redis**: `redis-${APP_NAME}` (es. `redis-camminiditalia`)
+- **elasticsearch**: `elasticsearch-${APP_NAME}` (es. `elasticsearch-camminiditalia`)
+
+## Variabile APP_NAME
+
+La variabile `${APP_NAME}` è definita nel file `.env` del progetto e rappresenta l'identificatore univoco dell'ambiente/istanza dell'applicazione.
+
+### Esempio di configurazione .env
+```env
+APP_NAME=camminiditalia
+```
+
+## Note
+
+- Il trattino (`-`) è il separatore standard per i nomi dei container Docker
+- L'underscore (`_`) non è raccomandato e può causare problemi di compatibilità
+- I nomi devono essere in lowercase
+- Il formato `servizio-${APP_NAME}` facilita l'identificazione e la gestione dei container
+- Lo shard corrisponde esattamente al valore della variabile `APP_NAME` nel file `.env`

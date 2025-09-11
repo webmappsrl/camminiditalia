@@ -50,7 +50,7 @@ if [ ! -d "$LOCAL_BACKUP_DIR" ]; then
 fi
 
 # Controlla se il container Docker è in esecuzione
-if ! docker ps | grep -q "postgres_camminiditalia"; then
+if ! docker ps | grep -q "postgres-${APP_NAME:-camminiditalia}"; then
     log_error "Il container PostgreSQL non è in esecuzione!"
     log_info "Avvia i container con: docker-compose up -d"
     exit 1
@@ -58,7 +58,7 @@ fi
 
 # Pulisci il database esistente prima dell'importazione
 log_info "Pulendo il database esistente..."
-if docker exec "postgres_camminiditalia" psql -U "$DB_USERNAME" -d "$DB_DATABASE" -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;" > /dev/null 2>&1; then
+if docker exec "postgres-${APP_NAME:-camminiditalia}" psql -U "$DB_USERNAME" -d "$DB_DATABASE" -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;" > /dev/null 2>&1; then
     log_info "Database pulito con successo"
 else
     log_warn "Impossibile pulire il database, continuando con l'importazione..."
@@ -97,6 +97,9 @@ fi
 # Carica le variabili d'ambiente
 export $(grep -v '^#' .env | xargs)
 
+# Imposta APP_NAME se non definito
+APP_NAME=${APP_NAME:-camminiditalia}
+
 # Controlla che le variabili del database siano definite
 if [ -z "$DB_DATABASE" ] || [ -z "$DB_USERNAME" ] || [ -z "$DB_PASSWORD" ]; then
     log_error "Variabili del database non definite nel file .env"
@@ -107,7 +110,7 @@ fi
 log_info "Importando backup nel database $DB_DATABASE..."
 
 # Importa il backup nel database
-if docker exec -i "postgres_camminiditalia" psql -U "$DB_USERNAME" -d "$DB_DATABASE" < "$LOCAL_BACKUP_DIR/$LOCAL_SQL_FILE"; then
+if docker exec -i "postgres-${APP_NAME:-camminiditalia}" psql -U "$DB_USERNAME" -d "$DB_DATABASE" < "$LOCAL_BACKUP_DIR/$LOCAL_SQL_FILE"; then
     log_info "Database aggiornato con successo!"
 else
     log_error "Errore durante l'importazione del database"
@@ -116,7 +119,7 @@ fi
 
 # Esegui le migrazioni per assicurarsi che la struttura sia aggiornata
 log_info "Eseguendo le migrazioni..."
-if docker exec "php_camminiditalia" php artisan migrate --force; then
+if docker exec "php-${APP_NAME:-camminiditalia}" php artisan migrate --force; then
     log_info "Migrazioni completate con successo!"
 else
     log_warn "Errore durante l'esecuzione delle migrazioni, ma il database è stato importato"
