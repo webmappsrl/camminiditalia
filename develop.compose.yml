@@ -22,7 +22,7 @@ services:
   # needed for aws s3 storage testing
   minio:
     image: "minio/minio:latest"
-    container_name: "minio_${APP_NAME}"
+    container_name: "minio-${APP_NAME}"
     ports:
       - "${FORWARD_MINIO_PORT:-9000}:9000"
       - "${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900"
@@ -44,7 +44,7 @@ services:
       timeout: 5s
   # needed for mails testing
   mailpit:
-    container_name: "mailpit_${APP_NAME}"
+    container_name: "mailpit-${APP_NAME}"
     image: "axllent/mailpit:latest"
     ports:
       - "${FORWARD_MAILPIT_PORT:-1025}:1025"

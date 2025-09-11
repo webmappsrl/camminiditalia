@@ -5,7 +5,7 @@ services:
     # user: root
     build: ./docker/configs/phpfpm
     restart: always
-    container_name: "php_${APP_NAME}"
+    container_name: "php-${APP_NAME}"
     image: wm-phpfpm:8.4
     ports:
       - ${DOCKER_PHP_PORT}:9000
@@ -15,7 +15,7 @@ services:
     working_dir: "/var/www/html/${DOCKER_PROJECT_DIR_NAME}"
   db:
     image: postgis/postgis:17-3.5-alpine
-    container_name: "postgres_${APP_NAME}"
+    container_name: "postgres-${APP_NAME}"
     restart: always
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD:?err}
@@ -28,11 +28,11 @@ services:
       - ${DOCKER_PSQL_PORT}:5432
   redis:
     image: redis:latest
-    container_name: "redis_${APP_NAME}"
+    container_name: "redis-${APP_NAME}"
     restart: always
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
-    container_name: "elasticsearch_${APP_NAME}"
+    container_name: "elasticsearch-${APP_NAME}"
     restart: always
     environment:
       - node.name=elasticsearch
