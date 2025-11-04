@@ -16,7 +16,6 @@
         "laravel/tinker": "^2.9",
         "predis/predis": "^2.3",
         "whitecube/nova-flexible-content": "^2.0.1",
-        "wm/layer-features": "@dev",
         "wm/map-multi-linestring": "^1.0.4",
         "wm/map-point": "*",
         "wm/wm-package": "*"
@@ -101,10 +100,6 @@
         {
             "type": "path",
             "url": "./wm-package"
-        },
-        {
-            "type": "path",
-            "url": "./nova-components/LayerFeatures"
         }
     ]
 }
