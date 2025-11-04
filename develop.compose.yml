@@ -23,17 +23,18 @@ services:
   minio:
     image: "minio/minio:latest"
     container_name: "minio-${APP_NAME}"
+    restart: always
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-laravel}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-laravelminio}
+      CONSOLE_BASE_HREF: "/minio"
+    command: 'minio server /data/minio --console-address ":8900"'
+    platform: linux/amd64
     ports:
       - "${FORWARD_MINIO_PORT:-9000}:9000"
       - "${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900"
-    environment:
-      MINIO_ROOT_USER: laravel
-      # at least 8 chars
-      MINIO_ROOT_PASSWORD: laravelminio
     volumes:
       - "./docker/volumes/minio/data:/data/minio"
-    command: 'minio server /data/minio --console-address ":8900"'
-    platform: linux/amd64
     healthcheck:
       test:
         - CMD
