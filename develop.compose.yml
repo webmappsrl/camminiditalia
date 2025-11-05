@@ -18,6 +18,10 @@ services:
     extends:
       file: compose.yml
       service: elasticsearch
+  kibana:
+    extends:
+      file: compose.yml
+      service: kibana
 
   # needed for aws s3 storage testing
   minio:
