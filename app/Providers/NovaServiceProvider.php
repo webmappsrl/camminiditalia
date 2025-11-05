@@ -60,12 +60,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 //     MenuItem::resource(TaxonomyActivity::class),
                 // ])->icon('document'),
 
-                MenuSection::make('Tools', [
-                    MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab()
-                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
-                    MenuItem::externalLink('Telescope', url('/telescope'))->openInNewTab()
-                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
-                ])->icon('briefcase'),
             ];
         });
     }
