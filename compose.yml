@@ -38,8 +38,10 @@ services:
       - node.name=elasticsearch
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
+      - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-${ELASTICSEARCH_PASSWORD:-changeme}}
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
     ulimits:
       memlock:
@@ -53,10 +55,12 @@ services:
       - elasticsearch
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - xpack.security.enabled=false
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD:-changeme}
+      - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=false
       - SERVER_NAME=kibana
       - SERVER_HOST=0.0.0.0
-      - SERVER_BASEPATH=${KIBANA_BASEPATH:-/kibana}
+      - SERVER_BASEPATH=/kibana
     ports:
       - ${DOCKER_KIBANA_PORT:-5601}:5601
