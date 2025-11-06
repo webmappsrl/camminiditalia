@@ -18,7 +18,13 @@ class LayerPolicy
      */
     public function before(User $user, $ability)
     {
-        return true;
+        // Administrators have full access
+        if ($user->hasRole('Administrator')) {
+            return true;
+        }
+
+        // For other users, checks are performed in specific methods
+        return null;
     }
 
     /**
@@ -48,8 +54,8 @@ class LayerPolicy
      */
     public function create(User $user)
     {
-        // Any authenticated user can create a layer.
-        return true;
+        // Only administrators can create layers
+        return $user->hasRole('Administrator');
     }
 
     /**

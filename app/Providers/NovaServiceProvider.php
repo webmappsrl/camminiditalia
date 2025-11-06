@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\LayerFeatureController;
 use App\Models\User;
 use App\Nova\App;
 use App\Nova\Dashboards\Main;
@@ -12,6 +13,7 @@ use App\Nova\User as NovaUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
@@ -29,6 +31,15 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot(): void
     {
         parent::boot();
+
+        // Questa route sovrascrive quella del wm-package permettendo
+        // di filtrare le tracce per utente loggato senza modificare il package.
+        // Le altre route (index e sync) vengono ereditate dal package.
+        Route::middleware(['nova'])
+            ->prefix('nova-vendor/layer-features')
+            ->group(function () {
+                Route::get('/features/{layerId}', [LayerFeatureController::class, 'getFeatures']);
+            });
 
         $this->getFooter();
 
