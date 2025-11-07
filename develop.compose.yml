@@ -23,7 +23,7 @@ services:
       file: compose.yml
       service: elasticsearch-init
     environment:
-      - ELASTICSEARCH_PASSWORD=local123
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD:-changeme}
   kibana:
     extends:
       file: compose.yml
@@ -31,8 +31,8 @@ services:
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       - ELASTICSEARCH_USERNAME=kibana_system
-      # Password hardcodata per ambiente local (deve corrispondere a ELASTIC_PASSWORD)
-      - ELASTICSEARCH_PASSWORD=local123
+      # Password da variabile d'ambiente (deve corrispondere a ELASTIC_PASSWORD)
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD:-changeme}
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=false
       - SERVER_NAME=kibana
@@ -64,9 +64,22 @@ services:
       retries: 3
       timeout: 5s
   horizon:
-    extends:
-      file: compose.yml
-      service: horizon
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    build: ./docker/configs/phpfpm
+    restart: always
+    container_name: "horizon-${APP_NAME}"
+    image: wm-phpfpm:8.4
+    command: php artisan horizon
+    volumes:
+      - ".:/var/www/html/${DOCKER_PROJECT_DIR_NAME}"
+      - "../wm-package:/var/www/html/wm-package"
+    working_dir: "/var/www/html/${DOCKER_PROJECT_DIR_NAME}"
+    depends_on:
+      - redis
+      - db
+    # Nessuna porta esposta (Horizon non necessita di porte)
+    ports: []
   mailpit:
     container_name: "mailpit-${APP_NAME}"
     image: "axllent/mailpit:latest"
