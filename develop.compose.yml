@@ -18,12 +18,28 @@ services:
     extends:
       file: compose.yml
       service: elasticsearch
+  elasticsearch-init:
+    extends:
+      file: compose.yml
+      service: elasticsearch-init
+    environment:
+      - ELASTICSEARCH_PASSWORD=local123
   kibana:
     extends:
       file: compose.yml
       service: kibana
-
-  # needed for aws s3 storage testing
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      # Password hardcodata per ambiente local (deve corrispondere a ELASTIC_PASSWORD)
+      - ELASTICSEARCH_PASSWORD=local123
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=false
+      - SERVER_NAME=kibana
+      - SERVER_HOST=0.0.0.0
+      # Rimossi SERVER_BASEPATH e SERVER_REWRITEBASEPATH per accesso diretto in local
+    ports:
+      - ${DOCKER_KIBANA_PORT:-5601}:5601
   minio:
     image: "minio/minio:latest"
     container_name: "minio-${APP_NAME}"
@@ -47,7 +63,10 @@ services:
         - local
       retries: 3
       timeout: 5s
-  # needed for mails testing
+  horizon:
+    extends:
+      file: compose.yml
+      service: horizon
   mailpit:
     container_name: "mailpit-${APP_NAME}"
     image: "axllent/mailpit:latest"

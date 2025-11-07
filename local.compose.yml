@@ -1,8 +1,26 @@
 services:
   php:
-    extends:
-      file: develop.compose.yml
-      service: php
+    # Servizio generico per operazioni (artisan, tinker, composer)
+    # Copiato da develop.compose.yml/compose.yml senza estendere
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    build: ./docker/configs/phpfpm
+    restart: always
+    container_name: "php-${APP_NAME}"
+    image: wm-phpfpm:8.4
+    # Nessuna porta esposta (solo per operazioni manuali)
+    ports: []
+    volumes:
+      - ".:/var/www/html/${DOCKER_PROJECT_DIR_NAME}"
+      - "../wm-package:/var/www/html/wm-package"
+    working_dir: "/var/www/html/${DOCKER_PROJECT_DIR_NAME}"
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
   db:
     extends:
       file: develop.compose.yml
@@ -19,11 +37,8 @@ services:
       - node.name=elasticsearch
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - xpack.security.enabled=true
-      - xpack.security.http.ssl.enabled=false
-      - xpack.security.transport.ssl.enabled=false
-      # Password hardcodata per ambiente local
-      - ELASTIC_PASSWORD=local123
+      # Sicurezza disattivata per ambiente local
+      - xpack.security.enabled=false
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
     ulimits:
       memlock:
@@ -34,19 +49,47 @@ services:
     container_name: "kibana-${APP_NAME}"
     restart: always
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_started
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=kibana_system
-      # Password hardcodata per ambiente local (deve corrispondere a ELASTIC_PASSWORD)
-      - ELASTICSEARCH_PASSWORD=local123
-      - xpack.security.enabled=true
-      - xpack.security.http.ssl.enabled=false
+      # Sicurezza disattivata per ambiente local
+      - xpack.security.enabled=false
       - SERVER_NAME=kibana
       - SERVER_HOST=0.0.0.0
       # Rimossi SERVER_BASEPATH e SERVER_REWRITEBASEPATH per accesso diretto in local
     ports:
       - ${DOCKER_KIBANA_PORT:-5601}:5601
+  # Servizi da develop.compose.yml (mantengono la catena di ereditarietà)
+  # Server Laravel per ambiente local
+  laravel:
+    build: ./docker/configs/phpfpm
+    container_name: "laravel-${APP_NAME}"
+    image: wm-phpfpm:8.4
+    command: php artisan serve --host 0.0.0.0 --port 8000
+    restart: always
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ".:/var/www/html/${DOCKER_PROJECT_DIR_NAME}"
+      - "../wm-package:/var/www/html/wm-package"
+    working_dir: "/var/www/html/${DOCKER_PROJECT_DIR_NAME}"
+    # Solo porta Laravel (8000), nessuna porta PHP-FPM
+    ports:
+      - ${DOCKER_SERVE_PORT:-8000}:8000
+  horizon:
+    extends:
+      file: develop.compose.yml
+      service: horizon
+    # Forza rimozione porte per evitare conflitti
+    ports: []
   minio:
     extends:
       file: develop.compose.yml
