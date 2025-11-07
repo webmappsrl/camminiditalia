@@ -49,6 +49,7 @@ services:
         hard: -1
   # Init container necessario per impostare automaticamente la password di kibana_system
   # Elasticsearch non supporta variabili d'ambiente per kibana_system, quindi va impostata via API
+  # Il container viene rimosso automaticamente dopo l'esecuzione
   elasticsearch-init:
     image: curlimages/curl:latest
     container_name: "elasticsearch-init-${APP_NAME}"
@@ -77,7 +78,13 @@ services:
           -H "Content-Type: application/json" \
           -d "{\"password\":\"$$ELASTICSEARCH_PASSWORD\"}" || true
         echo "Password set successfully!"
+        # Rimuove il container dopo l'esecuzione
+        echo "Removing init container..."
+        docker rm -f elasticsearch-init-${APP_NAME} 2>/dev/null || true
     restart: "no"
+    # Usa la socket Docker per permettere la rimozione del container stesso
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   kibana:
     image: docker.elastic.co/kibana/kibana:8.17.1
     container_name: "kibana-${APP_NAME}"
