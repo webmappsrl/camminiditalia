@@ -58,7 +58,7 @@ docker exec -it redis-camminiditalia redis-cli
 ### Comandi Docker errati
 ```bash
 # ❌ SBAGLIATO - usa underscore
-docker exec -u 0 -it php_camminiditalia bash
+docker exec -u 0 -it php-camminiditalia bash
 docker exec -it postgres_camminiditalia psql -U username -d database
 ```
 

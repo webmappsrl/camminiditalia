@@ -9,8 +9,8 @@ alwaysApply: true
 Configurazione e accesso all'ambiente Docker.
 
 ## Container Principale
-- Nome: php_camminiditalia
-- Accesso: docker exec -u 0 -it php_camminiditalia bash
+- Nome: php-camminiditalia
+- Accesso: docker exec -u 0 -it php-camminiditalia bash
 - Path progetto: /var/www/html/camminiditalia
 
 ## Ambiente
