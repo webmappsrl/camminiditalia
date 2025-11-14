@@ -28,3 +28,4 @@ storage/logs/wm-package
 storage/media-library
 
 storage/db-dumps/
+storage/backups/*
