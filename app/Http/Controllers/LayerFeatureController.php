@@ -8,12 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Nova\Fields\LayerFeatures\Http\Controllers\LayerFeatureController as WmLayerFeatureController;
-use Wm\WmPackage\Services\Models\LayerService;
-use Wm\WmPackage\Services\PBFGeneratorService;
+
 class LayerFeatureController extends WmLayerFeatureController
 {
-
-
     public function getFeatures(Request $request, $layerId): JsonResponse
     {
         try {

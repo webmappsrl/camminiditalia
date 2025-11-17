@@ -6,6 +6,8 @@ use App\Http\Controllers\LayerFeatureController;
 use App\Models\User;
 use App\Nova\App;
 use App\Nova\Dashboards\Main;
+use App\Nova\EcTrack;
+use App\Nova\Layer;
 use App\Nova\Media;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
@@ -20,8 +22,6 @@ use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 use Wm\WmPackage\Nova\EcPoi;
-use Wm\WmPackage\Nova\EcTrack;
-use Wm\WmPackage\Nova\Layer;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
