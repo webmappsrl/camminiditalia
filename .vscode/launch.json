@@ -10,7 +10,7 @@
             "request": "launch",
             "port": 9003,
             "pathMappings": {
-             "/var/www/html/camminiditalia": "${workspaceRoot}"
+                "/var/www/html/camminiditalia": "${workspaceFolder}"
             },
             "ignore": [
                 "**/vendor/**/*.php"

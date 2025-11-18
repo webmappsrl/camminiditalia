@@ -17,7 +17,6 @@ class Layer extends WmNovaLayer
      *
      * @var class-string<\App\Models\Layer>
      */
-    public static $model = \App\Models\Layer::class;
 
     public static function indexQuery(NovaRequest $request, $query)
     {
