@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\Auth;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcTrack as WmEcTrack;
+use Wm\WmPackage\Observers\EcTrackObserver;
 
 class EcTrack extends WmEcTrack
 {
@@ -14,6 +15,7 @@ class EcTrack extends WmEcTrack
     protected static function booted(): void
     {
         parent::booted();
+        EcTrack::observe(EcTrackObserver::class);
 
         static::creating(function ($ecTrack) {
             // Imposta automaticamente l'app
