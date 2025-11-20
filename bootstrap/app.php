@@ -19,5 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withSchedule(function (Schedule $schedule) {
         $schedule->command('telescope:prune')->weekly();
+        
+        // Importa l'indice Scout per EcTrack ogni 15 minuti
+        $schedule->command('scout:import "Wm\WmPackage\Models\EcTrack"')->everyFifteenMinutes();
     })
     ->create();

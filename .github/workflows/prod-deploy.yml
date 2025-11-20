@@ -21,4 +21,4 @@ jobs:
           username: ${{ vars.USERNAMEPROD }}
           port: ${{ vars.PORTPROD }}
           key: ${{ secrets.SSHKEYPROD }}
-          script: "cd /var/www/html/camminiditalia && git pull && git submodule update --init --recursive && docker exec php_camminiditalia bash scripts/deploy_prod.sh"
+          script: "cd /var/www/html/camminiditalia && git pull && git submodule update --init --recursive && docker exec php-camminiditalia bash scripts/deploy_prod.sh"

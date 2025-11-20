@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\LayerFeatureController;
 use App\Models\User;
 use App\Nova\App;
 use App\Nova\Dashboards\Main;
+use App\Nova\EcTrack;
+use App\Nova\Layer;
 use App\Nova\Media;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
@@ -12,14 +15,13 @@ use App\Nova\User as NovaUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 use Wm\WmPackage\Nova\EcPoi;
-use Wm\WmPackage\Nova\EcTrack;
-use Wm\WmPackage\Nova\Layer;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -29,6 +31,15 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot(): void
     {
         parent::boot();
+
+        // Questa route sovrascrive quella del wm-package permettendo
+        // di filtrare le tracce per utente loggato senza modificare il package.
+        // Le altre route (index e sync) vengono ereditate dal package.
+        Route::middleware(['nova'])
+            ->prefix('nova-vendor/layer-features')
+            ->group(function () {
+                Route::get('/features/{layerId}', [LayerFeatureController::class, 'getFeatures']);
+            });
 
         $this->getFooter();
 
@@ -60,12 +71,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 //     MenuItem::resource(TaxonomyActivity::class),
                 // ])->icon('document'),
 
-                MenuSection::make('Tools', [
-                    MenuItem::externalLink('Horizon', url('/horizon'))->openInNewTab()
-                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
-                    MenuItem::externalLink('Telescope', url('/telescope'))->openInNewTab()
-                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
-                ])->icon('briefcase'),
             ];
         });
     }

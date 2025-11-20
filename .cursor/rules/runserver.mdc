@@ -10,7 +10,7 @@ Gestione del server di sviluppo nel container Docker.
 
 ## Avvio Server
 - Comando: composer run dev
-- Ambiente: container php_camminiditalia
+- Ambiente: container php-camminiditalia
 - Directory: /var/www/html/camminiditalia
 
 ## Prerequisiti

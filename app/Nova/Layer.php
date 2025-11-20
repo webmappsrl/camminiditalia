@@ -4,18 +4,23 @@ namespace App\Nova;
 
 use App\Nova\Traits\FiltersUsersByRoleTrait;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Panel;
-use Wm\LayerFeatures\LayerFeatures;
-use Wm\WmPackage\Models\EcTrack as WmEcTrack;
 use Wm\WmPackage\Nova\Layer as WmNovaLayer;
 
 class Layer extends WmNovaLayer
 {
     use FiltersUsersByRoleTrait;
 
+    /**
+     * The model the resource corresponds to.
+     *
+     * @var class-string<\App\Models\Layer>
+     */
+
     public static function indexQuery(NovaRequest $request, $query)
     {
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
 
         if ($user && ! $user->hasRole('Administrator')) {
@@ -27,11 +32,26 @@ class Layer extends WmNovaLayer
 
     public function fields(NovaRequest $request): array
     {
-        return [
-            ...parent::fields($request),
-            Panel::make('Ec Tracks', [
-                LayerFeatures::make('ecTracks', $this->resource, WmEcTrack::class)->hideWhenCreating(),
-            ]),
-        ];
+        $fields = parent::fields($request);
+        $currentUser = $request->user();
+
+        // Remove App field for all users
+        $fields = array_filter($fields, function ($field) {
+            return ! ($field instanceof BelongsTo && $field->attribute === 'appOwner');
+        });
+
+        // Modify layerOwner field to be visible only to admins
+        $fields = array_map(function ($field) use ($currentUser) {
+            if ($field instanceof BelongsTo && $field->attribute === 'layerOwner') {
+                // Show layerOwner field only to admins
+                $field->canSee(function () use ($currentUser) {
+                    return $currentUser && $currentUser->hasRole('Administrator');
+                });
+            }
+
+            return $field;
+        }, $fields);
+
+        return array_values($fields);
     }
 }
