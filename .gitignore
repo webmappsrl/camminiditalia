@@ -30,3 +30,4 @@ storage/media-library
 storage/db-dumps/
 storage/backups/*
 storage/json/*
+storage/json/conf/
