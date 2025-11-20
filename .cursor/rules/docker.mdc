@@ -1,0 +1,193 @@
+---
+description: Configurazione Docker e regole per esecuzione comandi Laravel
+globs: 
+alwaysApply: true
+---
+
+# Docker Container Naming Convention
+
+## Regola per i nomi dei container
+
+I nomi dei container devono seguire il formato: `servizio-${APP_NAME}`
+
+Dove `${APP_NAME}` è la variabile d'ambiente definita nel file `.env` del progetto.
+
+### Formato corretto ✅
+- `php-${APP_NAME}` (es. `php-camminiditalia`)
+- `postgres-${APP_NAME}` (es. `postgres-camminiditalia`)
+- `redis-${APP_NAME}` (es. `redis-camminiditalia`)
+- `elasticsearch-${APP_NAME}` (es. `elasticsearch-camminiditalia`)
+- `minio-${APP_NAME}` (es. `minio-camminiditalia`)
+
+### Formato errato ❌
+- `php_${APP_NAME}` (usa underscore invece di trattino)
+- `postgres_${APP_NAME}` (usa underscore invece di trattino)
+- `redis_${APP_NAME}` (usa underscore invece di trattino)
+- `elasticsearch_${APP_NAME}` (usa underscore invece di trattino)
+- `minio_${APP_NAME}` (usa underscore invece di trattino)
+
+## Pattern di identificazione
+
+### Regex per identificare nomi corretti (con trattino)
+```regex
+^[a-z]+-${APP_NAME}$
+```
+
+### Regex per identificare nomi errati (con underscore)
+```regex
+^[a-z]+_${APP_NAME}$
+```
+
+### Esempi pratici con APP_NAME=camminiditalia
+```regex
+# Corretti
+^[a-z]+-camminiditalia$
+
+# Errati  
+^[a-z]+_camminiditalia$
+```
+
+## Esempi di utilizzo
+
+### Comandi Docker corretti
+```bash
+# Accesso al container PHP
+docker exec -u 0 -it php-camminiditalia bash
+
+# Accesso al container PostgreSQL
+docker exec -it postgres-camminiditalia psql -U username -d database
+
+# Accesso al container Redis
+docker exec -it redis-camminiditalia redis-cli
+```
+
+### Comandi Docker errati
+```bash
+# ❌ SBAGLIATO - usa underscore
+docker exec -u 0 -it php-camminiditalia bash
+docker exec -it postgres_camminiditalia psql -U username -d database
+```
+
+## Container attivi nel progetto
+
+Basandosi sul file `compose.yml`, i container utilizzano la variabile `${APP_NAME}`:
+
+- **php**: `php-${APP_NAME}` (es. `php-camminiditalia`)
+- **postgres**: `postgres-${APP_NAME}` (es. `postgres-camminiditalia`)
+- **redis**: `redis-${APP_NAME}` (es. `redis-camminiditalia`)
+- **elasticsearch**: `elasticsearch-${APP_NAME}` (es. `elasticsearch-camminiditalia`)
+
+## Variabile APP_NAME
+
+La variabile `${APP_NAME}` è definita nel file `.env` del progetto e rappresenta l'identificatore univoco dell'ambiente/istanza dell'applicazione.
+
+### Esempio di configurazione .env
+```env
+APP_NAME=camminiditalia
+```
+
+## Note
+
+- Il trattino (`-`) è il separatore standard per i nomi dei container Docker
+- L'underscore (`_`) non è raccomandato e può causare problemi di compatibilità
+- I nomi devono essere in lowercase
+- Il formato `servizio-${APP_NAME}` facilita l'identificazione e la gestione dei container
+- Lo shard corrisponde esattamente al valore della variabile `APP_NAME` nel file `.env`
+
+## ⚠️ REGOLA CRITICA: Esecuzione Comandi Laravel
+
+### IMPORTANTE: Usare SEMPRE i container Docker
+
+**NON eseguire MAI comandi Laravel direttamente sul sistema host.** Tutti i comandi Laravel devono essere eseguiti all'interno del container Docker PHP.
+
+### Determinazione automatica del nome del container
+
+Prima di eseguire qualsiasi comando, **determinare sempre il nome del container PHP** guardando i container in esecuzione:
+
+```bash
+# Comando per trovare il container PHP attivo
+docker ps --format "{{.Names}}" | grep "^php-" | head -1
+```
+
+Il risultato sarà il nome completo del container (es. `php-camminiditaliadev`).
+
+### Formato comandi Docker
+
+#### Per comandi Laravel non interattivi (artisan, composer, npm, ecc.)
+```bash
+# Formato base (SENZA -it per evitare errori TTY)
+docker exec <CONTAINER_NAME> <comando>
+
+# Esempio concreto
+docker exec php-camminiditaliadev php artisan migrate
+docker exec php-camminiditaliadev composer install
+docker exec php-camminiditaliadev php artisan wm:download-db-backup --latest --s3
+```
+
+#### Per comandi che richiedono root (es. chown, chmod)
+```bash
+# Aggiungere -u 0 per eseguire come root (SENZA -it)
+docker exec -u 0 <CONTAINER_NAME> <comando>
+
+# Esempio
+docker exec -u 0 php-camminiditaliadev chown -R 33 storage
+```
+
+#### Per accesso interattivo (bash, tinker, ecc.)
+```bash
+# Solo per accesso interattivo usare -it
+docker exec -u 0 -it php-camminiditaliadev bash
+docker exec -it php-camminiditaliadev php artisan tinker
+```
+
+### Workflow obbligatorio per comandi Laravel
+
+1. **Determinare il container**: `CONTAINER=$(docker ps --format "{{.Names}}" | grep "^php-" | head -1)`
+2. **Verificare che esista**: `docker ps --format "{{.Names}}" | grep -q "^php-" || echo "Container PHP non trovato"`
+3. **Eseguire il comando**: `docker exec $CONTAINER <comando>`
+
+### Esempi pratici completi
+
+```bash
+# 1. Trovare il container
+CONTAINER=$(docker ps --format "{{.Names}}" | grep "^php-" | head -1)
+
+# 2. Eseguire comando artisan
+docker exec $CONTAINER php artisan wm:download-db-backup --latest --s3
+
+# 3. Eseguire comando composer
+docker exec $CONTAINER composer install
+
+# 4. Eseguire comando npm (se necessario)
+docker exec $CONTAINER npm install --legacy-peer-deps
+```
+
+### Errori comuni da evitare
+
+❌ **SBAGLIATO**: Eseguire comandi direttamente sul host
+```bash
+php artisan migrate  # ❌ NON FARE MAI
+```
+
+❌ **SBAGLIATO**: Usare -it per comandi non interattivi
+```bash
+docker exec -it php-camminiditalia php artisan migrate  # ❌ Causa errore TTY
+```
+
+❌ **SBAGLIATO**: Assumere il nome del container senza verificarlo
+```bash
+docker exec php-camminiditalia php artisan migrate  # ❌ Potrebbe non esistere
+```
+
+✅ **CORRETTO**: Determinare e usare il container corretto
+```bash
+CONTAINER=$(docker ps --format "{{.Names}}" | grep "^php-" | head -1)
+docker exec $CONTAINER php artisan migrate  # ✅
+```
+
+### Regola d'oro
+
+**PRIMA di ogni comando Laravel:**
+1. Determinare il nome del container PHP dai container attivi
+2. Usare `docker exec` (senza `-it` per comandi non interattivi)
+3. Eseguire il comando all'interno del container
