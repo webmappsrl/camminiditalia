@@ -1,9 +1,6 @@
 ---
-description: Configurazione Docker e regole per esecuzione comandi Laravel
-globs: 
 alwaysApply: true
 ---
-
 # Docker Container Naming Convention
 
 ## Regola per i nomi dei container
