@@ -18,15 +18,15 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withSchedule(function (Schedule $schedule) {
-        
+
         $schedule->command('telescope:prune')
-        ->weekly();
-        
+            ->weekly();
+
         $schedule->command('scout:import "Wm\WmPackage\Models\EcTrack"')
-        ->everyFifteenMinutes();
+            ->everyFifteenMinutes();
 
         $schedule->command('horizon:snapshot')
-        ->everyFiveMinutes()
-        ->description('Take Horizon snapshot');
+            ->everyFiveMinutes()
+            ->description('Take Horizon snapshot');
     })
     ->create();
