@@ -1,5 +1,92 @@
 # Changelog
 
+## [1.2.0](https://github.com/webmappsrl/camminiditalia/compare/v1.1.0...v1.2.0) (2025-12-11)
+
+
+### Features
+
+* added layer policy and registered custom policy for layer model in appServiceProvider ([070e380](https://github.com/webmappsrl/camminiditalia/commit/070e38047cbdcab53f169d4abe6051809086b8c1))
+* **commands:** ✨ add command to fix layer names OC 6217 ([#23](https://github.com/webmappsrl/camminiditalia/issues/23)) ([4be73a4](https://github.com/webmappsrl/camminiditalia/commit/4be73a4eed1f7fc62c8efe43f2d4ebf9e2af145c))
+* **compose:** ✨ add elasticsearch-init service for automatic password setup ([3f05693](https://github.com/webmappsrl/camminiditalia/commit/3f05693f02f9c228301ca2c0718fb385f5bffa00))
+* **compose:** ✨ add Kibana service configuration ([19cccce](https://github.com/webmappsrl/camminiditalia/commit/19cccce542dbbc7b1427259a384cc3886c55756e))
+* **compose:** ✨ add local docker-compose configuration ([8b7d08d](https://github.com/webmappsrl/camminiditalia/commit/8b7d08d9e9c6773f46275c3151e226cffd70b646))
+* **compose:** ✨ enable security and add init containers for Elasticsearch and Scout ([a7c47f8](https://github.com/webmappsrl/camminiditalia/commit/a7c47f8c2411a669287977e20b32542cdc9d8f42))
+* **controller:** ✨ add LayerFeatureController with custom routes oc:6558 ([#24](https://github.com/webmappsrl/camminiditalia/issues/24)) ([ea88542](https://github.com/webmappsrl/camminiditalia/commit/ea88542e01213855d42395bd50507d99562e466f))
+* **docker:** ✨ add Docker configuration and Laravel command execution rules ([89bab8f](https://github.com/webmappsrl/camminiditalia/commit/89bab8ff845207007ca45e817832ba684d9aca08))
+* **docker:** ✨ customize Elasticsearch configuration in local setup ([121e916](https://github.com/webmappsrl/camminiditalia/commit/121e91649db2bf3f8fb784eb8b5254a5f5f12a57))
+* **migrations:** ✨ add 'created_by' column to UGC tables ([64085e2](https://github.com/webmappsrl/camminiditalia/commit/64085e26dbb733060518982ce7e9374d837161b0))
+* **migrations:** ✨ add icon column to taxonomy tables ([731ea09](https://github.com/webmappsrl/camminiditalia/commit/731ea092853e50801180cc7c4be3e3b539165b1d))
+* **migrations:** ✨ add migration to update layerables ec_track type ([492d416](https://github.com/webmappsrl/camminiditalia/commit/492d416a7cce728e0120f932655d4a87c1c4191c))
+* **migrations:** ✨ add properties column to users and user_id index to layers ([0983d89](https://github.com/webmappsrl/camminiditalia/commit/0983d89e7820f4c688d0b9cf4d3ce685935b16ba))
+* **models:** ✨ add EcTrack and Layer models oc:6608 ([#26](https://github.com/webmappsrl/camminiditalia/issues/26)) ([ae22744](https://github.com/webmappsrl/camminiditalia/commit/ae2274427ee423a36d7ac1cb8d5e850cdaf568c5))
+* **models:** ✨ add observer to EcTrack model ([7abdc6d](https://github.com/webmappsrl/camminiditalia/commit/7abdc6d172ac30fd1d793a8cd0616e416954e9cd))
+* **nova:** ✨ add FiltersUsersByRoleTrait to EcTrack and Layer classes OC:6043 ([#21](https://github.com/webmappsrl/camminiditalia/issues/21)) ([a2d7318](https://github.com/webmappsrl/camminiditalia/commit/a2d7318e6fb78aec6ad3be0ed34c425c483448e5))
+* **nova:** ✨ add role-based visibility for menu items OC: 6041 ([#22](https://github.com/webmappsrl/camminiditalia/issues/22)) ([9d8777e](https://github.com/webmappsrl/camminiditalia/commit/9d8777eba7a811d4f0e752e2623a7cbf53b409b7))
+* **nova:** ✨ add trait to hide 'app' field from index OC:6092 ([#20](https://github.com/webmappsrl/camminiditalia/issues/20)) ([8ff09f2](https://github.com/webmappsrl/camminiditalia/commit/8ff09f2f1c8c643d35bee0d7923f8ceb23d8f1c9))
+* **nova:** ✨ customize EcTrack and Layer resources ([ae22744](https://github.com/webmappsrl/camminiditalia/commit/ae2274427ee423a36d7ac1cb8d5e850cdaf568c5))
+* **nova:** ✨ restrict certain actions to administrators only OC:6715 ([#28](https://github.com/webmappsrl/camminiditalia/issues/28)) ([d5c8af0](https://github.com/webmappsrl/camminiditalia/commit/d5c8af0b4be77e9e0a866797c9dcb0c1a5f57286))
+* **policy:** ✨ restrict validators from updating or deleting layers OC:6706 ([#27](https://github.com/webmappsrl/camminiditalia/issues/27)) ([a365ac1](https://github.com/webmappsrl/camminiditalia/commit/a365ac1f994a67b39c2d137d95f16c296aa35bde))
+* register policies for Role and Permission models in AppServiceProvider ([6a0736f](https://github.com/webmappsrl/camminiditalia/commit/6a0736f63459488fb0527a8e78ac28b662e934f0))
+* **schedule:** ✨ add Horizon snapshot command to schedule ([6779033](https://github.com/webmappsrl/camminiditalia/commit/67790332f3febd96b5b73e3e8b1d8423f7973cf1))
+* **scripts:** ✨ add database update script and documentation ([3050567](https://github.com/webmappsrl/camminiditalia/commit/3050567f3dd4d903ce9917ead10bbf88e650e03a))
+* **security:** 🔒 enable Elasticsearch security and add authentication ([b81a001](https://github.com/webmappsrl/camminiditalia/commit/b81a0016e8909d741de6ef68e2fbf939dbd4099f))
+
+
+### Bug Fixes
+
+* add users ([60aa166](https://github.com/webmappsrl/camminiditalia/commit/60aa166be636925c6638a2b40cf87905befeb8f0))
+* **docker:** 🐛 update xdebug client port and formatting ([7a9eff8](https://github.com/webmappsrl/camminiditalia/commit/7a9eff8914da27201c7b6cb6010a1c27f3e6ab9c))
+* jwt lifetime ([b5d2b77](https://github.com/webmappsrl/camminiditalia/commit/b5d2b77921d4f89f26d5c72739a51a30c090603d))
+* name on layer custom field ([b93610d](https://github.com/webmappsrl/camminiditalia/commit/b93610d3995578b178e75d83b1c115d490d80995))
+* **policy:** 🛠️ restrict layer creation to administrators ([ea88542](https://github.com/webmappsrl/camminiditalia/commit/ea88542e01213855d42395bd50507d99562e466f))
+* **policy:** 🛡️ restrict 'viewAny' access to administrators only ([b3196a9](https://github.com/webmappsrl/camminiditalia/commit/b3196a9026e583c17e666c95239ef3877ad26f63))
+* **workflows:** 🐛 correct docker container name in deployment scripts ([83bf521](https://github.com/webmappsrl/camminiditalia/commit/83bf521e290aef0caa2dd913b0f7758118f7aa8e))
+
+
+### Miscellaneous Chores
+
+* add format command to composer.json for code formatting ([eb85095](https://github.com/webmappsrl/camminiditalia/commit/eb850953e03f2fcd1fbd83b7b8f8af0e7178ea7a))
+* add impersonate ([3032552](https://github.com/webmappsrl/camminiditalia/commit/303255222b305fffd46b1f38b16f55e2cc0a4815))
+* add ugc section on nova ([4071a8c](https://github.com/webmappsrl/camminiditalia/commit/4071a8c4ed4a77014490a103f8368d0478c5f392))
+* **compose:** 🔧 add restart policy and environment variables for MinIO service ([89376f0](https://github.com/webmappsrl/camminiditalia/commit/89376f0f888b105d8c9bec14d5a5b272a0db03c6))
+* **composer:** 🔧 update autoload paths and package version ([f86cb4e](https://github.com/webmappsrl/camminiditalia/commit/f86cb4e64259c2aad0ce4602ae5969ea519cfdf7))
+* **config:** 🔧 disable Telescope by default ([193fc22](https://github.com/webmappsrl/camminiditalia/commit/193fc22122c063e28ad9e55070f81f10a78260ba))
+* **config:** 🔧 update container naming convention ([1637b9c](https://github.com/webmappsrl/camminiditalia/commit/1637b9cc8a016814b2d0a55d45048e15b92b536e))
+* **dependencies:** 🔄 update composer dependencies ([c02a8cb](https://github.com/webmappsrl/camminiditalia/commit/c02a8cbde9c586d688d2b96593fa25b68634d962))
+* **dependencies:** 🔧 update wm/map-multi-linestring to version 1.0.4 ([f49922d](https://github.com/webmappsrl/camminiditalia/commit/f49922dcbfd09f393e615a85f0a48eafa95d5bfc))
+* **docker:** 🔧 update container naming convention ([f922fca](https://github.com/webmappsrl/camminiditalia/commit/f922fca28863f260a7f9e54e4a7f969c23998098))
+* **docker:** 🔧 update xdebug initialization script ([99bc561](https://github.com/webmappsrl/camminiditalia/commit/99bc56141736c365b8115ca0aab4fc88ae1b926d))
+* **gitignore:** ➕ add json storage folder to ignore list ([49923e5](https://github.com/webmappsrl/camminiditalia/commit/49923e513d85a8ca67b2e7759342e8bf50ee106e))
+* **gitignore:** 🔧 ignore storage backups directory ([0c5455d](https://github.com/webmappsrl/camminiditalia/commit/0c5455de764b1ae2b3aaff6e102746cc3daa1043))
+* **gitignore:** 🗑️ remove and ignore storage/json/conf directory ([05896dc](https://github.com/webmappsrl/camminiditalia/commit/05896dc8136f9af0701218c32fafe1e85a9309fb))
+* **migrations:** 🔥 remove obsolete migration file for layerables ec track type ([f512411](https://github.com/webmappsrl/camminiditalia/commit/f5124112854e70470f655f2b28f47ba9bd8a401c))
+* **schedule:** 🔧 add scout import command for EcTrack every 15 minutes ([cf4c17e](https://github.com/webmappsrl/camminiditalia/commit/cf4c17e14f1808dc64becf873b8be14a731fd87e))
+* udpated wm-package ([f1e3ee6](https://github.com/webmappsrl/camminiditalia/commit/f1e3ee6c25dff6601f87bbcaf8dd3896e0fc9053))
+* udpated wm-package ([80d7621](https://github.com/webmappsrl/camminiditalia/commit/80d76219f07db561e7cf79f4f193ce04dae11893))
+* udpated wm-package ([10eb9e8](https://github.com/webmappsrl/camminiditalia/commit/10eb9e814dbc693eff939ef54c03fd7d74eb53b8))
+* udpated wm-package ([9fe3b6f](https://github.com/webmappsrl/camminiditalia/commit/9fe3b6ffb6c5dd8315cd9a40dcbaf9e861a93747))
+* udpated wm-package ([3bfb087](https://github.com/webmappsrl/camminiditalia/commit/3bfb08771bafd2a97c06298c67d29c4844e1880e))
+* udpated wm-package ([f2ff67d](https://github.com/webmappsrl/camminiditalia/commit/f2ff67d949a5619c265837462fd2340020f956bb))
+* udpated wm-package ([31a064c](https://github.com/webmappsrl/camminiditalia/commit/31a064c90a76b6f7a804d47e6da9428e20a62caa))
+* udpated wm-package ([c92980e](https://github.com/webmappsrl/camminiditalia/commit/c92980e172f18f7305fd3676f0c0207bd0dbfc5a))
+* udpated wm-package ([a0cacf6](https://github.com/webmappsrl/camminiditalia/commit/a0cacf6c19e24cf61083d142d98caa90e6f03537))
+* udpated wm-package ([0e43e6f](https://github.com/webmappsrl/camminiditalia/commit/0e43e6f88d7eb226df9751b4a1e816eb85449bef))
+* udpated wm-package ([302b544](https://github.com/webmappsrl/camminiditalia/commit/302b544c997fe6c1b60f5fd804c43e97d05d45c0))
+* udpated wm-package ([3d65f4d](https://github.com/webmappsrl/camminiditalia/commit/3d65f4d732e5d0d8488c9ffd4a24c20344cae982))
+* udpated wm-package ([3daddc7](https://github.com/webmappsrl/camminiditalia/commit/3daddc79759b519531c08defe99ea84603619c89))
+* updated wm-package ([cf3f737](https://github.com/webmappsrl/camminiditalia/commit/cf3f73789ee55ee64d8da87911455d6a3aea3441))
+* **vscode:** 🔧 adjust Xdebug port and add file ignore pattern  - Updated the Xdebug listening port from 9200 to 9003 in the VSCode launch configuration. - Added an ignore pattern to exclude files in the vendor directory from being considered for debugging.  docs(docker): 📝 add Docker container naming convention documentation  - Introduced a new documentation file `Docker.mdc` explaining the naming conventions for Docker containers. - Detailed the correct and incorrect formats for container names utilizing `${APP_NAME}`. - Provided regex patterns for identifying proper and improper naming. - Included examples for Docker commands with correct and incorrect naming.  fix(scripts): 🐛 update Docker container naming in scripts  - Replaced underscores with hyphens in Docker container names within scripts. - Ensured consistency with the new naming convention by using `postgres-${APP_NAME:-camminiditalia}` and `php-${APP_NAME:-camminiditalia}`. - Made the `APP_NAME` variable optional with a default to `camminiditalia` if not set. ([c3247a3](https://github.com/webmappsrl/camminiditalia/commit/c3247a3c84836f2bcdeee97f0c7d51f1094117eb))
+* **vscode:** 🔧 update launch configuration for better debugging ([4f4951f](https://github.com/webmappsrl/camminiditalia/commit/4f4951f8a78fb21b3a3fadb7e9b676b6cc226822))
+* **vscode:** 🔧 update path mapping to use workspaceFolder ([61d7177](https://github.com/webmappsrl/camminiditalia/commit/61d717787d42c014dd30901edc34d939f6440e51))
+* **wm-package:** 🔧 update submodule reference to latest commit ([e68538e](https://github.com/webmappsrl/camminiditalia/commit/e68538e8ef5f448c20a9428c2685e79d5725d2e3))
+* **wm-package:** 🔧 update submodule reference to latest commit ([9744974](https://github.com/webmappsrl/camminiditalia/commit/97449745a86c72fbbedf8991983e9538533bc02b))
+* **wm-package:** 🔧 update submodule reference to latest commit ([990fde1](https://github.com/webmappsrl/camminiditalia/commit/990fde1062101374d7da0c893d1c821f630850d8))
+* **wm-package:** 🔧 update submodule reference to latest commit ([f8b85d6](https://github.com/webmappsrl/camminiditalia/commit/f8b85d63582f6193f5e336190a8d9876fbc79e89))
+* **wm-package:** 🔧 update submodule reference to latest commit ([ffcb36e](https://github.com/webmappsrl/camminiditalia/commit/ffcb36e2b8c539a12db8b1a44dbf4bb97276fcfc))
+* **wm-package:** 🔧 update submodule reference to latest commit ([1428c23](https://github.com/webmappsrl/camminiditalia/commit/1428c23dc0c8bc908748b00e66d776c978a69af3))
+* **wm-package:** 🔧 update submodule reference to latest commit ([d537634](https://github.com/webmappsrl/camminiditalia/commit/d53763491297d3c60449c4075293cd8f6807cb52))
+* **wm-package:** update submodule reference to latest commit ([4e2b847](https://github.com/webmappsrl/camminiditalia/commit/4e2b847ab6b919d4ee46363abcda256d82efda4b))
+
 ## [1.1.0](https://github.com/webmappsrl/camminiditalia/compare/v1.0.0...v1.1.0) (2025-04-17)
 
 
