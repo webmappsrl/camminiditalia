@@ -34,7 +34,6 @@ class LayerPolicy
      */
     public function viewAny(User $user)
     {
-        // Only users with roles can view layers list
         return false;
     }
 
@@ -45,7 +44,6 @@ class LayerPolicy
      */
     public function view(User $user, Layer $layer)
     {
-        // Only users with roles can view layers
         return false;
     }
 
@@ -56,7 +54,6 @@ class LayerPolicy
      */
     public function create(User $user)
     {
-        // Only administrators can create layers
         return false;
     }
 
@@ -67,13 +64,6 @@ class LayerPolicy
      */
     public function update(User $user, Layer $layer)
     {
-        // Admins handled by before().
-        // Validators cannot update their own layers, only tracks associated to them.
-        if ($user->hasRole('Validator')) {
-            return false;
-        }
-
-        // Users without role cannot update layers
         return false;
     }
 
@@ -84,13 +74,6 @@ class LayerPolicy
      */
     public function delete(User $user, Layer $layer)
     {
-        // Admins handled by before().
-        // Validators cannot delete their own layers.
-        if ($user->hasRole('Validator')) {
-            return false;
-        }
-
-        // Users without role cannot delete layers
         return false;
     }
 
