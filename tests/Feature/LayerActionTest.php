@@ -109,9 +109,6 @@ class LayerActionTest extends TestCase
                 $this->canActionBeSeen($regenerateAction, $novaRequest),
                 'Validator should not be able to see RegenerateLayerPbfAction'
             );
-        } else {
-            // Action might be filtered out completely, which is also acceptable
-            $this->assertNull($regenerateAction, 'RegenerateLayerPbfAction should not be visible to validator');
         }
     }
 
@@ -137,9 +134,6 @@ class LayerActionTest extends TestCase
                 $this->canActionBeSeen($executeAction, $novaRequest),
                 'Validator should not be able to see ExecuteEcTrackDataChainAction'
             );
-        } else {
-            // Action might be filtered out completely, which is also acceptable
-            $this->assertNull($executeAction, 'ExecuteEcTrackDataChainAction should not be visible to validator');
         }
     }
 
@@ -165,9 +159,6 @@ class LayerActionTest extends TestCase
                 $this->canActionBeSeen($regenerateAction, $novaRequest),
                 'User senza ruoli should not be able to see RegenerateLayerPbfAction'
             );
-        } else {
-            // Action might be filtered out completely, which is also acceptable
-            $this->assertNull($regenerateAction, 'RegenerateLayerPbfAction should not be visible to user senza ruoli');
         }
     }
 
@@ -193,9 +184,6 @@ class LayerActionTest extends TestCase
                 $this->canActionBeSeen($executeAction, $novaRequest),
                 'User senza ruoli should not be able to see ExecuteEcTrackDataChainAction'
             );
-        } else {
-            // Action might be filtered out completely, which is also acceptable
-            $this->assertNull($executeAction, 'ExecuteEcTrackDataChainAction should not be visible to user senza ruoli');
         }
     }
 
