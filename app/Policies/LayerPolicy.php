@@ -34,7 +34,8 @@ class LayerPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasRole('Administrator');
+        // Only users with roles can view layers list
+        return false;
     }
 
     /**
@@ -44,7 +45,8 @@ class LayerPolicy
      */
     public function view(User $user, Layer $layer)
     {
-        return true;
+        // Only users with roles can view layers
+        return false;
     }
 
     /**
@@ -55,7 +57,7 @@ class LayerPolicy
     public function create(User $user)
     {
         // Only administrators can create layers
-        return $user->hasRole('Administrator');
+        return false;
     }
 
     /**
@@ -71,8 +73,8 @@ class LayerPolicy
             return false;
         }
 
-        // Other users can update their own layers.
-        return $user->id === $layer->user_id;
+        // Users without role cannot update layers
+        return false;
     }
 
     /**
@@ -88,8 +90,8 @@ class LayerPolicy
             return false;
         }
 
-        // Other users can delete their own layers.
-        return $user->id === $layer->user_id;
+        // Users without role cannot delete layers
+        return false;
     }
 
     /**
