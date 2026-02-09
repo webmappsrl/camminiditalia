@@ -14,7 +14,7 @@
         "laravel/nova": "^5.0",
         "laravel/telescope": "^5.5",
         "laravel/tinker": "^2.10.1",
-        "laravel/tinker": "^2.10.1",
+        "outl1ne/nova-multiselect-field": "^5.0.1",
         "predis/predis": "^2.3",
         "whitecube/nova-flexible-content": "^2.0.1",
         "wm/map-multi-linestring": "^1.0.4",
