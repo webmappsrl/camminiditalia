@@ -8,4 +8,9 @@ use Wm\WmPackage\Nova\UgcPoi as WmNovaUgcPoi;
 class UgcPoi extends WmNovaUgcPoi
 {
     use HidesAppFromIndexTrait;
+
+    public static function label(): string
+    {
+        return __('Pois');
+    }
 }

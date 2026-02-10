@@ -21,7 +21,7 @@ use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
-use Wm\WmPackage\Nova\EcPoi;
+use App\Nova\EcPoi;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -62,7 +62,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 ])->icon('document'),
 
                 MenuSection::make('EC', [
-                    // MenuItem::resource(EcPoi::class),
+                    MenuItem::resource(EcPoi::class),
                     MenuItem::resource(EcTrack::class),
                     MenuItem::resource(Layer::class),
                 ])->icon('document'),
