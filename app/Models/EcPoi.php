@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Wm\WmPackage\Models\Ecpoi as WmEcPoi;
+use Wm\WmPackage\Models\EcPoi as WmEcPoi;
 
 class EcPoi extends WmEcPoi
 {
