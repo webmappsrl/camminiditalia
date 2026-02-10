@@ -9,6 +9,7 @@ use App\Nova\Dashboards\Main;
 use App\Nova\EcTrack;
 use App\Nova\Layer;
 use App\Nova\Media;
+use App\Nova\TaxonomyPoiType;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
 use App\Nova\User as NovaUser;
@@ -67,9 +68,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(Layer::class),
                 ])->icon('document'),
 
-                // MenuSection::make('Taxonomies', [
-                //     MenuItem::resource(TaxonomyActivity::class),
-                // ])->icon('document'),
+                 MenuSection::make('Taxonomies', [
+                     MenuItem::resource(TaxonomyPoiType::class),
+//                     MenuItem::resource(TaxonomyActivity::class),
+                 ])->icon('document'),
 
             ];
         });
