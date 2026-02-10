@@ -6,6 +6,7 @@ use App\Http\Controllers\LayerFeatureController;
 use App\Models\User;
 use App\Nova\App;
 use App\Nova\Dashboards\Main;
+use App\Nova\EcPoi;
 use App\Nova\EcTrack;
 use App\Nova\Layer;
 use App\Nova\Media;
@@ -22,7 +23,6 @@ use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
-use App\Nova\EcPoi;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -68,10 +68,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(Layer::class),
                 ])->icon('document'),
 
-                 MenuSection::make('Taxonomies', [
-                     MenuItem::resource(TaxonomyPoiType::class),
-//                     MenuItem::resource(TaxonomyActivity::class),
-                 ])->icon('document'),
+                MenuSection::make('Taxonomies', [
+                    MenuItem::resource(TaxonomyPoiType::class),
+                    //                     MenuItem::resource(TaxonomyActivity::class),
+                ])->icon('document'),
 
             ];
         });

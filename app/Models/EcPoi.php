@@ -4,7 +4,4 @@ namespace App\Models;
 
 use Wm\WmPackage\Models\EcPoi as WmEcPoi;
 
-class EcPoi extends WmEcPoi
-{
-
-}
+class EcPoi extends WmEcPoi {}
