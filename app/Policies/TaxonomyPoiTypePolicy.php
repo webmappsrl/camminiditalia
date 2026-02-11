@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
+use App\Models\TaxonomyPoiType;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\TaxonomyPoiType;
 
 class TaxonomyPoiTypePolicy
 {
@@ -31,7 +31,7 @@ class TaxonomyPoiTypePolicy
     public function viewAny(User $user)
     {
         return true;
-    
+
     }
 
     /**
@@ -43,6 +43,7 @@ class TaxonomyPoiTypePolicy
     {
         return true;
     }
+
     /**
      * Determine whether the user can create models.
      *

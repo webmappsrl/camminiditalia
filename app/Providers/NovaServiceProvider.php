@@ -52,7 +52,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuSection::make(__('Files'), [
                         MenuItem::externalLink(__('Icons'), route('icons.upload.show'))->openInNewTab(),
                     ])->canSee(fn (Request $request) => $request->user()->hasRole('Administrator'))
-                    ->collapsable()->collapsedByDefault(),
+                        ->collapsable()->collapsedByDefault(),
                 ])->icon('user')->collapsable()->collapsedByDefault(),
 
                 MenuSection::make(' ', [
