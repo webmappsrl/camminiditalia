@@ -48,6 +48,13 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             return [
                 MenuSection::dashboard(Main::class)->icon('chart-bar'),
 
+                MenuSection::make(__('Admin'), [
+                    MenuSection::make(__('Files'), [
+                        MenuItem::externalLink(__('Icons'), route('icons.upload.show'))->openInNewTab(),
+                    ])->canSee(fn (Request $request) => $request->user()->hasRole('Administrator'))
+                        ->collapsable()->collapsedByDefault(),
+                ])->icon('user')->collapsable()->collapsedByDefault(),
+
                 MenuSection::make(' ', [
                     MenuItem::resource(App::class)
                         ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
