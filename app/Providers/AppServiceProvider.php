@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\TaxonomyPoiType;
 use App\Policies\LayerPolicy;
+use App\Policies\TaxonomyPoiTypePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Permission;
@@ -29,5 +31,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Layer::class, LayerPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Permission::class, PermissionPolicy::class);
+        Gate::policy(TaxonomyPoiType::class, TaxonomyPoiTypePolicy::class);
     }
 }

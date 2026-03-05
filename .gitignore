@@ -31,3 +31,5 @@ storage/db-dumps/
 storage/backups/*
 storage/json/*
 storage/json/conf/
+
+.DS_Store

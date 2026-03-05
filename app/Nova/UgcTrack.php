@@ -8,4 +8,9 @@ use Wm\WmPackage\Nova\UgcTrack as WmNovaUgcTrack;
 class UgcTrack extends WmNovaUgcTrack
 {
     use HidesAppFromIndexTrait;
+
+    public static function label(): string
+    {
+        return __('Tracks');
+    }
 }
