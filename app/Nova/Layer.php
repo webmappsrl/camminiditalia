@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Models\User;
 use App\Nova\Traits\FiltersUsersByRoleTrait;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\BelongsTo;
@@ -21,7 +22,7 @@ class Layer extends WmNovaLayer
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        /** @var \App\Models\User|null $user */
+        /** @var User|null $user */
         $user = Auth::user();
 
         if ($user && ! $user->hasRole('Administrator')) {
