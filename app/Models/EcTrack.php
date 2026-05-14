@@ -24,7 +24,7 @@ class EcTrack extends WmEcTrack
             }
 
             // Se l'utente è un Validator, imposta automaticamente se stesso
-            /** @var \App\Models\User|null $currentUser */
+            /** @var User|null $currentUser */
             $currentUser = Auth::user();
             if (empty($ecTrack->user_id) && $currentUser) {
                 if ($currentUser->hasRole('Validator')) {

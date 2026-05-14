@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\User;
 use Wm\WmPackage\Nova\Fields\LayerFeatures\Http\Controllers\LayerFeatureController as WmLayerFeatureController;
 
 class LayerFeatureController extends WmLayerFeatureController
@@ -39,7 +41,7 @@ class LayerFeatureController extends WmLayerFeatureController
             }
 
             // Ottieni l'utente loggato
-            /** @var \Wm\WmPackage\Models\User|null $user */
+            /** @var User|null $user */
             $user = Auth::user();
 
             // Funzione helper per caricare le features associate
@@ -100,7 +102,7 @@ class LayerFeatureController extends WmLayerFeatureController
                 $paginatedFeatures = $allFeatures->slice($offset, $perPage);
 
                 // Crea un oggetto paginazione manuale
-                $features = new \Illuminate\Pagination\LengthAwarePaginator(
+                $features = new LengthAwarePaginator(
                     $paginatedFeatures,
                     $total,
                     $perPage,
