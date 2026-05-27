@@ -31,11 +31,11 @@ class App extends NovaApp
     protected function configHomeSortTriggerMarkup(): string
     {
         $title = e(__('Sort Home Layers'));
-        $description = e(__('Sort consecutive Layer boxes alphabetically. Other box types stay in place and you can still reorder everything manually after clicking.'));
+        $description = e(__('Sort consecutive Layer boxes alphabetically. Other box types stay in place and you can still reorder everything manually after clicking. Click Update to save the new order.'));
         $buttonLabel = e(__('Sort Layers A-Z'));
         $errorMessage = e(__('Unable to find the home content to sort.'));
         $infoMessage = e(__('Layers are already sorted within each group.'));
-        $successMessage = e(__('Layers sorted alphabetically within each group.'));
+        $successMessage = e(__('Layers sorted alphabetically within each group. Click Update to save the new order.'));
 
         return <<<HTML
             <div class="wm-config-home-sorter rounded-lg border border-gray-200 dark:border-gray-700 p-4">
