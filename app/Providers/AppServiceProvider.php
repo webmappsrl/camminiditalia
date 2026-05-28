@@ -11,10 +11,11 @@ use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Wm\WmPackage\Models\Layer;
-use Wm\WmPackage\Models\UgcPoi;
+use App\Models\UgcPoi;
 use Wm\WmPackage\Models\UgcTrack;
 use Wm\WmPackage\Policies\PermissionPolicy;
 use Wm\WmPackage\Policies\RolePolicy;
+use App\Policies\UgcPoiPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::policy(\Wm\WmPackage\Models\UgcPoi::class, UgcPoiPolicy::class);
         Gate::policy(Layer::class, LayerPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Permission::class, PermissionPolicy::class);
