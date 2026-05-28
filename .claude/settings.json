@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ORCHESTRATOR_URL=*)",
+      "Bash(mkdir -p wm-package/docs/features*)",
+      "Read(wm-package/docs/features*)",
+      "Write(wm-package/docs/features*)",
+      "Edit(wm-package/docs/features*)"
+    ]
+  }
+}

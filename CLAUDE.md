@@ -31,6 +31,12 @@ docker exec laravel-camminiditalia composer format   # esegue Laravel Pint
 
 ## Architettura
 
+### Submodule wm-package — riferimento
+
+Vedi `wm-package/CLAUDE.md` per:
+- Trappola `HasPackageFactory` nelle classi figlio (sovrascrivere `newFactory()`)
+- Convenzioni documentazione feature del package (`docs/resources/`)
+
 ### Submodule wm-package
 
 Il progetto usa `wm-package` come submodule Git (montato anche come volume Docker in `../wm-package`). Contiene:
