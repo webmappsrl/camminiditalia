@@ -21,3 +21,16 @@
 ## Follow-up
 
 - Nessuno.
+
+---
+
+## Completamento — Filtro Segnalazioni per Administrator
+
+### Deviazioni dal piano
+
+- **`LayerReportFilter` eliminato:** il piano prevedeva una classe `App\Nova\Filters\LayerReportFilter` custom. Durante l'implementazione è emerso che `Select::make()->searchable()->filterable()` è il pattern nativo Nova (già usato in wm-package per altri campi), non richiede una classe filter separata e produce un select con ricerca integrata senza componenti Vue custom.
+- **`$layer->name->it` non funziona:** il cast del modello `Layer` sovrascrive `name` con una stringa vuota. Sostituito con `$layer->getStringName()` (metodo già presente nel modello del package).
+
+### Decisioni
+
+- **`Select::make()->searchable()->filterable()` invece di classe Filter custom:** il filtro viene aggiunto ai `fields()` con `->hideFromIndex()->hideFromDetail()->hideWhenCreating()->hideWhenUpdating()`. Appare solo nel pannello filtri con ricerca nativa Nova. Nessun componente Vue aggiuntivo.

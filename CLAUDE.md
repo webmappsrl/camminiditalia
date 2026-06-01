@@ -110,6 +110,8 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 - `App\Nova\UgcPoi` deve dichiarare `public static $model = App\Models\UgcPoi::class` — senza questo override Nova usa il modello del package e le modifiche a campi non in `$fillable` del package vengono silenziosamente ignorate
 - Le Nova Action che devono essere usabili dai Validator richiedono `$this->canRun(fn($request, $model) => true)` nel costruttore — Nova 5 chiama `filterByResourceAuthorization` (policy `update`) quando `runCallback` non è impostato
 - `UgcPoiPolicy::before()` gestisce esplicitamente tutti i ruoli: Administrator → true, non-Validator → false, Validator → null (passa ai metodi specifici)
+- Filtri Nova con ricerca: usare `Select::make()->searchable()->filterable()` nei `fields()` invece di classi Filter custom — è il pattern nativo Nova, produce un select con ricerca senza Vue custom. Nascondere con `->hideFromIndex()->hideFromDetail()->hideWhenCreating()->hideWhenUpdating()`.
+- `$layer->name` restituisce stringa vuota per via del cast — usare sempre `$layer->getStringName()` per ottenere il nome leggibile
 
 ### UGC email notifications (oc:7641)
 - L'observer locale estende quello del package invece di modificarlo — mantiene la compatibilità con gli aggiornamenti di wm-package

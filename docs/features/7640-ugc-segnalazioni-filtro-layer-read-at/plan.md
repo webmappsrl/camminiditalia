@@ -715,3 +715,227 @@ git commit -m "feat(oc:7640): add local UgcPoi model with read_at cast"
 **Placeholder scan:** nessun TBD, ogni step ha codice completo.
 
 **Type consistency:** `filteredQueryForValidator(User $user, Builder $query)` definito e usato coerentemente nei Task 4 e nel test.
+
+---
+
+## Task 7: LayerReportFilter — completamento ticket (filtro per Administrator)
+
+> Tasks 1-6 già implementati sul branch `oc_561`. Questo task aggiunge il filtro mancante.
+
+**Files:**
+- Crea: `app/Nova/Filters/LayerReportFilter.php`
+- Modifica: `app/Nova/UgcPoi.php` — aggiunge `filters()`
+- Crea: `tests/Feature/LayerReportFilterTest.php`
+
+- [ ] **Step 1: Scrivi il test**
+
+```php
+<?php
+
+namespace Tests\Feature;
+
+use App\Nova\Filters\LayerReportFilter;
+use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Tests\Feature\Helpers\LayerTestHelpers;
+use Tests\TestCase;
+use Wm\WmPackage\Models\App as WmApp;
+use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\UgcPoi;
+use Wm\WmPackage\Services\RolesAndPermissionsService;
+
+class LayerReportFilterTest extends TestCase
+{
+    use DatabaseTransactions, LayerTestHelpers;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        RolesAndPermissionsService::seedDatabase();
+        if (WmApp::count() === 0) {
+            WmApp::factory()->create();
+        }
+    }
+
+    private function makeRequest(User $user): NovaRequest
+    {
+        $request = NovaRequest::create('/');
+        $request->setUserResolver(fn () => $user);
+        return $request;
+    }
+
+    public function test_filter_name_is_filtro_segnalazioni(): void
+    {
+        $filter = new LayerReportFilter;
+        $this->assertEquals('Filtro Segnalazioni', $filter->name());
+    }
+
+    public function test_apply_filters_by_layer_id_when_value_provided(): void
+    {
+        $layer = $this->createLayer();
+        $otherLayer = $this->createLayer();
+
+        $match = UgcPoi::factory()->create([
+            'properties' => ['form' => ['id' => 'report'], 'layer_id' => $layer->id],
+        ]);
+        $noMatch = UgcPoi::factory()->create([
+            'properties' => ['form' => ['id' => 'report'], 'layer_id' => $otherLayer->id],
+        ]);
+
+        $filter = new LayerReportFilter;
+        $results = $filter->apply(request(), UgcPoi::query(), $layer->id)->get();
+
+        $this->assertTrue($results->contains($match));
+        $this->assertFalse($results->contains($noMatch));
+    }
+
+    public function test_apply_returns_unfiltered_query_when_value_is_empty(): void
+    {
+        $layer = $this->createLayer();
+
+        $poi1 = UgcPoi::factory()->create(['properties' => ['layer_id' => $layer->id]]);
+        $poi2 = UgcPoi::factory()->create(['properties' => ['layer_id' => $layer->id + 999]]);
+
+        $filter = new LayerReportFilter;
+        $results = $filter->apply(request(), UgcPoi::query(), '')->get();
+
+        $this->assertTrue($results->contains($poi1));
+        $this->assertTrue($results->contains($poi2));
+    }
+
+    public function test_options_includes_only_layers_with_segnalazioni(): void
+    {
+        $layerWith = $this->createLayer();
+        $layerWithout = $this->createLayer();
+
+        UgcPoi::factory()->create([
+            'properties' => ['layer_id' => $layerWith->id],
+        ]);
+
+        $filter = new LayerReportFilter;
+        $options = $filter->options(request());
+
+        $this->assertContains($layerWith->id, array_values($options));
+        $this->assertNotContains($layerWithout->id, array_values($options));
+    }
+
+    public function test_filters_includes_layer_report_filter_for_administrator(): void
+    {
+        $admin = $this->createUserWithRole('Administrator');
+        $request = $this->makeRequest($admin);
+
+        $resource = new \App\Nova\UgcPoi(new UgcPoi);
+        $filterClasses = array_map(fn($f) => get_class($f), $resource->filters($request));
+
+        $this->assertContains(LayerReportFilter::class, $filterClasses);
+    }
+
+    public function test_filters_excludes_layer_report_filter_for_validator(): void
+    {
+        $validator = $this->createUserWithRole('Validator');
+        $request = $this->makeRequest($validator);
+
+        $resource = new \App\Nova\UgcPoi(new UgcPoi);
+        $filterClasses = array_map(fn($f) => get_class($f), $resource->filters($request));
+
+        $this->assertNotContains(LayerReportFilter::class, $filterClasses);
+    }
+}
+```
+
+- [ ] **Step 2: Esegui il test per verificare che fallisca**
+
+```bash
+docker exec laravel-camminiditalia php artisan test tests/Feature/LayerReportFilterTest.php
+```
+
+Atteso: FAIL — `App\Nova\Filters\LayerReportFilter` not found.
+
+- [ ] **Step 3: Crea `app/Nova/Filters/LayerReportFilter.php`**
+
+```php
+<?php
+
+namespace App\Nova\Filters;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Laravel\Nova\Filters\Filter;
+use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\UgcPoi;
+
+class LayerReportFilter extends Filter
+{
+    public $name = 'Filtro Segnalazioni';
+
+    public function apply(Request $request, $query, $value): Builder
+    {
+        if (empty($value)) {
+            return $query;
+        }
+
+        return $query->whereRaw("(properties->>'layer_id')::integer = ?", [(int) $value]);
+    }
+
+    public function options(Request $request): array
+    {
+        $layerIds = UgcPoi::query()
+            ->whereRaw("properties->>'layer_id' IS NOT NULL")
+            ->selectRaw("DISTINCT (properties->>'layer_id')::integer AS layer_id")
+            ->pluck('layer_id')
+            ->toArray();
+
+        return Layer::whereIn('id', $layerIds)
+            ->get()
+            ->mapWithKeys(fn (Layer $layer) => [
+                ($layer->name->it ?? "Layer {$layer->id}") => $layer->id,
+            ])
+            ->toArray();
+    }
+}
+```
+
+- [ ] **Step 4: Aggiungi `filters()` in `app/Nova/UgcPoi.php`**
+
+Aggiungi l'import dopo gli `use` esistenti:
+
+```php
+use App\Nova\Filters\LayerReportFilter;
+```
+
+Aggiungi il metodo dopo `actions()`:
+
+```php
+public function filters(NovaRequest $request): array
+{
+    if ($request->user()->hasRole('Administrator')) {
+        return [...parent::filters($request), new LayerReportFilter];
+    }
+
+    return parent::filters($request);
+}
+```
+
+- [ ] **Step 5: Esegui i test del filtro**
+
+```bash
+docker exec laravel-camminiditalia php artisan test tests/Feature/LayerReportFilterTest.php
+```
+
+Atteso: tutti i test PASS.
+
+- [ ] **Step 6: Esegui la suite completa per verificare nessuna regressione**
+
+```bash
+docker exec laravel-camminiditalia php artisan test
+```
+
+Atteso: tutti i test esistenti continuano a passare.
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add app/Nova/Filters/LayerReportFilter.php app/Nova/UgcPoi.php tests/Feature/LayerReportFilterTest.php
+git commit -m "feat(oc:7640): add LayerReportFilter for Administrator in UgcPoi Nova resource"
+```

@@ -8,7 +8,9 @@ use App\Nova\Actions\MarkAsUnread;
 use App\Nova\Traits\HidesAppFromIndexTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Nova\Fields\Badge;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Nova\UgcPoi as WmNovaUgcPoi;
 
 class UgcPoi extends WmNovaUgcPoi
@@ -66,6 +68,30 @@ class UgcPoi extends WmNovaUgcPoi
             })
             ->onlyOnIndex()
         );
+
+        if ($request->user()?->hasRole('Administrator')) {
+            $fields[] = Select::make(__('Filtro Segnalazioni'), 'layer_filter')
+                ->options(function () {
+                    $layerIds = \App\Models\UgcPoi::query()
+                        ->whereRaw("properties->>'layer_id' IS NOT NULL")
+                        ->selectRaw("DISTINCT (properties->>'layer_id')::integer AS layer_id")
+                        ->pluck('layer_id')
+                        ->toArray();
+
+                    return Layer::whereIn('id', $layerIds)
+                        ->get()
+                        ->mapWithKeys(fn (Layer $layer) => [$layer->id => $layer->getStringName()])
+                        ->toArray();
+                })
+                ->searchable()
+                ->filterable(function ($request, $query, $value) {
+                    return $query->whereRaw("(properties->>'layer_id')::integer = ?", [(int) $value]);
+                })
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating();
+        }
 
         return $fields;
     }
