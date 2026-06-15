@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Wm\WmPackage\Models\Abstracts\GeometryModel;
 use Wm\WmPackage\Models\UgcPoi;
 use Wm\WmPackage\Models\UgcTrack;
 use Wm\WmPackage\Services\UgcService;
@@ -44,6 +43,9 @@ class PopulateUgcLayerIdCommand extends Command
                 if ($layer) {
                     $properties = $model->properties ?? [];
                     $properties['layer_id'] = $layer->id;
+                    if (isset($properties['form']) && is_array($properties['form'])) {
+                        $properties['form']['layer_id'] = $layer->id;
+                    }
                     $model->properties = $properties;
                     $model->saveQuietly();
                     $updated++;
