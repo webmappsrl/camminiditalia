@@ -29,7 +29,8 @@ class SendUgcReportMailJob implements ShouldQueue
         $owner = $this->layer->layerOwner;
 
         if (! $owner) {
-            Log::info('SendUgcReportMailJob: layer '.$this->layer->id.' has no owner, skipping email.');
+            Log::info('SendUgcReportMailJob: layer '.$this->layer->id.' has no owner, sending fallback to info@camminiditalia.org.');
+            Mail::to('info@camminiditalia.org')->send(new NewUgcReportMail($this->ugc, $this->layer, noOwner: true));
 
             return;
         }

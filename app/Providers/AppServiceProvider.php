@@ -6,16 +6,16 @@ use App\Models\TaxonomyPoiType;
 use App\Observers\UgcObserver;
 use App\Policies\LayerPolicy;
 use App\Policies\TaxonomyPoiTypePolicy;
+use App\Policies\UgcPoiPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Wm\WmPackage\Models\Layer;
-use App\Models\UgcPoi;
+use Wm\WmPackage\Models\UgcPoi;
 use Wm\WmPackage\Models\UgcTrack;
 use Wm\WmPackage\Policies\PermissionPolicy;
 use Wm\WmPackage\Policies\RolePolicy;
-use App\Policies\UgcPoiPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {

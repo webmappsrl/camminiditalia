@@ -26,9 +26,14 @@
         .field label { display: block; font-size: 11px; text-transform: uppercase; color: #e8621a; font-weight: bold; letter-spacing: 0.08em; margin-bottom: 3px; }
         .field p { margin: 0; font-size: 15px; color: #222; }
 
+        .photos { margin-bottom: 20px; }
+        .photos label { display: block; font-size: 11px; text-transform: uppercase; color: #e8621a; font-weight: bold; letter-spacing: 0.08em; margin-bottom: 8px; }
+        .photos-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .photos-grid img { width: 180px; height: 130px; object-fit: cover; border-radius: 4px; border: 1px solid #eee; }
         .cta-wrap { text-align: center; margin-top: 28px; }
         .cta { display: inline-block; background: #e8621a; color: #fff; padding: 13px 32px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 15px; letter-spacing: 0.03em; }
 
+        .no-owner-notice { background: #fff8e1; border-left: 4px solid #f0a500; padding: 12px 20px; margin-bottom: 20px; border-radius: 4px; font-size: 13px; color: #7a5c00; }
         .footer { padding: 16px 32px; font-size: 12px; color: #aaa; border-top: 1px solid #f0ede8; text-align: center; background: #faf9f7; }
     </style>
 </head>
@@ -53,31 +58,24 @@
     </div>
 
     <div class="body">
-        <p class="intro">È stata ricevuta una nuova segnalazione sul cammino <strong>{{ $layer->name }}</strong>.</p>
-
-        <div class="field">
-            <label>Cammino / Layer</label>
-            <p>{{ $layer->name }}</p>
-        </div>
-
-        @if(!empty($ugcPoi->properties['form']['waypointtype']))
-        <div class="field">
-            <label>Tipo segnalazione</label>
-            <p>{{ $ugcPoi->properties['form']['waypointtype'] }}</p>
+        @if($noOwner)
+        <div class="no-owner-notice">
+            ⚠️ Questa segnalazione è stata inviata a info@camminiditalia.org perché il cammino <strong>{{ $layer->getStringName() }}</strong> non ha un gestore assegnato.
         </div>
         @endif
+        <p class="intro">È stata ricevuta una nuova segnalazione sul cammino <strong>{{ $layer->getStringName() }}</strong>.</p>
 
         <div class="field">
-            <label>Titolo</label>
-            <p>{{ $ugcPoi->properties['form']['title'] ?? $ugcPoi->name ?? '—' }}</p>
+            <label>{{ __('Layer') }}</label>
+            <p>{{ $layer->getStringName() }}</p>
         </div>
 
-        @if(!empty($ugcPoi->properties['form']['description']))
+        @foreach($formFields as $field)
         <div class="field">
-            <label>Descrizione</label>
-            <p>{{ $ugcPoi->properties['form']['description'] }}</p>
+            <label>{{ $field['label'] }}</label>
+            <p>{{ is_array($field['value']) ? implode(', ', $field['value']) : $field['value'] }}</p>
         </div>
-        @endif
+        @endforeach
 
         @if($coordinates)
         <div class="field">
@@ -90,6 +88,17 @@
             <label>Data e ora</label>
             <p>{{ $ugcPoi->created_at?->format('d/m/Y H:i') ?? '—' }}</p>
         </div>
+
+        @if(!empty($mediaUrls))
+        <div class="photos">
+            <label>{{ __('Photos') }}</label>
+            <div class="photos-grid">
+                @foreach($mediaUrls as $url)
+                <img src="{{ $url }}" alt="foto segnalazione">
+                @endforeach
+            </div>
+        </div>
+        @endif
 
         <div class="cta-wrap">
             <a href="{{ $novaUrl }}" class="cta">Apri nel pannello admin →</a>
