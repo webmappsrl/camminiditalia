@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\UgcPoi;
 use App\Nova\Actions\MarkAsRead;
 use App\Nova\Actions\MarkAsUnread;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -9,7 +10,6 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App as WmApp;
-use App\Models\UgcPoi;
 
 class MarkAsReadActionTest extends TestCase
 {
