@@ -60,14 +60,14 @@
     <div class="body">
         @if($noOwner)
         <div class="no-owner-notice">
-            ⚠️ Questa segnalazione è stata inviata a info@camminiditalia.org perché il cammino <strong>{{ $layer->getStringName() }}</strong> non ha un gestore assegnato.
+            ⚠️ Questa segnalazione è stata inviata a info@camminiditalia.org perché {!! $layer ? 'il cammino <strong>'.e($layer->getStringName()).'</strong> non ha un gestore assegnato' : 'non è stato possibile determinare il cammino di appartenenza' !!}.
         </div>
         @endif
-        <p class="intro">È stata ricevuta una nuova segnalazione sul cammino <strong>{{ $layer->getStringName() }}</strong>.</p>
+        <p class="intro">È stata ricevuta una nuova segnalazione{!! $layer ? ' sul cammino <strong>'.e($layer->getStringName()).'</strong>' : ' (cammino non determinato)' !!}.</p>
 
         <div class="field">
             <label>{{ __('Layer') }}</label>
-            <p>{{ $layer->getStringName() }}</p>
+            <p>{{ $layer?->getStringName() ?? 'Non determinato' }}</p>
         </div>
 
         @foreach($formFields as $field)

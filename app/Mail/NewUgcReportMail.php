@@ -16,13 +16,16 @@ class NewUgcReportMail extends Mailable
     use Queueable, SerializesModels;
 
     public string $novaUrl;
+
     public ?string $coordinates;
+
     public array $formFields;
+
     public array $mediaUrls;
 
     public function __construct(
         public readonly GeometryModel $ugcPoi,
-        public readonly Layer $layer,
+        public readonly ?Layer $layer,
         public readonly bool $noOwner = false,
     ) {
         $resourceName = $ugcPoi instanceof \Wm\WmPackage\Models\UgcPoi ? 'ugc-pois' : 'ugc-tracks';
@@ -30,13 +33,13 @@ class NewUgcReportMail extends Mailable
         $this->coordinates = $this->extractCoordinates($ugcPoi);
         app()->setLocale('it');
         $this->formFields = $this->resolveFormFields($ugcPoi);
-        $this->mediaUrls = $ugcPoi->getMedia()->map(fn($m) => $m->getUrl())->toArray();
+        $this->mediaUrls = $ugcPoi->getMedia()->map(fn ($m) => $m->getUrl())->toArray();
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nuova segnalazione su '.$this->layer->getStringName(),
+            subject: 'Nuova segnalazione su '.($this->layer?->getStringName() ?? 'cammino non determinato'),
         );
     }
 

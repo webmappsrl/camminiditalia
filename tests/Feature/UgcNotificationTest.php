@@ -2,15 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\ResolveUgcLayerJob;
 use App\Jobs\SendUgcReportMailJob;
 use App\Mail\NewUgcReportMail;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
-use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\UgcPoi;
 use Wm\WmPackage\Models\User;
@@ -32,7 +31,7 @@ class UgcNotificationTest extends TestCase
     }
 
     // -------------------------------------------------------------------------
-    // Job dispatch
+    // Job dispatch — observer
     // -------------------------------------------------------------------------
 
     public function test_creating_ugc_poi_with_layer_id_dispatches_notification_job(): void
@@ -43,68 +42,62 @@ class UgcNotificationTest extends TestCase
         $layer = Layer::factory()->create(['user_id' => $owner->id]);
 
         UgcPoi::factory()->create([
-            'properties' => ['layer_id' => $layer->id],
+            'properties' => ['layer_id' => $layer->id, 'form' => ['id' => 'report']],
         ]);
 
         Queue::assertPushed(SendUgcReportMailJob::class);
+        Queue::assertNotPushed(ResolveUgcLayerJob::class);
     }
 
-    public function test_creating_ugc_poi_without_layer_id_populates_it_and_dispatches_job(): void
+    public function test_creating_ugc_poi_without_layer_id_dispatches_resolve_job(): void
     {
         Queue::fake();
 
-        $owner = User::factory()->create();
-        $layer = Layer::factory()->create(['user_id' => $owner->id]);
-        $track = EcTrack::factory()->create();
-
-        // Traccia vicina al punto UGC (Roma) — 3D obbligatorio
-        DB::table('ec_tracks')->where('id', $track->id)->update([
-            'geometry' => DB::raw("ST_Force3D(ST_GeomFromText('MULTILINESTRING((12.49 41.89, 12.50 41.90, 12.51 41.91))', 4326))"),
+        $ugcPoi = UgcPoi::factory()->create([
+            'properties' => ['form' => ['id' => 'report']],
         ]);
 
-        // Associa la traccia al layer tramite layerables
-        DB::table('layerables')->insert([
-            'layer_id' => $layer->id,
-            'layerable_type' => 'App\Models\EcTrack',
-            'layerable_id' => $track->id,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        // Aggiorna geometry del layer (bbox delle tracce)
-        DB::table('layers')->where('id', $layer->id)->update([
-            'geometry' => DB::raw("ST_GeomFromText('POLYGON((12.48 41.88, 12.52 41.88, 12.52 41.92, 12.48 41.92, 12.48 41.88))', 4326)"),
-        ]);
-
-        // UgcPoi senza layer_id, geometria vicina alla traccia — 3D obbligatorio
-        $ugcPoi = UgcPoi::factory()->create(['properties' => []]);
-        DB::table('ugc_pois')->where('id', $ugcPoi->id)->update([
-            'geometry' => DB::raw("ST_Force3D(ST_GeomFromText('POINT(12.50 41.90)', 4326))"),
-        ]);
-        $ugcPoi->refresh();
-
-        // Simula il created() dell'observer
-        (new \App\Observers\UgcObserver)->created($ugcPoi);
-        $ugcPoi->refresh();
-
-        $this->assertEquals($layer->id, $ugcPoi->properties['layer_id']);
-        Queue::assertPushed(SendUgcReportMailJob::class);
-    }
-
-    public function test_creating_ugc_poi_far_from_any_track_does_not_dispatch_job(): void
-    {
-        Queue::fake();
-
-        // UgcPoi nel mezzo del Pacifico, nessuna traccia vicina — 3D obbligatorio
-        $ugcPoi = UgcPoi::factory()->create(['properties' => []]);
-        DB::table('ugc_pois')->where('id', $ugcPoi->id)->update([
-            'geometry' => DB::raw("ST_Force3D(ST_GeomFromText('POINT(-150.0 0.0)', 4326))"),
-        ]);
-        $ugcPoi->refresh();
-
-        (new \App\Observers\UgcObserver)->created($ugcPoi);
-
+        Queue::assertPushed(ResolveUgcLayerJob::class, function ($job) use ($ugcPoi) {
+            return $job->ugc->id === $ugcPoi->id;
+        });
         Queue::assertNotPushed(SendUgcReportMailJob::class);
+    }
+
+    public function test_creating_ugc_poi_without_layer_id_and_form_not_report_does_not_dispatch_resolve_job(): void
+    {
+        Queue::fake();
+
+        UgcPoi::factory()->create([
+            'properties' => ['form' => ['id' => 'poi']],
+        ]);
+
+        Queue::assertNotPushed(ResolveUgcLayerJob::class);
+        Queue::assertNotPushed(SendUgcReportMailJob::class);
+    }
+
+    public function test_creating_ugc_poi_with_null_form_layer_id_does_not_dispatch_resolve_job(): void
+    {
+        Queue::fake();
+
+        UgcPoi::factory()->create([
+            'properties' => ['form' => ['id' => 'report', 'layer_id' => null]],
+        ]);
+
+        Queue::assertNotPushed(ResolveUgcLayerJob::class);
+        Queue::assertNotPushed(SendUgcReportMailJob::class);
+    }
+
+    public function test_resolve_job_skips_non_report_ugc(): void
+    {
+        Mail::fake();
+
+        $ugcPoi = UgcPoi::factory()->create([
+            'properties' => ['form' => ['id' => 'poi']],
+        ]);
+
+        (new ResolveUgcLayerJob($ugcPoi))->handle(app(\Wm\WmPackage\Services\UgcService::class));
+
+        Mail::assertNothingSent();
     }
 
     // -------------------------------------------------------------------------
@@ -124,7 +117,7 @@ class UgcNotificationTest extends TestCase
         Mail::assertSent(NewUgcReportMail::class, fn ($mail) => $mail->hasTo('gestore@test.com'));
     }
 
-    public function test_job_does_not_send_mail_when_layer_has_no_owner(): void
+    public function test_job_sends_fallback_mail_when_layer_has_no_owner(): void
     {
         Mail::fake();
 
@@ -133,7 +126,7 @@ class UgcNotificationTest extends TestCase
 
         (new SendUgcReportMailJob($ugcPoi, $layer))->handle();
 
-        Mail::assertNothingSent();
+        Mail::assertSent(NewUgcReportMail::class, fn ($mail) => $mail->hasTo('info@camminiditalia.org'));
     }
 
     // -------------------------------------------------------------------------

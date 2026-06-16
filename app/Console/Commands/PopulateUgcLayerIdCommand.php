@@ -2,26 +2,26 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\ResolveUgcLayerJob;
 use Illuminate\Console\Command;
 use Wm\WmPackage\Models\UgcPoi;
 use Wm\WmPackage\Models\UgcTrack;
-use Wm\WmPackage\Services\UgcService;
 
 class PopulateUgcLayerIdCommand extends Command
 {
     protected $signature = 'ugc:populate-layer-id';
 
-    protected $description = 'Popola layer_id nelle properties dei UgcPoi e UgcTrack che ne sono privi tramite query spaziale PostGIS';
+    protected $description = 'Accoda ResolveUgcLayerJob per tutti i UgcPoi e UgcTrack privi di layer_id';
 
-    public function handle(UgcService $ugcService): int
+    public function handle(): int
     {
-        $this->processModel($ugcService, UgcPoi::class);
-        $this->processModel($ugcService, UgcTrack::class);
+        $this->processModel(UgcPoi::class);
+        $this->processModel(UgcTrack::class);
 
         return self::SUCCESS;
     }
 
-    private function processModel(UgcService $ugcService, string $modelClass): void
+    private function processModel(string $modelClass): void
     {
         $shortName = class_basename($modelClass);
         $query = $modelClass::whereNull('properties->layer_id');
@@ -33,29 +33,18 @@ class PopulateUgcLayerIdCommand extends Command
             return;
         }
 
-        $this->info("{$shortName}: trovati {$total} record senza layer_id.");
+        $this->info("{$shortName}: accodamento di {$total} job...");
         $bar = $this->output->createProgressBar($total);
-        $updated = 0;
 
-        $query->chunkById(100, function ($models) use ($ugcService, $bar, &$updated) {
+        $query->chunkById(100, function ($models) use ($bar) {
             foreach ($models as $model) {
-                $layer = $ugcService->resolveLayer($model);
-                if ($layer) {
-                    $properties = $model->properties ?? [];
-                    $properties['layer_id'] = $layer->id;
-                    if (isset($properties['form']) && is_array($properties['form'])) {
-                        $properties['form']['layer_id'] = $layer->id;
-                    }
-                    $model->properties = $properties;
-                    $model->saveQuietly();
-                    $updated++;
-                }
+                ResolveUgcLayerJob::dispatch($model, notify: false);
                 $bar->advance();
             }
         });
 
         $bar->finish();
         $this->newLine();
-        $this->info("{$shortName}: completato {$updated}/{$total} aggiornati.");
+        $this->info("{$shortName}: {$total} job accodati.");
     }
 }
