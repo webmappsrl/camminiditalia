@@ -13,6 +13,7 @@ use App\Nova\Media;
 use App\Nova\TaxonomyActivity;
 use App\Nova\TaxonomyPoiType;
 use App\Nova\TaxonomyWhere;
+use App\Nova\Tile;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
 use App\Nova\User as NovaUser;
@@ -26,6 +27,7 @@ use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -65,6 +67,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 MenuSection::make(' ', [
                     MenuItem::resource(App::class)
                         ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
+                    MenuItem::resource(Tile::class)
+                        ->canSee(fn (Request $request) => RolesAndPermissionsService::allows($request)),
                     MenuItem::resource(NovaUser::class)
                         ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
                     MenuItem::resource(Media::class)
