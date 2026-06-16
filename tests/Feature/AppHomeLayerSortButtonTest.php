@@ -29,7 +29,7 @@ class AppHomeLayerSortButtonTest extends TestCase
         $this->assertStringContainsString('data-config-home-sort-trigger="true"', $markup);
         $this->assertStringContainsString('data-config-home-sort-attribute="config_home"', $markup);
         $this->assertStringContainsString(
-            'data-config-home-sort-success="Layers sorted alphabetically within each group."',
+            'data-config-home-sort-success="Layers sorted alphabetically within each group. Click Update to save the new order."',
             $markup
         );
     }

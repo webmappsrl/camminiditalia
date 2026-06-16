@@ -34,7 +34,7 @@ class LayerPolicy
      */
     public function viewAny(User $user)
     {
-        return false;
+        return true;
     }
 
     /**
@@ -44,7 +44,7 @@ class LayerPolicy
      */
     public function view(User $user, Layer $layer)
     {
-        return false;
+        return true;
     }
 
     /**
@@ -64,7 +64,11 @@ class LayerPolicy
      */
     public function update(User $user, Layer $layer)
     {
-        return false;
+        if ($user->hasRole('Validator')) {
+            return false;
+        }
+
+        return $layer->user_id === $user->id;
     }
 
     /**
@@ -74,7 +78,11 @@ class LayerPolicy
      */
     public function delete(User $user, Layer $layer)
     {
-        return false;
+        if ($user->hasRole('Validator')) {
+            return false;
+        }
+
+        return $layer->user_id === $user->id;
     }
 
     /**
