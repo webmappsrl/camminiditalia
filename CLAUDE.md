@@ -104,8 +104,16 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | UGC email notifications | oc:7641 | `App\Observers\UgcObserver`, `App\Jobs\SendUgcReportMailJob` | Email al gestore del layer alla creazione di un UGC report |
 | UGC filtro layer e read/unread | oc:7640 | `App\Nova\UgcPoi`, `App\Models\UgcPoi`, `App\Policies\UgcPoiPolicy`, `App\Nova\Actions\MarkAsRead`, `App\Nova\Actions\MarkAsUnread` | Validator vede solo segnalazioni dei propri layer; badge e action bulk letto/non letto |
 | Trasferimento ownership EcTrack al layer owner | oc:8080 | `App\Observers\LayerObserver`, `App\Observers\LayerableObserver`, `config/camminiditalia.php`, `App\Nova\Layer` | Al cambio owner del layer, bulk UPDATE user_id su EcTrack e EcPoi associate; hook su Layerable::created per nuove associazioni |
+| Fix UI layer owner: action e link occhio tracce | oc:8089 | `App\Nova\Layer`, `tests/Feature/LayerActionsVisibilityTest.php`, `wm-package/.../LayerFeatures.php`, `wm-package/.../useGrid.ts` | canSee+canRun su AddLayersToConfigHomeAction (solo Administrator); novaPath via withMeta per link icona occhio corretto |
 
 ## Decisioni architetturali
+
+### Fix UI layer owner (oc:8089)
+- `canSee` senza `canRun` è protezione solo cosmetica: Nova con `canSee=false` già restituisce 404 sull'esecuzione via API (action non trovata in `availableActions()`), ma `canRun` aggiunge protezione esplicita a livello logico
+- Nova con `canSee=false` restituisce 404 (non 403) quando si tenta di eseguire l'action via API — comportamento da considerare nei test (asserire `[403, 404]`)
+- `uriKey` dell'action `AddLayersToConfigHomeAction` è `aggiungi-alla-home` (generato automaticamente dal nome italiano della classe PHP) — non `add-layers-to-config-home-action`
+- `novaPath` iniettato via `withMeta` in `LayerFeatures.php` usando `'/'.trim(Nova::path(), '/')` — il trim previene doppi slash se `Nova::path()` restituisce stringa con slash finale
+- Il rebuild del dist del campo Nova si fa con `npm run prod` (non `npm run build`) — configurazione Laravel Mix
 
 ### Trasferimento ownership EcTrack al layer owner (oc:8080)
 - Due observer locali custom (non in wm-package): `LayerObserver` (cambio owner del layer) e `LayerableObserver` (nuova risorsa associata a layer con owner)
