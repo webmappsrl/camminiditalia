@@ -103,8 +103,17 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Home tab layer sorting | oc:7644 | `App\Nova\Layer`, `resources/js/nova/config-home-sorter.js` | Sorting layer nella home tab via Nova |
 | UGC email notifications | oc:7641 | `App\Observers\UgcObserver`, `App\Jobs\SendUgcReportMailJob` | Email al gestore del layer alla creazione di un UGC report |
 | UGC filtro layer e read/unread | oc:7640 | `App\Nova\UgcPoi`, `App\Models\UgcPoi`, `App\Policies\UgcPoiPolicy`, `App\Nova\Actions\MarkAsRead`, `App\Nova\Actions\MarkAsUnread` | Validator vede solo segnalazioni dei propri layer; badge e action bulk letto/non letto |
+| Trasferimento ownership EcTrack al layer owner | oc:8080 | `App\Observers\LayerObserver`, `App\Observers\LayerableObserver`, `config/camminiditalia.php`, `App\Nova\Layer` | Al cambio owner del layer, bulk UPDATE user_id su EcTrack e EcPoi associate; hook su Layerable::created per nuove associazioni |
 
 ## Decisioni architetturali
+
+### Trasferimento ownership EcTrack al layer owner (oc:8080)
+- Due observer locali custom (non in wm-package): `LayerObserver` (cambio owner del layer) e `LayerableObserver` (nuova risorsa associata a layer con owner)
+- `LayerObserver::saved()` usa `wasRecentlyCreated || wasChanged('user_id')` — `wasChanged()` ritorna false su record appena creati, quindi la condizione deve coprire entrambi i casi
+- Fallback owner configurabile via `CAMMINIDITALIA_DEFAULT_OWNER_ID` in `.env` (default 2) — specifico di camminiditalia, non in wm-package config
+- Bulk UPDATE via query builder (`->update()`) — non triggera observer Eloquent sulle singole tracce, comportamento intenzionale
+- `layerable_type` in DB è `App\Models\EcTrack` (config `ec_track_model` già impostato) — il confronto nel `LayerableObserver` è corretto per questo progetto
+- `EcTrack` e `EcPoi` locali ora hanno `newFactory()` che punta alle factory del package — necessario per i test (trappola `HasPackageFactory`)
 
 ### UGC filtro layer e read/unread (oc:7640)
 - `App\Nova\UgcPoi` deve dichiarare `public static $model = App\Models\UgcPoi::class` — senza questo override Nova usa il modello del package e le modifiche a campi non in `$fillable` del package vengono silenziosamente ignorate

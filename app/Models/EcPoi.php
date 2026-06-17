@@ -2,6 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Wm\WmPackage\Models\EcPoi as WmEcPoi;
 
-class EcPoi extends WmEcPoi {}
+class EcPoi extends WmEcPoi
+{
+    protected static function newFactory(): Factory
+    {
+        return \Wm\WmPackage\Database\Factories\EcPoiFactory::new();
+    }
+}

@@ -44,10 +44,10 @@ class Layer extends WmNovaLayer
         // Modify layerOwner field to be visible only to admins
         $fields = array_map(function ($field) use ($currentUser) {
             if ($field instanceof BelongsTo && $field->attribute === 'layerOwner') {
-                // Show layerOwner field only to admins
                 $field->canSee(function () use ($currentUser) {
                     return $currentUser && $currentUser->hasRole('Administrator');
                 });
+                $field->help('⚠️ Modificando il gestore, tutte le tracce e i POI associati a questo layer verranno automaticamente trasferiti al nuovo gestore.');
             }
 
             return $field;

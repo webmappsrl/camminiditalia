@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\TaxonomyPoiType;
+use App\Observers\LayerableObserver;
+use App\Observers\LayerObserver;
 use App\Observers\UgcObserver;
 use App\Policies\LayerPolicy;
 use App\Policies\TaxonomyPoiTypePolicy;
@@ -12,6 +14,7 @@ use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\Layerable;
 use Wm\WmPackage\Models\UgcPoi;
 use Wm\WmPackage\Models\UgcTrack;
 use Wm\WmPackage\Policies\PermissionPolicy;
@@ -40,5 +43,7 @@ class AppServiceProvider extends ServiceProvider
 
         UgcPoi::observe(UgcObserver::class);
         UgcTrack::observe(UgcObserver::class);
+        Layer::observe(LayerObserver::class);
+        Layerable::observe(LayerableObserver::class);
     }
 }
