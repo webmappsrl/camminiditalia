@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b85103ce4689320fd61d7468747a5e21",
+    "content-hash": "e5886e0bdeada47b16830a0e6e9dbb75",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -11534,30 +11534,30 @@
         },
         {
             "name": "wm/wm-package",
-            "version": "dev-069386b94853e28931d635c07337a3233e45576d",
+            "version": "dev-oc_561",
             "dist": {
                 "type": "path",
                 "url": "./wm-package",
-                "reference": "9b04e0eeba2921aa9280f91f475ed3de6b4c2ea5"
+                "reference": "cc79ae37dedd5bdc82699995694d3ad0a536d27f"
             },
             "require": {
                 "chillerlan/php-qrcode": "^5.0",
                 "christiankuri/laravel-favorite": "^1.4",
                 "cweagans/composer-patches": "^1.7",
                 "ebess/advanced-nova-media-library": "^5.0",
-                "illuminate/contracts": "^10.0 || ^11.0 || ^12.0",
+                "illuminate/contracts": "^10.0 || ^11.0 || ^12.0 || ^13.0",
                 "intervention/image": "^2.5",
                 "jenssegers/agent": "^2.6",
                 "kiritokatklian/nova-permission": "*",
                 "kongulov/nova-tab-translatable": "^2.1",
-                "laravel/framework": "^10.0 || ^11.0 || ^12.0",
+                "laravel/framework": "^10.0 || ^11.0 || ^12.0 || ^13.0",
                 "laravel/horizon": "^5.30",
                 "laravel/nova": "^5.0",
                 "laravel/sanctum": "*",
                 "laravel/scout": "^10.11",
                 "league/flysystem-aws-s3-v3": "^3.0",
                 "maatwebsite/excel": "^3.1",
-                "marshmallow/nova-tiptap": "^5.1",
+                "marshmallow/nova-tiptap": "^5.1 || ^6.0",
                 "matchish/laravel-scout-elasticsearch": "^7.10",
                 "ndamiens/gisconverter": "^1.0",
                 "php": ">8.1",
@@ -11611,7 +11611,11 @@
                     "Wm\\WmPackage\\Nova\\Fields\\IconSelect\\": "src/Nova/Fields/IconSelect/src/",
                     "Wm\\WmPackage\\Nova\\Fields\\LayerFeatures\\": "src/Nova/Fields/LayerFeatures/src/",
                     "Wm\\WmPackage\\Nova\\Fields\\FeatureCollectionMap\\": "src/Nova/Fields/FeatureCollectionMap/src/",
-                    "Wm\\WmPackage\\Nova\\Fields\\FeatureCollectionGrid\\": "src/Nova/Fields/FeatureCollectionGrid/src/"
+                    "Wm\\WmPackage\\Nova\\Cards\\LayerAnalytics\\": "src/Nova/Cards/LayerAnalytics/src/",
+                    "Wm\\WmPackage\\Services\\PostHog\\": "src/Services/PostHog/",
+                    "Wm\\WmPackage\\Http\\Controllers\\Nova\\": "src/Http/Controllers/Nova/",
+                    "Wm\\WmPackage\\Nova\\Fields\\FeatureCollectionGrid\\": "src/Nova/Fields/FeatureCollectionGrid/src/",
+                    "Wm\\WmPackage\\Nova\\Cards\\ApiLinksCard\\": "src/Nova/Cards/ApiLinksCard/src/"
                 },
                 "classmap": [
                     "src/Exceptions/"

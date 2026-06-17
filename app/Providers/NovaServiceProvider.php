@@ -22,11 +22,12 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
-use Wm\WmPackage\Support\SuperAdminService;
+use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -36,6 +37,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot(): void
     {
         parent::boot();
+
+        Nova::serving(function (ServingNova $event) {
+            Nova::script('config-home-sorter', resource_path('js/nova/config-home-sorter.js'));
+        });
 
         // Questa route sovrascrive quella del wm-package permettendo
         // di filtrare le tracce per utente loggato senza modificare il package.
@@ -63,7 +68,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(App::class)
                         ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
                     MenuItem::resource(Tile::class)
-                        ->canSee(fn (Request $request) => SuperAdminService::allows($request)),
+                        ->canSee(fn (Request $request) => RolesAndPermissionsService::allows($request)),
                     MenuItem::resource(NovaUser::class)
                         ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
                     MenuItem::resource(Media::class)
