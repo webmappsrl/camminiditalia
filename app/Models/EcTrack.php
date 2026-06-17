@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Auth;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcTrack as WmEcTrack;
@@ -9,6 +10,11 @@ use Wm\WmPackage\Observers\EcTrackObserver;
 
 class EcTrack extends WmEcTrack
 {
+    protected static function newFactory(): Factory
+    {
+        return \Wm\WmPackage\Database\Factories\EcTrackFactory::new();
+    }
+
     /**
      * Boot the model and register events.
      */

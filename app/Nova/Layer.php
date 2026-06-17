@@ -6,6 +6,7 @@ use App\Nova\Traits\FiltersUsersByRoleTrait;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Wm\WmPackage\Nova\Actions\AddLayersToConfigHomeAction;
 use Wm\WmPackage\Nova\Actions\ExecuteEcTrackDataChainAction;
 use Wm\WmPackage\Nova\Actions\RegenerateLayerPbfAction;
 use Wm\WmPackage\Nova\Layer as WmNovaLayer;
@@ -44,10 +45,10 @@ class Layer extends WmNovaLayer
         // Modify layerOwner field to be visible only to admins
         $fields = array_map(function ($field) use ($currentUser) {
             if ($field instanceof BelongsTo && $field->attribute === 'layerOwner') {
-                // Show layerOwner field only to admins
                 $field->canSee(function () use ($currentUser) {
                     return $currentUser && $currentUser->hasRole('Administrator');
                 });
+                $field->help('⚠️ Modificando il gestore, tutte le tracce e i POI associati a questo layer verranno automaticamente trasferiti al nuovo gestore.');
             }
 
             return $field;
@@ -63,9 +64,12 @@ class Layer extends WmNovaLayer
 
         // Filter actions to show only to administrators
         $actions = array_map(function ($action) use ($currentUser) {
-            // Restrict RegenerateLayerPbfAction and ExecuteEcTrackDataChainAction to administrators only
-            if ($action instanceof RegenerateLayerPbfAction || $action instanceof ExecuteEcTrackDataChainAction) {
+            // Restrict RegenerateLayerPbfAction, ExecuteEcTrackDataChainAction and AddLayersToConfigHomeAction to administrators only
+            if ($action instanceof RegenerateLayerPbfAction || $action instanceof ExecuteEcTrackDataChainAction || $action instanceof AddLayersToConfigHomeAction) {
                 $action->canSee(function () use ($currentUser) {
+                    return $currentUser && $currentUser->hasRole('Administrator');
+                });
+                $action->canRun(function ($request, $model) use ($currentUser) {
                     return $currentUser && $currentUser->hasRole('Administrator');
                 });
             }

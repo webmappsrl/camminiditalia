@@ -83,6 +83,8 @@ services:
   mailpit:
     container_name: "mailpit-${APP_NAME}"
     image: "axllent/mailpit:latest"
+    environment:
+      MP_WEBROOT: mailpit
     ports:
-      - "${FORWARD_MAILPIT_PORT:-1025}:1025"
-      - "${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025"
+      - "127.0.0.1:${FORWARD_MAILPIT_PORT:-1025}:1025"
+      - "127.0.0.1:${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025"

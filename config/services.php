@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'posthog' => [
+        'host' => env('POSTHOG_HOST'),
+        'project_id' => env('POSTHOG_PROJECT_ID'),
+        'personal_api_key' => env('POSTHOG_PERSONAL_API_KEY'),
+        'analytics_cache_ttl' => env('POSTHOG_ANALYTICS_CACHE_TTL', 900),
+    ],
+
 ];

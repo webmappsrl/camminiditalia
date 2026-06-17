@@ -16,11 +16,11 @@ return new class extends Migration
             'taxonomy_activities',
             'taxonomy_targets',
             'taxonomy_whens',
-            'taxonomy_poi_types'
+            'taxonomy_poi_types',
         ];
 
         foreach ($tables as $table) {
-            if (Schema::hasTable($table) && !Schema::hasColumn($table, 'icon')) {
+            if (Schema::hasTable($table) && ! Schema::hasColumn($table, 'icon')) {
                 Schema::table($table, function (Blueprint $table) {
                     $table->string('icon')->nullable()->after('excerpt');
                 });
@@ -38,7 +38,7 @@ return new class extends Migration
             'taxonomy_activities',
             'taxonomy_targets',
             'taxonomy_whens',
-            'taxonomy_poi_types'
+            'taxonomy_poi_types',
         ];
 
         foreach ($tables as $table) {

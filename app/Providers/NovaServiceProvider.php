@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
@@ -36,6 +37,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot(): void
     {
         parent::boot();
+
+        Nova::serving(function (ServingNova $event) {
+            Nova::script('config-home-sorter', resource_path('js/nova/config-home-sorter.js'));
+        });
 
         // Questa route sovrascrive quella del wm-package permettendo
         // di filtrare le tracce per utente loggato senza modificare il package.
