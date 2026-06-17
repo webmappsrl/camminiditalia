@@ -6,6 +6,7 @@ use App\Nova\Traits\FiltersUsersByRoleTrait;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Wm\WmPackage\Nova\Actions\AddLayersToConfigHomeAction;
 use Wm\WmPackage\Nova\Actions\ExecuteEcTrackDataChainAction;
 use Wm\WmPackage\Nova\Actions\RegenerateLayerPbfAction;
 use Wm\WmPackage\Nova\Layer as WmNovaLayer;
@@ -63,9 +64,12 @@ class Layer extends WmNovaLayer
 
         // Filter actions to show only to administrators
         $actions = array_map(function ($action) use ($currentUser) {
-            // Restrict RegenerateLayerPbfAction and ExecuteEcTrackDataChainAction to administrators only
-            if ($action instanceof RegenerateLayerPbfAction || $action instanceof ExecuteEcTrackDataChainAction) {
+            // Restrict RegenerateLayerPbfAction, ExecuteEcTrackDataChainAction and AddLayersToConfigHomeAction to administrators only
+            if ($action instanceof RegenerateLayerPbfAction || $action instanceof ExecuteEcTrackDataChainAction || $action instanceof AddLayersToConfigHomeAction) {
                 $action->canSee(function () use ($currentUser) {
+                    return $currentUser && $currentUser->hasRole('Administrator');
+                });
+                $action->canRun(function ($request, $model) use ($currentUser) {
                     return $currentUser && $currentUser->hasRole('Administrator');
                 });
             }
