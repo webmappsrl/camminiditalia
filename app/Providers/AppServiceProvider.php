@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::policy(\Wm\WmPackage\Models\UgcPoi::class, UgcPoiPolicy::class);
+        Gate::policy(UgcPoi::class, UgcPoiPolicy::class);
         Gate::policy(Layer::class, LayerPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Permission::class, PermissionPolicy::class);

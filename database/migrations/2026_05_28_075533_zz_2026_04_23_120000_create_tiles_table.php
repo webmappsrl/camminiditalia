@@ -25,9 +25,9 @@ return new class extends Migration
             ['attribution' => 'webmapp'],
             [
                 'label' => json_encode(['it' => 'Webmapp', 'en' => 'Webmapp'], JSON_UNESCAPED_UNICODE),
-                'icon' => "tile-default",
+                'icon' => 'tile-default',
                 'server_xyz' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
-                'link' => "https://webmapp.it/",
+                'link' => 'https://webmapp.it/',
                 'created_at' => $now,
                 'updated_at' => $now,
             ]
@@ -37,7 +37,7 @@ return new class extends Migration
             ['attribution' => 'mute'],
             [
                 'label' => json_encode(['it' => 'Mute', 'en' => 'Mute'], JSON_UNESCAPED_UNICODE),
-                'icon' => "tile-mute",
+                'icon' => 'tile-mute',
                 'server_xyz' => 'http://tiles.webmapp.it/blankmap/{z}/{x}/{y}.png',
                 'link' => null,
                 'created_at' => $now,
@@ -49,7 +49,7 @@ return new class extends Migration
             ['attribution' => 'satellite'],
             [
                 'label' => json_encode(['it' => 'Satellite', 'en' => 'Satellite'], JSON_UNESCAPED_UNICODE),
-                'icon' => "tile-satellite",
+                'icon' => 'tile-satellite',
                 'server_xyz' => 'https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=0Z7ou7nfFFXipdDXHChf',
                 'link' => null,
                 'created_at' => $now,
@@ -63,4 +63,3 @@ return new class extends Migration
         Schema::dropIfExists('tiles');
     }
 };
-
