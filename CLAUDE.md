@@ -104,9 +104,17 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | UGC email notifications | oc:7641 | `App\Observers\UgcObserver`, `App\Jobs\SendUgcReportMailJob` | Email al gestore del layer alla creazione di un UGC report |
 | UGC filtro layer e read/unread | oc:7640 | `App\Nova\UgcPoi`, `App\Models\UgcPoi`, `App\Policies\UgcPoiPolicy`, `App\Nova\Actions\MarkAsRead`, `App\Nova\Actions\MarkAsUnread` | Validator vede solo segnalazioni dei propri layer; badge e action bulk letto/non letto |
 | Trasferimento ownership EcTrack al layer owner | oc:8080 | `App\Observers\LayerObserver`, `App\Observers\LayerableObserver`, `config/camminiditalia.php`, `App\Nova\Layer` | Al cambio owner del layer, bulk UPDATE user_id su EcTrack e EcPoi associate; hook su Layerable::created per nuove associazioni |
+| EcPoi: sola lettura per Validator | oc:8120 | `App\Policies\EcPoiPolicy`, `App\Providers\AppServiceProvider`, `App\Nova\EcPoi` | Validator può solo visualizzare EcPoi; Guest bloccato in Nova; action di modifica nascoste con canSee+canRun |
 | Fix UI layer owner: action e link occhio tracce | oc:8089 | `App\Nova\Layer`, `tests/Feature/LayerActionsVisibilityTest.php`, `wm-package/.../LayerFeatures.php`, `wm-package/.../useGrid.ts` | canSee+canRun su AddLayersToConfigHomeAction (solo Administrator); novaPath via withMeta per link icona occhio corretto |
 
 ## Decisioni architetturali
+
+### EcPoi: sola lettura per Validator (oc:8120)
+- `authorizedToCreate` su una Nova Resource è metodo **statico** — `authorizedToUpdate` e `authorizedToDelete` sono di istanza
+- Nova genera il `uriKey` delle action dal metodo `name()` (non dal nome della classe) — es. `ExecuteEcPoiDataChainAction` con `name()` "Execute EcPoi Data Chain" → `execute-ecpoi-data-chain` (non `execute-ec-poi-data-chain-action`)
+- `EcPoi::factory()->create()` richiede `'properties' => []` nei test — altrimenti `AbstractObserver` del package fallisce con `TypeError` (tenta di accedere come array una stringa JSON)
+- `DownloadEcPoiAction` non riceve `canSee`/`canRun` espliciti: il default Nova filtra già le action in base ad `authorizedToUpdate`, che blocca i Validator
+- Policy del package sovrascritta con `Gate::policy(EcPoi::class, EcPoiPolicy::class)` in `AppServiceProvider` — pattern già usato per `UgcPoiPolicy`
 
 ### Fix UI layer owner (oc:8089)
 - `canSee` senza `canRun` è protezione solo cosmetica: Nova con `canSee=false` già restituisce 404 sull'esecuzione via API (action non trovata in `availableActions()`), ma `canRun` aggiunge protezione esplicita a livello logico
