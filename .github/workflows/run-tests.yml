@@ -53,6 +53,8 @@ jobs:
         run: php artisan optimize
       - name: Prepare Log File
         run: mkdir -p storage/logs && touch storage/logs/test.log
+      - name: Clear config cache before tests
+        run: php artisan config:clear
       - name: Laravel Tests
         run: php artisan test --log-events-verbose-text storage/logs/test.log
       - name: Upload Test Results
