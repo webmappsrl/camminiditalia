@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Models\EcPoi as EcPoiModel;
 use Illuminate\Http\Request;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Wm\WmPackage\Nova\Actions\BulkEditAction;
 use Wm\WmPackage\Nova\Actions\DownloadEcPoiAction;
 use Wm\WmPackage\Nova\Actions\ExecuteEcPoiDataChainAction;
 use Wm\WmPackage\Nova\Actions\TranslateModelAction;
@@ -49,6 +50,9 @@ class EcPoi extends WmNovaEcPoi
                 ->canSee(fn () => $isAdmin)
                 ->canRun(fn ($req, $model) => $isAdmin),
             (new TranslateModelAction)
+                ->canSee(fn () => $isAdmin)
+                ->canRun(fn ($req, $model) => $isAdmin),
+            (new BulkEditAction(self::class, ['global']))
                 ->canSee(fn () => $isAdmin)
                 ->canRun(fn ($req, $model) => $isAdmin),
         ];
