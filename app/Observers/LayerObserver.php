@@ -20,14 +20,14 @@ class LayerObserver extends WmLayerObserver
         $oldOwnerId = $layer->getOriginal('user_id');
 
         $trackIds = $layer->ecTracks()->pluck('ec_tracks.id')->toArray();
-        $poiIds = $layer->manualEcPois()->pluck('ec_pois.id')->toArray();
+        $poiIds = $layer->ecPois()->pluck('ec_pois.id')->toArray();
 
         if (! empty($trackIds)) {
             $layer->ecTracks()->update(['user_id' => $newOwnerId]);
         }
 
         if (! empty($poiIds)) {
-            $layer->manualEcPois()->update(['user_id' => $newOwnerId]);
+            $layer->ecPois()->update(['user_id' => $newOwnerId]);
         }
 
         Log::info('Layer ownership transfer', [
