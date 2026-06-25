@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Auth;
+use Wm\WmPackage\Database\Factories\EcTrackFactory;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcTrack as WmEcTrack;
 use Wm\WmPackage\Observers\EcTrackObserver;
@@ -12,7 +13,7 @@ class EcTrack extends WmEcTrack
 {
     protected static function newFactory(): Factory
     {
-        return \Wm\WmPackage\Database\Factories\EcTrackFactory::new();
+        return EcTrackFactory::new();
     }
 
     /**
@@ -30,7 +31,7 @@ class EcTrack extends WmEcTrack
             }
 
             // Se l'utente è un Validator, imposta automaticamente se stesso
-            /** @var \App\Models\User|null $currentUser */
+            /** @var User|null $currentUser */
             $currentUser = Auth::user();
             if (empty($ecTrack->user_id) && $currentUser) {
                 if ($currentUser->hasRole('Validator')) {

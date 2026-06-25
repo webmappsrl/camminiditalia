@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Wm\WmPackage\Models\EcPoi;
 use App\Policies\EcPoiPolicy;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Gate;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
+use Wm\WmPackage\Models\EcPoi;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class EcPoiPolicyTest extends TestCase
@@ -46,7 +46,7 @@ class EcPoiPolicyTest extends TestCase
 
     public function test_local_ecpoi_policy_is_registered(): void
     {
-        $policy = Gate::getPolicyFor(\Wm\WmPackage\Models\EcPoi::class);
+        $policy = Gate::getPolicyFor(EcPoi::class);
         $this->assertInstanceOf(EcPoiPolicy::class, $policy);
     }
 
@@ -55,7 +55,7 @@ class EcPoiPolicyTest extends TestCase
     public function test_administrator_can_view_any_ec_poi(): void
     {
         $admin = $this->makeUser('Administrator');
-        $this->assertTrue(Gate::forUser($admin)->allows('viewAny', \Wm\WmPackage\Models\EcPoi::class));
+        $this->assertTrue(Gate::forUser($admin)->allows('viewAny', EcPoi::class));
     }
 
     public function test_administrator_can_view_ec_poi(): void
@@ -68,7 +68,7 @@ class EcPoiPolicyTest extends TestCase
     public function test_administrator_can_create_ec_poi(): void
     {
         $admin = $this->makeUser('Administrator');
-        $this->assertTrue(Gate::forUser($admin)->allows('create', \Wm\WmPackage\Models\EcPoi::class));
+        $this->assertTrue(Gate::forUser($admin)->allows('create', EcPoi::class));
     }
 
     public function test_administrator_can_update_ec_poi(): void
@@ -90,7 +90,7 @@ class EcPoiPolicyTest extends TestCase
     public function test_validator_can_view_any_ec_poi(): void
     {
         $validator = $this->makeUser('Validator');
-        $this->assertTrue(Gate::forUser($validator)->allows('viewAny', \Wm\WmPackage\Models\EcPoi::class));
+        $this->assertTrue(Gate::forUser($validator)->allows('viewAny', EcPoi::class));
     }
 
     public function test_validator_can_view_ec_poi(): void
@@ -103,7 +103,7 @@ class EcPoiPolicyTest extends TestCase
     public function test_validator_cannot_create_ec_poi(): void
     {
         $validator = $this->makeUser('Validator');
-        $this->assertFalse(Gate::forUser($validator)->allows('create', \Wm\WmPackage\Models\EcPoi::class));
+        $this->assertFalse(Gate::forUser($validator)->allows('create', EcPoi::class));
     }
 
     public function test_validator_cannot_update_ec_poi(): void
@@ -125,7 +125,7 @@ class EcPoiPolicyTest extends TestCase
     public function test_guest_cannot_view_any_ec_poi(): void
     {
         $guest = $this->makeUser('Guest');
-        $this->assertFalse(Gate::forUser($guest)->allows('viewAny', \Wm\WmPackage\Models\EcPoi::class));
+        $this->assertFalse(Gate::forUser($guest)->allows('viewAny', EcPoi::class));
     }
 
     public function test_guest_cannot_view_ec_poi(): void
