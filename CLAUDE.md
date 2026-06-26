@@ -108,8 +108,16 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | EcPoi: sola lettura per Validator | oc:8120 | `App\Policies\EcPoiPolicy`, `App\Providers\AppServiceProvider`, `App\Nova\EcPoi` | Validator può solo visualizzare EcPoi; Guest bloccato in Nova; action di modifica nascoste con canSee+canRun |
 | Fix UI layer owner: action e link occhio tracce | oc:8089 | `App\Nova\Layer`, `tests/Feature/LayerActionsVisibilityTest.php`, `wm-package/.../LayerFeatures.php`, `wm-package/.../useGrid.ts` | canSee+canRun su AddLayersToConfigHomeAction (solo Administrator); novaPath via withMeta per link icona occhio corretto |
 | Associazione automatica EcPoi al layer della traccia | oc:8139 | `wm-package/.../EcPoiEcTrackObserver.php`, `wm-package/.../Layer.php`, `wm-package/.../EcPoi.php`, `wm-package/.../Nova/Layer.php`, `App\Observers\LayerableObserver`, `App\Observers\LayerObserver`, `App\Console\Commands\SyncLayerEcPois` | EcPoi sincronizzati automaticamente ai layer della traccia; command di migrazione dati storici; panel EcPoi in Nova Layer |
+| Fix properties.layers EcPoi corrotto per layer senza taxonomy_where | oc:8140 | `wm-package/src/Services/Models/LayerService.php`, `App\Console\Commands\FixEcPoiLayersProperty`, `tests/Feature/LayerServiceUpdateLayersPropertyGuardTest.php` | Guard in `updateLayersPropertyOnLayeredFeature`: salta add e pulisce stale IDs quando layer non ha manuali né filtri tassonomici; command di riallineamento dati storici |
 
 ## Decisioni architetturali
+
+### Fix properties.layers EcPoi (oc:8140)
+- `updateLayersPropertyOnLayeredFeature` usa un flag `$noValidFilter` (no manual models AND no taxonomy_where AND no taxonomyActivities) invece di un early return — così il path di rimozione gira comunque e pulisce i layer ID storicamente corrotti (`$layerFeaturesIds = []` → `whereNotIn([])` seleziona tutti i POI con quell'ID → vengono rimossi)
+- I test per questa logica stanno nel repo principale (`tests/Feature/LayerServiceUpdateLayersPropertyGuardTest.php`) e NON in `wm-package/tests/` — i test del wm-package non possono referenziare `Tests\TestCase` del repo principale, e `Wm\WmPackage\Tests\TestCase` non è in `autoload-dev` di camminiditalia
+- Il `layerable_type` nel DB per EcPoi è `'App\Models\EcPoi'` (chiave del morph map), non `Wm\WmPackage\Models\EcPoi::class` — da usare nei test che inseriscono direttamente in `layerables`
+- Ordine obbligatorio di esecuzione in produzione: (1) deploy fix wm-package, (2) backup DB, (3) `sync-layer-ec-pois`, (4) `fix-ec-poi-layers-property` — il terzo popola `layerables`, il quarto usa `layerables` come sorgente di verità per aggiornare `properties['layers']`
+- `fix-ec-poi-layers-property` ha un self-check pre-deploy e flag `--force` per bypassarlo consapevolmente
 
 ### EcPoi: sola lettura per Validator (oc:8120)
 - `authorizedToCreate` su una Nova Resource è metodo **statico** — `authorizedToUpdate` e `authorizedToDelete` sono di istanza
