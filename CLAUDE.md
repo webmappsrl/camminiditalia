@@ -107,6 +107,7 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Trasferimento ownership EcTrack al layer owner | oc:8080 | `App\Observers\LayerObserver`, `App\Observers\LayerableObserver`, `config/camminiditalia.php`, `App\Nova\Layer` | Al cambio owner del layer, bulk UPDATE user_id su EcTrack e EcPoi associate; hook su Layerable::created per nuove associazioni |
 | EcPoi: sola lettura per Validator | oc:8120 | `App\Policies\EcPoiPolicy`, `App\Providers\AppServiceProvider`, `App\Nova\EcPoi` | Validator può solo visualizzare EcPoi; Guest bloccato in Nova; action di modifica nascoste con canSee+canRun |
 | Fix UI layer owner: action e link occhio tracce | oc:8089 | `App\Nova\Layer`, `tests/Feature/LayerActionsVisibilityTest.php`, `wm-package/.../LayerFeatures.php`, `wm-package/.../useGrid.ts` | canSee+canRun su AddLayersToConfigHomeAction (solo Administrator); novaPath via withMeta per link icona occhio corretto |
+| Associazione automatica EcPoi al layer della traccia | oc:8139 | `wm-package/.../EcPoiEcTrackObserver.php`, `wm-package/.../Layer.php`, `wm-package/.../EcPoi.php`, `wm-package/.../Nova/Layer.php`, `App\Observers\LayerableObserver`, `App\Observers\LayerObserver`, `App\Console\Commands\SyncLayerEcPois` | EcPoi sincronizzati automaticamente ai layer della traccia; command di migrazione dati storici; panel EcPoi in Nova Layer |
 
 ## Decisioni architetturali
 
@@ -142,3 +143,14 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 ### UGC email notifications (oc:7641)
 - L'observer locale estende quello del package invece di modificarlo — mantiene la compatibilità con gli aggiornamenti di wm-package
 - `layer_id` letto da `properties` JSON, non da FK — coerente con la scelta architetturale del progetto
+
+### Associazione automatica EcPoi al layer della traccia (oc:8139)
+- `EcPoiEcTrackObserver` (in wm-package) gestisce `created`/`deleted` sul pivot: su `created` chiama `syncWithoutDetaching` per associare il POI ai layer della traccia; su `deleted` rimuove il POI dal layer solo se nessun'altra traccia di quel layer ha ancora quel POI
+- `LayerableObserver::deleted` (repo principale) rimuove dal layer i POI orfani quando una traccia viene dissociata dal layer — stessa logica di controllo cross-pivot
+- `manualEcPois()` rinominato in `ecPois()` su `Layer` (wm-package); `manualEcPois()` resta come alias `@deprecated` per BC
+- `EcPoi::getLayerRelationName()` restituisce `'ecPois'` — necessario per `LayerFeatures` Nova field che è model-agnostic
+- `MorphPivot` non ha `withoutObservers()` — per bypassare l'observer nel command di migrazione usare `DB::table('layerables')->insert()` diretto con check di esistenza preventivo (no unique constraint sulla tabella)
+- Il command `camminiditalia:sync-layer-ec-pois` è idempotente: calcola `array_diff` tra POI già presenti e nuovi, inserisce solo i mancanti; fa bulk UPDATE `user_id` alla fine per layer
+- Panel "Ec Pois" in Nova Layer aggiunto via `LayerFeatures::make()` passando il modello EcPoi — stesso campo usato per le tracce, agnostico al modello
+- Ownership last-write-wins per POI condivisi tra layer con owner diversi: comportamento accettato per design, coerente con il pattern già usato per le EcTrack in oc:8080 (`LayerObserver::saved` aggiorna tutti i POI del layer indipendentemente da altre appartenenze)
+- La logica "POI ancora linkato al layer tramite altra traccia?" è centralizzata in `EcPoiEcTrack::poiStillLinkedToLayerViaOtherTrack()` — usata da `EcPoiEcTrackObserver` (detach da traccia) e `LayerableObserver::deleted` (detach da layer)
