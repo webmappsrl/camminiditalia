@@ -14,6 +14,7 @@ use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\UgcPoi;
 use Wm\WmPackage\Models\User;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
+use Wm\WmPackage\Services\UgcService;
 
 class UgcNotificationTest extends TestCase
 {
@@ -95,7 +96,7 @@ class UgcNotificationTest extends TestCase
             'properties' => ['form' => ['id' => 'poi']],
         ]);
 
-        (new ResolveUgcLayerJob($ugcPoi))->handle(app(\Wm\WmPackage\Services\UgcService::class));
+        (new ResolveUgcLayerJob($ugcPoi))->handle(app(UgcService::class));
 
         Mail::assertNothingSent();
     }

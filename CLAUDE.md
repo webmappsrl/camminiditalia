@@ -100,6 +100,7 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 
 | Feature | Ticket | Moduli toccati | Note |
 |---|---|---|---|
+| BulkEditAction su EcPoi (global) | oc:8133 | `app/Nova/EcPoi.php` | `BulkEditAction(\App\Nova\EcPoi::class, ['global'])` registrata in `EcPoi::actions()` con canSee+canRun per Administrator; logica bulk in wm-package |
 | Home tab layer sorting | oc:7644 | `App\Nova\Layer`, `resources/js/nova/config-home-sorter.js` | Sorting layer nella home tab via Nova |
 | UGC email notifications | oc:7641 | `App\Observers\UgcObserver`, `App\Jobs\SendUgcReportMailJob` | Email al gestore del layer alla creazione di un UGC report |
 | UGC filtro layer e read/unread | oc:7640 | `App\Nova\UgcPoi`, `App\Models\UgcPoi`, `App\Policies\UgcPoiPolicy`, `App\Nova\Actions\MarkAsRead`, `App\Nova\Actions\MarkAsUnread` | Validator vede solo segnalazioni dei propri layer; badge e action bulk letto/non letto |
