@@ -152,3 +152,5 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 - `MorphPivot` non ha `withoutObservers()` — per bypassare l'observer nel command di migrazione usare `DB::table('layerables')->insert()` diretto con check di esistenza preventivo (no unique constraint sulla tabella)
 - Il command `camminiditalia:sync-layer-ec-pois` è idempotente: calcola `array_diff` tra POI già presenti e nuovi, inserisce solo i mancanti; fa bulk UPDATE `user_id` alla fine per layer
 - Panel "Ec Pois" in Nova Layer aggiunto via `LayerFeatures::make()` passando il modello EcPoi — stesso campo usato per le tracce, agnostico al modello
+- Ownership last-write-wins per POI condivisi tra layer con owner diversi: comportamento accettato per design, coerente con il pattern già usato per le EcTrack in oc:8080 (`LayerObserver::saved` aggiorna tutti i POI del layer indipendentemente da altre appartenenze)
+- La logica "POI ancora linkato al layer tramite altra traccia?" è centralizzata in `EcPoiEcTrack::poiStillLinkedToLayerViaOtherTrack()` — usata da `EcPoiEcTrackObserver` (detach da traccia) e `LayerableObserver::deleted` (detach da layer)

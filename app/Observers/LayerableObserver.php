@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Models\EcPoi;
 use App\Models\EcTrack;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Wm\WmPackage\Models\EcPoiEcTrack;
 use Wm\WmPackage\Models\Layerable;
@@ -62,20 +61,9 @@ class LayerableObserver
             return;
         }
 
-        $pivotTable = config('wm-package.ec_poi_track_pivot_table', 'ec_poi_ec_track');
-        $fkName = EcPoiEcTrack::getTrackForeignKeyName();
-
-        $poiIdsToRemove = array_values(array_filter($trackPoiIds, function ($poiId) use ($layer, $layerable, $pivotTable, $fkName) {
-            return ! DB::table($pivotTable)
-                ->join('layerables', function ($join) use ($layer, $fkName, $pivotTable) {
-                    $join->on('layerables.layerable_id', '=', "{$pivotTable}.{$fkName}")
-                        ->where('layerables.layerable_type', EcTrack::class)
-                        ->where('layerables.layer_id', $layer->id);
-                })
-                ->where("{$pivotTable}.ec_poi_id", $poiId)
-                ->where("{$pivotTable}.{$fkName}", '!=', $layerable->layerable_id)
-                ->exists();
-        }));
+        $poiIdsToRemove = array_values(array_filter($trackPoiIds, fn ($poiId) => ! EcPoiEcTrack::poiStillLinkedToLayerViaOtherTrack(
+            $layer->id, $poiId, $layerable->layerable_id
+        )));
 
         if (! empty($poiIdsToRemove)) {
             $layer->ecPois()->detach($poiIdsToRemove);
