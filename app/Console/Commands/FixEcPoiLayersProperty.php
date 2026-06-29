@@ -54,7 +54,7 @@ class FixEcPoiLayersProperty extends Command
         });
 
         $this->newLine(2);
-        $this->info("Riallineamento completato.");
+        $this->info('Riallineamento completato.');
         $this->line("Totale aggiunte: {$totalAdded} | Totale rimozioni: {$totalDeleted}");
 
         return self::SUCCESS;

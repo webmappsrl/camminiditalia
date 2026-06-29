@@ -149,5 +149,4 @@ class LayerServiceUpdateLayersPropertyGuardTest extends TestCase
         $this->assertArrayHasKey('added', $result);
         $this->assertArrayHasKey('deleted', $result);
     }
-
 }
