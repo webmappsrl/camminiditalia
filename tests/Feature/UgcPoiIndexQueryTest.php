@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App as WmApp;
@@ -50,7 +51,7 @@ class UgcPoiIndexQueryTest extends TestCase
         $report = $this->createReportPoi($layer->id);
         $poi = $this->createPoiUgc($layer->id);
 
-        $request = \Laravel\Nova\Http\Requests\NovaRequest::create('/');
+        $request = NovaRequest::create('/');
         $request->setUserResolver(fn () => $admin);
 
         $results = \App\Nova\UgcPoi::indexQuery($request, UgcPoi::query())->get();

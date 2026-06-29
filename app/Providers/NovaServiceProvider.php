@@ -22,11 +22,13 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use Laravel\Nova\Dashboard;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Laravel\Nova\Tool;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
@@ -137,19 +139,19 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     /**
      * Get the dashboards that should be listed in the Nova sidebar.
      *
-     * @return array<int, \Laravel\Nova\Dashboard>
+     * @return array<int, Dashboard>
      */
     protected function dashboards(): array
     {
         return [
-            new \App\Nova\Dashboards\Main,
+            new Main,
         ];
     }
 
     /**
      * Get the tools that should be listed in the Nova sidebar.
      *
-     * @return array<int, \Laravel\Nova\Tool>
+     * @return array<int, Tool>
      */
     public function tools(): array
     {

@@ -8,7 +8,9 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Wm\WmPackage\Models\Abstracts\GeometryModel;
+use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\UgcPoi;
 use Wm\WmPackage\Services\GeometryComputationService;
 
 class NewUgcReportMail extends Mailable
@@ -28,7 +30,7 @@ class NewUgcReportMail extends Mailable
         public readonly ?Layer $layer,
         public readonly bool $noOwner = false,
     ) {
-        $resourceName = $ugcPoi instanceof \Wm\WmPackage\Models\UgcPoi ? 'ugc-pois' : 'ugc-tracks';
+        $resourceName = $ugcPoi instanceof UgcPoi ? 'ugc-pois' : 'ugc-tracks';
         $this->novaUrl = rtrim(config('app.url'), '/').'/nova/resources/'.$resourceName.'/'.$ugcPoi->id;
         $this->coordinates = $this->extractCoordinates($ugcPoi);
         app()->setLocale('it');
@@ -56,7 +58,7 @@ class NewUgcReportMail extends Mailable
         $skipKeys = ['id', 'index', 'layer_id'];
         $locale = app()->getLocale();
 
-        $app = \Wm\WmPackage\Models\App::find($ugc->app_id);
+        $app = App::find($ugc->app_id);
         $formId = $form['id'] ?? null;
         $schema = ($app && $formId) ? ($app->acquisitionForms($formId) ?? []) : [];
 

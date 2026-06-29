@@ -3,11 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Wm\WmPackage\Models\App;
-use Wm\WmPackage\Models\Layer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Wm\WmPackage\Nova\Actions\AddLayersToConfigHomeAction;
+use Wm\WmPackage\Models\App;
+use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class LayerActionsVisibilityTest extends TestCase

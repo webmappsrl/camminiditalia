@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\EcPoi;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -26,7 +27,7 @@ class EcPoiNovaActionsTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole('Administrator');
 
-        return \App\Models\EcPoi::factory()->create(['user_id' => $admin->id, 'properties' => []]);
+        return EcPoi::factory()->create(['user_id' => $admin->id, 'properties' => []]);
     }
 
     public function test_validator_cannot_see_modifying_actions(): void
