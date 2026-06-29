@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
-use PHPUnit\Framework\Assert;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcPoi;
@@ -47,17 +46,17 @@ class LayerServiceUpdateLayersPropertyGuardTest extends TestCase
         $result = $this->layerService->updateLayersPropertyOnLayeredFeature($layer->fresh(), EcPoi::class);
 
         // Nessuna aggiunta (guard blocca il path add)
-        Assert::assertSame([], $result['added']);
+        $this->assertSame([], $result['added']);
 
         // Il POI con ID corrotto viene ripulito
-        Assert::assertContains($poiStale->id, $result['deleted']);
+        $this->assertContains($poiStale->id, $result['deleted']);
 
         $poiStale->refresh();
-        Assert::assertNotContains($layer->id, $poiStale->properties['layers'] ?? []);
+        $this->assertNotContains($layer->id, $poiStale->properties['layers'] ?? []);
 
         // Il POI senza relazione rimane invariato
         $poiWithout->refresh();
-        Assert::assertNotContains($layer->id, $poiWithout->properties['layers'] ?? []);
+        $this->assertNotContains($layer->id, $poiWithout->properties['layers'] ?? []);
     }
 
     public function test_skips_adds_for_ec_track_when_no_manual_models_and_no_filter(): void
@@ -75,11 +74,11 @@ class LayerServiceUpdateLayersPropertyGuardTest extends TestCase
 
         $result = $this->layerService->updateLayersPropertyOnLayeredFeature($layer->fresh(), EcTrack::class);
 
-        Assert::assertSame([], $result['added']);
-        Assert::assertContains($trackStale->id, $result['deleted']);
+        $this->assertSame([], $result['added']);
+        $this->assertContains($trackStale->id, $result['deleted']);
 
         $trackStale->refresh();
-        Assert::assertNotContains($layer->id, $trackStale->properties['layers'] ?? []);
+        $this->assertNotContains($layer->id, $trackStale->properties['layers'] ?? []);
     }
 
     public function test_updates_when_layer_has_manual_ec_poi(): void
@@ -105,7 +104,7 @@ class LayerServiceUpdateLayersPropertyGuardTest extends TestCase
 
         $result = $this->layerService->updateLayersPropertyOnLayeredFeature($layer->fresh(), EcPoi::class);
 
-        Assert::assertContains($poi->id, $result['added']);
+        $this->assertContains($poi->id, $result['added']);
     }
 
     public function test_updates_when_layer_has_taxonomy_where_in_properties(): void
@@ -118,8 +117,8 @@ class LayerServiceUpdateLayersPropertyGuardTest extends TestCase
 
         $result = $this->layerService->updateLayersPropertyOnLayeredFeature($layer->fresh(), EcPoi::class);
 
-        Assert::assertArrayHasKey('added', $result);
-        Assert::assertArrayHasKey('deleted', $result);
+        $this->assertArrayHasKey('added', $result);
+        $this->assertArrayHasKey('deleted', $result);
     }
 
     public function test_updates_when_layer_has_taxonomy_activities(): void
@@ -147,8 +146,8 @@ class LayerServiceUpdateLayersPropertyGuardTest extends TestCase
 
         $result = $this->layerService->updateLayersPropertyOnLayeredFeature($layer->fresh(), EcPoi::class);
 
-        Assert::assertArrayHasKey('added', $result);
-        Assert::assertArrayHasKey('deleted', $result);
+        $this->assertArrayHasKey('added', $result);
+        $this->assertArrayHasKey('deleted', $result);
     }
 
 }

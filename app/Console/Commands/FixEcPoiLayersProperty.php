@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Services\Models\LayerService;
 
@@ -11,8 +12,9 @@ class FixEcPoiLayersProperty extends Command
     protected $signature = 'camminiditalia:fix-ec-poi-layers-property
                             {--force : Bypassa il check di pre-deploy (usa solo se il fix in wm-package è confermato deployato)}';
 
-    protected $description = 'Riallinea properties.layers su EcPoi e EcTrack per tutti i layer, rimuovendo ID errati e aggiungendo quelli mancanti.
-    IMPORTANTE: eseguire DOPO il deploy del fix in wm-package (oc:8140). Fare un backup del DB prima di procedere.';
+    protected $description = 'Riallinea properties.layers su EcPoi e EcTrack per tutti i layer.';
+
+    protected $help = 'IMPORTANTE: eseguire DOPO il deploy del fix in wm-package (oc:8140). Fare un backup del DB prima di procedere.';
 
     public function handle(LayerService $layerService): int
     {
@@ -60,7 +62,6 @@ class FixEcPoiLayersProperty extends Command
 
     private function guardIsInPlace(LayerService $layerService): bool
     {
-        // Trova un layer senza taxonomy_where, senza taxonomyActivities, senza modelli manuali
         $candidate = Layer::with(['taxonomyActivities'])
             ->whereDoesntHave('taxonomyActivities')
             ->get()
@@ -69,17 +70,25 @@ class FixEcPoiLayersProperty extends Command
             });
 
         if (! $candidate) {
-            // Non c'è un layer idoneo per il check — assumi che il guard sia in place
             return true;
         }
 
-        foreach ($layerService->getModelsWithLayersInProperties() as $modelClass) {
-            $result = $layerService->updateLayersPropertyOnLayeredFeature($candidate, $modelClass);
-            if (! empty($result['added'])) {
-                return false;
+        // Esegui la verifica dentro una transazione che viene annullata: il metodo scrive nel DB
+        // (beginTransaction + saveQuietly), ma il rollBack esterno annulla tutto tramite savepoint PostgreSQL.
+        $isInPlace = true;
+        DB::beginTransaction();
+        try {
+            foreach ($layerService->getModelsWithLayersInProperties() as $modelClass) {
+                $result = $layerService->updateLayersPropertyOnLayeredFeature($candidate, $modelClass);
+                if (! empty($result['added'])) {
+                    $isInPlace = false;
+                    break;
+                }
             }
+        } finally {
+            DB::rollBack();
         }
 
-        return true;
+        return $isInPlace;
     }
 }
