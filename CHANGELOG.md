@@ -1,5 +1,54 @@
 # Changelog
 
+## [1.3.0](https://github.com/webmappsrl/camminiditalia/compare/v1.2.0...v1.3.0) (2026-06-30)
+
+
+### Features
+
+* add BulkEditAction to EcPoi for admins OC:8133 ([#46](https://github.com/webmappsrl/camminiditalia/issues/46)) ([cfcba68](https://github.com/webmappsrl/camminiditalia/commit/cfcba685c17d0f3ee6cf6ab431c4df07a690f42a))
+* **config:** ✨ add PostHog configuration ([1560abc](https://github.com/webmappsrl/camminiditalia/commit/1560abc9444316579fb2484dde20d811ae393d16))
+* **docs:** ✨ add settings for CLAUDE and update documentation ([f6fb156](https://github.com/webmappsrl/camminiditalia/commit/f6fb156639dcbbbde0647b65735bd964173b4347))
+* **nova:** ✨ add Tile resource and related migrations ([7612736](https://github.com/webmappsrl/camminiditalia/commit/76127363e4e5fa4dc3eb7b05c488941b3a9a5c19))
+* **nova:** add home tab layer sorting feature OC:7644 ([#42](https://github.com/webmappsrl/camminiditalia/issues/42)) ([02cb533](https://github.com/webmappsrl/camminiditalia/commit/02cb533be5c843b9dc61c3d11359bbb08db32cc7))
+* **oc:7640:** add searchable layer filter for Administrator in UgcPoi Nova resource ([4c088e8](https://github.com/webmappsrl/camminiditalia/commit/4c088e8d63a21de677beadfd1faf32fa2c3fabaf))
+* **oc:7640:** hide UgcTrack from menu and index for non-Administrator roles ([6885e3d](https://github.com/webmappsrl/camminiditalia/commit/6885e3df4dca354164787acbe619edc8e8c76e00))
+* **oc:7640:** UGC filter by layer and read/unread flag ([c49bd5f](https://github.com/webmappsrl/camminiditalia/commit/c49bd5f48ad4d7a76d5f4bee4be21161e6cd37f5))
+* **oc:8079:** auto-assign layer_id on UGC reports when missing (backward compat) ([b5b6142](https://github.com/webmappsrl/camminiditalia/commit/b5b6142a077fa2735150d7fa15e9501b16143f4c))
+* **oc:8079:** merge auto-assign layer_id on UGC reports ([9ac3885](https://github.com/webmappsrl/camminiditalia/commit/9ac388544895062d5fe98faf1841b3f02af27768))
+* **oc:8080:** trasferimento ownership EcTrack e EcPoi al cambio layer owner ([742d3cb](https://github.com/webmappsrl/camminiditalia/commit/742d3cbdeeb3c33a1a7aaa44f5ae8090759de615))
+* **oc:8120:** add local EcPoiPolicy — Validator read-only, Guest blocked in Nova ([bc2d44d](https://github.com/webmappsrl/camminiditalia/commit/bc2d44d262a29896e0f91e2f068522ba255c7f42))
+* **oc:8120:** EcPoi sola lettura per Validator ([06df6a7](https://github.com/webmappsrl/camminiditalia/commit/06df6a7d6bcd6bed6e067e268da4b529e6191676))
+* **oc:8120:** EcPoi sola lettura per Validator ([06df6a7](https://github.com/webmappsrl/camminiditalia/commit/06df6a7d6bcd6bed6e067e268da4b529e6191676))
+* **oc:8120:** restrict Nova EcPoi edit controls and actions to Administrator ([b6f529f](https://github.com/webmappsrl/camminiditalia/commit/b6f529ffbc83d72a8ead4bd8e269c9ff3d6c1ad8))
+* **oc:8139:** auto-associate EcPoi to layer via track relation ([#47](https://github.com/webmappsrl/camminiditalia/issues/47)) ([c0b95e3](https://github.com/webmappsrl/camminiditalia/commit/c0b95e38d48c52405dbcbe712d636a79b66ed903))
+* **ugc:** ✨ oc:7641 implement UGC email notifications and layer ID population ([b781250](https://github.com/webmappsrl/camminiditalia/commit/b781250c700e5f78efc5ed4544f4ac6a87798e90))
+
+
+### Bug Fixes
+
+* **ci:** add Redis and Elasticsearch services to test workflow ([9a85e23](https://github.com/webmappsrl/camminiditalia/commit/9a85e23b5f3b17e31c34616ef106d1272bdd7eb5))
+* **ci:** clear config cache before tests so phpunit.xml env overrides work ([3e64abb](https://github.com/webmappsrl/camminiditalia/commit/3e64abb966d5a0aec26b752eb05cc010524adc22))
+* **ci:** remove Elasticsearch dependency from tests ([14db182](https://github.com/webmappsrl/camminiditalia/commit/14db182c2a6afeb99678d3f957c2d29f6571724b))
+* **develop.compose.yml:** 🛠️ update mailpit service configuration for enhanced security ([0eaaaca](https://github.com/webmappsrl/camminiditalia/commit/0eaaaca36ce8c68b3d39391f58eec42a8abdaf77))
+* disable Elasticsearch and use array session driver in CI test env ([730248d](https://github.com/webmappsrl/camminiditalia/commit/730248dc1aff1b0c34b7b426f337148dc41cfce2))
+* **oc:7639:** populate properties.form.layer_id in backfill command ([bd50565](https://github.com/webmappsrl/camminiditalia/commit/bd5056502d54adf0ff25e2d50794d0261bf21740))
+* **oc:7641:** fix email notification trigger and improve mail content ([aeded5f](https://github.com/webmappsrl/camminiditalia/commit/aeded5f97a3b7d7c0f11f9bdab2417d37c1808ff))
+* **oc:8089:** hide AddLayersToConfigHomeAction from non-Administrator and fix eye-link ([2b3a94c](https://github.com/webmappsrl/camminiditalia/commit/2b3a94c02a7ec9cc2ba3ed5dab33b4aa61051e94))
+* **oc:8089:** merge fix/oc-8089-fix-ui-layer-owner into oc_561 ([090c0c4](https://github.com/webmappsrl/camminiditalia/commit/090c0c49a71a6372c4499f38e3bb8d3b6a0cfd4a))
+* **oc:8140:** add FixEcPoiLayersProperty command + review fixes ([#48](https://github.com/webmappsrl/camminiditalia/issues/48)) ([e689913](https://github.com/webmappsrl/camminiditalia/commit/e689913fac353cead36954a1462799670d88afcb))
+* **tests:** fix failing tests after develop merge ([a1d9f0a](https://github.com/webmappsrl/camminiditalia/commit/a1d9f0a510e66d0edcfd55a397e8dfe5eaf0219e))
+* uncomment AWS_DEFAULT_REGION in .env-deploy to fix CI tests ([8f44c4b](https://github.com/webmappsrl/camminiditalia/commit/8f44c4b45a5f1cc5870787448640a02407ea85e9))
+
+
+### Miscellaneous Chores
+
+* **dependencies:** 🔄 update wm-package version and dependencies ([1560abc](https://github.com/webmappsrl/camminiditalia/commit/1560abc9444316579fb2484dde20d811ae393d16))
+* merge develop into oc_561 ([8c082ce](https://github.com/webmappsrl/camminiditalia/commit/8c082ce004ab30bbb50b5567e9f08e8c5b13755b))
+* **migrations:** 🔧 remove unused migration files ([0e72b6e](https://github.com/webmappsrl/camminiditalia/commit/0e72b6e2187a79d60003925bd29d7affd34b2963))
+* update wm-package submodule ([fcdbc0d](https://github.com/webmappsrl/camminiditalia/commit/fcdbc0dd4cbaf29b9aee9f869e06392d7592d09c))
+* update wm-package submodule (Mailpit setup docs) ([035e56e](https://github.com/webmappsrl/camminiditalia/commit/035e56efa562c4a34d6de0a5c9cbc536d0d53cab))
+* update wm-package submodule (restore redis lock in uniqueVia) ([2c102af](https://github.com/webmappsrl/camminiditalia/commit/2c102af0800807af8b0c57600108bebe7aefd569))
+
 ## [1.2.0](https://github.com/webmappsrl/camminiditalia/compare/v1.1.0...v1.2.0) (2026-05-06)
 
 
