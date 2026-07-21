@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Traits\HasLayerFilterAndLink;
 use App\Nova\Traits\HidesAppFromIndexTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Wm\WmPackage\Nova\UgcTrack as WmNovaUgcTrack;
 class UgcTrack extends WmNovaUgcTrack
 {
     use HidesAppFromIndexTrait;
+    use HasLayerFilterAndLink;
 
     public static function label(): string
     {
@@ -29,5 +31,20 @@ class UgcTrack extends WmNovaUgcTrack
         }
 
         return $query->whereRaw('1=0');
+    }
+
+    public function fields(NovaRequest $request): array
+    {
+        $fields = parent::fields($request);
+
+        if ($filterField = $this->layerFilterField($request)) {
+            $fields[] = $filterField;
+        }
+
+        if ($linkField = $this->layerLinkField($request)) {
+            $fields[] = $linkField;
+        }
+
+        return $fields;
     }
 }
