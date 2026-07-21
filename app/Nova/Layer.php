@@ -80,4 +80,11 @@ class Layer extends WmNovaLayer
 
         return $actions;
     }
+
+    protected function canSeeGlobalAnalyticsCard(NovaRequest $request): bool
+    {
+        $currentUser = $request->user();
+
+        return $currentUser && $currentUser->hasRole('Administrator');
+    }
 }
