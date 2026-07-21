@@ -10,7 +10,6 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Wm\WmPackage\Nova\Actions\AddLayersToConfigHomeAction;
 use Wm\WmPackage\Nova\Actions\ExecuteEcTrackDataChainAction;
 use Wm\WmPackage\Nova\Actions\RegenerateLayerPbfAction;
-use Wm\WmPackage\Nova\Cards\LayerAnalytics\LayerAnalyticsCard;
 use Wm\WmPackage\Nova\Layer as WmNovaLayer;
 
 class Layer extends WmNovaLayer
@@ -82,38 +81,10 @@ class Layer extends WmNovaLayer
         return $actions;
     }
 
-    public function cards(NovaRequest $request): array
+    protected function canSeeGlobalAnalyticsCard(NovaRequest $request): bool
     {
-        $cards = parent::cards($request);
-
-        // The per-layer cards (parent::cards()) are already restricted to the detail view
-        // (they return [] when there is no resourceId), but we check explicitly here too:
-        // the global analytics card must only ever appear on the index.
-        if ($request->resourceId) {
-            return $cards;
-        }
-
         $currentUser = $request->user();
-        if (! $currentUser || ! $currentUser->hasRole('Administrator')) {
-            return $cards;
-        }
 
-        /** @var \Wm\WmPackage\Models\Layer|null $anyLayer */
-        $anyLayer = static::newModel()->query()->first();
-        if (! $anyLayer) {
-            return $cards;
-        }
-
-        $app = $anyLayer->appOwner;
-        $appProperties = $this->getLayerAppProperties($anyLayer);
-        $analyticsEnabled = $app &&
-            (($appProperties['analytics_app_enabled'] ?? false) ||
-             ($appProperties['analytics_webapp_enabled'] ?? false));
-
-        if ($analyticsEnabled) {
-            $cards[] = LayerAnalyticsCard::global();
-        }
-
-        return $cards;
+        return $currentUser && $currentUser->hasRole('Administrator');
     }
 }
