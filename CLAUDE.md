@@ -109,8 +109,16 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Fix UI layer owner: action e link occhio tracce | oc:8089 | `App\Nova\Layer`, `tests/Feature/LayerActionsVisibilityTest.php`, `wm-package/.../LayerFeatures.php`, `wm-package/.../useGrid.ts` | canSee+canRun su AddLayersToConfigHomeAction (solo Administrator); novaPath via withMeta per link icona occhio corretto |
 | Associazione automatica EcPoi al layer della traccia | oc:8139 | `wm-package/.../EcPoiEcTrackObserver.php`, `wm-package/.../Layer.php`, `wm-package/.../EcPoi.php`, `wm-package/.../Nova/Layer.php`, `App\Observers\LayerableObserver`, `App\Observers\LayerObserver`, `App\Console\Commands\SyncLayerEcPois` | EcPoi sincronizzati automaticamente ai layer della traccia; command di migrazione dati storici; panel EcPoi in Nova Layer |
 | Fix properties.layers EcPoi corrotto per layer senza taxonomy_where | oc:8140 | `wm-package/src/Services/Models/LayerService.php`, `App\Console\Commands\FixEcPoiLayersProperty`, `tests/Feature/LayerServiceUpdateLayersPropertyGuardTest.php` | Guard in `updateLayersPropertyOnLayeredFeature`: salta add e pulisce stale IDs quando layer non ha manuali né filtri tassonomici; command di riallineamento dati storici |
+| Colonna layer linkabile e filtro layer su UgcPoi/UgcTrack | oc:8276 | `app/Nova/Traits/HasLayerFilterAndLink.php`, `app/Nova/UgcPoi.php`, `app/Nova/UgcTrack.php` | Field "layer" (link verso il layer, in nuova scheda) e filtro Select per layer, solo Administrator; trait condiviso tra UgcPoi e UgcTrack |
 
 ## Decisioni architetturali
+
+### Colonna layer linkabile e filtro layer su UgcPoi/UgcTrack (oc:8276)
+- Logica di risoluzione layer_id → nome/link e filtro Select estratta in `App\Nova\Traits\HasLayerFilterAndLink`, condiviso da `UgcPoi` e `UgcTrack` — evita la duplicazione del blocco Select introdotta da oc:7640 su UgcPoi soltanto
+- `layer_id` da `properties` va sempre validato con `is_numeric()` prima dell'uso: il filtro Select preesistente (oc:7640) usa un cast SQL `::integer` senza validazione, fragile su dati corrotti — rischio noto, non modificato in questo ciclo (fuori scope), ma il nuovo trait adotta validazione PHP-side per non ripeterlo
+- Cache statica in-request (`static::$layerNameCache`) per evitare N+1 query quando più righe della stessa pagina index condividono lo stesso layer_id
+- Layer cancellato (`layer_id` valido ma `Layer::find()` nullo) mostra "Layer eliminato (ID: {id})", distinto da "Non assegnato" (layer_id assente/non valido) — nessun link generato in entrambi i casi
+- Link con `target="_blank" rel="noopener noreferrer"` (mitigazione tabnabbing) e nome layer escapato con `htmlspecialchars()` (mitigazione XSS stored, dato che `Layer::getStringName()` può contenere input utente non sanitizzato)
 
 ### Fix properties.layers EcPoi (oc:8140)
 - `updateLayersPropertyOnLayeredFeature` usa un flag `$noValidFilter` (no manual models AND no taxonomy_where AND no taxonomyActivities) invece di un early return — così il path di rimozione gira comunque e pulisce i layer ID storicamente corrotti (`$layerFeaturesIds = []` → `whereNotIn([])` seleziona tutti i POI con quell'ID → vengono rimossi)
