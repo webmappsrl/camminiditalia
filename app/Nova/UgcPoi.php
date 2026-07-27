@@ -14,8 +14,8 @@ use Wm\WmPackage\Nova\UgcPoi as WmNovaUgcPoi;
 
 class UgcPoi extends WmNovaUgcPoi
 {
-    use HidesAppFromIndexTrait;
     use HasLayerFilterAndLink;
+    use HidesAppFromIndexTrait;
 
     public static $model = \App\Models\UgcPoi::class;
 
