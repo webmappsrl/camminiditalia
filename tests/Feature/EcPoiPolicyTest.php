@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcPoi;
+use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class EcPoiPolicyTest extends TestCase
@@ -105,7 +106,7 @@ class EcPoiPolicyTest extends TestCase
     public function test_validator_with_layer_can_create_ec_poi(): void
     {
         $validator = $this->makeUser('Validator');
-        \Wm\WmPackage\Models\Layer::factory()->create(['user_id' => $validator->id]);
+        Layer::factory()->create(['user_id' => $validator->id]);
 
         $this->assertTrue(Gate::forUser($validator)->allows('create', EcPoi::class));
     }

@@ -2,13 +2,14 @@
 
 namespace App\Observers;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class EcPoiValidatorLayerObserver
 {
     public function created(Model $ecPoi): void
     {
-        $user = $ecPoi->user_id ? \App\Models\User::find($ecPoi->user_id) : null;
+        $user = $ecPoi->user_id ? User::find($ecPoi->user_id) : null;
 
         if (! $user || ! $user->hasRole('Validator')) {
             return;
