@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Wm\WmPackage\Models\EcPoi;
 use Wm\WmPackage\Models\Layer;
 
@@ -16,7 +17,7 @@ class EcPoiValidatorLayerObserver
             return;
         }
 
-        /** @var \Illuminate\Support\Collection<int, Layer> $layers */
+        /** @var Collection<int, Layer> $layers */
         $layers = $user->layers()->get();
 
         if ($layers->isEmpty()) {
