@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\TaxonomyPoiType;
+use App\Observers\EcPoiValidatorLayerObserver;
 use App\Observers\LayerableObserver;
 use App\Observers\LayerObserver;
 use App\Observers\UgcObserver;
@@ -48,5 +49,7 @@ class AppServiceProvider extends ServiceProvider
         UgcTrack::observe(UgcObserver::class);
         Layer::observe(LayerObserver::class);
         Layerable::observe(LayerableObserver::class);
+        EcPoi::observe(EcPoiValidatorLayerObserver::class);
+        \App\Models\EcPoi::observe(EcPoiValidatorLayerObserver::class);
     }
 }

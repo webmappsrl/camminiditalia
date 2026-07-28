@@ -100,16 +100,37 @@ class EcPoiPolicyTest extends TestCase
         $this->assertTrue(Gate::forUser($validator)->allows('view', $ecPoi));
     }
 
-    public function test_validator_cannot_create_ec_poi(): void
+    // --- Validator: create/update sui propri POI, scoping per layer ---
+
+    public function test_validator_with_layer_can_create_ec_poi(): void
     {
         $validator = $this->makeUser('Validator');
+        \Wm\WmPackage\Models\Layer::factory()->create(['user_id' => $validator->id]);
+
+        $this->assertTrue(Gate::forUser($validator)->allows('create', EcPoi::class));
+    }
+
+    public function test_validator_without_layer_cannot_create_ec_poi(): void
+    {
+        $validator = $this->makeUser('Validator');
+
         $this->assertFalse(Gate::forUser($validator)->allows('create', EcPoi::class));
     }
 
-    public function test_validator_cannot_update_ec_poi(): void
+    public function test_validator_can_update_own_ec_poi(): void
     {
         $validator = $this->makeUser('Validator');
         $ecPoi = $this->makeEcPoi($validator->id);
+
+        $this->assertTrue(Gate::forUser($validator)->allows('update', $ecPoi));
+    }
+
+    public function test_validator_cannot_update_ec_poi_of_another_user(): void
+    {
+        $validator = $this->makeUser('Validator');
+        $otherValidator = $this->makeUser('Validator');
+        $ecPoi = $this->makeEcPoi($otherValidator->id);
+
         $this->assertFalse(Gate::forUser($validator)->allows('update', $ecPoi));
     }
 

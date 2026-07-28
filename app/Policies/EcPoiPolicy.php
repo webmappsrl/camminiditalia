@@ -35,12 +35,12 @@ class EcPoiPolicy
 
     public function create(User $user): bool
     {
-        return false;
+        return $user->layers()->exists();
     }
 
     public function update(User $user, EcPoi $ecPoi): bool
     {
-        return false;
+        return $ecPoi->user_id === $user->id;
     }
 
     public function delete(User $user, EcPoi $ecPoi): bool
