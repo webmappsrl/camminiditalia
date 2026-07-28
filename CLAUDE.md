@@ -113,6 +113,10 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 
 ## Decisioni architetturali
 
+### Visibilità POI/tracce non proprie nel pannello manuale di Layer (oc:8311)
+- La regola "ognuno vede/gestisce sempre e solo il proprio contenuto" (`user_id`) si applica a **tutti i ruoli senza eccezioni**, Administrator incluso — l'ownership su un layer riflette sempre il gestore attuale perché il trasferimento al cambio owner è già gestito da `LayerObserver` (oc:8080); l'Administrator può avere più EC solo perché è l'unico che può possedere più layer contemporaneamente (bootstrap iniziale)
+- La modalità `auto` di `sync()` (`LayerFeatureController`) non usa più `assignTracksByTaxonomy`/`assignPoisByTaxonomy` del package (logica a tassonomia): per camminiditalia `auto=true` significa "assegna al layer tutti gli EC di cui sono proprietario", senza tassonomia né filtro `app_id` (il progetto ha una sola app)
+
 ### Colonna layer linkabile e filtro layer su UgcPoi/UgcTrack (oc:8276)
 - Logica di risoluzione layer_id → nome/link e filtro Select estratta in `App\Nova\Traits\HasLayerFilterAndLink`, condiviso da `UgcPoi` e `UgcTrack` — evita la duplicazione del blocco Select introdotta da oc:7640 su UgcPoi soltanto
 - `layer_id` da `properties` va sempre validato con `is_numeric()` prima dell'uso: il filtro Select preesistente (oc:7640) usa un cast SQL `::integer` senza validazione, fragile su dati corrotti — rischio noto, non modificato in questo ciclo (fuori scope), ma il nuovo trait adotta validazione PHP-side per non ripeterlo
