@@ -16,11 +16,6 @@ class Layer extends WmNovaLayer
 {
     use FiltersUsersByRoleTrait;
 
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var class-string<\App\Models\Layer>
-     */
     public static function indexQuery(NovaRequest $request, $query)
     {
         /** @var User|null $user */
