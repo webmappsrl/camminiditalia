@@ -1,16 +1,142 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ecPois\.$#'
+			identifier: property.notFound
 			count: 1
-			path: routes/console.php
+			path: app/Console/Commands/SyncLayerEcPois.php
 
 		-
-			message: '#^Call to an undefined method PHPUnit\\Framework\\TestCase\:\:get\(\)\.$#'
+			message: '#^Access to an undefined property Wm\\WmPackage\\Models\\Abstracts\\GeometryModel\:\:\$geometry\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/ResolveUgcLayerJob.php
+
+		-
+			message: '#^Access to an undefined property Wm\\WmPackage\\Models\\Abstracts\\GeometryModel\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Jobs/ResolveUgcLayerJob.php
+
+		-
+			message: '#^Access to an undefined property Wm\\WmPackage\\Models\\Abstracts\\GeometryModel\:\:\$properties\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/ResolveUgcLayerJob.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/SendUgcReportMailJob.php
+
+		-
+			message: '#^Access to an undefined property Wm\\WmPackage\\Models\\Abstracts\\GeometryModel\:\:\$app_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Mail/NewUgcReportMail.php
+
+		-
+			message: '#^Access to an undefined property Wm\\WmPackage\\Models\\Abstracts\\GeometryModel\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Mail/NewUgcReportMail.php
+
+		-
+			message: '#^Access to an undefined property Wm\\WmPackage\\Models\\Layerable\:\:\$layer\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Observers/LayerableObserver.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: tests/Feature/ExampleTest.php
+			path: database/migrations/2025_03_13_093245_create_telescope_entries_table.php
+
+		-
+			message: '#^Method Illuminate\\Database\\Schema\\Blueprint\:\:float\(\) invoked with 3 parameters, 1\-2 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: database/migrations/2025_03_17_085246_create_users_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\IndexDefinition\:\:comment\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: database/migrations/2025_03_31_120626_create_ec_tracks_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: database/migrations/2025_03_31_120649_z_add_foreign_keys_to_app_layer_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: database/migrations/2025_03_31_120651_z_add_foreign_keys_to_ec_poi_ec_track_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: database/migrations/2025_03_31_120654_z_add_foreign_keys_to_media_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: database/migrations/2025_03_31_120655_z_add_foreign_keys_to_model_has_permissions_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: database/migrations/2025_03_31_120656_z_add_foreign_keys_to_model_has_roles_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: database/migrations/2025_03_31_120657_z_add_foreign_keys_to_role_has_permissions_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: database/migrations/2025_03_31_120702_z_add_foreign_keys_to_ugc_pois_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: database/migrations/2025_03_31_120703_z_add_foreign_keys_to_ugc_tracks_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: database/migrations/2025_04_08_075101_z_add_user_foreign_key_to_ec_pois_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: database/migrations/2025_04_08_075102_z_add_user_foreign_key_to_ec_tracks_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: database/migrations/2025_04_08_075103_z_add_user_foreign_key_to_layers_table.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:onDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: database/migrations/2026_04_22_113119_zz_2026_04_03_000004_rename_theme_filters_and_create_app_filter_layers_table.php
 
 		-
 			message: '#^Undefined variable\: \$this$#'
