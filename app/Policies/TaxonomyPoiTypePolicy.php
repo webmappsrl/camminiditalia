@@ -37,8 +37,6 @@ class TaxonomyPoiTypePolicy
 
     /**
      * Determine whether the user can view the model.
-     *
-     * @return bool
      */
     public function view(User $user, TaxonomyPoiType|\Laravel\Nova\Resource $taxonomyPoiType): bool
     {
@@ -58,8 +56,6 @@ class TaxonomyPoiTypePolicy
 
     /**
      * Determine whether the user can update the model.
-     *
-     * @return bool
      */
     public function update(User $user, TaxonomyPoiType|\Laravel\Nova\Resource $taxonomyPoiType): bool
     {
