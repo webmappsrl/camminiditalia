@@ -3,11 +3,12 @@
 namespace App\Observers;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
+use Wm\WmPackage\Models\EcPoi;
+use Wm\WmPackage\Models\Layer;
 
 class EcPoiValidatorLayerObserver
 {
-    public function created(Model $ecPoi): void
+    public function created(EcPoi $ecPoi): void
     {
         $user = $ecPoi->user_id ? User::find($ecPoi->user_id) : null;
 
@@ -15,6 +16,7 @@ class EcPoiValidatorLayerObserver
             return;
         }
 
+        /** @var \Illuminate\Support\Collection<int, Layer> $layers */
         $layers = $user->layers()->get();
 
         if ($layers->isEmpty()) {

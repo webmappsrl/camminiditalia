@@ -47,7 +47,10 @@ class EcPoi extends WmNovaEcPoi
             return true;
         }
 
-        return $user->hasRole('Validator') && $this->resource->user_id === $user->id;
+        /** @var EcPoiModel $ecPoi */
+        $ecPoi = $this->resource;
+
+        return $user->hasRole('Validator') && $ecPoi->user_id === $user->id;
     }
 
     public function authorizedToDelete(Request $request): bool
