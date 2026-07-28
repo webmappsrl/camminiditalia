@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\User;
 use Wm\WmPackage\Nova\Fields\LayerFeatures\Http\Controllers\LayerFeatureController as WmLayerFeatureController;
+use Wm\WmPackage\Services\PBFGeneratorService;
 
 class LayerFeatureController extends WmLayerFeatureController
 {
@@ -17,6 +19,14 @@ class LayerFeatureController extends WmLayerFeatureController
     {
         try {
             $layer = Layer::findOrFail($layerId);
+            $layerOwnerId = $layer->user_id ?? config('camminiditalia.default_owner_id');
+
+            /** @var User|null $user */
+            $user = Auth::user();
+
+            if (! $user || ($layer->user_id !== $user->id && ! $user->hasRole('Administrator'))) {
+                abort(403);
+            }
 
             $validatedData = $request->validate([
                 'model' => 'required|string',
@@ -31,6 +41,17 @@ class LayerFeatureController extends WmLayerFeatureController
             $search = $validatedData['search'] ?? '';
             $viewMode = $validatedData['view_mode'] ?? 'edit';
 
+            if (! in_array($validatedData['model'], [
+                \App\Models\EcPoi::class,
+                \Wm\WmPackage\Models\EcPoi::class,
+                \App\Models\EcTrack::class,
+                \Wm\WmPackage\Models\EcTrack::class,
+            ], true)) {
+                return response()->json([
+                    'error' => "Modello '{$validatedData['model']}' non consentito.",
+                ], 400);
+            }
+
             // Creo un'istanza del modello per ottenere il nome della relazione
             $model = new $validatedData['model'];
 
@@ -40,16 +61,14 @@ class LayerFeatureController extends WmLayerFeatureController
                 ], 400);
             }
 
-            // Ottieni l'utente loggato
-            /** @var User|null $user */
-            $user = Auth::user();
-
             // Funzione helper per caricare le features associate
-            $getAssociatedFeatures = function () use ($model, $layerId, $search) {
+            $getAssociatedFeatures = function () use ($model, $layerId, $search, $layerOwnerId) {
                 $query = $model->newQuery();
                 $query->whereHas('associatedLayers', function ($q) use ($layerId) {
                     $q->where('layer_id', $layerId);
                 });
+
+                $query->where('user_id', $layerOwnerId);
 
                 if ($search) {
                     $query->where('name', 'like', "%{$search}%");
@@ -75,10 +94,8 @@ class LayerFeatureController extends WmLayerFeatureController
                     $otherQuery->where('app_id', $layer->app_id);
                 }
 
-                // Filtra per utente loggato (escludi Administrator)
-                if ($user && ! $user->hasRole('Administrator')) {
-                    $otherQuery->where('user_id', $user->id);
-                }
+                // Filtra per proprietario del layer (nessuna eccezione di ruolo)
+                $otherQuery->where('user_id', $layerOwnerId);
 
                 // Escludi quelle già associate
                 if ($associatedFeatures->isNotEmpty()) {
@@ -120,8 +137,99 @@ class LayerFeatureController extends WmLayerFeatureController
                     'total' => $features->total(),
                 ],
             ]);
+        } catch (HttpExceptionInterface $e) {
+            throw $e;
+        } catch (\Illuminate\Validation\ValidationException|\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            throw $e;
         } catch (\Exception $e) {
             Log::error('LayerFeatureController::getFeatures error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'error' => 'Errore interno del server: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function sync(Request $request, $layerId): JsonResponse
+    {
+        try {
+            $layer = Layer::findOrFail($layerId);
+            $layerOwnerId = $layer->user_id ?? config('camminiditalia.default_owner_id');
+
+            /** @var \Wm\WmPackage\Models\User|null $user */
+            $user = Auth::user();
+
+            if (! $user || ($layer->user_id !== $user->id && ! $user->hasRole('Administrator'))) {
+                abort(403);
+            }
+
+            $validatedData = $request->validate([
+                'features' => 'array',
+                'model' => 'required|string',
+                'auto' => 'boolean',
+            ]);
+
+            if (! in_array($validatedData['model'], [
+                \App\Models\EcPoi::class,
+                \Wm\WmPackage\Models\EcPoi::class,
+                \App\Models\EcTrack::class,
+                \Wm\WmPackage\Models\EcTrack::class,
+            ], true)) {
+                return response()->json([
+                    'error' => "Modello '{$validatedData['model']}' non consentito.",
+                ], 400);
+            }
+
+            $model = new $validatedData['model'];
+
+            if (! method_exists($model, 'getLayerRelationName')) {
+                return response()->json([
+                    'error' => "Il modello '{$validatedData['model']}' non implementa l'interfaccia LayerRelatedModel.",
+                ], 400);
+            }
+
+            $relationName = $model->getLayerRelationName();
+
+            if (! method_exists($layer, $relationName)) {
+                return response()->json([
+                    'error' => "La relazione '{$relationName}' non esiste nel modello Layer.",
+                ], 400);
+            }
+
+            $isAutoRequest = ! empty($validatedData['auto']) && in_array($relationName, ['ecTracks', 'ecPois']);
+
+            if ($isAutoRequest) {
+                $ownedIds = $model->newQuery()->where('user_id', $layerOwnerId)->pluck('id')->toArray();
+
+                $layer->{$relationName}()->sync($ownedIds);
+            } else {
+                $requestedIds = $validatedData['features'] ?? [];
+
+                $ownedIds = $model->newQuery()->whereIn('id', $requestedIds)->where('user_id', $layerOwnerId)->pluck('id')->toArray();
+
+                $layer->{$relationName}()->sync($ownedIds);
+            }
+
+            if ($relationName === 'ecTracks') {
+                app(PBFGeneratorService::class)->regeneratePbfsForLayer($layer);
+            }
+
+            $tableName = $model->getTable();
+            $assignedIds = $layer->{$relationName}()->select($tableName.'.id')->pluck('id')->toArray();
+
+            return response()->json([
+                'message' => 'Features sincronizzate con successo',
+                'assigned_ids' => $assignedIds,
+            ], 200);
+        } catch (HttpExceptionInterface $e) {
+            throw $e;
+        } catch (\Illuminate\Validation\ValidationException|\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            Log::error('LayerFeatureController::sync error', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
