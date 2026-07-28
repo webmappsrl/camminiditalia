@@ -28,6 +28,10 @@ class HasLayerFilterAndLinkTest extends TestCase
         $this->subject = new class
         {
             use HasLayerFilterAndLink;
+
+            public $properties = [];
+
+            public static $model;
         };
     }
 
