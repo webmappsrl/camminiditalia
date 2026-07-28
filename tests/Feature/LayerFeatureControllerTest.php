@@ -6,6 +6,8 @@ use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\Layer;
@@ -49,7 +51,7 @@ class LayerFeatureControllerTest extends TestCase
         \DB::table('layerables')->insert([
             'layer_id' => $layer->id,
             'layerable_id' => $poiOfB->id,
-            'layerable_type' => \App\Models\EcPoi::class,
+            'layerable_type' => EcPoi::class,
         ]);
 
         $response = $this->actingAs($validatorA)
@@ -70,7 +72,7 @@ class LayerFeatureControllerTest extends TestCase
         \DB::table('layerables')->insert([
             'layer_id' => $layer->id,
             'layerable_id' => $poiOfB->id,
-            'layerable_type' => \App\Models\EcPoi::class,
+            'layerable_type' => EcPoi::class,
         ]);
 
         $response = $this->actingAs($validatorA)
@@ -91,7 +93,7 @@ class LayerFeatureControllerTest extends TestCase
         \DB::table('layerables')->insert([
             'layer_id' => $layer->id,
             'layerable_id' => $poiOfOwner->id,
-            'layerable_type' => \App\Models\EcPoi::class,
+            'layerable_type' => EcPoi::class,
         ]);
 
         // POI di proprietà dell'admin stesso, non associato al layer: non deve comparire.
@@ -200,7 +202,7 @@ class LayerFeatureControllerTest extends TestCase
         \DB::table('layerables')->insert([
             'layer_id' => $layer->id,
             'layerable_id' => $poiOfOtherPreAssigned->id,
-            'layerable_type' => \App\Models\EcPoi::class,
+            'layerable_type' => EcPoi::class,
         ]);
 
         $ownPoi = $this->makePoi($validator->id);
@@ -223,8 +225,8 @@ class LayerFeatureControllerTest extends TestCase
         // il quale in ambiente di test (QUEUE_CONNECTION=sync) chiama la vera API DEM esterna.
         // Queue::fake()+Http::fake() evitano la chiamata di rete reale (stesso pattern di
         // LayerOwnershipTransferTest::setUp()), rendendo il test deterministico.
-        \Illuminate\Support\Facades\Queue::fake();
-        \Illuminate\Support\Facades\Http::fake();
+        Queue::fake();
+        Http::fake();
 
         $validator = $this->makeUser('Validator');
         $layer = Layer::factory()->create(['user_id' => $validator->id]);
@@ -284,7 +286,7 @@ class LayerFeatureControllerTest extends TestCase
         $layer = Layer::factory()->create(['user_id' => $validator->id]);
 
         $response = $this->actingAs($validator)
-            ->getJson('/nova-vendor/layer-features/features/'.$layer->id.'?model='.urlencode(\App\Models\User::class).'&view_mode=edit&manual=1');
+            ->getJson('/nova-vendor/layer-features/features/'.$layer->id.'?model='.urlencode(User::class).'&view_mode=edit&manual=1');
 
         $response->assertStatus(400);
     }
@@ -296,7 +298,7 @@ class LayerFeatureControllerTest extends TestCase
 
         $response = $this->actingAs($validator)
             ->postJson('/nova-vendor/layer-features/sync/'.$layer->id, [
-                'model' => \App\Models\User::class,
+                'model' => User::class,
                 'features' => [],
             ]);
 
@@ -348,7 +350,7 @@ class LayerFeatureControllerTest extends TestCase
         \DB::table('layerables')->insert([
             'layer_id' => $layer->id,
             'layerable_id' => $poiOfFallbackOwner->id,
-            'layerable_type' => \App\Models\EcPoi::class,
+            'layerable_type' => EcPoi::class,
         ]);
 
         $otherOrphan = $this->makeUser('Validator');

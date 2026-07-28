@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EcPoi;
+use App\Models\EcTrack;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\User;
@@ -42,9 +46,9 @@ class LayerFeatureController extends WmLayerFeatureController
             $viewMode = $validatedData['view_mode'] ?? 'edit';
 
             if (! in_array($validatedData['model'], [
-                \App\Models\EcPoi::class,
+                EcPoi::class,
                 \Wm\WmPackage\Models\EcPoi::class,
-                \App\Models\EcTrack::class,
+                EcTrack::class,
                 \Wm\WmPackage\Models\EcTrack::class,
             ], true)) {
                 return response()->json([
@@ -139,7 +143,7 @@ class LayerFeatureController extends WmLayerFeatureController
             ]);
         } catch (HttpExceptionInterface $e) {
             throw $e;
-        } catch (\Illuminate\Validation\ValidationException|\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        } catch (ValidationException|ModelNotFoundException $e) {
             throw $e;
         } catch (\Exception $e) {
             Log::error('LayerFeatureController::getFeatures error', [
@@ -159,7 +163,7 @@ class LayerFeatureController extends WmLayerFeatureController
             $layer = Layer::findOrFail($layerId);
             $layerOwnerId = $layer->user_id ?? config('camminiditalia.default_owner_id');
 
-            /** @var \Wm\WmPackage\Models\User|null $user */
+            /** @var User|null $user */
             $user = Auth::user();
 
             if (! $user || ($layer->user_id !== $user->id && ! $user->hasRole('Administrator'))) {
@@ -173,9 +177,9 @@ class LayerFeatureController extends WmLayerFeatureController
             ]);
 
             if (! in_array($validatedData['model'], [
-                \App\Models\EcPoi::class,
+                EcPoi::class,
                 \Wm\WmPackage\Models\EcPoi::class,
-                \App\Models\EcTrack::class,
+                EcTrack::class,
                 \Wm\WmPackage\Models\EcTrack::class,
             ], true)) {
                 return response()->json([
@@ -226,7 +230,7 @@ class LayerFeatureController extends WmLayerFeatureController
             ], 200);
         } catch (HttpExceptionInterface $e) {
             throw $e;
-        } catch (\Illuminate\Validation\ValidationException|\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        } catch (ValidationException|ModelNotFoundException $e) {
             throw $e;
         } catch (\Exception $e) {
             Log::error('LayerFeatureController::sync error', [
