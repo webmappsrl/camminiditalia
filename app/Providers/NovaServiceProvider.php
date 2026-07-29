@@ -44,13 +44,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             Nova::script('config-home-sorter', resource_path('js/nova/config-home-sorter.js'));
         });
 
-        // Questa route sovrascrive quella del wm-package permettendo
-        // di filtrare le tracce per utente loggato senza modificare il package.
-        // Le altre route (index e sync) vengono ereditate dal package.
+        // Queste route sovrascrivono quelle del wm-package permettendo
+        // di filtrare per utente loggato senza modificare il package.
+        // L'unica route ereditata invariata dal package è "index".
         Route::middleware(['nova'])
             ->prefix('nova-vendor/layer-features')
             ->group(function () {
                 Route::get('/features/{layerId}', [LayerFeatureController::class, 'getFeatures']);
+                Route::post('/sync/{layerId}', [LayerFeatureController::class, 'sync']);
             });
 
         $this->getFooter();

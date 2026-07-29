@@ -11609,6 +11609,7 @@
                     "Wm\\WmPackage\\Database\\Factories\\": "database/factories/",
                     "Wm\\WmPackage\\Http\\Controllers\\": "src/Http/Controllers",
                     "Wm\\WmPackage\\Nova\\Fields\\IconSelect\\": "src/Nova/Fields/IconSelect/src/",
+                    "Wm\\WmPackage\\Nova\\Fields\\TranslationsBuilder\\": "src/Nova/Fields/TranslationsBuilder/src/",
                     "Wm\\WmPackage\\Nova\\Fields\\LayerFeatures\\": "src/Nova/Fields/LayerFeatures/src/",
                     "Wm\\WmPackage\\Nova\\Fields\\FeatureCollectionMap\\": "src/Nova/Fields/FeatureCollectionMap/src/",
                     "Wm\\WmPackage\\Nova\\Cards\\LayerAnalytics\\": "src/Nova/Cards/LayerAnalytics/src/",
