@@ -78,8 +78,8 @@ trait HasLayerFilterAndLink
                     ->toArray();
             })
             ->searchable()
-            ->filterable(function ($request, $query, $value) {
-                return $query->whereRaw("(properties->>'layer_id')::integer = ?", [(int) $value]);
+            ->filterable(function (NovaRequest $request, $query, mixed $value, string $attribute) {
+                $query->whereRaw("(properties->>'layer_id')::integer = ?", [(int) $value]);
             })
             ->hideFromIndex()
             ->hideFromDetail()

@@ -57,7 +57,7 @@ class LayerOwnershipTransferTest extends TestCase
         $layer = $this->createLayer($oldOwner->id);
 
         $poi = EcPoi::factory()->create(['user_id' => $oldOwner->id, 'properties' => []]);
-        $layer->manualEcPois()->attach($poi->id);
+        $layer->ecPois()->attach($poi->id);
 
         $layer->update(['user_id' => $newOwner->id]);
 
@@ -141,7 +141,7 @@ class LayerOwnershipTransferTest extends TestCase
         $layer = $this->createLayer($owner->id);
 
         $poi = EcPoi::factory()->create(['user_id' => null, 'properties' => []]);
-        $layer->manualEcPois()->attach($poi->id);
+        $layer->ecPois()->attach($poi->id);
 
         $this->assertEquals($owner->id, $poi->fresh()->user_id);
     }

@@ -37,8 +37,6 @@ class TaxonomyPoiTypePolicy
 
     /**
      * Determine whether the user can view the model.
-     *
-     * @return Response|bool
      */
     public function view(User $user, TaxonomyPoiType|\Laravel\Nova\Resource $taxonomyPoiType): bool
     {
@@ -58,8 +56,6 @@ class TaxonomyPoiTypePolicy
 
     /**
      * Determine whether the user can update the model.
-     *
-     * @return Response|bool
      */
     public function update(User $user, TaxonomyPoiType|\Laravel\Nova\Resource $taxonomyPoiType): bool
     {
@@ -73,7 +69,7 @@ class TaxonomyPoiTypePolicy
      */
     public function delete(User $user, TaxonomyPoiType|\Laravel\Nova\Resource $taxonomyPoiType)
     {
-        //
+        return false;
     }
 
     /**
@@ -83,7 +79,7 @@ class TaxonomyPoiTypePolicy
      */
     public function restore(User $user, TaxonomyPoiType|\Laravel\Nova\Resource $taxonomyPoiType)
     {
-        //
+        return false;
     }
 
     /**
@@ -93,6 +89,6 @@ class TaxonomyPoiTypePolicy
      */
     public function forceDelete(User $user, TaxonomyPoiType|\Laravel\Nova\Resource $taxonomyPoiType)
     {
-        //
+        return false;
     }
 }
