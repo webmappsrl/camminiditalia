@@ -11534,11 +11534,11 @@
         },
         {
             "name": "wm/wm-package",
-            "version": "dev-main",
+            "version": "dev-oc_561",
             "dist": {
                 "type": "path",
                 "url": "./wm-package",
-                "reference": "2e347a8c7263113fdad527a7fe6ae477d79a09ba"
+                "reference": "cc79ae37dedd5bdc82699995694d3ad0a536d27f"
             },
             "require": {
                 "chillerlan/php-qrcode": "^5.0",
