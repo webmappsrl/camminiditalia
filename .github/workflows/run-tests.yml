@@ -56,7 +56,15 @@ jobs:
       - name: Clear config cache before tests
         run: php artisan config:clear
       - name: Laravel Tests
+        # DB_HOST/DB_DATABASE espliciti: senza, il nuovo .env.testing (committato per l'uso locale,
+        # DB_HOST=db valido solo su rete Docker) verrebbe caricato anche qui perché APP_ENV=testing
+        # (impostato in phpunit.xml). Le env var di uno step GitHub Actions sono variabili reali del
+        # processo OS: Laravel/Dotenv (Illuminate\Support\Env::getRepository() è "immutable") non le
+        # sovrascrive mai con un valore di .env.testing, quindi vincono sempre su quel file.
         run: php artisan test --log-events-verbose-text storage/logs/test.log
+        env:
+          DB_HOST: localhost
+          DB_DATABASE: camminiditalia
       - name: Upload Test Results
         if: failure()
         uses: actions/upload-artifact@v4
