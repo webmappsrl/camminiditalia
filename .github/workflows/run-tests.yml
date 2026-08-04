@@ -56,15 +56,20 @@ jobs:
       - name: Clear config cache before tests
         run: php artisan config:clear
       - name: Laravel Tests
-        # DB_HOST/DB_DATABASE espliciti: senza, il nuovo .env.testing (committato per l'uso locale,
-        # DB_HOST=db valido solo su rete Docker) verrebbe caricato anche qui perché APP_ENV=testing
-        # (impostato in phpunit.xml). Le env var di uno step GitHub Actions sono variabili reali del
-        # processo OS: Laravel/Dotenv (Illuminate\Support\Env::getRepository() è "immutable") non le
-        # sovrascrive mai con un valore di .env.testing, quindi vincono sempre su quel file.
+        # DB_HOST/DB_DATABASE/REDIS_HOST espliciti: senza, il nuovo .env.testing (committato per
+        # l'uso locale, con hostname Docker validi solo sulla rete locale: DB_HOST=db, REDIS_HOST=redis)
+        # verrebbe caricato anche qui perché APP_ENV=testing (impostato in phpunit.xml). Le env var
+        # di uno step GitHub Actions sono variabili reali del processo OS: Laravel/Dotenv
+        # (Illuminate\Support\Env::getRepository() è "immutable") non le sovrascrive mai con un
+        # valore di .env.testing, quindi vincono sempre su quel file.
+        # REDIS_HOST è necessario nonostante phpunit.xml forzi già CACHE_STORE=array/QUEUE_CONNECTION=sync:
+        # BuildAppPoisGeojsonJob::uniqueVia() usa Cache::store('redis') hardcoded, bypassando quell'override
+        # (confermato in CI: 40 test falliti con "getaddrinfo for redis failed" prima di questo fix).
         run: php artisan test --log-events-verbose-text storage/logs/test.log
         env:
           DB_HOST: localhost
           DB_DATABASE: camminiditalia
+          REDIS_HOST: localhost
       - name: Upload Test Results
         if: failure()
         uses: actions/upload-artifact@v4
