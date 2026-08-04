@@ -54,6 +54,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Running in GitHub Actions CI
+    |--------------------------------------------------------------------------
+    |
+    | GITHUB_ACTIONS è impostata automaticamente da ogni runner GitHub, a
+    | prescindere da .env/.env.testing. Usata in tests/TestCase.php per
+    | disattivare la guardia anti-bypass locale (la CI ha una propria
+    | protezione indipendente in .github/workflows/run-tests.yml).
+    |
+    */
+
+    'running_in_ci' => (bool) env('GITHUB_ACTIONS', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application URL
     |--------------------------------------------------------------------------
     |
