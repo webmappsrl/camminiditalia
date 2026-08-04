@@ -24,6 +24,19 @@ docker exec laravel-camminiditalia php artisan test --filter=NomeTest
 docker exec laravel-camminiditalia php artisan test tests/Feature/LayerPolicyTest.php
 ```
 
+I test girano su un database PostgreSQL separato (`camminiditalia_testing`), non su quello di sviluppo — vedi `.env.testing` e `phpunit.xml`.
+
+### Setup DB di test (una tantum, dopo primo clone o reset container)
+```bash
+docker exec laravel-camminiditalia php artisan tinker --execute="\DB::statement('CREATE DATABASE camminiditalia_testing TEMPLATE template_postgis');"
+docker exec laravel-camminiditalia php artisan migrate --env=testing
+```
+
+### Reset del DB di test (se corrotto durante lo sviluppo)
+```bash
+docker exec laravel-camminiditalia php artisan migrate:fresh --env=testing
+```
+
 Formattare il codice:
 ```bash
 docker exec laravel-camminiditalia composer format   # esegue Laravel Pint
@@ -111,8 +124,15 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Fix properties.layers EcPoi corrotto per layer senza taxonomy_where | oc:8140 | `wm-package/src/Services/Models/LayerService.php`, `App\Console\Commands\FixEcPoiLayersProperty`, `tests/Feature/LayerServiceUpdateLayersPropertyGuardTest.php` | Guard in `updateLayersPropertyOnLayeredFeature`: salta add e pulisce stale IDs quando layer non ha manuali né filtri tassonomici; command di riallineamento dati storici |
 | Colonna layer linkabile e filtro layer su UgcPoi/UgcTrack | oc:8276 | `app/Nova/Traits/HasLayerFilterAndLink.php`, `app/Nova/UgcPoi.php`, `app/Nova/UgcTrack.php` | Field "layer" (link verso il layer, in nuova scheda) e filtro Select per layer, solo Administrator; trait condiviso tra UgcPoi e UgcTrack |
 | Fix drift phpstan-baseline.neon | oc:8312 | `phpstan-baseline.neon`, `app/Nova/Layer.php`, `app/Nova/Traits/HasLayerFilterAndLink.php`, `app/Policies/TaxonomyPoiTypePolicy.php`, `tests/Feature/AppHomeLayerSortButtonTest.php`, `tests/Feature/LayerOwnershipTransferTest.php` | Baseline rigenerato allineato a PHPStan 2.1.38/Larastan 3.9.2; 18 fix reali (docblock orfano, firma closure Nova, return espliciti in policy, asserzioni/chiamate test obsolete), 31 entry baseline per falsi positivi migration + gap tipizzazione wm-package |
+| Database PostgreSQL separato per i test PHPUnit | oc:8092 | `.env.testing`, `phpunit.xml`, `.github/workflows/run-tests.yml`, `CLAUDE.md` | I test girano su `camminiditalia_testing` (clonato da `template_postgis`), non più sul DB di sviluppo condiviso; `RefreshDatabase` non svuota più i dati locali |
 
 ## Decisioni architetturali
+
+### Database PostgreSQL separato per i test PHPUnit (oc:8092)
+- `.env.testing` è committato direttamente (non `.example`) ma **non è una copia integrale del `.env` locale**: `APP_KEY`/`JWT_SECRET`/`AWS_DUMPS_ACCESS_KEY_ID`/`AWS_DUMPS_SECRET_ACCESS_KEY` vanno sempre rigenerati/omessi (trovato in review: la prima stesura conteneva questi segreti reali copiati 1:1 dal `.env` personale, incluse credenziali AWS con accesso ai backup di produzione)
+- La protezione CI in `run-tests.yml` (env var `DB_HOST`/`DB_DATABASE` esplicite sullo step "Laravel Tests") funziona perché `Illuminate\Support\Env::getRepository()` costruisce il repository con `->immutable()`: le env var reali di un GitHub Actions step non vengono mai cancellate né sovrascritte da `.env.testing`, anche se quest'ultimo viene caricato automaticamente per `APP_ENV=testing`. Verificato empiricamente (non solo per lettura del codice vendor) simulando le condizioni CI in locale — un'ipotesi di regressione basata solo sulla lettura di `Collision\TestCommand::clearEnv()` si è rivelata infondata dopo il test empirico
+- **Fix Redis/qemu (non era una limitazione permanente)**: i fallimenti `ConnectionException` verso Redis (40 osservati in questo ciclo, 28 in oc:8312) erano causati da un'immagine `redis:latest` in variante `amd64` fatta girare via emulazione qemu su host `arm64` (Apple Silicon) — non da un problema architetturale del progetto. Fix: `docker pull --platform linux/arm64 redis:latest` + `docker compose up -d --force-recreate redis` (nessun volume persistente su Redis, nessun rischio dati). Risultato: suite `php artisan test` **145 passati, 0 falliti**. La nota equivalente in oc:8312 sotto (che descrive questi fallimenti come "problema di infrastruttura Docker locale pre-esistente" da "rivalutare") è superata da questo fix
+- `template_postgis` (template Postgres con PostGIS preinstallato) è uno stato Docker locale non versionato — se il volume Postgres viene ricreato da zero, va rigenerato implicitamente dall'immagine `postgis/postgis` all'avvio, nessuno script del repo lo crea esplicitamente
 
 ### Fix drift phpstan-baseline.neon (oc:8312)
 - Il baseline (generato 2025-02-12) era disallineato da PHPStan 2.1.38/Larastan 3.9.2 (versioni molto più recenti) — causa non un bump intenzionale ma drift silenzioso: `composer.lock` non è coperto dal check CI, quindi un bump di versione via dipendenze non fa fallire subito nulla, il drift si accumula finché il baseline non intercetta più gli errori nuovi
