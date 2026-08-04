@@ -34,5 +34,6 @@ Durante l'implementazione di oc:8089, il test `LayerActionsVisibilityTest` ha es
 - `phpunit.xml` (modifica: rimozione righe SQLite commentate, aggiunta `DB_DATABASE`)
 - `CLAUDE.md` (sezione `## Comandi comuni`: setup one-time + comando di reset rapido)
 - `.github/workflows/run-tests.yml` (**emerso da Fase: challenge**, non elencato nel ticket originale — env var esplicite per proteggere la CI dall'auto-load di `.env.testing`)
-- `tests/TestCase.php` (**emerso dopo i commit iniziali**, non nel ticket originale — guardia contro il bypass silenzioso via `config:cache`)
+- `tests/TestCase.php` (**emerso dopo i commit iniziali**, non nel ticket originale — guardia contro il bypass silenzioso via `config:cache`; corretta dopo una seconda review che ha trovato un blocker: la guardia rompeva la CI, vedi `notes.md`)
+- `config/app.php` (**emerso dallo stesso fix**, non nel ticket originale — chiave `running_in_ci` per rispettare la convenzione Larastan `env()` solo nei file di config)
 - Database Docker locale: nuovo DB `camminiditalia_testing` (stato infrastrutturale, non versionato in git)
