@@ -146,10 +146,11 @@ class DeepLinkQrFieldVisibilityTest extends TestCase
     public function test_validator_can_see_qr_field_on_ec_track(): void
     {
         $app = $this->makeApp(true);
-        $track = EcTrack::factory()->create(['app_id' => $app->id, 'user_id' => $this->makeAdmin()->id, 'properties' => []]);
 
         $validator = User::factory()->create();
         $validator->assignRole('Validator');
+
+        $track = EcTrack::factory()->create(['app_id' => $app->id, 'user_id' => $validator->id, 'properties' => []]);
 
         $response = $this->actingAs($validator)
             ->getJson('/nova-api/ec-tracks/'.$track->id);

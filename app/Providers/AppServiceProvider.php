@@ -16,10 +16,12 @@ use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Wm\WmPackage\Models\EcPoi;
+use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\Layerable;
 use Wm\WmPackage\Models\UgcPoi;
 use Wm\WmPackage\Models\UgcTrack;
+use Wm\WmPackage\Policies\EcTrackPolicy;
 use Wm\WmPackage\Policies\PermissionPolicy;
 use Wm\WmPackage\Policies\RolePolicy;
 
@@ -44,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Permission::class, PermissionPolicy::class);
         Gate::policy(TaxonomyPoiType::class, TaxonomyPoiTypePolicy::class);
         Gate::policy(EcPoi::class, EcPoiPolicy::class);
+        Gate::policy(EcTrack::class, EcTrackPolicy::class);
 
         UgcPoi::observe(UgcObserver::class);
         UgcTrack::observe(UgcObserver::class);
