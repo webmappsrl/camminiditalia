@@ -113,8 +113,15 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Fix drift phpstan-baseline.neon | oc:8312 | `phpstan-baseline.neon`, `app/Nova/Layer.php`, `app/Nova/Traits/HasLayerFilterAndLink.php`, `app/Policies/TaxonomyPoiTypePolicy.php`, `tests/Feature/AppHomeLayerSortButtonTest.php`, `tests/Feature/LayerOwnershipTransferTest.php` | Baseline rigenerato allineato a PHPStan 2.1.38/Larastan 3.9.2; 18 fix reali (docblock orfano, firma closure Nova, return espliciti in policy, asserzioni/chiamate test obsolete), 31 entry baseline per falsi positivi migration + gap tipizzazione wm-package |
 | Toggle QR code deep link + well-known registry | oc:8251 | Quasi interamente `wm-package` (vedi `wm-package/CLAUDE.md`); in questo repo solo `.env` (credenziali SFTP) | Toggle per app + QR code/link deep-link mostrato direttamente su Track/Poi (Nova Field); sync automatico file well-known condiviso via SFTP |
 | Dashboard statistiche aggregate per Cammini d'Italia | oc:8182 | `app/Nova/Layer.php`, `tests/Feature/LayerGlobalAnalyticsCardVisibilityTest.php`; grosso della logica in `wm-package` (vedi `wm-package/CLAUDE.md`) | `App\Nova\Layer::cards()` registra `LayerAnalyticsCard::global()` su index Layer, solo Administrator, solo se analytics abilitato per l'App; detail view invariata (`parent::cards()`) |
+| Box informativi — registrazione EcTrackPolicy | oc:8181 | `app/Providers/AppServiceProvider.php`, `tests/Feature/EcTrackPolicyTest.php`, submodule `wm-package` | Fix bloccante review: `Gate::policy(EcTrack::class, EcTrackPolicy::class)` ownership-based (commit `4fe834e`); grosso builder Nova in wm-package — vedi `wm-package/docs/features/8181-box-informativi-cammino/` |
 
 ## Decisioni architetturali
+
+### Box informativi + EcTrackPolicy (oc:8181)
+- Pattern identico a `EcPoiPolicy` (oc:8120): policy del package registrata in `AppServiceProvider` con `Gate::policy(EcTrack::class, EcTrackPolicy::class)`.
+- Validator: `update`/`delete`/`view` solo sulle proprie EcTrack (`user_id`); Layer resta Administrator-only (`LayerPolicy::update()` blocca tutti i Validator).
+- Test: `EcTrackPolicyTest.php` (mirror di `EcPoiPolicyTest.php`) + regressione `EcPoiPolicyTest.php`; integrazione Nova in `wm-package/tests/Feature/Nova/ConfigDetailAuthorizationInheritanceTest.php`.
+- Frontend `config_detail` (consumo wm-core) fuori scope in questo repo — solo fix autorizzazione consumer emerso in review backend.
 
 ### Fix drift phpstan-baseline.neon (oc:8312)
 - Il baseline (generato 2025-02-12) era disallineato da PHPStan 2.1.38/Larastan 3.9.2 (versioni molto più recenti) — causa non un bump intenzionale ma drift silenzioso: `composer.lock` non è coperto dal check CI, quindi un bump di versione via dipendenze non fa fallire subito nulla, il drift si accumula finché il baseline non intercetta più gli errori nuovi
