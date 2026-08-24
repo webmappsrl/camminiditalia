@@ -125,8 +125,34 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Colonna layer linkabile e filtro layer su UgcPoi/UgcTrack | oc:8276 | `app/Nova/Traits/HasLayerFilterAndLink.php`, `app/Nova/UgcPoi.php`, `app/Nova/UgcTrack.php` | Field "layer" (link verso il layer, in nuova scheda) e filtro Select per layer, solo Administrator; trait condiviso tra UgcPoi e UgcTrack |
 | Fix drift phpstan-baseline.neon | oc:8312 | `phpstan-baseline.neon`, `app/Nova/Layer.php`, `app/Nova/Traits/HasLayerFilterAndLink.php`, `app/Policies/TaxonomyPoiTypePolicy.php`, `tests/Feature/AppHomeLayerSortButtonTest.php`, `tests/Feature/LayerOwnershipTransferTest.php` | Baseline rigenerato allineato a PHPStan 2.1.38/Larastan 3.9.2; 18 fix reali (docblock orfano, firma closure Nova, return espliciti in policy, asserzioni/chiamate test obsolete), 31 entry baseline per falsi positivi migration + gap tipizzazione wm-package |
 | Database PostgreSQL separato per i test PHPUnit | oc:8092 | `.env.testing`, `phpunit.xml`, `.github/workflows/run-tests.yml`, `CLAUDE.md` | I test girano su `camminiditalia_testing` (clonato da `template_postgis`), non più sul DB di sviluppo condiviso; `RefreshDatabase` non svuota più i dati locali |
+| Modalità auto/manuale layer persistita + blocco auto per owner Administrator | oc:8314 | `app/Http/Controllers/LayerFeatureController.php`, `tests/Feature/LayerFeatureControllerTest.php`, `.env`, `.env.testing` | `track_mode`/`poi_mode` ora persistiti su `sync()`; `auto:true` rifiutato (422) per layer con owner Administrator; default modalità camminiditalia = `manual` (`DEFAULT_LAYER_MODE`) |
 
 ## Decisioni architetturali
+
+### Modalità auto/manuale del layer persistita lato backend (oc:8314)
+- persistMode() nel controller locale eredita dal package (protected), nessuna
+  duplicazione della logica di persistenza; il ramo auto/manuale locale
+  (whitelist modelli, filtro user_id=layerOwnerId) resta specifico di
+  camminiditalia e NON delega a parent::sync() (scelta di oc:8311, invariata)
+- Layer con owner (risolto: user_id ?? default_owner_id) di ruolo Administrator:
+  auto:true viene rifiutato con 422 esplicito nel controller locale (non nel
+  package: Wm\WmPackage\Models\Layer non ha un override locale utilizzabile, 22
+  punti nel package lo referenziano direttamente). Copertura parziale: blocca
+  solo il salvataggio via questo endpoint, non il valore mostrato in UI al
+  primo caricamento per layer non ancora toccati
+- Default della modalità (quando configuration non ha track_mode/poi_mode)
+  cambiato da 'auto' a 'manual' per camminiditalia via nuova chiave config
+  wm-package.default_layer_mode (env DEFAULT_LAYER_MODE) — il default 'auto'
+  resta invariato per gli altri progetti Webmapp
+- Bug scoperto ma non corretto in questo ciclo: 35 layer su 118 hanno tutte le
+  tracce associate con user_id diverso dal proprietario del layer (verificato
+  su due dump distinti, 28/07 e 23/08, stesso conteggio) — la vista Nova
+  (edit/detail) le nasconde sempre (filtro where('user_id', $layerOwnerId)).
+  Causa probabile: LayerObserver (oc:8080) trasferisce ownership solo al
+  cambio di user_id del layer, non quando vengono aggiunte tracce con owner
+  diverso al pivot in un secondo momento. Decisione: nessuna correzione bulk
+  sui dati, il cliente verrà informato caso per caso e correggerà lui stesso
+  da Nova
 
 ### Database PostgreSQL separato per i test PHPUnit (oc:8092)
 - `.env.testing` è committato direttamente (non `.example`) ma **non è una copia integrale del `.env` locale**: `APP_KEY`/`JWT_SECRET`/`AWS_DUMPS_ACCESS_KEY_ID`/`AWS_DUMPS_SECRET_ACCESS_KEY` vanno sempre rigenerati/omessi (trovato in review: la prima stesura conteneva questi segreti reali copiati 1:1 dal `.env` personale, incluse credenziali AWS con accesso ai backup di produzione)
