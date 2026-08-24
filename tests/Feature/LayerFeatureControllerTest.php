@@ -388,4 +388,229 @@ class LayerFeatureControllerTest extends TestCase
         $this->assertContains($ownPoi->id, $assignedIds);
         $this->assertNotContains($poiOfOtherOrphanOwner->id, $assignedIds);
     }
+
+    public function test_set_track_mode_persists_value_and_preserves_other_configuration_keys(): void
+    {
+        $layer = Layer::factory()->create([
+            'configuration' => ['some_other_key' => 'kept'],
+        ]);
+
+        $layer->setTrackMode('manual');
+
+        $fresh = $layer->fresh();
+        $this->assertSame('manual', $fresh->configuration['track_mode']);
+        $this->assertSame('kept', $fresh->configuration['some_other_key']);
+    }
+
+    public function test_set_track_mode_accepts_null_configuration(): void
+    {
+        $layer = Layer::factory()->create(['configuration' => null]);
+
+        $layer->setTrackMode('manual');
+
+        $fresh = $layer->fresh();
+        $this->assertSame('manual', $fresh->configuration['track_mode']);
+    }
+
+    public function test_layer_without_configuration_defaults_to_manual_mode_on_camminiditalia(): void
+    {
+        $layer = Layer::factory()->create(['configuration' => null]);
+
+        $this->assertFalse($layer->isAutoTrackMode());
+        $this->assertFalse($layer->isAutoPoiMode());
+    }
+
+    public function test_set_track_mode_and_set_poi_mode_do_not_lose_each_other_under_concurrent_writes(): void
+    {
+        $layer = Layer::factory()->create(['configuration' => null]);
+
+        // Simula due richieste concorrenti: due istanze caricate PRIMA che
+        // una delle due scriva, come accadrebbe con due pannelli Nova
+        // (Tracce e POI) sulla stessa pagina che POSTano quasi in contemporanea.
+        $layerFromRequestA = Layer::find($layer->id);
+        $layerFromRequestB = Layer::find($layer->id);
+
+        $layerFromRequestA->setTrackMode('manual');
+        $layerFromRequestB->setPoiMode('manual');
+
+        $fresh = $layer->fresh();
+        $this->assertSame('manual', $fresh->configuration['track_mode']);
+        $this->assertSame('manual', $fresh->configuration['poi_mode']);
+    }
+
+    public function test_sync_with_manual_true_persists_manual_mode_for_tracks(): void
+    {
+        Queue::fake();
+        Http::fake();
+
+        $owner = $this->makeUser('Validator');
+        $layer = Layer::factory()->create(['user_id' => $owner->id]);
+        $track = EcTrack::factory()->create(['user_id' => $owner->id, 'properties' => []]);
+        $layer->ecTracks()->sync([$track->id]);
+
+        $this->actingAs($owner)
+            ->postJson("/nova-vendor/layer-features/sync/{$layer->id}", [
+                'model' => EcTrack::class,
+                'manual' => true,
+            ])
+            ->assertOk();
+
+        $this->assertSame('manual', $layer->fresh()->configuration['track_mode']);
+    }
+
+    public function test_sync_with_auto_true_persists_auto_mode_explicitly(): void
+    {
+        Queue::fake();
+        Http::fake();
+
+        $owner = $this->makeUser('Validator');
+        $layer = Layer::factory()->create([
+            'user_id' => $owner->id,
+            'configuration' => ['track_mode' => 'manual'],
+        ]);
+
+        // Il pivot ecTracks resta vuoto (nessuna traccia posseduta), ma
+        // regeneratePbfsForLayer() viene comunque invocata per la relazione
+        // ecTracks: mockata come nel pattern di test_sync_ec_tracks_triggers_pbf_regeneration
+        // per evitare la dipendenza dal bounding box reale dell'App.
+        $pbfMock = \Mockery::mock(PBFGeneratorService::class);
+        $pbfMock->shouldReceive('regeneratePbfsForLayer');
+        $this->app->instance(PBFGeneratorService::class, $pbfMock);
+
+        $this->actingAs($owner)
+            ->postJson("/nova-vendor/layer-features/sync/{$layer->id}", [
+                'model' => EcTrack::class,
+                'auto' => true,
+                'features' => [],
+            ])
+            ->assertOk();
+
+        $this->assertSame('auto', $layer->fresh()->configuration['track_mode']);
+    }
+
+    public function test_sync_with_manual_true_and_no_features_does_not_touch_pivot(): void
+    {
+        Queue::fake();
+        Http::fake();
+
+        $owner = $this->makeUser('Validator');
+        $layer = Layer::factory()->create(['user_id' => $owner->id]);
+        $trackA = EcTrack::factory()->create(['user_id' => $owner->id, 'properties' => []]);
+        $trackB = EcTrack::factory()->create(['user_id' => $owner->id, 'properties' => []]);
+        $layer->ecTracks()->sync([$trackA->id, $trackB->id]);
+
+        $this->actingAs($owner)
+            ->postJson("/nova-vendor/layer-features/sync/{$layer->id}", [
+                'model' => EcTrack::class,
+                'manual' => true,
+            ])
+            ->assertOk();
+
+        $this->assertEqualsCanonicalizing(
+            [$trackA->id, $trackB->id],
+            $layer->fresh()->ecTracks()->pluck('ec_tracks.id')->toArray()
+        );
+    }
+
+    public function test_sync_with_manual_true_and_no_features_does_not_trigger_pbf_regeneration(): void
+    {
+        Queue::fake();
+        Http::fake();
+
+        $owner = $this->makeUser('Validator');
+        $layer = Layer::factory()->create(['user_id' => $owner->id]);
+        $track = EcTrack::factory()->create(['user_id' => $owner->id, 'properties' => []]);
+        $layer->ecTracks()->sync([$track->id]);
+
+        $pbfMock = \Mockery::mock(PBFGeneratorService::class);
+        $pbfMock->shouldNotReceive('regeneratePbfsForLayer');
+        $this->app->instance(PBFGeneratorService::class, $pbfMock);
+
+        $this->actingAs($owner)
+            ->postJson("/nova-vendor/layer-features/sync/{$layer->id}", [
+                'model' => EcTrack::class,
+                'manual' => true,
+            ])
+            ->assertOk();
+    }
+
+    public function test_sync_rejects_auto_and_manual_together(): void
+    {
+        $owner = $this->makeUser('Validator');
+        $layer = Layer::factory()->create(['user_id' => $owner->id]);
+
+        $this->actingAs($owner)
+            ->postJson("/nova-vendor/layer-features/sync/{$layer->id}", [
+                'model' => EcTrack::class,
+                'auto' => true,
+                'manual' => true,
+            ])
+            ->assertStatus(422);
+
+        $this->assertNull($layer->fresh()->configuration['track_mode'] ?? null);
+    }
+
+    public function test_sync_rejects_auto_true_when_layer_owner_is_administrator(): void
+    {
+        Queue::fake();
+        Http::fake();
+
+        $admin = $this->makeUser('Administrator');
+        $layer = Layer::factory()->create(['user_id' => $admin->id]);
+        $ownedTrack = EcTrack::factory()->create(['user_id' => $admin->id, 'properties' => []]);
+        // Traccia estranea, di proprietà dello stesso admin, per dimostrare che
+        // il ramo auto (se eseguito) assegnerebbe indiscriminatamente tutto il
+        // catalogo dell'admin, non solo le tracce pertinenti a questo layer.
+        EcTrack::factory()->create(['user_id' => $admin->id, 'properties' => []]);
+
+        $response = $this->actingAs($admin)
+            ->postJson("/nova-vendor/layer-features/sync/{$layer->id}", [
+                'model' => EcTrack::class,
+                'auto' => true,
+            ])
+            ->assertStatus(422);
+
+        $this->assertStringContainsString('Amministratore', $response->json('error'));
+        $this->assertNull($layer->fresh()->configuration['track_mode'] ?? null);
+        $this->assertSame([], $layer->fresh()->ecTracks()->pluck('ec_tracks.id')->toArray());
+    }
+
+    public function test_sync_rejects_auto_true_when_resolved_owner_is_administrator_via_default_owner_id(): void
+    {
+        Queue::fake();
+        Http::fake();
+
+        $admin = $this->makeUser('Administrator');
+        config(['camminiditalia.default_owner_id' => $admin->id]);
+        $layer = Layer::factory()->create(['user_id' => null]);
+
+        $this->actingAs($admin)
+            ->postJson("/nova-vendor/layer-features/sync/{$layer->id}", [
+                'model' => EcTrack::class,
+                'auto' => true,
+            ])
+            ->assertStatus(422);
+
+        $this->assertNull($layer->fresh()->configuration['track_mode'] ?? null);
+    }
+
+    public function test_sync_allows_manual_true_even_when_layer_owner_is_administrator(): void
+    {
+        Queue::fake();
+        Http::fake();
+
+        $admin = $this->makeUser('Administrator');
+        $layer = Layer::factory()->create(['user_id' => $admin->id]);
+        $track = EcTrack::factory()->create(['user_id' => $admin->id, 'properties' => []]);
+        $layer->ecTracks()->sync([$track->id]);
+
+        $this->actingAs($admin)
+            ->postJson("/nova-vendor/layer-features/sync/{$layer->id}", [
+                'model' => EcTrack::class,
+                'manual' => true,
+            ])
+            ->assertOk();
+
+        $this->assertSame('manual', $layer->fresh()->configuration['track_mode']);
+    }
 }
