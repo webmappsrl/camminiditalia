@@ -173,7 +173,8 @@ class LayerFeatureController extends WmLayerFeatureController
             $validatedData = $request->validate([
                 'features' => 'array',
                 'model' => 'required|string',
-                'auto' => 'boolean',
+                'auto' => ['boolean', 'prohibits:manual'],
+                'manual' => ['boolean', 'prohibits:auto'],
             ]);
 
             if (! in_array($validatedData['model'], [
@@ -206,10 +207,22 @@ class LayerFeatureController extends WmLayerFeatureController
             $isAutoRequest = ! empty($validatedData['auto']) && in_array($relationName, ['ecTracks', 'ecPois']);
 
             if ($isAutoRequest) {
+                $owner = User::find($layerOwnerId);
+
+                if ($owner && $owner->hasRole('Administrator')) {
+                    return response()->json([
+                        'error' => 'Il proprietario di questo layer è un Amministratore: non è possibile attivare la modalità automatica, verrebbero assegnate tutte le tracce/POI di sistema di sua proprietà.',
+                    ], 422);
+                }
+            }
+
+            $this->persistMode($layer, $relationName, $request);
+
+            if ($isAutoRequest) {
                 $ownedIds = $model->newQuery()->where('user_id', $layerOwnerId)->pluck('id')->toArray();
 
                 $layer->{$relationName}()->sync($ownedIds);
-            } else {
+            } elseif ($request->has('features')) {
                 $requestedIds = $validatedData['features'] ?? [];
 
                 $ownedIds = $model->newQuery()->whereIn('id', $requestedIds)->where('user_id', $layerOwnerId)->pluck('id')->toArray();
@@ -217,7 +230,9 @@ class LayerFeatureController extends WmLayerFeatureController
                 $layer->{$relationName}()->sync($ownedIds);
             }
 
-            if ($relationName === 'ecTracks') {
+            $pivotSynced = $isAutoRequest || $request->has('features');
+
+            if ($pivotSynced && $relationName === 'ecTracks') {
                 app(PBFGeneratorService::class)->regeneratePbfsForLayer($layer);
             }
 

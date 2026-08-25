@@ -24,6 +24,19 @@ docker exec laravel-camminiditalia php artisan test --filter=NomeTest
 docker exec laravel-camminiditalia php artisan test tests/Feature/LayerPolicyTest.php
 ```
 
+I test girano su un database PostgreSQL separato (`camminiditalia_testing`), non su quello di sviluppo — vedi `.env.testing` e `phpunit.xml`.
+
+### Setup DB di test (una tantum, dopo primo clone o reset container)
+```bash
+docker exec laravel-camminiditalia php artisan tinker --execute="\DB::statement('CREATE DATABASE camminiditalia_testing TEMPLATE template_postgis');"
+docker exec laravel-camminiditalia php artisan migrate --env=testing
+```
+
+### Reset del DB di test (se corrotto durante lo sviluppo)
+```bash
+docker exec laravel-camminiditalia php artisan migrate:fresh --env=testing
+```
+
 Formattare il codice:
 ```bash
 docker exec laravel-camminiditalia composer format   # esegue Laravel Pint
@@ -114,6 +127,8 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Toggle QR code deep link + well-known registry | oc:8251 | Quasi interamente `wm-package` (vedi `wm-package/CLAUDE.md`); in questo repo solo `.env` (credenziali SFTP) | Toggle per app + QR code/link deep-link mostrato direttamente su Track/Poi (Nova Field); sync automatico file well-known condiviso via SFTP |
 | Dashboard statistiche aggregate per Cammini d'Italia | oc:8182 | `app/Nova/Layer.php`, `tests/Feature/LayerGlobalAnalyticsCardVisibilityTest.php`; grosso della logica in `wm-package` (vedi `wm-package/CLAUDE.md`) | `App\Nova\Layer::cards()` registra `LayerAnalyticsCard::global()` su index Layer, solo Administrator, solo se analytics abilitato per l'App; detail view invariata (`parent::cards()`) |
 | Box informativi — registrazione EcTrackPolicy | oc:8181 | `app/Providers/AppServiceProvider.php`, `tests/Feature/EcTrackPolicyTest.php`, submodule `wm-package` | Fix bloccante review: `Gate::policy(EcTrack::class, EcTrackPolicy::class)` ownership-based (commit `4fe834e`); grosso builder Nova in wm-package — vedi `wm-package/docs/features/8181-box-informativi-cammino/` |
+| Database PostgreSQL separato per i test PHPUnit | oc:8092 | `.env.testing`, `phpunit.xml`, `.github/workflows/run-tests.yml`, `CLAUDE.md` | I test girano su `camminiditalia_testing` (clonato da `template_postgis`), non più sul DB di sviluppo condiviso; `RefreshDatabase` non svuota più i dati locali |
+| Modalità auto/manuale layer persistita + blocco auto per owner Administrator | oc:8314 | `app/Http/Controllers/LayerFeatureController.php`, `tests/Feature/LayerFeatureControllerTest.php`, `.env`, `.env.testing` | `track_mode`/`poi_mode` ora persistiti su `sync()`; `auto:true` rifiutato (422) per layer con owner Administrator; default modalità camminiditalia = `manual` (`DEFAULT_LAYER_MODE`) |
 
 ## Decisioni architetturali
 
@@ -122,6 +137,37 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 - Validator: `update`/`delete`/`view` solo sulle proprie EcTrack (`user_id`); Layer resta Administrator-only (`LayerPolicy::update()` blocca tutti i Validator).
 - Test: `EcTrackPolicyTest.php` (mirror di `EcPoiPolicyTest.php`) + regressione `EcPoiPolicyTest.php`; integrazione Nova in `wm-package/tests/Feature/Nova/ConfigDetailAuthorizationInheritanceTest.php`.
 - Frontend `config_detail` (consumo wm-core) fuori scope in questo repo — solo fix autorizzazione consumer emerso in review backend.
+
+### Modalità auto/manuale del layer persistita lato backend (oc:8314)
+- persistMode() nel controller locale eredita dal package (protected), nessuna
+  duplicazione della logica di persistenza; il ramo auto/manuale locale
+  (whitelist modelli, filtro user_id=layerOwnerId) resta specifico di
+  camminiditalia e NON delega a parent::sync() (scelta di oc:8311, invariata)
+- Layer con owner (risolto: user_id ?? default_owner_id) di ruolo Administrator:
+  auto:true viene rifiutato con 422 esplicito nel controller locale (non nel
+  package: Wm\WmPackage\Models\Layer non ha un override locale utilizzabile, 22
+  punti nel package lo referenziano direttamente). Copertura parziale: blocca
+  solo il salvataggio via questo endpoint, non il valore mostrato in UI al
+  primo caricamento per layer non ancora toccati
+- Default della modalità (quando configuration non ha track_mode/poi_mode)
+  cambiato da 'auto' a 'manual' per camminiditalia via nuova chiave config
+  wm-package.default_layer_mode (env DEFAULT_LAYER_MODE) — il default 'auto'
+  resta invariato per gli altri progetti Webmapp
+- Bug scoperto ma non corretto in questo ciclo: 35 layer su 118 hanno tutte le
+  tracce associate con user_id diverso dal proprietario del layer (verificato
+  su due dump distinti, 28/07 e 23/08, stesso conteggio) — la vista Nova
+  (edit/detail) le nasconde sempre (filtro where('user_id', $layerOwnerId)).
+  Causa probabile: LayerObserver (oc:8080) trasferisce ownership solo al
+  cambio di user_id del layer, non quando vengono aggiunte tracce con owner
+  diverso al pivot in un secondo momento. Decisione: nessuna correzione bulk
+  sui dati, il cliente verrà informato caso per caso e correggerà lui stesso
+  da Nova
+
+### Database PostgreSQL separato per i test PHPUnit (oc:8092)
+- `.env.testing` è committato direttamente (non `.example`) ma **non è una copia integrale del `.env` locale**: `APP_KEY`/`JWT_SECRET`/`AWS_DUMPS_ACCESS_KEY_ID`/`AWS_DUMPS_SECRET_ACCESS_KEY` vanno sempre rigenerati/omessi (trovato in review: la prima stesura conteneva questi segreti reali copiati 1:1 dal `.env` personale, incluse credenziali AWS con accesso ai backup di produzione)
+- La protezione CI in `run-tests.yml` (env var `DB_HOST`/`DB_DATABASE` esplicite sullo step "Laravel Tests") funziona perché `Illuminate\Support\Env::getRepository()` costruisce il repository con `->immutable()`: le env var reali di un GitHub Actions step non vengono mai cancellate né sovrascritte da `.env.testing`, anche se quest'ultimo viene caricato automaticamente per `APP_ENV=testing`. Verificato empiricamente (non solo per lettura del codice vendor) simulando le condizioni CI in locale — un'ipotesi di regressione basata solo sulla lettura di `Collision\TestCommand::clearEnv()` si è rivelata infondata dopo il test empirico
+- **Fix Redis/qemu (non era una limitazione permanente)**: i fallimenti `ConnectionException` verso Redis (40 osservati in questo ciclo, 28 in oc:8312) erano causati da un'immagine `redis:latest` in variante `amd64` fatta girare via emulazione qemu su host `arm64` (Apple Silicon) — non da un problema architetturale del progetto. Fix: `docker pull --platform linux/arm64 redis:latest` + `docker compose up -d --force-recreate redis` (nessun volume persistente su Redis, nessun rischio dati). Risultato: suite `php artisan test` **145 passati, 0 falliti**. La nota equivalente in oc:8312 sotto (che descrive questi fallimenti come "problema di infrastruttura Docker locale pre-esistente" da "rivalutare") è superata da questo fix
+- `template_postgis` (template Postgres con PostGIS preinstallato) è uno stato Docker locale non versionato — se il volume Postgres viene ricreato da zero, va rigenerato implicitamente dall'immagine `postgis/postgis` all'avvio, nessuno script del repo lo crea esplicitamente
 
 ### Fix drift phpstan-baseline.neon (oc:8312)
 - Il baseline (generato 2025-02-12) era disallineato da PHPStan 2.1.38/Larastan 3.9.2 (versioni molto più recenti) — causa non un bump intenzionale ma drift silenzioso: `composer.lock` non è coperto dal check CI, quindi un bump di versione via dipendenze non fa fallire subito nulla, il drift si accumula finché il baseline non intercetta più gli errori nuovi
