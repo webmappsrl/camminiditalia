@@ -18,7 +18,7 @@ class AppHomeLayerSortButtonTest extends TestCase
         $fields = $this->homeTabFields();
         $configHomeIndex = $this->fieldIndexByAttribute($fields, 'config_home');
 
-        $this->assertNotFalse($configHomeIndex, 'The config_home field should exist in the home tab.');
+        $this->assertNotNull($configHomeIndex, 'The config_home field should exist in the home tab.');
         $this->assertGreaterThan(0, $configHomeIndex, 'The sort trigger should be inserted before config_home.');
         $this->assertInstanceOf(Heading::class, $fields[$configHomeIndex - 1]);
 
@@ -41,7 +41,7 @@ class AppHomeLayerSortButtonTest extends TestCase
         $fields = $this->homeTabFields();
         $configHomeIndex = $this->fieldIndexByAttribute($fields, 'config_home');
 
-        $this->assertNotFalse($configHomeIndex, 'The config_home field should exist in the home tab.');
+        $this->assertNotNull($configHomeIndex, 'The config_home field should exist in the home tab.');
 
         $markup = $fields[$configHomeIndex - 1]->name;
 
