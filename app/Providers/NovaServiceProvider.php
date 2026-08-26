@@ -12,6 +12,7 @@ use App\Nova\Layer;
 use App\Nova\Media;
 use App\Nova\TaxonomyActivity;
 use App\Nova\TaxonomyPoiType;
+use App\Nova\TaxonomyTheme;
 use App\Nova\TaxonomyWhere;
 use App\Nova\Tile;
 use App\Nova\UgcPoi;
@@ -89,10 +90,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(Layer::class),
                 ])->icon('document'),
 
+                // TaxonomyActivity e TaxonomyWhere non sono esposte nel menu: in
+                // camminiditalia non vengono usate (la modalità auto dei layer non
+                // passa dalla tassonomia, vedi oc:8311). Le risorse restano
+                // registrate — servono ai campi relazione delle altre risorse, e
+                // togliere la registrazione farebbe rispondere 404 a quei campi.
                 MenuSection::make('Taxonomies', [
                     MenuItem::resource(TaxonomyPoiType::class),
-                    MenuItem::resource(TaxonomyActivity::class),
-                    MenuItem::resource(TaxonomyWhere::class),
+                    MenuItem::resource(TaxonomyTheme::class),
                 ])->icon('document'),
 
             ];
