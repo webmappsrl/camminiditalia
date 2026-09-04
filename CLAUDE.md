@@ -129,8 +129,14 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Box informativi — registrazione EcTrackPolicy | oc:8181 | `app/Providers/AppServiceProvider.php`, `tests/Feature/EcTrackPolicyTest.php`, submodule `wm-package` | Fix bloccante review: `Gate::policy(EcTrack::class, EcTrackPolicy::class)` ownership-based (commit `4fe834e`); grosso builder Nova in wm-package — vedi `wm-package/docs/features/8181-box-informativi-cammino/` |
 | Database PostgreSQL separato per i test PHPUnit | oc:8092 | `.env.testing`, `phpunit.xml`, `.github/workflows/run-tests.yml`, `CLAUDE.md` | I test girano su `camminiditalia_testing` (clonato da `template_postgis`), non più sul DB di sviluppo condiviso; `RefreshDatabase` non svuota più i dati locali |
 | Modalità auto/manuale layer persistita + blocco auto per owner Administrator | oc:8314 | `app/Http/Controllers/LayerFeatureController.php`, `tests/Feature/LayerFeatureControllerTest.php`, `.env`, `.env.testing` | `track_mode`/`poi_mode` ora persistiti su `sync()`; `auto:true` rifiutato (422) per layer con owner Administrator; default modalità camminiditalia = `manual` (`DEFAULT_LAYER_MODE`) |
+| Analytics shard name per query PostHog | oc:8464 | `.env-example`; grosso della logica in `wm-package` (vedi `wm-package/CLAUDE.md`) | Documentazione `.env-example` per `SHARD_NAME`/`ANALYTICS_SHARD_NAME` (righe commentate, nessun valore attivo); il fix applicativo (nuova chiave `analytics_shard_name`, fallback in `AnalyticsService::shardNameClause()`) vive interamente nel submodule |
 
 ## Decisioni architetturali
+
+### Analytics shard name per query PostHog (oc:8464)
+- Fix applicativo interamente in `wm-package` (vedi `wm-package/CLAUDE.md`) — questo repo riceve solo documentazione `.env-example` (righe commentate `SHARD_NAME`/`ANALYTICS_SHARD_NAME`, nessun valore impostato in nessun ambiente) e il futuro bump del gitlink del submodule
+- Fix confinato al branch `RDO_ass_cammini_italia_2026_2` (come oc:8354), nessun backport su `develop`/`main` di wm-package
+- Nessuna modifica a `SHARD_NAME`/al suo fallback su `APP_NAME` — scope ridotto deliberatamente in fase di reverse-interaction: solo la nuova variabile dedicata alle query PostHog
 
 ### Box informativi + EcTrackPolicy (oc:8181)
 - Pattern identico a `EcPoiPolicy` (oc:8120): policy del package registrata in `AppServiceProvider` con `Gate::policy(EcTrack::class, EcTrackPolicy::class)`.
