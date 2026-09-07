@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
@@ -22,6 +23,11 @@ class EcTrackGeometryAttributesObserverTest extends TestCase
         parent::setUp();
         Queue::fake();
         Http::fake();
+        // EcTrackObserver::deleting() (wm-package) chiama StorageService->deleteModelFiles()
+        // sul disco 'wmfe' (S3/MinIO reale in locale, irraggiungibile in CI dove non esiste
+        // il servizio MinIO) — isolare dall'infrastruttura reale, come già fatto per il disco
+        // well_known_registry (oc:8251).
+        Storage::fake('wmfe');
         RolesAndPermissionsService::seedDatabase();
         if (App::count() === 0) {
             App::factory()->create();
