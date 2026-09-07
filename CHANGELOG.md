@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/webmappsrl/camminiditalia/compare/v1.3.0...v1.3.1) (2026-09-07)
+
+
+### Bug Fixes
+
+* **test:** isola EcTrackGeometryAttributesObserverTest dal disco S3 reale wmfe ([56f1aa1](https://github.com/webmappsrl/camminiditalia/commit/56f1aa14fbc54676a160eec98f7648de362422fa))
+
 ## [1.3.0](https://github.com/webmappsrl/camminiditalia/compare/v1.2.0...v1.3.0) (2026-08-25)
 
 
