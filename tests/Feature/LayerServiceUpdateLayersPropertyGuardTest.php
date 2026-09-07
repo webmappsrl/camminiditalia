@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcPoi;
@@ -20,6 +22,15 @@ class LayerServiceUpdateLayersPropertyGuardTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        // Il test associa tappe ai cammini, quindi da oc:8180 innesca
+        // RecalculateLayerAttributesJob, che interroga osmfeatures: senza
+        // questi fake partirebbe una chiamata HTTP reale (con
+        // QUEUE_CONNECTION=sync il job gira dentro il test) e la suite
+        // diventerebbe dipendente dalla rete.
+        Queue::fake();
+        Http::fake();
+
         $this->layerService = app(LayerService::class);
     }
 

@@ -1,9 +1,12 @@
 {
-    "Sort Home Layers": "Sort Home Layers",
-    "Sort consecutive Layer boxes alphabetically. Other box types stay in place and you can still reorder everything manually after clicking. Click Update to save the new order.": "Sort consecutive Layer boxes alphabetically. Other box types stay in place and you can still reorder everything manually after clicking. Click Update to save the new order.",
-    "Sort Layers A-Z": "Sort Layers A-Z",
-    "Unable to find the home content to sort.": "Unable to find the home content to sort.",
+    "Discontinuous": "Discontinuous",
+    "Layer": "Layer",
     "Layers are already sorted within each group.": "Layers are already sorted within each group.",
     "Layers sorted alphabetically within each group. Click Update to save the new order.": "Layers sorted alphabetically within each group. Click Update to save the new order.",
-    "Layer": "Layer"
+    "Linear": "Linear",
+    "Roundtrip": "Roundtrip",
+    "Sort Home Layers": "Sort Home Layers",
+    "Sort Layers A-Z": "Sort Layers A-Z",
+    "Sort consecutive Layer boxes alphabetically. Other box types stay in place and you can still reorder everything manually after clicking. Click Update to save the new order.": "Sort consecutive Layer boxes alphabetically. Other box types stay in place and you can still reorder everything manually after clicking. Click Update to save the new order.",
+    "Unable to find the home content to sort.": "Unable to find the home content to sort."
 }

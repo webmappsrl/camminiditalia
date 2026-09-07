@@ -21,6 +21,17 @@ class LayerFeatureControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        // Isolamento dalla rete per TUTTI i test del file, non solo per quelli
+        // che lo dichiaravano: da oc:8180 il sync del pannello modifica il
+        // pivot delle tappe, quindi innesca RecalculateLayerAttributesJob, che
+        // interroga osmfeatures per le regioni. Con QUEUE_CONNECTION=sync il
+        // job gira dentro la richiesta e senza questi fake partiva una
+        // chiamata HTTP reale: osservati timeout cURL da 10s che facevano
+        // fallire test diversi a ogni esecuzione della suite.
+        Queue::fake();
+        Http::fake();
+
         RolesAndPermissionsService::seedDatabase();
         if (App::count() === 0) {
             App::factory()->create();

@@ -2,12 +2,30 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\RecalculateAppLayerAttributesAction;
 use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Whitecube\NovaFlexibleContent\Flexible;
 use Wm\WmPackage\Nova\App as NovaApp;
+use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class App extends NovaApp
 {
+    public function actions(NovaRequest $request): array
+    {
+        $superAdminOnly = fn (NovaRequest $req) => RolesAndPermissionsService::allows($req);
+
+        return array_merge(parent::actions($request), [
+            (new RecalculateAppLayerAttributesAction)
+                ->onlyOnDetail()
+                ->canSee($superAdminOnly)
+                ->canRun($superAdminOnly)
+                ->confirmText(__('Recalculate the attributes of every route of this app? The work is queued and may take a while.'))
+                ->confirmButtonText(__('Yes, recalculate'))
+                ->cancelButtonText(__('Cancel')),
+        ]);
+    }
+
     protected function home_tab(): array
     {
         $fields = parent::home_tab();
