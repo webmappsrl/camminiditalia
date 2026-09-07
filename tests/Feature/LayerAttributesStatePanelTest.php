@@ -3,8 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Nova\Layer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\Layer as LayerModel;
@@ -44,9 +47,9 @@ class LayerAttributesStatePanelTest extends TestCase
      */
     private function buildHtmlFor(LayerModel $layer): string
     {
-        $resource = new \App\Nova\Layer($layer);
+        $resource = new Layer($layer);
 
-        $method = new \ReflectionMethod(\App\Nova\Layer::class, 'buildAttributesStateHtml');
+        $method = new \ReflectionMethod(Layer::class, 'buildAttributesStateHtml');
         $method->setAccessible(true);
 
         return $method->invoke($resource);
@@ -273,8 +276,8 @@ class LayerAttributesStatePanelTest extends TestCase
      */
     private function fillThemesField(LayerModel $layer, array $values): void
     {
-        $resource = new \App\Nova\Layer($layer);
-        $request = \Laravel\Nova\Http\Requests\NovaRequest::create('/', 'POST', [
+        $resource = new Layer($layer);
+        $request = NovaRequest::create('/', 'POST', [
             'taxonomyThemes' => $values,
         ]);
 
@@ -282,7 +285,7 @@ class LayerAttributesStatePanelTest extends TestCase
         $fields = $resource->fields($request);
 
         foreach ($fields as $field) {
-            if (! $field instanceof \Laravel\Nova\Panel) {
+            if (! $field instanceof Panel) {
                 continue;
             }
 

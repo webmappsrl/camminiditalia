@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Nova\Layer as NovaLayer;
 use App\Services\LayerAttributesService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\Resources\MergeValue;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -34,7 +35,7 @@ class LayerAttributeFieldsTest extends TestCase
 
     private function fieldAttributes(): array
     {
-        $resource = new NovaLayer(new \Wm\WmPackage\Models\Layer);
+        $resource = new NovaLayer(new Layer);
         $attributes = [];
 
         $walk = function ($items) use (&$walk, &$attributes) {
@@ -46,7 +47,7 @@ class LayerAttributeFieldsTest extends TestCase
                 }
                 // Panel e Tab estendono MergeValue: i campi contenuti stanno in ->data,
                 // e array_walk_recursive non entrerebbe negli oggetti.
-                if ($item instanceof \Illuminate\Http\Resources\MergeValue) {
+                if ($item instanceof MergeValue) {
                     $walk($item->data);
 
                     continue;

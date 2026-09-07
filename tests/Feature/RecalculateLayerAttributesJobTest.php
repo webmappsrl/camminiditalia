@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Jobs\RecalculateLayerAttributesJob;
 use App\Models\EcTrack;
+use App\Services\LayerAttributesService;
+use Illuminate\Bus\UniqueLock;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
@@ -43,7 +45,7 @@ class RecalculateLayerAttributesJobTest extends TestCase
         // dispatch) per poterne interrogare i job accodati: Queue::pushed()
         // esiste solo su QueueFake, non sulla facade.
         $queue = Queue::fake();
-        $service = app(\App\Services\LayerAttributesService::class);
+        $service = app(LayerAttributesService::class);
         $layer = $this->createLayer();
         $track = EcTrack::factory()->create(['properties' => ['manual_data' => ['distance' => 3.0]]]);
         $layer->ecTracks()->attach($track->id);
@@ -65,7 +67,7 @@ class RecalculateLayerAttributesJobTest extends TestCase
     public function test_handle_regenerates_the_config_when_a_value_changes(): void
     {
         $queue = Queue::fake();
-        $service = app(\App\Services\LayerAttributesService::class);
+        $service = app(LayerAttributesService::class);
         $layer = $this->createLayer();
         $track = EcTrack::factory()->create(['properties' => ['manual_data' => ['distance' => 3.0]]]);
         $layer->ecTracks()->attach($track->id);
@@ -97,7 +99,7 @@ class RecalculateLayerAttributesJobTest extends TestCase
      */
     private function releaseUpdateAppConfigLock(int $appId): void
     {
-        app(\Illuminate\Bus\UniqueLock::class)->release(new UpdateAppConfigJob($appId));
+        app(UniqueLock::class)->release(new UpdateAppConfigJob($appId));
     }
 
     public function test_handle_writes_filters_and_dispatches_config_regeneration(): void
@@ -108,7 +110,7 @@ class RecalculateLayerAttributesJobTest extends TestCase
         $track = EcTrack::factory()->create(['properties' => ['manual_data' => ['distance' => 3.0]]]);
         $layer->ecTracks()->attach($track->id);
 
-        (new RecalculateLayerAttributesJob($layer->id))->handle(app(\App\Services\LayerAttributesService::class));
+        (new RecalculateLayerAttributesJob($layer->id))->handle(app(LayerAttributesService::class));
 
         $attributes = json_decode(DB::selectOne('SELECT properties FROM layers WHERE id = ?', [$layer->id])->properties, true)['attributes'];
         $this->assertEquals(3.0, $attributes['distance']);
@@ -120,7 +122,7 @@ class RecalculateLayerAttributesJobTest extends TestCase
     {
         Bus::fake([UpdateAppConfigJob::class]);
 
-        (new RecalculateLayerAttributesJob(999999))->handle(app(\App\Services\LayerAttributesService::class));
+        (new RecalculateLayerAttributesJob(999999))->handle(app(LayerAttributesService::class));
 
         Bus::assertNotDispatched(UpdateAppConfigJob::class);
     }

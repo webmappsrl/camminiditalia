@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Wm\WmPackage\Http\Clients\OsmfeaturesClient;
+use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\TaxonomyTheme;
 
 /**
  * Calcola i valori di filtro di un cammino (Layer) aggregando le sue tappe
@@ -114,7 +116,7 @@ class LayerAttributesService
         $total = 0.0;
         $hasValue = false;
         foreach ($tracks as $track) {
-            /** @var \Wm\WmPackage\Models\EcTrack $track */
+            /** @var EcTrack $track */
             $value = $track->classifyField($track, 'distance')['currentValue'] ?? null;
 
             if ($value === null) {
@@ -403,7 +405,7 @@ class LayerAttributesService
         $themes = [];
 
         foreach ($layer->taxonomyThemes as $theme) {
-            /** @var \Wm\WmPackage\Models\TaxonomyTheme $theme */
+            /** @var TaxonomyTheme $theme */
             /** @var array<string, string> $names */
             $names = array_filter(
                 $theme->getTranslations('name'),

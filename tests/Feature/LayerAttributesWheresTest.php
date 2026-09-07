@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\EcTrack;
 use App\Services\LayerAttributesService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Tests\Feature\Helpers\LayerTestHelpers;
@@ -165,14 +166,14 @@ class LayerAttributesWheresTest extends TestCase
         $wheres = $service->wheres($layer);
         $service->persistCalculatedValues($layer, ['taxonomy_where' => $wheres]);
 
-        $type = \Illuminate\Support\Facades\DB::selectOne(
+        $type = DB::selectOne(
             "SELECT jsonb_typeof(properties->'attributes'->'taxonomy_where') AS type FROM layers WHERE id = ?",
             [$layer->id]
         )->type;
 
         $this->assertSame('array', $type);
 
-        $first = \Illuminate\Support\Facades\DB::selectOne(
+        $first = DB::selectOne(
             "SELECT properties->'attributes'->'taxonomy_where'->0 AS item FROM layers WHERE id = ?",
             [$layer->id]
         )->item;

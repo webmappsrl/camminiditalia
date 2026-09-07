@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Enums\RouteShape;
 use App\Models\User;
 use App\Nova\Traits\FiltersUsersByRoleTrait;
+use App\Services\LayerAttributesService;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\MorphToMany;
@@ -168,7 +169,7 @@ class Layer extends WmNovaLayer
 
                     return function () use ($model, $value) {
                         /** @var \Wm\WmPackage\Models\Layer $model */
-                        $service = app(\App\Services\LayerAttributesService::class);
+                        $service = app(LayerAttributesService::class);
 
                         // Persistito nella forma { value, name } come
                         // taxonomy_where: il consumer non deve tradurre gli
@@ -227,7 +228,7 @@ class Layer extends WmNovaLayer
 
                     return function () use ($model, $value) {
                         /** @var \Wm\WmPackage\Models\Layer $model */
-                        $service = app(\App\Services\LayerAttributesService::class);
+                        $service = app(LayerAttributesService::class);
 
                         // Lista di { value, name }, come taxonomy_where: il
                         // consumer non deve tradurre gli enum da sé.

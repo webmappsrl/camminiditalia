@@ -3,10 +3,14 @@
 namespace Tests\Feature;
 
 use App\Jobs\RecalculateLayerAttributesJob;
+use App\Nova\Layer;
 use App\Services\LayerAttributesService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\Resources\MergeValue;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
@@ -55,7 +59,7 @@ class LayerThemeAttributesTest extends TestCase
 
         $field = $this->themesField();
 
-        $request = \Laravel\Nova\Http\Requests\NovaRequest::create('/', 'POST', [
+        $request = NovaRequest::create('/', 'POST', [
             'taxonomyThemes' => json_encode([$theme->id]),
         ]);
 
@@ -78,7 +82,7 @@ class LayerThemeAttributesTest extends TestCase
 
     private function themesField(): object
     {
-        $resource = new \App\Nova\Layer(new \Wm\WmPackage\Models\Layer);
+        $resource = new Layer(new \Wm\WmPackage\Models\Layer);
 
         $found = null;
         $walk = function ($items) use (&$walk, &$found) {
@@ -88,7 +92,7 @@ class LayerThemeAttributesTest extends TestCase
 
                     continue;
                 }
-                if ($item instanceof \Illuminate\Http\Resources\MergeValue) {
+                if ($item instanceof MergeValue) {
                     $walk($item->data);
 
                     continue;
@@ -98,7 +102,7 @@ class LayerThemeAttributesTest extends TestCase
                 }
             }
         };
-        $walk($resource->fields(\Laravel\Nova\Http\Requests\NovaRequest::create('/')));
+        $walk($resource->fields(NovaRequest::create('/')));
 
         $this->assertNotNull($found, 'Campo Temi non trovato nella risorsa Layer.');
 
@@ -138,7 +142,7 @@ class LayerThemeAttributesTest extends TestCase
 
         $service->persistCalculatedValues($layer, $service->computeCalculatedValues($layer->fresh()));
 
-        $row = \Illuminate\Support\Facades\DB::selectOne(
+        $row = DB::selectOne(
             "SELECT jsonb_array_length(properties->'attributes'->'themes') AS voci,
                     jsonb_typeof(properties->'attributes'->'themes'->0->'name') AS tipo_nome
              FROM layers WHERE id = ?",

@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Jobs\RecalculateLayerAttributesJob;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -82,7 +83,7 @@ class EcTrackGeometryAttributesObserver
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, mixed>
+     * @return Collection<int, mixed>
      */
     private function layerIdsForTrack($track)
     {
