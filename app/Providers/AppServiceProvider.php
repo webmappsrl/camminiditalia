@@ -13,6 +13,7 @@ use App\Policies\EcPoiPolicy;
 use App\Policies\LayerPolicy;
 use App\Policies\TaxonomyPoiTypePolicy;
 use App\Policies\UgcPoiPolicy;
+use App\Policies\UgcTrackPolicy;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -62,6 +63,7 @@ class AppServiceProvider extends ServiceProvider
         Event::listen('eloquent.deleting: '.\App\Models\EcTrack::class, $captureBeforeDelete);
 
         Gate::policy(UgcPoi::class, UgcPoiPolicy::class);
+        Gate::policy(UgcTrack::class, UgcTrackPolicy::class);
         Gate::policy(Layer::class, LayerPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Permission::class, PermissionPolicy::class);
