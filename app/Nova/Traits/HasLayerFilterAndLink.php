@@ -48,7 +48,11 @@ trait HasLayerFilterAndLink
 
         $resourceClass = static::class;
 
-        return Text::make(__('Layer'), 'layer_link', function () use ($resourceClass) {
+        // Label hardcoded in italiano, non tradotta via __(): il locale attivo
+        // in produzione non è sempre 'it' (osservato: la stessa label mostra
+        // "Layer" invece di "Cammino" su alcuni record), stesso motivo per cui
+        // renderLayerLink() sopra usa già stringhe italiane fisse.
+        return Text::make('Cammino', 'layer_link', function () use ($resourceClass) {
             return $resourceClass::renderLayerLink($this->properties['layer_id'] ?? null);
         })
             ->asHtml()
@@ -64,7 +68,7 @@ trait HasLayerFilterAndLink
 
         $modelClass = static::$model;
 
-        return Select::make(__('Filtro Segnalazioni'), 'layer_filter')
+        return Select::make('Filtro Segnalazioni', 'layer_filter')
             ->options(function () use ($modelClass) {
                 $layerIds = $modelClass::query()
                     ->whereRaw("properties->>'layer_id' IS NOT NULL")

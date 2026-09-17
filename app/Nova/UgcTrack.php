@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Nova\Traits\HasLayerFilterAndLink;
+use App\Nova\Traits\HasLayerOverride;
 use App\Nova\Traits\HidesAppFromIndexTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Wm\WmPackage\Nova\UgcTrack as WmNovaUgcTrack;
 class UgcTrack extends WmNovaUgcTrack
 {
     use HasLayerFilterAndLink;
+    use HasLayerOverride;
     use HidesAppFromIndexTrait;
 
     public static function label(): string
@@ -43,6 +45,14 @@ class UgcTrack extends WmNovaUgcTrack
 
         if ($linkField = $this->layerLinkField($request)) {
             $fields[] = $linkField;
+        }
+
+        if ($overrideField = $this->layerOverrideField($request)) {
+            $fields[] = $overrideField;
+        }
+
+        if ($overrideOriginalField = $this->layerOverrideOriginalField($request)) {
+            $fields[] = $overrideOriginalField;
         }
 
         return $fields;
