@@ -32,4 +32,9 @@ class UgcPoiPolicy
     {
         return $user->hasRole('Validator');
     }
+
+    public function update(User $user, UgcPoi $ugcPoi): bool
+    {
+        return false;
+    }
 }

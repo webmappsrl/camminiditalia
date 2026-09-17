@@ -67,4 +67,25 @@ class UgcPoiPolicyTest extends TestCase
         $user = $this->createUserWithoutRole();
         $this->assertFalse(Gate::forUser($user)->allows('viewAny', UgcPoi::class));
     }
+
+    public function test_administrator_can_update_ugc_poi(): void
+    {
+        $admin = $this->createUserWithRole('Administrator');
+        $poi = UgcPoi::factory()->create();
+        $this->assertTrue(Gate::forUser($admin)->allows('update', $poi));
+    }
+
+    public function test_validator_cannot_update_ugc_poi(): void
+    {
+        $validator = $this->createUserWithRole('Validator');
+        $poi = UgcPoi::factory()->create();
+        $this->assertFalse(Gate::forUser($validator)->allows('update', $poi));
+    }
+
+    public function test_guest_cannot_update_ugc_poi(): void
+    {
+        $guest = $this->createUserWithRole('Guest');
+        $poi = UgcPoi::factory()->create();
+        $this->assertFalse(Gate::forUser($guest)->allows('update', $poi));
+    }
 }
