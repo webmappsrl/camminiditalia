@@ -130,6 +130,7 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Database PostgreSQL separato per i test PHPUnit | oc:8092 | `.env.testing`, `phpunit.xml`, `.github/workflows/run-tests.yml`, `CLAUDE.md` | I test girano su `camminiditalia_testing` (clonato da `template_postgis`), non più sul DB di sviluppo condiviso; `RefreshDatabase` non svuota più i dati locali |
 | Modalità auto/manuale layer persistita + blocco auto per owner Administrator | oc:8314 | `app/Http/Controllers/LayerFeatureController.php`, `tests/Feature/LayerFeatureControllerTest.php`, `.env`, `.env.testing` | `track_mode`/`poi_mode` ora persistiti su `sync()`; `auto:true` rifiutato (422) per layer con owner Administrator; default modalità camminiditalia = `manual` (`DEFAULT_LAYER_MODE`) |
 | Analytics shard name per query PostHog | oc:8464 | `.env-example`; grosso della logica in `wm-package` (vedi `wm-package/CLAUDE.md`) | Documentazione `.env-example` per `SHARD_NAME`/`ANALYTICS_SHARD_NAME` (righe commentate, nessun valore attivo); il fix applicativo (nuova chiave `analytics_shard_name`, fallback in `AnalyticsService::shardNameClause()`) vive interamente nel submodule |
+| Override manuale in Nova | oc:8575 | `app/Nova/Traits/HasLayerOverride.php`, `app/Nova/Traits/HasLayerFilterAndLink.php`, `app/Support/UgcLayerAssignment.php`, `app/Jobs/ResolveUgcLayerJob.php`, `app/Policies/UgcTrackPolicy.php`, `app/Policies/UgcPoiPolicy.php` | Vedi [docs/knowledge/risoluzione-layer-ugc.md](docs/knowledge/risoluzione-layer-ugc.md) |
 
 ## Decisioni architetturali
 
