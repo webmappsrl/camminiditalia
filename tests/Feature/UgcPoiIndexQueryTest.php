@@ -87,4 +87,35 @@ class UgcPoiIndexQueryTest extends TestCase
 
         $this->assertCount(0, $results);
     }
+
+    /**
+     * Regressione a protezione dello scoping per layer (oc:8587): un cambio
+     * upstream come oc:8162 — che ha reso EcTrackPolicy per-app anziché
+     * per-record — potrebbe in futuro toccare anche questo meccanismo senza
+     * che nessun test se ne accorga. Scenario più ampio del test sopra:
+     * più layer posseduti, un layer estraneo, verifica che l'unione dei
+     * report sia esattamente quella attesa, non un sottoinsieme o un
+     * superinsieme.
+     */
+    public function test_validator_with_multiple_layers_sees_reports_from_all_owned_layers_only(): void
+    {
+        $validator = $this->createUserWithRole('Validator');
+        $ownedLayerA = $this->createLayer($validator->id);
+        $ownedLayerB = $this->createLayer($validator->id);
+        $foreignLayer = $this->createLayer();
+
+        $reportA = $this->createReportPoi($ownedLayerA->id);
+        $reportB = $this->createReportPoi($ownedLayerB->id);
+        $foreignReport = $this->createReportPoi($foreignLayer->id);
+        $ownedPoi = $this->createPoiUgc($ownedLayerA->id);
+
+        $results = \App\Nova\UgcPoi::filteredQueryForValidator($validator, UgcPoi::query())->get();
+
+        $this->assertEqualsCanonicalizing(
+            [$reportA->id, $reportB->id],
+            $results->pluck('id')->all(),
+        );
+        $this->assertFalse($results->contains($foreignReport));
+        $this->assertFalse($results->contains($ownedPoi));
+    }
 }

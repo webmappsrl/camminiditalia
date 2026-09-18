@@ -19,6 +19,28 @@ class EcTrack extends WmNovaEcTrack
     public static $model = \App\Models\EcTrack::class;
 
     /**
+     * Override locale di Wm\WmPackage\Nova\AbstractEcResource::indexQuery(), che
+     * scopa per app_id posseduto (ownedAppIds()) — in camminiditalia c'è una sola
+     * App, di proprietà dell'Administrator, quindi nessun Validator ne possiede
+     * mai una e la lista risulterebbe sempre vuota (oc:8587). Qui si scopa per
+     * user_id, coerente con App\Policies\EcTrackPolicy.
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        $user = $request->user();
+
+        if ($user->hasRole('Administrator')) {
+            return $query;
+        }
+
+        if ($user->hasRole('Validator')) {
+            return $query->where('user_id', $user->id);
+        }
+
+        return $query->whereRaw('1=0');
+    }
+
+    /**
      * Get the fields displayed by the resource.
      */
     public function fields(NovaRequest $request): array

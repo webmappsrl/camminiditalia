@@ -10,6 +10,7 @@ use App\Observers\LayerAttributesObserver;
 use App\Observers\LayerObserver;
 use App\Observers\UgcObserver;
 use App\Policies\EcPoiPolicy;
+use App\Policies\EcTrackPolicy;
 use App\Policies\LayerPolicy;
 use App\Policies\TaxonomyPoiTypePolicy;
 use App\Policies\UgcPoiPolicy;
@@ -25,7 +26,6 @@ use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\Layerable;
 use Wm\WmPackage\Models\UgcPoi;
 use Wm\WmPackage\Models\UgcTrack;
-use Wm\WmPackage\Policies\EcTrackPolicy;
 use Wm\WmPackage\Policies\PermissionPolicy;
 use Wm\WmPackage\Policies\RolePolicy;
 

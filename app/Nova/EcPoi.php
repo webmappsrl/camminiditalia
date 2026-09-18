@@ -24,6 +24,28 @@ class EcPoi extends WmNovaEcPoi
         return __('Pois');
     }
 
+    /**
+     * Override locale di Wm\WmPackage\Nova\AbstractEcResource::indexQuery(), che
+     * scopa per app_id posseduto (ownedAppIds()) — in camminiditalia c'è una sola
+     * App, di proprietà dell'Administrator, quindi nessun Validator ne possiede
+     * mai una e la lista risulterebbe sempre vuota (oc:8587). Qui si scopa per
+     * user_id, coerente con authorizedToUpdate()/authorizedToDelete() sopra.
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        $user = $request->user();
+
+        if ($user->hasRole('Administrator')) {
+            return $query;
+        }
+
+        if ($user->hasRole('Validator')) {
+            return $query->where('user_id', $user->id);
+        }
+
+        return $query->whereRaw('1=0');
+    }
+
     public static function authorizedToCreate(Request $request): bool
     {
         $user = $request->user();
