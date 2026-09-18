@@ -1,0 +1,29 @@
+> Ticket: oc:8596
+
+# Notes — Autorizzazioni "Tipi POI"
+
+## Deviazioni dal piano
+
+### Task 2: setup mancante di `App::factory()` nel test
+Il piano non prevedeva la creazione di un `App` nel `setUp()` del test. Alla prima esecuzione dei test con `Layer::factory()->create()` (Task 2, Step 2), `LayerFactory::app_id` legge `App::first()->id`, che falliva con `Attempt to read property "id" on null` in assenza di un'App nel DB di test. Aggiunto lo stesso guard già presente in `EcPoiPolicyTest::setUp()` (`if (App::count() === 0) { App::factory()->create(); }`), preso a riferimento nel piano per lo stile ma non copiato integralmente in quel dettaglio.
+
+## Bug trovati
+
+### Bug introdotto e corretto: regressione su viewAny/view per Validator/Guest
+Trovato da `/code-review` (effort basso) sul diff prima del commit, confermato empiricamente con `Gate::forUser($validator)->allows('viewAny', TaxonomyPoiType::class)` → `false`. La prima versione di `before()` (Task 1) ritornava `false` per chiunque non fosse Administrator su **ogni** ability, incluse `viewAny`/`view` — che prima di questo lavoro erano sempre `true` per chiunque (il vecchio `before()` faceva fallthrough per tutti tranne l'email hardcoded). Risultato: Validator e Guest avrebbero perso l'accesso in visualizzazione ai tipi POI in Nova, un effetto collaterale mai discusso e fuori scope dal ticket. Corretto escludendo `viewAny`/`view` dal gate di ruolo in `before()` (ritornano `null`, fallthrough ai metodi che restano `return true` invariati). Aggiunti 4 test di regressione (`test_validator_can_view_any_taxonomy_poi_type` e affini). Non arrivato a produzione: trovato prima del commit.
+
+### Fallimenti preesistenti nella suite (non correlati)
+`Tests\Feature\DeepLinkQrFieldVisibilityTest::validator_can_see_qr_field_on_ec_track`, e le tre `Tests\Feature\EcTrackPolicyTest::validator_can_{view,update,delete}_own_ec_track`, più `Tests\Feature\RecalculateLayerAttributesJobTest::handle_writes_filters_and_dispatches_config_regeneration`, falliscono anche sul branch base, prima di qualsiasi modifica di questo ticket — verificato due volte con `git stash` ed esecuzione dell'intera suite (11 fallimenti sul base, di cui 6 erano i test di `TaxonomyPoiTypePolicyTest` non ancora implementati e 5 erano questi). Preesistenti, non correlati a `TaxonomyPoiTypePolicy`; non indagati oltre, fuori scope.
+
+## Decisioni
+
+- **Cambio tipo ticket:** oc:8596 riclassificato da `Help desk` a `Feature` su richiesta esplicita del dev, dopo la Fase: challenge — motivazione: il lavoro richiede una modifica architetturale non banale (guardia "in uso", correzione dell'interazione before()/delete() nel Gate di Laravel), non un intervento di semplice supporto.
+- **Trait `AuthorizesViaBypassRoles` di wm-package scartato in fase di write-plan.** Concordato in Challenge come soluzione al rischio "ambiguità implementativa", ma scoperto in write-plan che non può funzionare per `delete()`: il suo `before()` ritorna `true` per l'Administrator su *qualsiasi* ability, cortocircuitando Laravel prima che `delete()` (dove vive la guardia "in uso") venga mai invocato. Sostituito con un `before()` locale ispirato al pattern già usato in `App\Policies\UgcTrackPolicy` (oc:8575): bypass totale per Administrator tranne sull'ability `delete`, per cui ritorna `null` e lascia decidere al metodo.
+- **`forceDelete()` senza guardia "in uso"**: decisione esplicita del dev in Challenge — l'azione non è raggiungibile dall'interfaccia Nova (il modello non è soft-deletable), quindi non riceve lo stesso controllo di `delete()`. Accettato come rischio noto (vedi overview.md → Rischi).
+- **Verifica manuale in produzione richiesta al dev** (non eseguita in questa sessione): confermare che `team@webmapp.it` abbia il ruolo Spatie `Administrator` anche in produzione, non solo sul DB locale (verificato qui: 3 Administrator, incluso `team@webmapp.it`), per evitare una regressione silenziosa di accesso.
+- **Messaggio di blocco non visibile in Nova (accettato dal dev dopo test manuale).** Testando in Nova, il dev ha notato che il pulsante cestino risulta semplicemente disabilitato per i tipi in uso (es. id 301 "Riserve naturali", 2 associazioni), senza alcun messaggio visibile — a differenza di quanto descritto nell'overview originale ("messaggio esplicito e comprensibile"). Verificato nel codice sorgente di Nova (`Authorizable::authorizedTo()` usa `Gate::check()`, booleano puro; `DeleteResourceRequest::deletableModels()` filtra silenziosamente i modelli non autorizzati senza sollevare eccezioni): il testo di `Response::deny()` non raggiunge mai l'interfaccia nativa, in nessun punto del flusso (icona nell'index, bulk delete via API). Proposta una Nova Action custom dedicata come alternativa; il dev ha scelto di accettare il blocco silenzioso per questo ciclo (l'obiettivo primario — impedire l'eliminazione — resta raggiunto, il messaggio resta verificabile solo a livello di policy/test). Nessuna modifica al codice richiesta da questa decisione.
+
+## Follow-up
+- Il vincolo FK senza `onDelete` su `taxonomy_poi_typeables` esiste identico anche nello stub di `wm-package` — lo stesso errore SQL grezzo può manifestarsi su altri progetti Webmapp che usano il package. Non risolto in questo ciclo per scelta esplicita di scope (modifica confinata a camminiditalia); da valutare come ticket separato lato wm-package.
+- Race condition (TOCTOU) tra il check "in uso" e l'esecuzione del `DELETE`: accettata senza mitigazione dedicata, coerente con l'assenza di gestione equivalente altrove nel progetto.
+- Se in futuro il cliente chiede visibilità sul motivo del blocco, valutare una Nova Action custom dedicata alla cancellazione dei tipi POI (può mostrare un messaggio d'errore esplicito in un toast, a differenza dell'icona cestino nativa) — scartata in questo ciclo per restare nello scope del ticket originale.
