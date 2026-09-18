@@ -132,6 +132,7 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Analytics shard name per query PostHog | oc:8464 | `.env-example`; grosso della logica in `wm-package` (vedi `wm-package/CLAUDE.md`) | Documentazione `.env-example` per `SHARD_NAME`/`ANALYTICS_SHARD_NAME` (righe commentate, nessun valore attivo); il fix applicativo (nuova chiave `analytics_shard_name`, fallback in `AnalyticsService::shardNameClause()`) vive interamente nel submodule |
 | Override manuale in Nova | oc:8575 | `app/Nova/Traits/HasLayerOverride.php`, `app/Nova/Traits/HasLayerFilterAndLink.php`, `app/Support/UgcLayerAssignment.php`, `app/Jobs/ResolveUgcLayerJob.php`, `app/Policies/UgcTrackPolicy.php`, `app/Policies/UgcPoiPolicy.php` | Vedi [docs/knowledge/risoluzione-layer-ugc.md](docs/knowledge/risoluzione-layer-ugc.md) |
 | RouteShape: esporre Discontinuo come Lineare al frontend, tenere l'alert solo in Nova | oc:8463 | `app/Services/LayerAttributesService.php`, `app/Nova/Layer.php`, `app/Jobs/RecalculateLayerAttributesJob.php`, `config/wm-package.php`, `resources/lang/{it,en}.json`; parte in `wm-package` (vedi `wm-package/CLAUDE.md`) | Vedi [docs/knowledge/route-shape-layer.md](docs/knowledge/route-shape-layer.md) |
+| Autorizzazioni "Tipi POI" | oc:8596 | `app/Policies/TaxonomyPoiTypePolicy.php`, `resources/lang/{it,en}.json`, `tests/Feature/TaxonomyPoiTypePolicyTest.php` | Vedi [docs/knowledge/autorizzazione-tipi-poi.md](docs/knowledge/autorizzazione-tipi-poi.md) |
 
 ## Decisioni architetturali
 
