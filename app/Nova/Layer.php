@@ -334,10 +334,15 @@ class Layer extends WmNovaLayer
         $properties = is_array($layerModel->properties ?? null) ? $layerModel->properties : [];
         $routeAttributes = is_array($properties['attributes'] ?? null) ? $properties['attributes'] : [];
 
+        // Il secondo termine copre i layer persistiti prima di oc:8463 con
+        // shape=discontinuous e senza ancora shape_discontinuous.
+        $isDiscontinuous = (bool) ($routeAttributes['shape_discontinuous'] ?? false)
+            || self::attributeCode($routeAttributes['shape'] ?? null) === RouteShape::DISCONTINUOUS->value;
+
         $cards = [
             $this->renderDistanceCard($routeAttributes['distance'] ?? null),
             $this->renderStageCountCard($routeAttributes['stage_count'] ?? null),
-            $this->renderShapeCard($routeAttributes['shape'] ?? null),
+            $this->renderShapeCard($routeAttributes['shape'] ?? null, $isDiscontinuous),
             $this->renderTaxonomyWhereCard($routeAttributes['taxonomy_where'] ?? null),
             $this->renderNetworkCard($routeAttributes['walking_network'] ?? null),
             $this->renderSeasonCard($routeAttributes['season'] ?? null),
@@ -449,7 +454,7 @@ class Layer extends WmNovaLayer
         return $codes;
     }
 
-    private function renderShapeCard(mixed $type): string
+    private function renderShapeCard(mixed $type, bool $isDiscontinuous): string
     {
         $type = self::attributeCode($type);
 
@@ -463,16 +468,30 @@ class Layer extends WmNovaLayer
             return $this->renderCard(__('Route shape'), 'error', $this->unrecognizedHtml($type));
         }
 
-        if ($enum === RouteShape::DISCONTINUOUS) {
-            $valueHtml = '<strong>'.htmlspecialchars($enum->label(), ENT_QUOTES, 'UTF-8').'</strong>'
-                .'<br><span style="color:#78716c;font-size:12px;">'
-                .htmlspecialchars(__('the route segments are not connected to each other'), ENT_QUOTES, 'UTF-8')
-                .'</span>';
+        // Dati storici (pre oc:8463) possono ancora avere shape=discontinuous
+        // persistito: mostralo come linear, lo stesso valore che
+        // RecalculateAppLayerAttributesAction scriverà al prossimo ricalcolo
+        // (Task 7).
+        $displayEnum = $enum === RouteShape::DISCONTINUOUS ? RouteShape::LINEAR : $enum;
 
-            return $this->renderCard(__('Route shape'), 'warn', $valueHtml);
+        $valueHtml = '<strong>'.htmlspecialchars($displayEnum->label(), ENT_QUOTES, 'UTF-8').'</strong>';
+
+        if ($isDiscontinuous) {
+            // La card resta "ok" (verde) e mostra il valore pubblico reale:
+            // l'alert è un box interno, non sostituisce né cambia lo stato
+            // della card — coerente con shape che non vale mai
+            // "discontinuous" pubblicamente.
+            $valueHtml .= '<div style="margin-top:8px;background:#fffbeb;border:1px solid #fde68a;'
+                .'border-radius:6px;padding:6px 8px;display:flex;align-items:flex-start;gap:6px;">'
+                .'<span style="color:#d97706;font-size:13px;line-height:1.4;flex-shrink:0;">⚠</span>'
+                .'<span style="line-height:1.4;">'
+                .'<strong style="font-size:13px;color:#92400e;">'.htmlspecialchars(__('Discontinuous'), ENT_QUOTES, 'UTF-8').'</strong>'
+                .'<br><span style="font-size:12px;color:#78716c;">'
+                .htmlspecialchars(__('the route segments are not connected to each other'), ENT_QUOTES, 'UTF-8')
+                .'</span></span></div>';
         }
 
-        return $this->renderCard(__('Route shape'), 'ok', '<strong>'.htmlspecialchars($enum->label(), ENT_QUOTES, 'UTF-8').'</strong>');
+        return $this->renderCard(__('Route shape'), 'ok', $valueHtml);
     }
 
     private function renderTaxonomyWhereCard(mixed $wheres): string

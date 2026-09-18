@@ -89,7 +89,7 @@ class LayerAttributesService
      * automatico. Le altre
      * (walking_network, season) sono manuali e non vanno mai toccate.
      */
-    public const CALCULATED_KEYS = ['distance', 'stage_count', 'shape', 'taxonomy_where', 'themes'];
+    public const CALCULATED_KEYS = ['distance', 'stage_count', 'shape', 'shape_discontinuous', 'taxonomy_where', 'themes'];
 
     /**
      * Somma delle distanze delle tappe, in km.
@@ -623,7 +623,12 @@ class LayerAttributesService
 
         $shape = $this->determineType($this->trackEndpoints($layer));
         if ($shape !== null) {
-            $values['shape'] = $this->withTranslations($shape->value, fn (string $locale) => $shape->labelIn($locale));
+            $publicShape = $shape === RouteShape::DISCONTINUOUS ? RouteShape::LINEAR : $shape;
+            $values['shape'] = $this->withTranslations($publicShape->value, fn (string $locale) => $publicShape->labelIn($locale));
+
+            if ($shape === RouteShape::DISCONTINUOUS) {
+                $values['shape_discontinuous'] = true;
+            }
         }
 
         $wheres = $this->wheres($layer);

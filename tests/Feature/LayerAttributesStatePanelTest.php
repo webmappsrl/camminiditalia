@@ -125,11 +125,57 @@ class LayerAttributesStatePanelTest extends TestCase
     }
 
     /**
-     * "Discontinuo" è un valore vero della tipologia (tratti non collegati
-     * fra loro), non un'assenza di dato: deve comparire come tale, con una
-     * spiegazione breve del significato.
+     * "Discontinuo" (tratti non collegati fra loro) non è un'assenza di
+     * dato: deve comparire come tale, con una spiegazione breve del
+     * significato. Da oc:8463 il valore pubblico persistito in `shape` è
+     * sempre `linear`/`roundtrip` (mai `discontinuous`): la discontinuità
+     * è espressa dal flag interno separato `shape_discontinuous`, letto
+     * solo da questo pannello Nova.
      */
     public function test_layer_with_discontinuous_type_shows_value_with_explanation(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Administrator');
+
+        $layer = LayerModel::factory()->create([
+            'user_id' => $owner->id,
+            'properties' => [
+                'attributes' => [
+                    'shape' => [
+                        'value' => 'linear',
+                        'name' => ['it' => 'Lineare', 'en' => 'Linear'],
+                    ],
+                    'shape_discontinuous' => true,
+                ],
+            ],
+        ]);
+
+        $html = $this->buildHtmlFor($layer);
+
+        // Un'unica card "Route shape", verde/ok, col valore pubblico reale
+        // (Linear) come valore principale — l'alert di discontinuità è un
+        // box interno alla stessa card (Discontinuous in grassetto +
+        // spiegazione piccola), non un badge/card separata che sovrascrive
+        // il valore principale.
+        $this->assertStringContainsString('<strong>Linear</strong>', $html);
+        $this->assertStringContainsString('Discontinuous', $html);
+        $this->assertStringContainsString('the route segments are not connected to each other', $html);
+        // "Discontinuo" è un valore vero, non un'assenza: non deve comparire
+        // vicino al badge/testo di "non calcolabile" usato dagli altri
+        // filtri (distanza/durata/regioni) quando manca il dato.
+        $this->assertStringNotContainsString('Tipologia</span></div><div style="font-size:14px;color:#0f172a;line-height:1.5;word-break:break-word;"><span style="color:#92400e;font-weight:600;">non calcolabile', $html);
+    }
+
+    /**
+     * Regressione (trovata in review formale, oc:8463): un layer persistito
+     * PRIMA di questo fix ha `shape=discontinuous` senza il nuovo flag
+     * `shape_discontinuous` (che non esisteva ancora). Finché
+     * RecalculateAppLayerAttributesAction non lo ricalcola (Task 7,
+     * procedura post-deploy), il pannello deve continuare a mostrare
+     * l'alert interno — senza, il valore letterale "discontinuous" verrebbe
+     * mostrato come tale nella card, invece che come "Linear" con l'alert.
+     */
+    public function test_layer_with_legacy_discontinuous_shape_and_no_flag_still_shows_warning(): void
     {
         $owner = User::factory()->create();
         $owner->assignRole('Administrator');
@@ -148,12 +194,12 @@ class LayerAttributesStatePanelTest extends TestCase
 
         $html = $this->buildHtmlFor($layer);
 
+        // Anche sul dato storico "shape=discontinuous" la card "Route shape"
+        // mostra Linear come valore principale (mai il valore letterale
+        // discontinuous), con l'alert come box interno alla stessa card.
+        $this->assertStringContainsString('<strong>Linear</strong>', $html);
         $this->assertStringContainsString('Discontinuous', $html);
         $this->assertStringContainsString('the route segments are not connected to each other', $html);
-        // "Discontinuo" è un valore vero, non un'assenza: non deve comparire
-        // vicino al badge/testo di "non calcolabile" usato dagli altri
-        // filtri (distanza/durata/regioni) quando manca il dato.
-        $this->assertStringNotContainsString('Tipologia</span></div><div style="font-size:14px;color:#0f172a;line-height:1.5;word-break:break-word;"><span style="color:#92400e;font-weight:600;">non calcolabile', $html);
     }
 
     public function test_layer_with_unrecognized_network_value_does_not_throw(): void
