@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Nova\Actions\MarkAsRead;
 use App\Nova\Actions\MarkAsUnread;
 use App\Nova\Traits\HasLayerFilterAndLink;
+use App\Nova\Traits\HasLayerOverride;
 use App\Nova\Traits\HidesAppFromIndexTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Nova\Fields\Badge;
@@ -15,6 +16,7 @@ use Wm\WmPackage\Nova\UgcPoi as WmNovaUgcPoi;
 class UgcPoi extends WmNovaUgcPoi
 {
     use HasLayerFilterAndLink;
+    use HasLayerOverride;
     use HidesAppFromIndexTrait;
 
     public static $model = \App\Models\UgcPoi::class;
@@ -75,6 +77,14 @@ class UgcPoi extends WmNovaUgcPoi
 
         if ($linkField = $this->layerLinkField($request)) {
             $fields[] = $linkField;
+        }
+
+        if ($overrideField = $this->layerOverrideField($request)) {
+            $fields[] = $overrideField;
+        }
+
+        if ($overrideOriginalField = $this->layerOverrideOriginalField($request)) {
+            $fields[] = $overrideOriginalField;
         }
 
         return $fields;
