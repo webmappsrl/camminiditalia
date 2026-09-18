@@ -8,5 +8,6 @@
     "Sort Home Layers": "Sort Home Layers",
     "Sort Layers A-Z": "Sort Layers A-Z",
     "Sort consecutive Layer boxes alphabetically. Other box types stay in place and you can still reorder everything manually after clicking. Click Update to save the new order.": "Sort consecutive Layer boxes alphabetically. Other box types stay in place and you can still reorder everything manually after clicking. Click Update to save the new order.",
-    "Unable to find the home content to sort.": "Unable to find the home content to sort."
+    "Unable to find the home content to sort.": "Unable to find the home content to sort.",
+    "the route segments are not connected to each other": "the route segments are not connected to each other"
 }

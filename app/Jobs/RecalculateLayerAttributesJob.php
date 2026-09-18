@@ -4,11 +4,13 @@ namespace App\Jobs;
 
 use App\Services\LayerAttributesService;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Wm\WmPackage\Jobs\UpdateAppConfigJob;
 use Wm\WmPackage\Models\Layer;
@@ -80,6 +82,23 @@ class RecalculateLayerAttributesJob implements ShouldBeUniqueUntilProcessing, Sh
     public function uniqueId(): string
     {
         return "recalculate-layer-attributes-{$this->layerId}";
+    }
+
+    /**
+     * Forza il lock su Redis invece dello store di default (CACHE_STORE=database):
+     * DatabaseLock::acquire() prova un INSERT e, se la riga di lock esiste già,
+     * ripiega su un UPDATE nello stesso try/catch — su PostgreSQL una query
+     * fallita "avvelena" l'intera transazione, quindi anche l'UPDATE di
+     * fallback fallisce con un generico 25P02. Ogni dispatch di questo job
+     * dentro RecalculateAppLayerAttributesAction avviene nella transazione che
+     * Nova apre per l'action, quindi senza questo fix un ricalcolo bulk va in
+     * 500 non appena trova la riga di lock già presente in `cache_locks` (già
+     * risolto con lo stesso pattern per UpdateAppConfigJob/BuildAppPoisGeojsonJob,
+     * oc:8564).
+     */
+    public function uniqueVia(): Repository
+    {
+        return Cache::store('redis');
     }
 
     public function handle(LayerAttributesService $service): void

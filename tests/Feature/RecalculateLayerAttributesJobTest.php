@@ -6,6 +6,7 @@ use App\Jobs\RecalculateLayerAttributesJob;
 use App\Models\EcTrack;
 use App\Services\LayerAttributesService;
 use Illuminate\Bus\UniqueLock;
+use Illuminate\Cache\RedisStore;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
@@ -141,5 +142,29 @@ class RecalculateLayerAttributesJobTest extends TestCase
         // è solo il tempo di esecuzione del job: 120s è ampiamente
         // sufficiente come rete di sicurezza.
         $this->assertSame(120, (new RecalculateLayerAttributesJob(42))->uniqueFor);
+    }
+
+    /**
+     * Regressione trovata in test manuale (oc:8463, esecuzione di
+     * RecalculateAppLayerAttributesAction su Nova): con CACHE_STORE=database
+     * (il default di questo progetto), DatabaseLock::acquire() prova un
+     * INSERT e, se la riga di lock esiste già, ripiega su un UPDATE nello
+     * stesso try/catch — su PostgreSQL una query fallita "avvelena" l'intera
+     * transazione, quindi il ricalcolo bulk (che dispatcha un job per layer
+     * dentro la transazione della action Nova) andava in 500 (25P02) al
+     * primo layer con lock già presente. Riprodotto e verificato dal vivo
+     * (non solo qui) prima e dopo il fix. Non testabile con un
+     * DB::transaction() dentro DatabaseTransactions: quest'ultimo apre già
+     * una transazione per il test, quindi la seconda diventa una savepoint
+     * innestata che non riproduce l'abort della transazione di livello
+     * superiore — l'unica verifica affidabile qui è che il lock passi
+     * davvero da Redis, non dallo store di default.
+     */
+    public function test_unique_via_uses_redis_not_the_default_database_store(): void
+    {
+        $this->assertInstanceOf(
+            RedisStore::class,
+            (new RecalculateLayerAttributesJob(42))->uniqueVia()->getStore()
+        );
     }
 }
