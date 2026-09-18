@@ -10,6 +10,7 @@ use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App as WmApp;
 use Wm\WmPackage\Models\EcPoi;
+use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 /**
  * Stesso bug di EcTrackIndexQueryTest (oc:8587): Wm\WmPackage\Nova\AbstractEcResource::indexQuery()
@@ -29,7 +30,7 @@ class EcPoiIndexQueryTest extends TestCase
         Queue::fake();
         Http::fake();
 
-        \Wm\WmPackage\Services\RolesAndPermissionsService::seedDatabase();
+        RolesAndPermissionsService::seedDatabase();
 
         if (WmApp::count() === 0) {
             WmApp::factory()->create();

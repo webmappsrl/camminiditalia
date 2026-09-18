@@ -10,6 +10,7 @@ use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App as WmApp;
 use Wm\WmPackage\Models\EcTrack;
+use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 /**
  * Wm\WmPackage\Nova\AbstractEcResource::indexQuery() scopa per app_id posseduto
@@ -30,7 +31,7 @@ class EcTrackIndexQueryTest extends TestCase
         Queue::fake();
         Http::fake();
 
-        \Wm\WmPackage\Services\RolesAndPermissionsService::seedDatabase();
+        RolesAndPermissionsService::seedDatabase();
 
         if (WmApp::count() === 0) {
             WmApp::factory()->create();
