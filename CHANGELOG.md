@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.0](https://github.com/webmappsrl/camminiditalia/compare/v1.3.0...v1.4.0) (2026-09-18)
+
+
+### Features
+
+* **oc:8575:** Override manuale in Nova ([#62](https://github.com/webmappsrl/camminiditalia/issues/62)) ([41454f1](https://github.com/webmappsrl/camminiditalia/commit/41454f1491e013db74e956e31523b5320c344084))
+* **oc:8596:** Autorizzazioni "Tipi POI" ([#65](https://github.com/webmappsrl/camminiditalia/issues/65)) ([d00bd04](https://github.com/webmappsrl/camminiditalia/commit/d00bd048ba1e6a226578b1b4b00367764a0fa48d))
+
+
+### Bug Fixes
+
+* **oc:8463:** RouteShape discontinuo esposto come Lineare, alert solo in Nova ([#63](https://github.com/webmappsrl/camminiditalia/issues/63)) ([5db350f](https://github.com/webmappsrl/camminiditalia/commit/5db350f30efae6e40cb2d1efb6a3de3013e7a110))
+* **oc:8587:** Validator non vede più EcTrack/EcPoi dopo trasferimento ownership layer ([#66](https://github.com/webmappsrl/camminiditalia/issues/66)) ([c9b778a](https://github.com/webmappsrl/camminiditalia/commit/c9b778adbfa76482a829c3dff41d7d58dbfe4c28))
+* **test:** isola EcTrackGeometryAttributesObserverTest dal disco S3 reale wmfe ([56f1aa1](https://github.com/webmappsrl/camminiditalia/commit/56f1aa14fbc54676a160eec98f7648de362422fa))
+
 ## [1.3.0](https://github.com/webmappsrl/camminiditalia/compare/v1.2.0...v1.3.0) (2026-08-25)
 
 
