@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Policies\EcTrackPolicy;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Gate;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcTrack;
-use Wm\WmPackage\Policies\EcTrackPolicy;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class EcTrackPolicyTest extends TestCase
@@ -42,9 +42,11 @@ class EcTrackPolicyTest extends TestCase
         return $user;
     }
 
-    // --- Policy attiva è quella del package, ora registrata ---
+    // --- Policy attiva è quella locale, non del package (oc:8162 in wm-package ha cambiato
+    // view()/update()/delete() del package da controllo per-traccia a controllo per-app,
+    // per un ruolo Editor che qui non esiste — vedi App\Policies\EcTrackPolicy) ---
 
-    public function test_ectrack_policy_is_registered(): void
+    public function test_local_ectrack_policy_is_registered(): void
     {
         $policy = Gate::getPolicyFor(EcTrack::class);
         $this->assertInstanceOf(EcTrackPolicy::class, $policy);
