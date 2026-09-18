@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\RouteShape;
 use App\Services\LayerAttributesService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
@@ -36,9 +37,9 @@ class LayerConfigJsonShapeDiscontinuousTest extends TestCase
 
         $service = new class extends LayerAttributesService
         {
-            public function determineType(array $endpoints): \App\Enums\RouteShape
+            public function determineType(array $endpoints): RouteShape
             {
-                return \App\Enums\RouteShape::DISCONTINUOUS;
+                return RouteShape::DISCONTINUOUS;
             }
         };
 

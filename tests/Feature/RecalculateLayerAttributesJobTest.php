@@ -6,6 +6,7 @@ use App\Jobs\RecalculateLayerAttributesJob;
 use App\Models\EcTrack;
 use App\Services\LayerAttributesService;
 use Illuminate\Bus\UniqueLock;
+use Illuminate\Cache\RedisStore;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
@@ -162,7 +163,7 @@ class RecalculateLayerAttributesJobTest extends TestCase
     public function test_unique_via_uses_redis_not_the_default_database_store(): void
     {
         $this->assertInstanceOf(
-            \Illuminate\Cache\RedisStore::class,
+            RedisStore::class,
             (new RecalculateLayerAttributesJob(42))->uniqueVia()->getStore()
         );
     }
