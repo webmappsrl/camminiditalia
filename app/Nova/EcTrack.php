@@ -4,6 +4,8 @@ namespace App\Nova;
 
 use App\Nova\Traits\FiltersUsersByRoleTrait;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Wm\WmPackage\Nova\EcTrack as WmNovaEcTrack;
 
@@ -53,10 +55,31 @@ class EcTrack extends WmNovaEcTrack
             return ! ($field instanceof BelongsTo && $field->attribute === 'app');
         });
 
-        // Modify User field to be visible only to admins
         $fields = array_map(function ($field) use ($currentUser) {
+            // Show User field only to admins
             if ($field instanceof BelongsTo && $field->attribute === 'user') {
-                // Show User field only to admins
+                $field->canSee(function () use ($currentUser) {
+                    return $currentUser && $currentUser->hasRole('Administrator');
+                });
+
+                return $field;
+            }
+
+            // wm-package/src/Nova/EcTrack.php referenzia EcPoi::class senza `use`
+            // esplicito: risolve alla classe Nova del package, priva
+            // dell'override indexQuery() per user_id (oc:8587) — il campo di
+            // attach risultava sempre vuoto per un Validator (oc:8611).
+            if ($field instanceof BelongsToMany && $field->attribute === 'ecPois') {
+                return BelongsToMany::make('EcPois', 'ecPois', EcPoi::class)
+                    ->searchable()
+                    ->collapsedByDefault();
+            }
+
+            // Il campo Layers (stesso bug del campo EcPois sopra) va nascosto
+            // per il Validator invece che corretto: un gestore di cammino non
+            // deve poter fare attach/detach diretto del layer da qui,
+            // l'associazione passa sempre dal pannello Layer/LayerFeatureController.
+            if ($field instanceof MorphToMany && $field->attribute === 'layers') {
                 $field->canSee(function () use ($currentUser) {
                     return $currentUser && $currentUser->hasRole('Administrator');
                 });

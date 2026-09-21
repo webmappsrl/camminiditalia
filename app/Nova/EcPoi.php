@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Models\EcPoi as EcPoiModel;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Wm\WmPackage\Models\Layer;
@@ -82,7 +83,17 @@ class EcPoi extends WmNovaEcPoi
 
     public function fields(NovaRequest $request): array
     {
-        $fields = parent::fields($request);
+        $fields = array_map(function ($field) {
+            // wm-package/src/Nova/EcPoi.php referenzia EcTrack::class senza `use`
+            // esplicito: risolve alla classe Nova del package, priva
+            // dell'override indexQuery() per user_id (oc:8587) — il campo di
+            // attach risultava sempre vuoto per un Validator (oc:8611).
+            if ($field instanceof BelongsToMany && $field->attribute === 'ecTracks') {
+                return BelongsToMany::make('EcTracks', 'ecTracks', EcTrack::class);
+            }
+
+            return $field;
+        }, parent::fields($request));
 
         if ($layerField = $this->layerAssignmentField($request)) {
             $fields[] = $layerField;
