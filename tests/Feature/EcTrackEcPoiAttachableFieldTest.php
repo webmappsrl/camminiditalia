@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Nova\EcTrack;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -84,7 +85,7 @@ class EcTrackEcPoiAttachableFieldTest extends TestCase
         $field = $this->findField($fields, 'ecTracks');
 
         $this->assertInstanceOf(BelongsToMany::class, $field);
-        $this->assertSame(\App\Nova\EcTrack::class, $field->resourceClass);
+        $this->assertSame(EcTrack::class, $field->resourceClass);
     }
 
     public function test_ecpoi_ectracks_field_has_exactly_one_occurrence(): void
@@ -143,7 +144,7 @@ class EcTrackEcPoiAttachableFieldTest extends TestCase
         $admin = $this->createUserWithRole('Administrator');
         $track = \App\Models\EcTrack::factory()->createQuietly(['user_id' => $admin->id]);
 
-        $fields = (new \App\Nova\EcTrack($track))->fields($this->novaRequestFor($admin));
+        $fields = (new EcTrack($track))->fields($this->novaRequestFor($admin));
         $field = $this->findField($fields, 'ecPois');
 
         $this->assertInstanceOf(BelongsToMany::class, $field);
@@ -156,7 +157,7 @@ class EcTrackEcPoiAttachableFieldTest extends TestCase
         $admin = $this->createUserWithRole('Administrator');
         $track = \App\Models\EcTrack::factory()->createQuietly(['user_id' => $admin->id]);
 
-        $fields = (new \App\Nova\EcTrack($track))->fields($this->novaRequestFor($admin));
+        $fields = (new EcTrack($track))->fields($this->novaRequestFor($admin));
         $occurrences = array_filter($fields, fn ($field) => $field instanceof BelongsToMany && $field->attribute === 'ecPois');
 
         $this->assertCount(1, $occurrences);
@@ -171,7 +172,7 @@ class EcTrackEcPoiAttachableFieldTest extends TestCase
         $otherPoi = $this->makeEcPoi($otherValidator->id);
 
         $track = \App\Models\EcTrack::factory()->createQuietly(['user_id' => $validator->id]);
-        $fields = (new \App\Nova\EcTrack($track))->fields($this->novaRequestFor($validator));
+        $fields = (new EcTrack($track))->fields($this->novaRequestFor($validator));
         $field = $this->findField($fields, 'ecPois');
 
         $results = $field->resourceClass::indexQuery(
@@ -191,7 +192,7 @@ class EcTrackEcPoiAttachableFieldTest extends TestCase
         $poi = $this->makeEcPoi($validator->id);
 
         $track = \App\Models\EcTrack::factory()->createQuietly(['user_id' => $admin->id]);
-        $fields = (new \App\Nova\EcTrack($track))->fields($this->novaRequestFor($admin));
+        $fields = (new EcTrack($track))->fields($this->novaRequestFor($admin));
         $field = $this->findField($fields, 'ecPois');
 
         $results = $field->resourceClass::indexQuery(
@@ -208,7 +209,7 @@ class EcTrackEcPoiAttachableFieldTest extends TestCase
         $track = \App\Models\EcTrack::factory()->createQuietly(['user_id' => $validator->id]);
 
         $request = $this->novaRequestFor($validator);
-        $fields = (new \App\Nova\EcTrack($track))->fields($request);
+        $fields = (new EcTrack($track))->fields($request);
         $field = $this->findField($fields, 'layers');
 
         $this->assertInstanceOf(MorphToMany::class, $field);
@@ -221,7 +222,7 @@ class EcTrackEcPoiAttachableFieldTest extends TestCase
         $track = \App\Models\EcTrack::factory()->createQuietly(['user_id' => $admin->id]);
 
         $request = $this->novaRequestFor($admin);
-        $fields = (new \App\Nova\EcTrack($track))->fields($request);
+        $fields = (new EcTrack($track))->fields($request);
         $field = $this->findField($fields, 'layers');
 
         $this->assertInstanceOf(MorphToMany::class, $field);
