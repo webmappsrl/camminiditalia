@@ -78,7 +78,20 @@ class EcPoi extends WmNovaEcPoi
 
     public function authorizedToDelete(Request $request): bool
     {
-        return $request->user()?->hasRole('Administrator') ?? false;
+        $user = $request->user();
+
+        if (! $user) {
+            return false;
+        }
+
+        if ($user->hasRole('Administrator')) {
+            return true;
+        }
+
+        /** @var EcPoiModel $ecPoi */
+        $ecPoi = $this->resource;
+
+        return $user->hasRole('Validator') && $ecPoi->user_id === $user->id;
     }
 
     public function fields(NovaRequest $request): array
