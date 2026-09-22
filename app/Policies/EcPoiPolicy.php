@@ -45,6 +45,6 @@ class EcPoiPolicy
 
     public function delete(User $user, EcPoi $ecPoi): bool
     {
-        return false;
+        return $ecPoi->user_id === $user->id;
     }
 }

@@ -135,11 +135,26 @@ class EcPoiPolicyTest extends TestCase
         $this->assertFalse(Gate::forUser($validator)->allows('update', $ecPoi));
     }
 
-    public function test_validator_cannot_delete_ec_poi(): void
+    public function test_validator_can_delete_own_ec_poi(): void
     {
         $validator = $this->makeUser('Validator');
         $ecPoi = $this->makeEcPoi($validator->id);
+        $this->assertTrue(Gate::forUser($validator)->allows('delete', $ecPoi));
+    }
+
+    public function test_validator_cannot_delete_ec_poi_of_another_user(): void
+    {
+        $validator = $this->makeUser('Validator');
+        $otherValidator = $this->makeUser('Validator');
+        $ecPoi = $this->makeEcPoi($otherValidator->id);
         $this->assertFalse(Gate::forUser($validator)->allows('delete', $ecPoi));
+    }
+
+    public function test_guest_cannot_delete_ec_poi(): void
+    {
+        $guest = $this->makeUser('Guest');
+        $ecPoi = $this->makeEcPoi();
+        $this->assertFalse(Gate::forUser($guest)->allows('delete', $ecPoi));
     }
 
     // --- Guest: nessun accesso Nova ---
