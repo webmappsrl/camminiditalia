@@ -16,4 +16,12 @@ return [
      | l'alert di discontinuità del cammino, mai da esporre pubblicamente.
      */
     'internal_attribute_keys' => ['shape_discontinuous'],
+
+    /*
+     | Mostra "Uso dei filtri sui cammini" nella card Analytics globale di Nova (oc:8585).
+     | Opt-in nel pacchetto (default false): l'evento PostHog che alimenta questa sezione
+     | (filterUsed/route) è emesso solo dal pannello "filtro avanzato" della search bar
+     | camminiditalia — qui, l'unico consumer che lo ha davvero, va a true.
+     */
+    'route_filter_analytics_enabled' => true,
 ];
