@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\EcTrack;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Http;
@@ -156,7 +157,7 @@ class EcPoiNovaAuthorizationTest extends TestCase
         $validator = $this->makeUser('Validator');
         Layer::factory()->create(['user_id' => $validator->id]);
         $ecPoi = EcPoi::factory()->create(['user_id' => $validator->id, 'properties' => []]);
-        $ecTrack = \App\Models\EcTrack::factory()->create(['user_id' => $validator->id, 'properties' => []]);
+        $ecTrack = EcTrack::factory()->create(['user_id' => $validator->id, 'properties' => []]);
         $ecPoi->ecTracks()->attach($ecTrack->id);
 
         $response = $this->actingAs($validator)
