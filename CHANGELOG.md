@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.0](https://github.com/webmappsrl/camminiditalia/compare/v1.3.0...v1.4.0) (2026-09-23)
+
+
+### Features
+
+* **oc:8575:** Override manuale in Nova ([#62](https://github.com/webmappsrl/camminiditalia/issues/62)) ([41454f1](https://github.com/webmappsrl/camminiditalia/commit/41454f1491e013db74e956e31523b5320c344084))
+* **oc:8585:** abilita l'analytics dei filtri avanzati per camminiditalia ([dbb7f10](https://github.com/webmappsrl/camminiditalia/commit/dbb7f103d030ed0ce427b3f0f3db08e00a94b644))
+* **oc:8596:** Autorizzazioni "Tipi POI" ([#65](https://github.com/webmappsrl/camminiditalia/issues/65)) ([d00bd04](https://github.com/webmappsrl/camminiditalia/commit/d00bd048ba1e6a226578b1b4b00367764a0fa48d))
+
+
+### Bug Fixes
+
+* **oc:8463:** RouteShape discontinuo esposto come Lineare, alert solo in Nova ([#63](https://github.com/webmappsrl/camminiditalia/issues/63)) ([5db350f](https://github.com/webmappsrl/camminiditalia/commit/5db350f30efae6e40cb2d1efb6a3de3013e7a110))
+* **oc:8587:** Validator non vede più EcTrack/EcPoi dopo trasferimento ownership layer ([#66](https://github.com/webmappsrl/camminiditalia/issues/66)) ([c9b778a](https://github.com/webmappsrl/camminiditalia/commit/c9b778adbfa76482a829c3dff41d7d58dbfe4c28))
+* **oc:8611:** associazione EcTrack-EcPoi in Nova non trovava le tracce/POI per il Validator ([#67](https://github.com/webmappsrl/camminiditalia/issues/67)) ([b8aa7fd](https://github.com/webmappsrl/camminiditalia/commit/b8aa7fd10da15212c696940f37347c0355b22d10))
+* **oc:8611:** sblocco eliminazione EcPoi per il Validator ([#68](https://github.com/webmappsrl/camminiditalia/issues/68)) ([caf7635](https://github.com/webmappsrl/camminiditalia/commit/caf7635e2b26af472df4be29ee69562a8e2cad2f))
+* **oc:8623:** Administrator possono assegnare Validator/Guest in Nova ([#70](https://github.com/webmappsrl/camminiditalia/issues/70)) ([493de00](https://github.com/webmappsrl/camminiditalia/commit/493de00d596d29cc1fc6d01247ca002f423cd516))
+* **test:** isola EcTrackGeometryAttributesObserverTest dal disco S3 reale wmfe ([56f1aa1](https://github.com/webmappsrl/camminiditalia/commit/56f1aa14fbc54676a160eec98f7648de362422fa))
+
 ## [1.3.0](https://github.com/webmappsrl/camminiditalia/compare/v1.2.0...v1.3.0) (2026-08-25)
 
 
