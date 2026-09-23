@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Laravel\Nova\Auth\PasswordValidationRules;
+use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Spatie\Permission\Models\Role;
 use Vyuldashev\NovaPermission\RoleBooleanGroup;
@@ -30,7 +31,7 @@ class User extends AbstractUserResource
     private const ADMINISTRATOR_MANAGEABLE_ROLES = ['Validator', 'Guest'];
 
     /**
-     * @return array<int, \Laravel\Nova\Fields\Field>
+     * @return array<int, Field>
      */
     public function fields(NovaRequest $request)
     {
