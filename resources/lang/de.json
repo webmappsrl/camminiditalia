@@ -1,5 +1,8 @@
 {
     "Discontinuous": "Unterbrochen",
     "Linear": "Linear",
-    "Roundtrip": "Rundweg"
+    "Roundtrip": "Rundweg",
+    "Automatic": "Automatisch",
+    "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Auf Automatisch lassen, um die aus den Etappen berechnete Streckenform zu verwenden; einen Wert wählen, um sie manuell zu korrigieren.",
+    "Route shape": "Streckenform"
 }
