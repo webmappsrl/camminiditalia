@@ -87,9 +87,25 @@ class LayerAttributesService
      * del cammino: distanza, durata, tipologia, regioni attraversate, ecc.
      * NON gli attributi Eloquent del modello) gestite dal calcolo
      * automatico. Le altre
-     * (walking_network, season) sono manuali e non vanno mai toccate.
+     * (walking_network, season, shape_manual) sono manuali e non vanno mai toccate.
      */
     public const CALCULATED_KEYS = ['distance', 'stage_count', 'shape', 'shape_discontinuous', 'taxonomy_where', 'themes'];
+
+    /**
+     * Override manuale della tipologia (oc:8646): solo il codice RouteShape
+     * (linear|roundtrip), mai l'oggetto tradotto — le etichette si
+     * ricostruiscono a ogni scrittura di `shape`, così una correzione di
+     * traduzione arriva anche ai layer con override. Fuori da CALCULATED_KEYS:
+     * il ricalcolo non la tocca mai. Chiave interna: esclusa dai consumer
+     * pubblici via config('wm-package.internal_attribute_keys').
+     */
+    public const SHAPE_MANUAL_KEY = 'shape_manual';
+
+    /**
+     * Sottoinsieme di CALCULATED_KEYS che descrive la tipologia: le uniche
+     * chiavi calcolate riscritte in modo sincrono da applyManualShape().
+     */
+    private const SHAPE_KEYS = ['shape', 'shape_discontinuous'];
 
     /**
      * Somma delle distanze delle tappe, in km.
@@ -557,21 +573,49 @@ class LayerAttributesService
      */
     public function calculatedValuesAreUnchanged(Layer $layer, array $values): bool
     {
+        $stored = $this->storedAttributes($layer);
+
+        if ($stored === null) {
+            return false;
+        }
+
+        return $this->storedKeysMatch($stored, self::CALCULATED_KEYS, $values);
+    }
+
+    /**
+     * properties->attributes così com'è nel DB (non nel modello in memoria),
+     * o null se il layer non esiste.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function storedAttributes(Layer $layer): ?array
+    {
         $stored = DB::selectOne(
             "SELECT COALESCE(properties->'attributes', '{}'::jsonb) AS attributes FROM layers WHERE id = ?",
             [$layer->id]
         );
 
         if ($stored === null) {
-            return false;
+            return null;
         }
 
         $decoded = json_decode((string) $stored->attributes, true);
-        $decoded = is_array($decoded) ? $decoded : [];
 
-        $storedCalculated = array_intersect_key($decoded, array_flip(self::CALCULATED_KEYS));
+        return is_array($decoded) ? $decoded : [];
+    }
 
-        return $this->canonicalize($storedCalculated) === $this->canonicalize($values);
+    /**
+     * Vero se le chiavi $keys persistite coincidono con $values, a meno
+     * dell'ordine delle chiavi.
+     *
+     * @param  array<string, mixed>  $stored
+     * @param  array<int, string>  $keys
+     * @param  array<string, mixed>  $values
+     */
+    private function storedKeysMatch(array $stored, array $keys, array $values): bool
+    {
+        return $this->canonicalize(array_intersect_key($stored, array_flip($keys)))
+            === $this->canonicalize($values);
     }
 
     /**
@@ -621,15 +665,7 @@ class LayerAttributesService
             $values['stage_count'] = $stageCount;
         }
 
-        $shape = $this->determineType($this->trackEndpoints($layer));
-        if ($shape !== null) {
-            $publicShape = $shape === RouteShape::DISCONTINUOUS ? RouteShape::LINEAR : $shape;
-            $values['shape'] = $this->withTranslations($publicShape->value, fn (string $locale) => $publicShape->labelIn($locale));
-
-            if ($shape === RouteShape::DISCONTINUOUS) {
-                $values['shape_discontinuous'] = true;
-            }
-        }
+        $values = [...$values, ...$this->shapeValues($layer)];
 
         $wheres = $this->wheres($layer);
         if ($wheres !== null) {
@@ -655,24 +691,36 @@ class LayerAttributesService
      * un save() concorrente durante un ricalcolo massivo cancellerebbe
      * traduzioni redazionali non ricalcolabili.
      *
-     * Le chiavi manuali di properties->attributes (walking_network, season) sono preservate; le
+     * Le chiavi manuali di properties->attributes (walking_network, season,
+     * shape_manual) sono preservate; le
      * chiavi calcolate non più calcolabili vengono rimosse per non
      * lasciare valori stale.
      */
     public function persistCalculatedValues(Layer $layer, array $values): void
     {
+        $this->replaceKeys($layer, self::CALCULATED_KEYS, $values);
+    }
+
+    /**
+     * Rimuove le chiavi $keys da properties->attributes e vi fonde $values,
+     * in una sola istruzione SQL. Le chiavi da rimuovere passano come array
+     * bindato (operatore jsonb `- text[]`), non interpolate nella query:
+     * stesso stile di persistManualValue(), un solo modo di scrivere in
+     * questa classe.
+     *
+     * @param  array<int, string>  $keys
+     * @param  array<string, mixed>  $values
+     */
+    private function replaceKeys(Layer $layer, array $keys, array $values): void
+    {
         $payload = $values === []
             ? '{}'
             : json_encode($values, JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION);
 
-        // Le chiavi calcolate da rimuovere passano come array bindato
-        // (operatore jsonb `- text[]`), non interpolate nella query: stesso
-        // stile di persistManualValue(), un solo modo di scrivere in questa
-        // classe.
         $this->writeAttributes(
             $layer,
             "(COALESCE(properties->'attributes', '{}'::jsonb) - ?::text[]) || ?::jsonb",
-            ['{'.implode(',', self::CALCULATED_KEYS).'}', $payload]
+            ['{'.implode(',', $keys).'}', $payload]
         );
     }
 
@@ -730,7 +778,7 @@ class LayerAttributesService
      *
      * Rifiuta silenziosamente (log warning, nessuna scrittura) una chiave
      * appartenente a CALCULATED_KEYS: questo metodo è per i valori manuali
-     * (walking_network, season), mai per quelli calcolati.
+     * (walking_network, season, shape_manual), mai per quelli calcolati.
      */
     public function persistManualValue(Layer $layer, string $key, mixed $value): void
     {
@@ -770,6 +818,104 @@ class LayerAttributesService
             "(COALESCE(properties->'attributes', '{}'::jsonb) - ?::text) || jsonb_build_object(?::text, ?::jsonb)",
             [$key, $key, $encoded]
         );
+    }
+
+    /**
+     * Override manuale valido, letto dal DB e non dal modello in memoria: il
+     * campo Nova lo scrive via SQL dopo il save Eloquent, quindi il modello
+     * può averne una copia vecchia. `discontinuous` non è un override
+     * ammesso (non è una tipologia pubblica, oc:8463).
+     */
+    public function manualShape(Layer $layer): ?RouteShape
+    {
+        $row = DB::selectOne(
+            "SELECT jsonb_typeof(properties->'attributes'->?) AS t,
+                    properties->'attributes'->>? AS v
+             FROM layers WHERE id = ?",
+            [self::SHAPE_MANUAL_KEY, self::SHAPE_MANUAL_KEY, $layer->id]
+        );
+
+        if ($row === null || $row->t !== 'string') {
+            return null;
+        }
+
+        return $this->allowedManualShape((string) $row->v);
+    }
+
+    /**
+     * Unica regola su quali codici valgono come override: un RouteShape
+     * valido diverso da `discontinuous`, che non è una tipologia pubblica
+     * (oc:8463).
+     */
+    private function allowedManualShape(?string $code): ?RouteShape
+    {
+        $shape = $code === null ? null : RouteShape::tryFrom($code);
+
+        return $shape === RouteShape::DISCONTINUOUS ? null : $shape;
+    }
+
+    /**
+     * Valori di tipologia persistiti in properties->attributes: `shape`
+     * pubblico (override manuale se presente, altrimenti calcolato, mai
+     * `discontinuous`) e il flag interno `shape_discontinuous`, che resta
+     * sempre quello della topologia reale delle tappe.
+     *
+     * @return array<string, mixed>
+     */
+    public function shapeValues(Layer $layer): array
+    {
+        $values = [];
+        $calculated = $this->determineType($this->trackEndpoints($layer));
+        $public = $this->manualShape($layer)
+            ?? ($calculated === RouteShape::DISCONTINUOUS ? RouteShape::LINEAR : $calculated);
+
+        if ($public !== null) {
+            $values['shape'] = $this->withTranslations($public->value, fn (string $locale) => $public->labelIn($locale));
+        }
+
+        if ($calculated === RouteShape::DISCONTINUOUS) {
+            $values['shape_discontinuous'] = true;
+        }
+
+        return $values;
+    }
+
+    /**
+     * Imposta (o rimuove, con null / valore non ammesso) l'override manuale
+     * e riscrive SUBITO `shape`, senza aspettare il job in coda: la detail
+     * Nova mostrata dopo il salvataggio deve già riflettere la scelta.
+     * Tocca solo le chiavi di tipologia, non le altre CALCULATED_KEYS (che
+     * richiedono chiamate esterne, es. wheres()).
+     *
+     * @return bool true se `shape`/`shape_discontinuous` persistiti sono
+     *              cambiati: il chiamante deve allora rigenerare il config,
+     *              perché la scrittura SQL non fa scattare gli observer e il
+     *              job di ricalcolo troverà i valori già allineati.
+     */
+    public function applyManualShape(Layer $layer, ?string $code): bool
+    {
+        $shape = $this->allowedManualShape($code);
+        $stored = $this->storedAttributes($layer) ?? [];
+
+        // Il campo Nova chiama questo metodo a ogni salvataggio del layer,
+        // anche quando "Route shape" non è stato toccato: se l'override
+        // richiesto è già quello salvato non si ricalcola nulla (niente
+        // query di topologia dentro la transazione di Nova).
+        if (($stored[self::SHAPE_MANUAL_KEY] ?? null) === $shape?->value) {
+            return false;
+        }
+
+        $this->persistManualValue($layer, self::SHAPE_MANUAL_KEY, $shape?->value);
+
+        $values = $this->shapeValues($layer);
+
+        if ($this->storedKeysMatch($stored, self::SHAPE_KEYS, $values)) {
+            return false;
+        }
+
+        $this->replaceKeys($layer, self::SHAPE_KEYS, $values);
+
+        return true;
     }
 
     /**
