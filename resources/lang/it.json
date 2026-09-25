@@ -37,5 +37,7 @@
     "not computable: the stages carry no distance data": "non calcolabile per mancanza di dati sulle distanze delle tappe",
     "not set": "non impostato",
     "the route segments are not connected to each other": "i tratti del percorso non risultano collegati fra loro",
-    "unrecognized value": "valore non riconosciuto"
+    "unrecognized value": "valore non riconosciuto",
+    "Automatic": "Automatica",
+    "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Lascia Automatica per usare la tipologia calcolata dalle tappe; scegli un valore per correggerla a mano."
 }
