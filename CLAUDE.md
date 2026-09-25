@@ -52,7 +52,7 @@ Vedi `wm-package/CLAUDE.md` per:
 
 ### Submodule wm-package
 
-Il progetto usa `wm-package` come submodule Git (montato anche come volume Docker in `../wm-package`). Contiene:
+Il progetto usa `wm-package` come submodule Git. **I container non montano il submodule ma la copia accanto al progetto, `../wm-package`**: le modifiche fatte in `wm-package/` non sono viste né dall'app né da `php artisan test`. Per eseguire i test del package sul submodule: `docker run --rm --network camminiditalia_default -e DB_HOST=postgres-camminiditalia -v "$PWD/wm-package:/app" -w /app wm-phpfpm:8.4 vendor/bin/pest <test>` (DB `wm_package` già presente nel Postgres del progetto) (oc:8637). Contiene:
 - Modelli base: `UgcPoi`, `UgcTrack`, `Layer`, `App`, `User`, `EcPoi`, `EcTrack`
 - Risorse Nova astratte: `AbstractUgcResource`, `AbstractEcResource`, ecc.
 - Policy base, Filters, Actions, Observers riusabili
@@ -138,6 +138,7 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Sblocco eliminazione EcPoi per il Validator | oc:8611 | `app/Policies/EcPoiPolicy.php`, `app/Nova/EcPoi.php`, `tests/Feature/EcPoiPolicyTest.php`, `tests/Feature/EcPoiNovaAuthorizationTest.php` | Secondo scope dello stesso ticket, richiesto dal cliente nello stesso thread dopo il fix precedente: `EcPoiPolicy::delete()`/`authorizedToDelete()` diventano ownership-based, come già `update()`. Vedi [docs/knowledge/autorizzazione-ecpoi-validator.md](docs/knowledge/autorizzazione-ecpoi-validator.md) |
 | Amministratori possono assegnare Validator/Guest in Nova | oc:8623 | `app/Nova/User.php`, `tests/Feature/UserNovaRoleManagementTest.php` | Override locale del campo Roles ereditato da wm-package (`App\Nova\User::fields()`): un Administrator non super-admin può assegnare solo Validator/Guest, mai Administrator — nessuna modifica al submodule wm-package. Vedi [docs/knowledge/gestione-ruoli-nova-user.md](docs/knowledge/gestione-ruoli-nova-user.md) |
 | Località nel dettaglio tappa: solo la regione | oc:8588 | `app/Providers/NovaServiceProvider.php`, `tests/Feature/TaxonomyWhereMenuVisibilityTest.php`; grosso della logica in `wm-package` | Vedi [docs/knowledge/localita-nel-dettaglio-tappa.md](docs/knowledge/localita-nel-dettaglio-tappa.md) |
+| Nome utente sul marker live attivabile per shard | oc:8637 | `.env-example`; logica e test interamente in `wm-package` | Variabile `ANALYTICS_SHOW_LIVE_USER_IDENTITY` documentata solo come riga commentata, non attiva in nessun ambiente: Cammini d'Italia vuole il marker anonimo. Vedi [wm-package/docs/knowledge/analytics-posthog.md](wm-package/docs/knowledge/analytics-posthog.md) |
 
 ## Decisioni architetturali
 
