@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Http\Controllers\LayerFeatureController;
 use App\Models\User;
 use App\Nova\App;
+use App\Nova\CertificationRequest;
 use App\Nova\Dashboards\Main;
 use App\Nova\EcPoi;
 use App\Nova\EcTrack;
@@ -83,6 +84,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(UgcPoi::class),
                     MenuItem::resource(UgcTrack::class),
                 ])->icon('document'),
+
+                // Passaporto del camminatore (oc:8653): lo scoping per layer
+                // del Validator è in App\Nova\CertificationRequest e nella
+                // policy; il canSee qui limita solo la visibilità della voce.
+                MenuSection::make(__('Passport'), [
+                    MenuItem::resource(CertificationRequest::class),
+                ])->icon('identification')
+                    ->canSee(fn (Request $request) => $request->user()->hasAnyRole(['Administrator', 'Validator'])),
 
                 MenuSection::make('EC', [
                     MenuItem::resource(EcPoi::class),

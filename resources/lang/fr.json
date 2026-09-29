@@ -4,5 +4,17 @@
     "Roundtrip": "Boucle",
     "Automatic": "Automatique",
     "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Laissez Automatique pour utiliser la typologie calculée à partir des étapes ; choisissez une valeur pour la corriger manuellement.",
-    "Route shape": "Typologie"
+    "Route shape": "Typologie",
+    "A certification request is already pending for this route.": "Une demande de certification est déjà en attente pour ce chemin.",
+    "The uploaded files are too large.": "Les fichiers téléchargés sont trop volumineux.",
+    "Validations": "Validations",
+    "Validation": "Validation",
+    "Passport": "Passeport",
+    "Walker": "Marcheur",
+    "Route": "Chemin",
+    "Serial number": "Numéro de série",
+    "Status": "Statut",
+    "Submitted at": "Date d'envoi",
+    "Photos": "Photos",
+    "Pending": "En attente"
 }
