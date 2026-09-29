@@ -12,5 +12,17 @@
     "Unable to find the home content to sort.": "Unable to find the home content to sort.",
     "the route segments are not connected to each other": "the route segments are not connected to each other",
     "Automatic": "Automatic",
-    "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually."
+    "A certification request is already pending for this route.": "A certification request is already pending for this route.",
+    "The uploaded files are too large.": "The uploaded files are too large.",
+    "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.",
+    "Validations": "Validations",
+    "Validation": "Validation",
+    "Passport": "Passport",
+    "Walker": "Walker",
+    "Route": "Route",
+    "Serial number": "Serial number",
+    "Status": "Status",
+    "Submitted at": "Submitted at",
+    "Photos": "Photos",
+    "Pending": "Pending"
 }

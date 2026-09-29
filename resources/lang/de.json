@@ -4,5 +4,17 @@
     "Roundtrip": "Rundweg",
     "Automatic": "Automatisch",
     "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Auf Automatisch lassen, um die aus den Etappen berechnete Streckenform zu verwenden; einen Wert wählen, um sie manuell zu korrigieren.",
-    "Route shape": "Streckenform"
+    "Route shape": "Streckenform",
+    "A certification request is already pending for this route.": "Für diese Route liegt bereits ein Zertifizierungsantrag vor.",
+    "The uploaded files are too large.": "Die hochgeladenen Dateien sind zu groß.",
+    "Validations": "Validierungen",
+    "Validation": "Validierung",
+    "Passport": "Pass",
+    "Walker": "Wanderer",
+    "Route": "Route",
+    "Serial number": "Seriennummer",
+    "Status": "Status",
+    "Submitted at": "Eingereicht am",
+    "Photos": "Fotos",
+    "Pending": "Ausstehend"
 }

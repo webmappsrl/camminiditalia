@@ -39,5 +39,17 @@
     "the route segments are not connected to each other": "i tratti del percorso non risultano collegati fra loro",
     "unrecognized value": "valore non riconosciuto",
     "Automatic": "Automatica",
-    "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Lascia Automatica per usare la tipologia calcolata dalle tappe; scegli un valore per correggerla a mano."
+    "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Lascia Automatica per usare la tipologia calcolata dalle tappe; scegli un valore per correggerla a mano.",
+    "A certification request is already pending for this route.": "C'è già una richiesta di certificazione in attesa per questo cammino.",
+    "The uploaded files are too large.": "I file caricati sono troppo grandi.",
+    "Validations": "Validazioni",
+    "Validation": "Validazione",
+    "Passport": "Passaporto",
+    "Walker": "Camminatore",
+    "Route": "Cammino",
+    "Serial number": "Numero seriale",
+    "Status": "Stato",
+    "Submitted at": "Data di invio",
+    "Photos": "Foto",
+    "Pending": "In attesa"
 }

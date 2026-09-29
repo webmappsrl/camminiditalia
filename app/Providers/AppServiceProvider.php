@@ -2,13 +2,16 @@
 
 namespace App\Providers;
 
+use App\Models\CertificationRequest;
 use App\Models\TaxonomyPoiType;
+use App\Observers\CertificationRequestCleanupObserver;
 use App\Observers\EcPoiValidatorLayerObserver;
 use App\Observers\EcTrackGeometryAttributesObserver;
 use App\Observers\LayerableObserver;
 use App\Observers\LayerAttributesObserver;
 use App\Observers\LayerObserver;
 use App\Observers\UgcObserver;
+use App\Policies\CertificationRequestPolicy;
 use App\Policies\EcPoiPolicy;
 use App\Policies\EcTrackPolicy;
 use App\Policies\LayerPolicy;
@@ -26,6 +29,7 @@ use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\Layerable;
 use Wm\WmPackage\Models\UgcPoi;
 use Wm\WmPackage\Models\UgcTrack;
+use Wm\WmPackage\Models\User as WmUser;
 use Wm\WmPackage\Policies\PermissionPolicy;
 use Wm\WmPackage\Policies\RolePolicy;
 
@@ -70,6 +74,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(TaxonomyPoiType::class, TaxonomyPoiTypePolicy::class);
         Gate::policy(EcPoi::class, EcPoiPolicy::class);
         Gate::policy(EcTrack::class, EcTrackPolicy::class);
+        Gate::policy(CertificationRequest::class, CertificationRequestPolicy::class);
 
         UgcPoi::observe(UgcObserver::class);
         UgcTrack::observe(UgcObserver::class);
@@ -80,5 +85,12 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\EcPoi::observe(EcPoiValidatorLayerObserver::class);
         EcTrack::observe(EcTrackGeometryAttributesObserver::class);
         \App\Models\EcTrack::observe(EcTrackGeometryAttributesObserver::class);
+
+        // Doppia registrazione: la guard `api` usa App\Models\User, mentre Wm\WmPackage\Models\User
+        // copre il codice del package che istanzia direttamente quella classe (gli eventi
+        // Eloquent sono per classe concreta, un observer non vale per la sottoclasse/parent).
+        WmUser::observe(CertificationRequestCleanupObserver::class);
+        \App\Models\User::observe(CertificationRequestCleanupObserver::class);
+        Layer::observe(CertificationRequestCleanupObserver::class);
     }
 }
