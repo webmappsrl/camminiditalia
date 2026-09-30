@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CertificationRequest;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,11 @@ return new class extends Migration
             $table->string('status')->default('pending')->index();
             $table->text('serial_number')->nullable();
             $table->timestamp('disclaimer_accepted_at');
+            // 5 caratteri: spazio per codici con regione (pt-BR) se le lingue crescono.
+            $table->string('locale', 5)->default(CertificationRequest::DEFAULT_LOCALE);
+            $table->text('decision_note')->nullable();
+            $table->timestamp('decided_at')->nullable();
+            $table->foreignId('decided_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Wm\WmPackage\Models\Layer;
@@ -22,6 +23,10 @@ use Wm\WmPackage\Models\User as WmUser;
  * @property string $status
  * @property ?string $serial_number
  * @property \Illuminate\Support\Carbon $disclaimer_accepted_at
+ * @property string $locale
+ * @property ?string $decision_note
+ * @property ?\Illuminate\Support\Carbon $decided_at
+ * @property ?int $decided_by
  * @property \Illuminate\Support\Carbon $created_at
  */
 class CertificationRequest extends Model implements HasMedia
@@ -39,6 +44,14 @@ class CertificationRequest extends Model implements HasMedia
 
     public const MEDIA_COLLECTION = 'default';
 
+    /** Lingue in cui può partire la mail di esito al camminatore (oc:8671). */
+    public const SUPPORTED_LOCALES = ['it', 'en', 'fr', 'es', 'de'];
+
+    public const DEFAULT_LOCALE = 'it';
+
+    /** Lunghezza massima della nota del gestore, uguale in Nova e nella conferma. */
+    public const DECISION_NOTE_MAX_LENGTH = 5000;
+
     protected $fillable = [
         'user_id',
         'layer_id',
@@ -46,10 +59,15 @@ class CertificationRequest extends Model implements HasMedia
         'status',
         'serial_number',
         'disclaimer_accepted_at',
+        'locale',
+        'decision_note',
+        'decided_at',
+        'decided_by',
     ];
 
     protected $casts = [
         'disclaimer_accepted_at' => 'datetime',
+        'decided_at' => 'datetime',
     ];
 
     public function registerMediaCollections(): void
@@ -71,6 +89,63 @@ class CertificationRequest extends Model implements HasMedia
     public function layer(): BelongsTo
     {
         return $this->belongsTo(Layer::class);
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function decidedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'decided_by');
+    }
+
+    /**
+     * @return HasMany<ValidatedEcTrack, $this>
+     */
+    public function validatedTracks(): HasMany
+    {
+        return $this->hasMany(ValidatedEcTrack::class);
+    }
+
+    /**
+     * Lingua della richiesta ricavata dall'header Accept-Language dell'app:
+     * la prima lingua supportata in ordine di preferenza (q), confrontando solo
+     * il codice principale (`de-DE` e `de_DE` → `de`); altrimenti DEFAULT_LOCALE.
+     */
+    public static function localeFromAcceptLanguage(?string $header): string
+    {
+        $candidates = [];
+
+        foreach (explode(',', (string) $header) as $position => $part) {
+            $pieces = explode(';', trim($part));
+            $language = strtolower(preg_split('/[-_]/', trim($pieces[0]))[0]);
+            $quality = 1.0;
+
+            foreach (array_slice($pieces, 1) as $parameter) {
+                if (preg_match('/^\s*q\s*=\s*([0-9.]+)\s*$/i', $parameter, $matches)) {
+                    $quality = (float) $matches[1];
+                }
+            }
+
+            if ($language !== '' && $quality > 0) {
+                $candidates[] = [$language, $quality, $position];
+            }
+        }
+
+        usort($candidates, fn ($a, $b) => [$b[1], $a[2]] <=> [$a[1], $b[2]]);
+
+        foreach ($candidates as [$language]) {
+            if (in_array($language, self::SUPPORTED_LOCALES, true)) {
+                return $language;
+            }
+        }
+
+        return self::DEFAULT_LOCALE;
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === self::STATUS_PENDING;
     }
 
     /**

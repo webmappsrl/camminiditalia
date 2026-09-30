@@ -313,6 +313,19 @@ class CertificationRequestNovaTest extends TestCase
         }
     }
 
+    public function test_nobody_can_delete_decided_request_from_nova(): void
+    {
+        $admin = $this->createUserWithRole('Administrator');
+        $request = $this->makeRequest($this->createLayer($this->createUserWithRole('Validator')->id), 1);
+        $request->forceFill(['status' => CertificationRequest::STATUS_APPROVED])->save();
+
+        $response = $this->actingAs($admin)
+            ->deleteJson('/nova-api/certification-requests?resources[]='.$request->id);
+
+        $this->assertContains($response->status(), [200, 403, 404]);
+        $this->assertDatabaseHas('certification_requests', ['id' => $request->id]);
+    }
+
     private function passportMenuItemVisibleFor(User $user): bool
     {
         $request = Request::create('/nova');

@@ -3,13 +3,17 @@
 namespace App\Nova;
 
 use App\Models\CertificationRequest as CertificationRequestModel;
+use App\Nova\Actions\DecideCertificationRequest;
+use App\Support\UserDisplay;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -35,7 +39,7 @@ class CertificationRequest extends Resource
     /**
      * @var array<int, string>
      */
-    public static $with = ['user', 'layer', 'media'];
+    public static $with = ['user', 'layer', 'media', 'decidedBy'];
 
     public static function uriKey(): string
     {
@@ -115,6 +119,8 @@ class CertificationRequest extends Resource
                 ])
                 ->labels([
                     CertificationRequestModel::STATUS_PENDING => __('Pending'),
+                    CertificationRequestModel::STATUS_APPROVED => __('Approved'),
+                    CertificationRequestModel::STATUS_REJECTED => __('Rejected'),
                 ]),
 
             DateTime::make(__('Submitted at'), 'created_at')
@@ -124,20 +130,33 @@ class CertificationRequest extends Resource
             Text::make(__('Photos'), fn ($resource) => $this->photosHtml($request, $resource))
                 ->asHtml()
                 ->onlyOnDetail(),
+
+            BelongsTo::make(__('Decided by'), 'decidedBy', User::class)
+                ->readonly()
+                ->nullable()
+                ->onlyOnDetail()
+                ->canSee(fn (Request $request) => (bool) $request->user()?->hasRole('Administrator')),
+
+            Text::make(__('Decided by'), fn ($resource) => UserDisplay::short($resource->decidedBy))
+                ->onlyOnDetail()
+                ->canSee(fn (Request $request) => ! $request->user()?->hasRole('Administrator')),
+
+            DateTime::make(__('Decided at'), 'decided_at')
+                ->readonly()
+                ->onlyOnDetail(),
+
+            Textarea::make(__('Decision note'), 'decision_note')
+                ->readonly()
+                ->alwaysShow()
+                ->onlyOnDetail(),
+
+            HasMany::make(__('Validated stages'), 'validatedTracks', ValidatedEcTrack::class),
         ];
     }
 
     protected function walkerDisplay(CertificationRequestModel $resource): string
     {
-        $user = $resource->user;
-        $name = trim((string) $user?->name);
-        $email = (string) $user?->email;
-
-        if ($name === '') {
-            return $email;
-        }
-
-        return $email !== '' ? $name.' ('.$email.')' : $name;
+        return UserDisplay::withEmail($resource->user);
     }
 
     /**
@@ -165,8 +184,24 @@ class CertificationRequest extends Resource
             .'</div>';
     }
 
+    /**
+     * La richiesta è nota quando Nova carica o esegue l'azione su una singola
+     * risorsa (dettaglio, POST dell'azione): serve ai campi dell'azione (tappe)
+     * e a mostrarla solo sulle richieste pending che l'utente può vedere. Senza canRun Nova
+     * ricadrebbe sulla policy update(), che è false per tutti.
+     */
     public function actions(NovaRequest $request): array
     {
-        return [];
+        $target = $this->resource instanceof CertificationRequestModel && $this->resource->exists
+            ? $this->resource
+            : DecideCertificationRequest::targetFromRequest($request);
+
+        return [
+            (new DecideCertificationRequest($target))
+                ->canSee(fn (Request $request) => $target !== null
+                    ? (bool) $request->user()?->can('view', $target) && $target->isPending()
+                    : (bool) $request->user()?->can('viewAny', CertificationRequestModel::class))
+                ->canRun(fn (Request $request, CertificationRequestModel $model) => (bool) $request->user()?->can('view', $model) && $model->isPending()),
+        ];
     }
 }

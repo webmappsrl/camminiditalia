@@ -20,9 +20,9 @@ class CertificationRequestPolicy
     /**
      * Abilità concesse d'ufficio all'Administrator. Non un before() "tutto
      * true": create/update/replicate/restore/forceDelete devono restare
-     * vietate anche a lui.
+     * vietate anche a lui. `delete` non è qui: dipende dallo stato (oc:8671).
      */
-    private const ADMINISTRATOR_ABILITIES = ['viewAny', 'view', 'delete'];
+    private const ADMINISTRATOR_ABILITIES = ['viewAny', 'view'];
 
     public function before(User $user, string $ability): ?bool
     {
@@ -53,9 +53,13 @@ class CertificationRequestPolicy
         return false;
     }
 
+    /**
+     * Solo l'Administrator, e solo finché la richiesta è pending: una
+     * richiesta decisa è la prova delle tappe validate e non si cancella.
+     */
     public function delete(User $user, CertificationRequest $request): bool
     {
-        return false;
+        return $user->hasRole('Administrator') && $request->isPending();
     }
 
     public function replicate(User $user, CertificationRequest $request): bool

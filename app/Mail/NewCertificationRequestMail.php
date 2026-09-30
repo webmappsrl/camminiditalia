@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Models\CertificationRequest;
 use App\Nova\CertificationRequest as NovaCertificationRequest;
+use App\Support\UserDisplay;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -45,10 +46,6 @@ class NewCertificationRequestMail extends Mailable
 
     private function resolveWalkerDisplay(CertificationRequest $request): string
     {
-        $user = $request->user;
-        $name = trim((string) $user?->name);
-        $email = $user->email ?? '—';
-
-        return $name !== '' ? $name.' ('.$email.')' : $email;
+        return UserDisplay::withEmail($request->user);
     }
 }
