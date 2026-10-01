@@ -255,10 +255,103 @@ class CertificationRequestApiTest extends TestCase
             ->getJson("/api/layer/{$layer->id}/certification", ['Accept' => 'application/json']);
 
         $response->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 'status' => 'pending',
                 'submitted_at' => $request->fresh()->created_at->toIso8601String(),
+                'decided_at' => null,
+                'decision_note' => null,
             ]);
+    }
+
+    public function test_show_returns_latest_approved_request_with_decision(): void
+    {
+        $user = User::factory()->create();
+        $layer = $this->createLayer();
+
+        $request = CertificationRequest::create([
+            'user_id' => $user->id,
+            'layer_id' => $layer->id,
+            'status' => CertificationRequest::STATUS_APPROVED,
+            'disclaimer_accepted_at' => now(),
+            'decided_at' => now(),
+        ]);
+
+        $this->actingAs($user, 'api')
+            ->getJson("/api/layer/{$layer->id}/certification", ['Accept' => 'application/json'])
+            ->assertStatus(200)
+            ->assertExactJson([
+                'status' => 'approved',
+                'submitted_at' => $request->fresh()->created_at->toIso8601String(),
+                'decided_at' => $request->fresh()->decided_at->toIso8601String(),
+                'decision_note' => null,
+            ]);
+    }
+
+    public function test_show_returns_latest_rejected_request_with_note(): void
+    {
+        $user = User::factory()->create();
+        $layer = $this->createLayer();
+
+        CertificationRequest::create([
+            'user_id' => $user->id,
+            'layer_id' => $layer->id,
+            'status' => CertificationRequest::STATUS_REJECTED,
+            'disclaimer_accepted_at' => now(),
+            'decided_at' => now(),
+            'decision_note' => 'Foto illeggibile',
+        ]);
+
+        $this->actingAs($user, 'api')
+            ->getJson("/api/layer/{$layer->id}/certification", ['Accept' => 'application/json'])
+            ->assertStatus(200)
+            ->assertJson(['status' => 'rejected', 'decision_note' => 'Foto illeggibile']);
+    }
+
+    public function test_show_returns_most_recent_when_multiple(): void
+    {
+        $user = User::factory()->create();
+        $layer = $this->createLayer();
+
+        foreach ([CertificationRequest::STATUS_REJECTED, CertificationRequest::STATUS_PENDING] as $status) {
+            CertificationRequest::create([
+                'user_id' => $user->id,
+                'layer_id' => $layer->id,
+                'status' => $status,
+                'disclaimer_accepted_at' => now(),
+            ]);
+        }
+
+        $this->actingAs($user, 'api')
+            ->getJson("/api/layer/{$layer->id}/certification", ['Accept' => 'application/json'])
+            ->assertStatus(200)
+            ->assertJson(['status' => 'pending', 'decided_at' => null]);
+    }
+
+    public static function acceptLanguageProvider(): array
+    {
+        return [
+            'full header' => ['de-DE,de;q=0.9,en;q=0.8', 'de'],
+            'bare language' => ['fr', 'fr'],
+            'unsupported' => ['pt-BR', 'it'],
+            'missing' => [null, 'it'],
+            'uppercase region' => ['EN-us', 'en'],
+            'posix underscore' => ['de_DE', 'de'],
+            'unsupported first, supported later' => ['pt-BR,es;q=0.5', 'es'],
+        ];
+    }
+
+    #[DataProvider('acceptLanguageProvider')]
+    public function test_store_saves_locale_from_accept_language(?string $header, string $expected): void
+    {
+        // Il client di test di Symfony manda di default `en-us,en;q=0.5`: header
+        // vuoto per simulare un'app che non lo invia.
+        $headers = ['Accept' => 'application/json', 'Accept-Language' => $header ?? ''];
+
+        $this->actingAs(User::factory()->create(), 'api')
+            ->postJson("/api/layer/{$this->createLayer()->id}/certification", $this->validPayload(), $headers)
+            ->assertStatus(201);
+
+        $this->assertSame($expected, CertificationRequest::first()->locale);
     }
 
     public function test_show_does_not_leak_other_users_request(): void

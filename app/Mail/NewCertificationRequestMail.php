@@ -4,6 +4,8 @@ namespace App\Mail;
 
 use App\Models\CertificationRequest;
 use App\Nova\CertificationRequest as NovaCertificationRequest;
+use App\Support\MailBranding;
+use App\Support\UserDisplay;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -19,6 +21,13 @@ class NewCertificationRequestMail extends Mailable
 
     public string $walkerDisplay;
 
+    public ?string $appIconUrl;
+
+    public ?string $routeLogoUrl;
+
+    /** @var array<int, string> */
+    public array $photoUrls;
+
     public function __construct(
         public readonly CertificationRequest $request,
         public readonly bool $noOwner = false,
@@ -26,6 +35,9 @@ class NewCertificationRequestMail extends Mailable
         $this->novaUrl = rtrim(config('app.url'), '/').'/'.trim(Nova::path(), '/').'/resources/'
             .NovaCertificationRequest::uriKey().'/'.$request->id;
         $this->walkerDisplay = $this->resolveWalkerDisplay($request);
+        $this->appIconUrl = MailBranding::appIconUrl($request->app_id ?? $request->layer?->app_id);
+        $this->routeLogoUrl = MailBranding::routeLogoUrl($request->layer);
+        $this->photoUrls = $request->getMedia(CertificationRequest::MEDIA_COLLECTION)->map(fn ($media) => $media->getUrl())->values()->all();
         $this->locale('it');
     }
 
@@ -45,10 +57,6 @@ class NewCertificationRequestMail extends Mailable
 
     private function resolveWalkerDisplay(CertificationRequest $request): string
     {
-        $user = $request->user;
-        $name = trim((string) $user?->name);
-        $email = $user->email ?? '—';
-
-        return $name !== '' ? $name.' ('.$email.')' : $email;
+        return UserDisplay::withEmail($request->user);
     }
 }

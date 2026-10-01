@@ -107,4 +107,38 @@ class CertificationRequestModelTest extends TestCase
         }
         $this->assertSame(0, Media::where('model_type', CertificationRequest::class)->count());
     }
+
+    public function test_locale_defaults_to_it(): void
+    {
+        $request = CertificationRequest::create([
+            'user_id' => User::factory()->create()->id,
+            'layer_id' => $this->createLayer()->id,
+            'status' => CertificationRequest::STATUS_PENDING,
+            'disclaimer_accepted_at' => now(),
+        ]);
+
+        $this->assertSame('it', $request->fresh()->locale);
+        $this->assertTrue($request->isPending());
+    }
+
+    public function test_decided_by_relation(): void
+    {
+        $validator = $this->createUserWithRole('Validator');
+
+        $request = CertificationRequest::create([
+            'user_id' => User::factory()->create()->id,
+            'layer_id' => $this->createLayer($validator->id)->id,
+            'status' => CertificationRequest::STATUS_REJECTED,
+            'disclaimer_accepted_at' => now(),
+            'decided_at' => now(),
+            'decided_by' => $validator->id,
+            'decision_note' => 'Foto illeggibile',
+        ]);
+
+        $fresh = $request->fresh();
+        $this->assertSame($validator->id, $fresh->decidedBy->id);
+        $this->assertNotNull($fresh->decided_at);
+        $this->assertSame('Foto illeggibile', $fresh->decision_note);
+        $this->assertFalse($fresh->isPending());
+    }
 }

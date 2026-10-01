@@ -88,4 +88,21 @@ class CertificationRequestPolicyTest extends TestCase
     {
         $this->assertInstanceOf(CertificationRequestPolicy::class, Gate::getPolicyFor(CertificationRequest::class));
     }
+
+    public static function decidedStatusProvider(): array
+    {
+        return [
+            'approved' => [CertificationRequest::STATUS_APPROVED],
+            'rejected' => [CertificationRequest::STATUS_REJECTED],
+        ];
+    }
+
+    #[DataProvider('decidedStatusProvider')]
+    public function test_administrator_cannot_delete_decided_request(string $status): void
+    {
+        $this->certificationRequest->forceFill(['status' => $status])->save();
+
+        $this->assertFalse(Gate::forUser($this->createUserWithRole('Administrator'))->allows('delete', $this->certificationRequest));
+        $this->assertFalse(Gate::forUser($this->owner)->allows('delete', $this->certificationRequest));
+    }
 }

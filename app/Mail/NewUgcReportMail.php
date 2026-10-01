@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Support\MailBranding;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -25,6 +26,10 @@ class NewUgcReportMail extends Mailable
 
     public array $mediaUrls;
 
+    public ?string $appIconUrl;
+
+    public ?string $routeLogoUrl;
+
     public function __construct(
         public readonly GeometryModel $ugcPoi,
         public readonly ?Layer $layer,
@@ -36,6 +41,8 @@ class NewUgcReportMail extends Mailable
         app()->setLocale('it');
         $this->formFields = $this->resolveFormFields($ugcPoi);
         $this->mediaUrls = $ugcPoi->getMedia()->map(fn ($m) => $m->getUrl())->toArray();
+        $this->appIconUrl = MailBranding::appIconUrl($ugcPoi->app_id ?? $layer?->app_id);
+        $this->routeLogoUrl = MailBranding::routeLogoUrl($layer);
     }
 
     public function envelope(): Envelope

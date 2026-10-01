@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EcPoi;
 use App\Models\EcTrack;
+use App\Support\LayerOwner;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class LayerFeatureController extends WmLayerFeatureController
     {
         try {
             $layer = Layer::findOrFail($layerId);
-            $layerOwnerId = $layer->user_id ?? config('camminiditalia.default_owner_id');
+            $layerOwnerId = LayerOwner::idFor($layer);
 
             /** @var User|null $user */
             $user = Auth::user();
@@ -161,7 +162,7 @@ class LayerFeatureController extends WmLayerFeatureController
     {
         try {
             $layer = Layer::findOrFail($layerId);
-            $layerOwnerId = $layer->user_id ?? config('camminiditalia.default_owner_id');
+            $layerOwnerId = LayerOwner::idFor($layer);
 
             /** @var User|null $user */
             $user = Auth::user();

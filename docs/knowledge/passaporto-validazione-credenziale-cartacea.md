@@ -1,0 +1,40 @@
+# Passaporto camminatore: validazione della credenziale cartacea
+
+## Come funziona oggi
+
+Il camminatore chiede dall'app al gestore di un cammino (layer) di certificare la credenziale cartacea timbrata (`App\Models\CertificationRequest`, API in `routes/api.php`, sezione Nova «Validazioni»). Il gestore (Validator proprietario del layer) o l'Administrator decide la richiesta in Nova con l'azione **«Decidi richiesta»**, solo dal dettaglio: **Approva** con una o più tappe, oppure **Rifiuta**, con nota facoltativa. La decisione è irreversibile (`pending` → `approved` | `rejected`); le tappe approvate finiscono in `validated_ec_tracks` (`App\Models\ValidatedEcTrack`) e il camminatore riceve una mail di esito nella lingua salvata al `POST`. Il `GET` restituisce l'ultima richiesta dell'utente per quel layer, in qualsiasi stato, con `decided_at` e `decision_note`.
+
+Vincoli che il codice da solo non spiega:
+- l'indice unico su `(user_id, layer_id)` è **parziale** (`WHERE status = 'pending'`): blocca un secondo invio solo finché la richiesta è in attesa; dopo una decisione il camminatore può inviarne una nuova;
+- `STATUS_NONE` non è uno stato salvato nel DB: esiste solo nella risposta del GET quando l'utente non ha nessuna richiesta per quel layer;
+- `routes/api.php` è il primo file di route API del repo principale: tutte le altre route API vivono in `wm-package`;
+- il campo «Camminatore» in Nova è un link solo per l'Administrator, perché il Validator non può aprire la risorsa User;
+- **tappe selezionabili**: solo le EcTrack del layer di proprietà del proprietario effettivo del layer (`App\Support\LayerOwner`, stessa regola della vista Nova del layer), escluse quelle già validate per il camminatore; le tappe con proprietario diverso non si possono validare finché il cliente non allinea i dati (bug noto di oc:8314);
+- **una riga per coppia utente-tappa** (vincolo unico `(user_id, ec_track_id)`): `layer_id` è il cammino in cui la tappa è stata validata per prima, **non** un'appartenenza — per sapere le tappe validate di un cammino si parte da `layer->ecTracks()`, non da `validated_ec_tracks.layer_id`;
+- **decisione in due passaggi**: il primo modale Nova (`App\Nova\Actions\DecideCertificationRequest`) non scrive nulla e apre un secondo modale Vue (`resources/js/nova/certification-decision-confirm.js`); solo la conferma chiama `POST /nova-vendor/certification-decision/confirm` (`CertificationDecisionController`), che rifà autorizzazione e validazione. Nova mostra comunque il suo messaggio «action executed» dopo il primo passaggio;
+- le tappe validate si vedono solo in Nova (dettaglio della richiesta) e nella mail: **nessuna API** le espone ancora al frontend;
+- le richieste decise non si cancellano da Nova, nemmeno dall'Administrator (`delete` fuori da `ADMINISTRATOR_ABILITIES`). Una decisione sbagliata si corregge solo a mano sul DB: procedura in `docs/features/8671-…/notes.md`.
+
+## Perché così
+
+- **Foto nella media library come gli UGC** (oc:8653): scelta del dev per uniformità, dopo aver scartato una tabella dedicata. Si accettano gli stessi limiti delle foto UGC: `GET /api/media/{id}` pubblica, Validator che vedono tutti i media dalla risorsa Nova Media, bug di `MediaController::destroy()` del package, bucket `wmfe` leggibile ed elencabile pubblicamente.
+- **`app_id` sulla richiesta, preso dal layer** (oc:8653): il `MediaObserver` del package copia `app_id` dal modello padre e `WmfePathGenerator` lo usa per il percorso. Senza, il media riceve `app_id = 1` con un warning, e su un DB senza App 1 (come quello di test) l'insert fallisce sulla FK `media_app_id_foreign`: anche nei test le richieste vanno create con l'`app_id` di un'App esistente. Un modello che riceve media e non è un `GeometryModel` ottiene una geometria di default (un punto a Pisa).
+- **Richiesta creata prima delle foto** (oc:8653): con la media library il record deve esistere prima di `addMedia()`; se un caricamento fallisce, la richiesta viene cancellata con i media già creati, e l'email parte solo a caricamento riuscito.
+- **Observer di pulizia su User e Layer** (oc:8653): la cascade SQL da `users`/`layers` cancella le righe senza passare da Eloquent e lascerebbe media e file orfani; l'observer cancella prima le richieste tramite il modello.
+- **Una sola azione con esito esplicito** (oc:8671): Rifiuta è una scelta, non una selezione di tappe vuota; Approva richiede almeno una tappa.
+- **Due passaggi invece del `confirmText` di Nova** (oc:8671): il testo di conferma di Nova è fissato prima della scelta delle tappe e non può mostrarne numero e nomi; il pattern `Action::modal()` è lo stesso di `ImportTaxonomyWhere` in wm-package.
+- **Decisione sotto lock nel service** (oc:8671): `CertificationRequestService::decide()` rilegge la richiesta con `lockForUpdate()` e controlla `pending` in transazione; riepilogo e decisione usano le stesse regole (`resolveDecisionTracks()`). Una richiesta già decisa torna al secondo modale come 422 con messaggio leggibile.
+- **Lingua della mail dall'`Accept-Language` del `POST`** (oc:8671): parser dedicato (`CertificationRequest::localeFromAcceptLanguage()`), perché `getPreferredLanguage()` di Symfony restituisce la prima lingua ammessa anche quando l'header non ne contiene nessuna. Lingue ammesse e default in `CertificationRequest::SUPPORTED_LOCALES` / `DEFAULT_LOCALE`.
+- **Cancellazione a cascata accettata** (oc:8671, rischio accettato dal dev): `validated_ec_tracks.ec_track_id` e `layer_id` sono `cascadeOnDelete`. Un Validator che cancella una propria tappa ne elimina le validazioni per tutti; cancellare un layer elimina le sue richieste (anche decise) e le validazioni con quel `layer_id`. Il cliente chiedeva che le tappe riconosciute non si potessero cancellare: una richiesta decisa non si cancella da Nova, ma la cascade SQL elimina comunque le validazioni. Alternative valutate e non scelte per ora: `restrictOnDelete` su `ec_track_id`, `nullOnDelete` su `layer_id`.
+- **Anteprime delle foto nella mail al gestore** (oc:8671, rischio accettato dal dev): le foto della credenziale, con nome e cognome del camminatore, sono nella mail con URL pubblici (bucket `wmfe` leggibile, `GET /api/media/{id}` pubblica) che restano validi se la mail viene inoltrata. Il design delle mail è in [design-mail.md](design-mail.md).
+- **Rischio residuo accettato** (oc:8653): se il processo muore a metà caricamento resta una richiesta `pending` incompleta, visibile in Nova, che blocca nuovi invii finché non viene cancellata.
+
+## Come ci siamo arrivati
+
+- **Tabella dedicata `certification_request_images` con file in un prefisso privato e URL temporanei** (oc:8653, superata): scelta in challenge per tenere le foto fuori dalla tabella `media`. Abbandonata quando la review finale ha mostrato che il bucket `wmfe` è pubblico (`GetObject` e `ListBucket` anonimi, quindi `private` e URL temporanei non proteggevano nulla), poi sostituita dalla media library su scelta del dev.
+- **Campo `notes`** (oc:8653, superato): era un'ipotesi del frontend (oc:8166) per il testo «Seriale o altre informazioni»; rinominato `serial_number` ovunque, frontend compreso.
+- **Nessuna logica decisionale, sblocco solo con la cancellazione dell'Administrator** (oc:8653, superata da oc:8671): ora la richiesta si decide in Nova; la cancellazione resta solo per le `pending`.
+- **`GET` limitato alla richiesta `pending`** (oc:8653, superato da oc:8671): dopo una decisione l'app riceveva `none` e riproponeva il pulsante di invio; ora il `GET` restituisce l'ultima richiesta in qualsiasi stato.
+- **Tabella `user_track_completions` con `manually_validated` e `CheckLayerBadgeJob`** (overview originale di oc:8166, superata da oc:8671): allo scrum del 30/09 si è deciso di tenere separate la tabella delle richieste e quella delle tappe validate, con una relazione solo per le manuali; badge e completamento restano a oc:8165.
+- **Nessun URL né anteprima delle foto nelle mail** (oc:8653, superata da oc:8671).
+- **Endpoint `GET /api/layer/{layer}/progress`** (oc:8653): escluso, dipende da oc:8165 (calcolo delle tappe percorse), non ancora implementato.

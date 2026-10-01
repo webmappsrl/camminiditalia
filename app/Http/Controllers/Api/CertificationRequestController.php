@@ -23,6 +23,7 @@ class CertificationRequestController extends Controller
                 $layer,
                 $request->file('images'),
                 $request->input('serial_number'),
+                CertificationRequest::localeFromAcceptLanguage($request->header('Accept-Language')),
             );
         } catch (PendingCertificationRequestExistsException) {
             return response()->json([
@@ -30,25 +31,31 @@ class CertificationRequestController extends Controller
             ], 409);
         }
 
-        return $this->pendingResponse($certificationRequest, 201);
+        return $this->statusResponse($certificationRequest, 201);
     }
 
     public function show(Request $request, Layer $layer): JsonResponse
     {
-        $certificationRequest = $this->service->currentFor($request->user(), $layer);
+        $certificationRequest = $this->service->latestFor($request->user(), $layer);
 
         if ($certificationRequest === null) {
             return response()->json(['status' => CertificationRequest::STATUS_NONE]);
         }
 
-        return $this->pendingResponse($certificationRequest);
+        return $this->statusResponse($certificationRequest);
     }
 
-    private function pendingResponse(CertificationRequest $certificationRequest, int $status = 200): JsonResponse
+    /**
+     * Stato dell'ultima richiesta, in qualsiasi stato (oc:8671): come mostrarlo
+     * è compito del frontend.
+     */
+    private function statusResponse(CertificationRequest $certificationRequest, int $status = 200): JsonResponse
     {
         return response()->json([
             'status' => $certificationRequest->status,
             'submitted_at' => $certificationRequest->created_at->toIso8601String(),
+            'decided_at' => $certificationRequest->decided_at?->toIso8601String(),
+            'decision_note' => $certificationRequest->decision_note,
         ], $status);
     }
 }

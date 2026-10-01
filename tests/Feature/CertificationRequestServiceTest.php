@@ -172,12 +172,20 @@ class CertificationRequestServiceTest extends TestCase
         }
     }
 
-    public function test_current_for_returns_latest_pending_or_null(): void
+    public function test_latest_for_returns_latest_request_in_any_status_or_null(): void
     {
         $user = User::factory()->create();
         $layer = $this->createLayer();
 
-        $this->assertNull($this->service->currentFor($user, $layer));
+        $this->assertNull($this->service->latestFor($user, $layer));
+
+        CertificationRequest::create([
+            'user_id' => $user->id,
+            'layer_id' => $layer->id,
+            'status' => CertificationRequest::STATUS_REJECTED,
+            'disclaimer_accepted_at' => now(),
+        ]);
+        $this->assertSame(CertificationRequest::STATUS_REJECTED, $this->service->latestFor($user, $layer)->status);
 
         $request = CertificationRequest::create([
             'user_id' => $user->id,
@@ -186,9 +194,19 @@ class CertificationRequestServiceTest extends TestCase
             'disclaimer_accepted_at' => now(),
         ]);
 
-        $current = $this->service->currentFor($user, $layer);
+        $this->assertSame($request->id, $this->service->latestFor($user, $layer)->id);
+    }
 
-        $this->assertNotNull($current);
-        $this->assertSame($request->id, $current->id);
+    public function test_submit_saves_locale(): void
+    {
+        $request = $this->service->submit(
+            User::factory()->create(),
+            $this->createLayer(),
+            [UploadedFile::fake()->image('c1.jpg')],
+            null,
+            'de',
+        );
+
+        $this->assertSame('de', $request->fresh()->locale);
     }
 }

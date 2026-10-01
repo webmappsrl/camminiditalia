@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Controllers\LayerFeatureController;
+use App\Http\Controllers\Nova\CertificationDecisionController;
 use App\Models\User;
 use App\Nova\App;
 use App\Nova\CertificationRequest;
@@ -44,6 +45,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
         Nova::serving(function (ServingNova $event) {
             Nova::script('config-home-sorter', resource_path('js/nova/config-home-sorter.js'));
+            Nova::script('certification-decision-confirm', resource_path('js/nova/certification-decision-confirm.js'));
         });
 
         // Queste route sovrascrivono quelle del wm-package permettendo
@@ -54,6 +56,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             ->group(function () {
                 Route::get('/features/{layerId}', [LayerFeatureController::class, 'getFeatures']);
                 Route::post('/sync/{layerId}', [LayerFeatureController::class, 'sync']);
+            });
+
+        // Secondo passaggio dell'azione "Decidi richiesta" (oc:8671): stessi
+        // middleware delle API Nova (autenticazione + accesso al pannello).
+        Route::middleware(config('nova.api_middleware', []))
+            ->prefix('nova-vendor/certification-decision')
+            ->group(function () {
+                Route::post('/confirm', [CertificationDecisionController::class, 'confirm']);
             });
 
         $this->getFooter();
