@@ -33,7 +33,6 @@
     "the manager of :route has approved your paper passport. These stages have been recognised:": "the manager of :route has approved your paper passport. These stages have been recognised:",
     "the manager of :route has rejected your certification request.": "the manager of :route has rejected your certification request.",
     "Note from the route manager": "Note from the route manager",
-    "Automatic notification — Cammini d'Italia — Please do not reply to this email.": "Automatic notification — Cammini d'Italia — Please do not reply to this email.",
     "Already validated": "Already validated",
     "Approve": "Approve",
     "Approved": "Approved",
@@ -70,5 +69,10 @@
     "Validated stages": "Validated stages",
     "You are approving :count stages for :walker (:route):": "You are approving :count stages for :walker (:route):",
     "You are rejecting the request from :walker (:route).": "You are rejecting the request from :walker (:route).",
-    "Stages": "Stages"
+    "Stages": "Stages",
+    "Your request has been approved": "Your request has been approved",
+    "Your request has not been approved": "Your request has not been approved",
+    "Logo of :name": "Logo of :name",
+    "You can send a new request from the app, on the route page, with clearer photos.": "You can send a new request from the app, on the route page, with clearer photos.",
+    "Automatic message from Cammini d'Italia. Replies to this address are not read.": "Automatic message from Cammini d'Italia. Replies to this address are not read."
 }

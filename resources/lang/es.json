@@ -25,7 +25,6 @@
     "the manager of :route has approved your paper passport. These stages have been recognised:": "el gestor de :route ha aprobado tu pasaporte en papel. Estas etapas han sido reconocidas:",
     "the manager of :route has rejected your certification request.": "el gestor de :route ha rechazado tu solicitud de certificación.",
     "Note from the route manager": "Nota del gestor del camino",
-    "Automatic notification — Cammini d'Italia — Please do not reply to this email.": "Notificación automática — Cammini d'Italia — No respondas a este correo.",
     "Already validated": "Ya validadas",
     "Approve": "Aprobar",
     "Approved": "Aprobada",
@@ -62,5 +61,10 @@
     "Validated stages": "Etapas validadas",
     "You are approving :count stages for :walker (:route):": "Estás aprobando :count etapas para :walker (:route):",
     "You are rejecting the request from :walker (:route).": "Estás rechazando la solicitud de :walker (:route).",
-    "Stages": "Etapas"
+    "Stages": "Etapas",
+    "Your request has been approved": "Tu solicitud ha sido aprobada",
+    "Your request has not been approved": "Tu solicitud no ha sido aprobada",
+    "Logo of :name": "Logo de :name",
+    "You can send a new request from the app, on the route page, with clearer photos.": "Puedes enviar una nueva solicitud desde la app, en la página del camino, con fotos más nítidas.",
+    "Automatic message from Cammini d'Italia. Replies to this address are not read.": "Mensaje automático de Cammini d'Italia. Las respuestas a esta dirección no se leen."
 }

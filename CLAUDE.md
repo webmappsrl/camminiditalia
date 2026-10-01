@@ -105,6 +105,10 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 
 `App\Observers\UgcObserver` estende quello del package e, al `created`, legge `properties['layer_id']`, trova il Layer e dispatcha `SendUgcReportMailJob` per notificare via email i gestori del layer.
 
+### Email
+
+Tutte le mail del progetto hanno lo stesso design. Ogni vista in `resources/views/emails/` estende `emails.layouts.cammini` e compone il corpo con i componenti `resources/views/components/mail/` (`<x-mail.route>`, `<x-mail.field>`, `<x-mail.note>`, `<x-mail.photos>`); icon dell'App e logo del cammino si leggono con `App\Support\MailBranding`. Non creare mail con CSS o struttura propri: se serve un elemento nuovo, aggiungilo come componente `x-mail.*` riusabile. Colori, accessibilità ed eccezioni: [docs/knowledge/design-mail.md](docs/knowledge/design-mail.md).
+
 ### Routing Nova custom
 
 `NovaServiceProvider` sovrascrive la route `layer-features/{layerId}` del package con `LayerFeatureController` locale, per filtrare le tracce per utente loggato senza toccare il package.
@@ -142,6 +146,7 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Route shape modificabile a mano in Nova | oc:8646 | `app/Services/LayerAttributesService.php`, `app/Nova/Layer.php`, `config/wm-package.php`, `resources/lang/{it,en,fr,es,de}.json`, `tests/Feature/{LayerShapeOverride,LayerShapeOverrideField,LayerConfigJsonShapeManual}Test.php` | Vedi [docs/knowledge/route-shape-layer.md](docs/knowledge/route-shape-layer.md) |
 | Passaporto camminatore: richieste di certificazione della credenziale cartacea | oc:8653 | `routes/api.php`, `bootstrap/app.php`, `app/Models/CertificationRequest.php`, `app/Services/CertificationRequestService.php`, `app/Http/Controllers/Api/CertificationRequestController.php`, `app/Nova/CertificationRequest.php`, `app/Policies/CertificationRequestPolicy.php`, `app/Observers/CertificationRequestCleanupObserver.php`, `app/Jobs/SendCertificationRequestMailJob.php`, `app/Mail/NewCertificationRequestMail.php`, `config/camminiditalia.php` | Vedi [docs/knowledge/passaporto-validazione-credenziale-cartacea.md](docs/knowledge/passaporto-validazione-credenziale-cartacea.md) |
 | Passaporto camminatore: decisione sulla richiesta e tappe validate | oc:8671 | `app/Services/CertificationRequestService.php`, `app/Nova/Actions/DecideCertificationRequest.php`, `app/Http/Controllers/Nova/CertificationDecisionController.php`, `resources/js/nova/certification-decision-confirm.js`, `app/Models/ValidatedEcTrack.php`, `app/Nova/ValidatedEcTrack.php`, `app/Mail/CertificationDecisionMail.php`, `app/Support/{LayerOwner,UserDisplay,EcTrackLabel}.php`, `app/Policies/CertificationRequestPolicy.php` | Vedi [docs/knowledge/passaporto-validazione-credenziale-cartacea.md](docs/knowledge/passaporto-validazione-credenziale-cartacea.md) |
+| Design unico e accessibile delle mail | oc:8671 | `resources/views/emails/layouts/cammini.blade.php`, `resources/views/components/mail/`, `resources/views/emails/*.blade.php`, `app/Support/MailBranding.php`, `app/Mail/*.php` | Vedi [docs/knowledge/design-mail.md](docs/knowledge/design-mail.md) |
 
 ## Decisioni architetturali
 

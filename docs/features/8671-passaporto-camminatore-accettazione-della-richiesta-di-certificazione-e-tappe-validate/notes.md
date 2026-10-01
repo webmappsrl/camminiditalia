@@ -28,6 +28,13 @@ Nessuna deviazione sostanziale. Aggiustamenti minori:
 - Le migration usano le costanti del modello per i default (`DEFAULT_LOCALE`, `SOURCE_MANUAL`): schema invariato, nessun rollback necessario. Scelta consapevole: una migration che legge una costante di un modello si rompe se in futuro la costante viene rinominata.
 - Nova: origine `gps` etichettata esplicitamente, valori sconosciuti mostrati così come sono; risorsa `ValidatedEcTrack` esclusa dalla ricerca globale.
 
+## Design unico e accessibile delle mail (richiesto dal dev dopo la PR #75)
+
+- Le tre mail (segnalazione UGC, nuova richiesta di certificazione, esito al camminatore) ora estendono `resources/views/emails/layouts/cammini.blade.php` e usano i componenti `resources/views/components/mail/` (`route`, `field`, `note`, `photos`); icon dell'App e logo del cammino da `App\Support\MailBranding`. Regola nel `CLAUDE.md` (sezione «Email») e motivazioni in `docs/knowledge/design-mail.md`.
+- Design validato dal dev su un mockup (artifact privato): colori del sito camminiditalia.org, WCAG 2.2 AA; unica eccezione accettata il pulsante bianco a 16px su `#e15d15` (3,6:1).
+- **Anteprime delle foto della credenziale nella mail al gestore**: decisione del dev che supera «nessun URL nelle mail» di oc:8653, rischio accettato (URL pubblici di foto con dati personali nelle mail). Il test di oc:8653 `test_mail_contains_nova_link_and_no_image_urls` è diventato `test_mail_contains_nova_link_and_photo_previews`.
+- Nuove chiavi di traduzione per la mail al camminatore; tolta la chiave del vecchio piè di pagina. Le due mail ai gestori restano in italiano fisso, come prima.
+
 ## Bug trovati
 
 - **Worker Horizon con codice vecchio**, durante la prova nel browser. Il primo invio della mail di esito è fallito con `Call to undefined method App\Models\CertificationRequest::validatedTracks()`: il worker era partito prima delle modifiche e aveva in memoria la versione vecchia del modello. Si risolve con `docker exec horizon-camminiditalia php artisan horizon:terminate` (il container ha `restart: always` e riparte da solo) e poi `php artisan queue:retry <uuid>`. Non è un bug del codice. In produzione il deploy riavvia già i worker.

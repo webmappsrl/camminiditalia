@@ -141,7 +141,11 @@ class CertificationRequestMailTest extends TestCase
         $this->assertSame('it', $mail->locale);
     }
 
-    public function test_mail_contains_nova_link_and_no_image_urls(): void
+    /**
+     * Da oc:8671 la mail al gestore mostra le anteprime delle foto della
+     * credenziale (decisione del dev, supera "nessun URL nelle mail" di oc:8653).
+     */
+    public function test_mail_contains_nova_link_and_photo_previews(): void
     {
         $owner = User::factory()->create(['name' => 'Mario Gestore']);
         $layer = $this->createLayer($owner->id);
@@ -154,16 +158,13 @@ class CertificationRequestMailTest extends TestCase
 
         $this->assertStringContainsString($mail->novaUrl, $rendered);
         $this->assertStringContainsString('/nova/resources/certification-requests/'.$request->id, $rendered);
-        $this->assertStringNotContainsString('<img', $rendered);
-
         $media = $request->getMedia(CertificationRequest::MEDIA_COLLECTION);
         $this->assertCount(1, $media);
 
         foreach ($media as $item) {
-            $this->assertStringNotContainsString($item->getPathRelativeToRoot(), $rendered);
-            $this->assertStringNotContainsString($item->getUrl(), $rendered);
-            $this->assertStringNotContainsString($item->file_name, $rendered);
+            $this->assertStringContainsString('src="'.$item->getUrl().'"', $rendered);
         }
+        $this->assertStringContainsString('alt="Foto 1 della credenziale"', $rendered);
 
         // Il Mailable renderizza in italiano (locale solo del Mailable).
         $previousLocale = app()->getLocale();

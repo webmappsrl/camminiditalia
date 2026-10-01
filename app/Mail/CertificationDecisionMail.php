@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Models\CertificationRequest;
 use App\Support\EcTrackLabel;
+use App\Support\MailBranding;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -51,6 +52,8 @@ class CertificationDecisionMail extends Mailable
                         ->filter(fn ($track) => $track instanceof EcTrack)
                 )->map(fn (EcTrack $track) => EcTrackLabel::for($track)),
                 'note' => $this->request->decision_note,
+                'appIconUrl' => MailBranding::appIconUrl($this->request->app_id ?? $this->request->layer?->app_id),
+                'routeLogoUrl' => MailBranding::routeLogoUrl($this->request->layer),
             ],
         );
     }
