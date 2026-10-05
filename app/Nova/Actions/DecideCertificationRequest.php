@@ -118,7 +118,7 @@ class DecideCertificationRequest extends Action
                 $fields[] = Text::make(__('Already validated'), 'already_validated')
                     ->default($already->map(fn ($track) => EcTrackLabel::for($track))->implode(', '))
                     ->readonly()
-                    ->help(__('These stages are already validated for this walker and cannot be selected again.'));
+                    ->help(__('These stages are already validated for this user and cannot be selected again.'));
             }
 
             $options = $selectable
@@ -139,9 +139,9 @@ class DecideCertificationRequest extends Action
                 });
         }
 
-        $fields[] = Textarea::make(__('Note for the walker'), 'decision_note')
+        $fields[] = Textarea::make(__('Note for the user'), 'decision_note')
             ->rules('nullable', 'string', 'max:'.CertificationRequest::DECISION_NOTE_MAX_LENGTH)
-            ->help(__('Optional. It is sent to the walker by email.'));
+            ->help(__('Optional. It is sent to the user by email.'));
 
         return $fields;
     }
@@ -172,7 +172,7 @@ class DecideCertificationRequest extends Action
      * Testi del secondo modale, già tradotti: il componente JS non ha accesso
      * al traduttore Laravel.
      *
-     * @param  array{outcome: string, track_labels: array<int, string>, walker: string, route: string}  $preview
+     * @param  array{outcome: string, track_labels: array<int, string>, user: string, route: string}  $preview
      * @return array<string, string>
      */
     private function confirmLabels(array $preview): array
@@ -182,10 +182,10 @@ class DecideCertificationRequest extends Action
         return [
             'title' => __('Confirm decision'),
             'summary' => $approve
-                ? __('You are approving :count stages for :walker (:route):', ['count' => count($preview['track_labels']), 'walker' => $preview['walker'], 'route' => $preview['route']])
-                : __('You are rejecting the request from :walker (:route).', ['walker' => $preview['walker'], 'route' => $preview['route']]),
-            'note' => __('Note for the walker'),
-            'warning' => __('The decision cannot be changed afterwards and the walker will be notified by email.'),
+                ? __('You are approving :count stages for :user (:route):', ['count' => count($preview['track_labels']), 'user' => $preview['user'], 'route' => $preview['route']])
+                : __('You are rejecting the request from :user (:route).', ['user' => $preview['user'], 'route' => $preview['route']]),
+            'note' => __('Note for the user'),
+            'warning' => __('The decision cannot be changed afterwards and the user will be notified by email.'),
             'cancel' => __('Cancel'),
             'confirm' => __('Confirm decision'),
             'confirming' => __('Saving...'),

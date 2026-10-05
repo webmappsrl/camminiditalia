@@ -1,13 +1,20 @@
 <?php
 
 use App\Http\Controllers\Api\CertificationRequestController;
+use App\Http\Controllers\Api\StageProgressController;
 use Illuminate\Support\Facades\Route;
 
 /*
- * API "passaporto camminatore" (oc:8653) — nomi di route prefissati con
- * `camminiditalia.` per non collidere con le route `layer.favorite.*` già
- * registrate dal package su `api/layer/favorite/*` (vedi
- * ../wm-package/routes/api.php).
+ * API "passaporto camminatore", tutte con `auth:api` e nomi di route
+ * prefissati con `camminiditalia.` per non collidere con quelle del package
+ * (es. `layer.favorite.*` su `api/layer/favorite/*`, vedi
+ * ../wm-package/routes/api.php):
+ *
+ * - `camminiditalia.api.layer.*` su `api/layer/{layer}/...`: richiesta di
+ *   certificazione della credenziale cartacea (oc:8653) e progresso del
+ *   camminatore sul cammino, `GET api/layer/{layer}/progress` (oc:8676);
+ * - `camminiditalia.api.passport`, `GET api/passport` (oc:8676): cammini in
+ *   cui l'utente ha almeno una tappa validata, con i relativi totali.
  */
 Route::name('camminiditalia.api.layer.')
     ->prefix('layer')
@@ -20,4 +27,11 @@ Route::name('camminiditalia.api.layer.')
         Route::get('/{layer}/certification', [CertificationRequestController::class, 'show'])
             ->whereNumber('layer')
             ->name('certification.show');
+        Route::get('/{layer}/progress', [StageProgressController::class, 'progress'])
+            ->whereNumber('layer')
+            ->name('progress');
     });
+
+Route::get('/passport', [StageProgressController::class, 'passport'])
+    ->middleware('auth:api')
+    ->name('camminiditalia.api.passport');

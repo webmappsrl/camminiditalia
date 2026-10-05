@@ -49,12 +49,12 @@ class CertificationDecisionController extends Controller
             return response()->json(['message' => $e->getMessage()], 422);
         }
 
-        $walker = UserDisplay::short($decided->user);
+        $userLabel = UserDisplay::short($decided->user);
 
         return response()->json([
             'message' => $decided->status === CertificationRequest::STATUS_APPROVED
-                ? __('Approved :count stages for :walker.', ['count' => $decided->validatedTracks()->count(), 'walker' => $walker])
-                : __('Request from :walker rejected.', ['walker' => $walker]),
+                ? __('Approved :count stages for :user.', ['count' => $decided->validatedTracks()->count(), 'user' => $userLabel])
+                : __('Request from :user rejected.', ['user' => $userLabel]),
         ]);
     }
 }

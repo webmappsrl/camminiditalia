@@ -99,7 +99,7 @@ class CertificationRequestNovaActionTest extends TestCase
         $this->assertSame('approve', $payload['outcome']);
         $this->assertSame([$this->trackIds[1]], $payload['ec_track_ids']);
         $this->assertSame(['Tappa 2'], $payload['track_labels']);
-        $this->assertStringContainsString('Mario Rossi', $payload['walker']);
+        $this->assertStringContainsString('Mario Rossi', $payload['user']);
         $this->assertSame('ok', $payload['note']);
         $this->assertArrayHasKey('labels', $payload);
         $this->assertSame(0, ValidatedEcTrack::count());

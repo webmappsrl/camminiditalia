@@ -96,11 +96,11 @@ class CertificationRequest extends Resource
 
             // Administrator: link alla risorsa User. Gli altri (Validator) vedono
             // il camminatore solo come testo: non devono poter aprire il profilo.
-            BelongsTo::make(__('Walker'), 'user', User::class)
+            BelongsTo::make(__('User'), 'user', User::class)
                 ->readonly()
                 ->canSee(fn (Request $request) => (bool) $request->user()?->hasRole('Administrator')),
 
-            Text::make(__('Walker'), fn ($resource) => $this->walkerDisplay($resource))
+            Text::make(__('User'), fn ($resource) => $this->userLabel($resource))
                 ->exceptOnForms()
                 ->canSee(fn (Request $request) => ! $request->user()?->hasRole('Administrator')),
 
@@ -154,7 +154,7 @@ class CertificationRequest extends Resource
         ];
     }
 
-    protected function walkerDisplay(CertificationRequestModel $resource): string
+    protected function userLabel(CertificationRequestModel $resource): string
     {
         return UserDisplay::withEmail($resource->user);
     }

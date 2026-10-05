@@ -104,4 +104,18 @@ class ValidatedEcTrackModelTest extends TestCase
 
         $this->assertNull(ValidatedEcTrack::find($validation->id));
     }
+
+    public function test_validated_scope_filters_on_validated_at_and_keeps_existing_rows(): void
+    {
+        $validation = $this->makeValidation();
+
+        $this->assertStringContainsString(
+            '"validated_ec_tracks"."validated_at" is not null',
+            ValidatedEcTrack::validated()->toSql(),
+        );
+        $this->assertSame('v.validated_at IS NOT NULL', ValidatedEcTrack::validatedSql('v'));
+        $this->assertSame([$validation->id], ValidatedEcTrack::validated()->pluck('id')->all());
+        $this->assertSame([$validation->id], \App\Models\User::findOrFail($this->walker->id)->validatedEcTracks()->pluck('id')->all());
+        $this->assertStringContainsString('is not null', $this->certificationRequest->validatedTracks()->toSql());
+    }
 }

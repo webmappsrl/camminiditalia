@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Wm\WmPackage\Models\EcTrack;
@@ -41,6 +42,29 @@ class ValidatedEcTrack extends Model
     protected $casts = [
         'validated_at' => 'datetime',
     ];
+
+    /**
+     * Solo le tappe validate. Oggi è sempre vera (`validated_at` NOT NULL):
+     * è il punto unico per escludere le righe di avanzamento parziale di
+     * oc:8165. Per le query raw vedi validatedSql().
+     *
+     * @param  Builder<static>  $query
+     * @return Builder<static>
+     */
+    public function scopeValidated(Builder $query): Builder
+    {
+        return $query->whereNotNull($query->qualifyColumn('validated_at'));
+    }
+
+    /**
+     * Stessa condizione di scopeValidated() per le query raw/JoinClause su
+     * `validated_ec_tracks` con alias (es. `v`). Nelle LEFT JOIN va messa
+     * nella clausola ON, non nel WHERE.
+     */
+    public static function validatedSql(string $alias): string
+    {
+        return "{$alias}.validated_at IS NOT NULL";
+    }
 
     /**
      * @return BelongsTo<User, $this>

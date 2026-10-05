@@ -160,7 +160,7 @@ class CertificationRequestNovaTest extends TestCase
         $this->assertFalse($ids->contains($foreign->id));
     }
 
-    public function test_administrator_sees_walker_as_linked_belongs_to(): void
+    public function test_administrator_sees_user_as_linked_belongs_to(): void
     {
         $admin = $this->createUserWithRole('Administrator');
         $request = $this->makeRequest($this->createLayer($this->createUserWithRole('Validator')->id));
@@ -168,13 +168,13 @@ class CertificationRequestNovaTest extends TestCase
         $response = $this->actingAs($admin)->getJson('/nova-api/certification-requests/'.$request->id);
 
         $response->assertOk();
-        $walker = collect($response->json('resource.fields'))->firstWhere('name', 'Walker');
+        $walker = collect($response->json('resource.fields'))->firstWhere('name', 'User');
         $this->assertNotNull($walker);
         $this->assertSame('belongs-to-field', $walker['component']);
         $this->assertSame($request->user_id, $walker['belongsToId']);
     }
 
-    public function test_validator_sees_walker_as_plain_text_without_link(): void
+    public function test_validator_sees_user_as_plain_text_without_link(): void
     {
         $owner = $this->createUserWithRole('Validator');
         $request = $this->makeRequest($this->createLayer($owner->id));
@@ -187,7 +187,7 @@ class CertificationRequestNovaTest extends TestCase
             $fields = $uri === '/nova-api/certification-requests'
                 ? $response->json('resources.0.fields')
                 : $response->json('resource.fields');
-            $walkers = collect($fields)->where('name', 'Walker');
+            $walkers = collect($fields)->where('name', 'User');
 
             $this->assertCount(1, $walkers);
             $walker = $walkers->first();

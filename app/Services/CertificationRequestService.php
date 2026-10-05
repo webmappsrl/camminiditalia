@@ -9,7 +9,6 @@ use App\Jobs\SendCertificationRequestMailJob;
 use App\Models\CertificationRequest;
 use App\Models\ValidatedEcTrack;
 use App\Support\EcTrackLabel;
-use App\Support\LayerOwner;
 use App\Support\UserDisplay;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\UploadedFile;
@@ -130,6 +129,7 @@ class CertificationRequestService
 
             try {
                 foreach ($tracks as $track) {
+                    // oc:8165: qui va gestita la promozione di una riga parziale esistente (vincolo unico user_id, ec_track_id).
                     ValidatedEcTrack::create([
                         'user_id' => $locked->user_id,
                         'ec_track_id' => $track->id,
@@ -166,7 +166,7 @@ class CertificationRequestService
      * mostra esattamente ciò che la conferma scriverà.
      *
      * @param  array<int, int|string>  $ecTrackIds
-     * @return array{outcome: string, ec_track_ids: array<int, int>, track_labels: array<int, string>, walker: string, route: string, note: ?string}
+     * @return array{outcome: string, ec_track_ids: array<int, int>, track_labels: array<int, string>, user: string, route: string, note: ?string}
      *
      * @throws CertificationDecisionException
      */
@@ -178,7 +178,7 @@ class CertificationRequestService
             'outcome' => $outcome,
             'ec_track_ids' => $tracks->pluck('id')->map(fn ($id) => (int) $id)->all(),
             'track_labels' => $tracks->map(fn (EcTrack $track) => EcTrackLabel::for($track))->all(),
-            'walker' => UserDisplay::withEmail($request->user),
+            'user' => UserDisplay::withEmail($request->user),
             'route' => $request->layer?->getStringName() ?? '—',
             'note' => $this->normalizeNote($note),
         ];
@@ -228,8 +228,8 @@ class CertificationRequestService
 
     /**
      * Tappe che il gestore può ancora validare per questa richiesta: le EcTrack
-     * del layer di proprietà del proprietario del layer (LayerOwner, stessa regola
-     * della vista Nova del layer), escluse quelle già validate per il camminatore.
+     * del layer di proprietà del proprietario effettivo del layer
+     * (StageProgressService::managedTracksQuery(), «tappe del gestore»), escluse quelle già validate per il camminatore.
      * Ordinate per nome con ordinamento naturale.
      *
      * @return Collection<int, EcTrack>
@@ -277,11 +277,16 @@ class CertificationRequestService
             return collect();
         }
 
+        // Regola «tappe del gestore» da un punto solo (StageProgressService).
+        $managedIds = app(StageProgressService::class)->managedTracksQuery()
+            ->where('layerables.layer_id', $layer->id)
+            ->select('ec_tracks.id');
+
         // Solo le colonne che servono a etichetta e controlli: geometria e
         // properties pesano decine di kB a tappa e i layer arrivano a 99 tappe.
         /** @var Collection<int, EcTrack> */
         return $layer->ecTracks()
-            ->where('ec_tracks.user_id', LayerOwner::idFor($layer))
+            ->whereIn('ec_tracks.id', $managedIds)
             ->get(['ec_tracks.id', 'ec_tracks.name', 'ec_tracks.user_id']);
     }
 
@@ -290,7 +295,7 @@ class CertificationRequestService
      */
     private function validatedTrackIds(CertificationRequest $request): array
     {
-        return ValidatedEcTrack::where('user_id', $request->user_id)
+        return ValidatedEcTrack::validated()->where('user_id', $request->user_id)
             ->pluck('ec_track_id')
             ->map(fn ($id) => (int) $id)
             ->all();
