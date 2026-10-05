@@ -104,7 +104,7 @@ class CertificationRequest extends Model implements HasMedia
      */
     public function validatedTracks(): HasMany
     {
-        return $this->hasMany(ValidatedEcTrack::class);
+        return $this->hasMany(ValidatedEcTrack::class)->validated();
     }
 
     /**

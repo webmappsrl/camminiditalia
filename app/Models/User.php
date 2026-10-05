@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Wm\WmPackage\Models\User as WmUser;
 
@@ -44,5 +45,15 @@ class User extends WmUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Tappe validate del camminatore (oc:8671/oc:8676).
+     *
+     * @return HasMany<ValidatedEcTrack, $this>
+     */
+    public function validatedEcTracks(): HasMany
+    {
+        return $this->hasMany(ValidatedEcTrack::class)->validated();
     }
 }
