@@ -10,6 +10,7 @@ use App\Observers\EcTrackGeometryAttributesObserver;
 use App\Observers\LayerableObserver;
 use App\Observers\LayerAttributesObserver;
 use App\Observers\LayerObserver;
+use App\Observers\PassportStageShareCleanupObserver;
 use App\Observers\UgcObserver;
 use App\Policies\CertificationRequestPolicy;
 use App\Policies\EcPoiPolicy;
@@ -92,5 +93,14 @@ class AppServiceProvider extends ServiceProvider
         WmUser::observe(CertificationRequestCleanupObserver::class);
         \App\Models\User::observe(CertificationRequestCleanupObserver::class);
         Layer::observe(CertificationRequestCleanupObserver::class);
+
+        // Condivisioni delle tappe del passaporto (oc:8702): stessa doppia
+        // registrazione per User ed EcTrack, perché gli eventi Eloquent sono
+        // per classe concreta.
+        WmUser::observe(PassportStageShareCleanupObserver::class);
+        \App\Models\User::observe(PassportStageShareCleanupObserver::class);
+        Layer::observe(PassportStageShareCleanupObserver::class);
+        EcTrack::observe(PassportStageShareCleanupObserver::class);
+        \App\Models\EcTrack::observe(PassportStageShareCleanupObserver::class);
     }
 }

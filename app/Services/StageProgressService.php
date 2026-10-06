@@ -8,8 +8,10 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\User;
+use Wm\WmPackage\Services\Models\MediaService;
 
 /**
  * Progresso di un camminatore sulle tappe validate (oc:8676), sempre
@@ -40,6 +42,14 @@ class StageProgressService
      * `(user_id << SUMMARY_ID_USER_SHIFT) | layer_id`.
      */
     public const SUMMARY_ID_USER_SHIFT = 32;
+
+    /**
+     * Colonne di `ec_tracks` che bastano a stageDetails(): `properties`
+     * (ref, from, to, manual/osm/dem_data) e `osmid` (priorità di
+     * classifyField()). Niente geometria: su un cammino di 99 tappe pesa più
+     * di un megabyte e qui non serve.
+     */
+    public const STAGE_DETAIL_COLUMNS = ['id', 'properties', 'osmid'];
 
     /**
      * Regola A: una riga per ogni tappa associata a ogni layer, qualunque sia
@@ -94,7 +104,7 @@ class StageProgressService
             ->where('ct.layer_id', $layer->id)
             ->first();
 
-        $tracks = DB::query()
+        $rows = DB::query()
             ->fromSub($this->layerTracksQuery($layer->id), 'lt')
             ->leftJoin('validated_ec_tracks as v', function (JoinClause $join) use ($user) {
                 $join->on('v.ec_track_id', '=', 'lt.ec_track_id')
@@ -102,8 +112,19 @@ class StageProgressService
                     ->whereRaw(ValidatedEcTrack::validatedSql('v'));
             })
             ->orderBy('lt.ec_track_id')
-            ->get(['lt.ec_track_id', 'lt.name_raw', 'lt.distance_km', 'v.validated_at', 'v.source'])
-            ->map(function (object $row) {
+            ->get(['lt.ec_track_id', 'lt.name_raw', 'lt.distance_km', 'v.validated_at', 'v.source']);
+
+        // Una sola query per i model delle tappe (con media): niente N+1, e
+        // solo le colonne di stageDetails(), senza geometria.
+        $models = EcTrack::query()
+            ->select(self::STAGE_DETAIL_COLUMNS)
+            ->with('media')
+            ->whereIn('id', $rows->pluck('ec_track_id'))
+            ->get()
+            ->keyBy('id');
+
+        $tracks = $rows
+            ->map(function (object $row) use ($models) {
                 $validated = $row->validated_at !== null;
 
                 return [
@@ -114,13 +135,47 @@ class StageProgressService
                     'progress' => $this->trackProgress($validated),
                     'validated_at' => $validated ? $this->isoDate($row->validated_at) : null,
                     'source' => $validated ? $row->source : null,
-                ];
+                ] + $this->stageDetails($models->get($row->ec_track_id))
+                  + ['shareable' => $validated];
             })
             ->all();
 
         return ['layer_id' => $layer->id]
             + $this->progressFields($totals)
             + ['tracks' => $tracks];
+    }
+
+    /**
+     * Dati tecnici della tappa, unica derivazione per la pagina di dettaglio
+     * dell'app (progressFor()) e per l'immagine di condivisione
+     * (StageShareImageService::snapshot()), con la stessa logica di
+     * EcTrack::toSearchableArray() (wm-package): `ref`, `from`/`to` (ripiego
+     * su osmfeatures_data), `ascent`/`descent` secondo la priorità di
+     * classifyField(), `image` = miniatura della prima media in ordine di
+     * `order_column` (getMedia('*'), come toSearchableArray()).
+     * I valori vuoti (`''`, `0`) o assenti diventano `null`. Al model bastano
+     * le colonne STAGE_DETAIL_COLUMNS.
+     *
+     * @return array{ref: ?string, from: ?string, to: ?string, ascent: ?int, descent: ?int, image: ?string}
+     */
+    public function stageDetails(?EcTrack $track): array
+    {
+        if ($track === null) {
+            return ['ref' => null, 'from' => null, 'to' => null, 'ascent' => null, 'descent' => null, 'image' => null];
+        }
+
+        $text = fn (mixed $value): ?string => is_scalar($value) && trim((string) $value) !== '' ? (string) $value : null;
+        $number = fn (string $field): ?int => ((int) ($track->classifyField($track, $field)['currentValue'] ?? 0)) ?: null;
+        $firstMedia = $track->getMedia('*')->first();
+
+        return [
+            'ref' => $text($track->properties['ref'] ?? null),
+            'from' => $text($track->properties['from'] ?? data_get($track->osmfeatures_data ?? null, 'properties.from')),
+            'to' => $text($track->properties['to'] ?? data_get($track->osmfeatures_data ?? null, 'properties.to')),
+            'ascent' => $number('ascent'),
+            'descent' => $number('descent'),
+            'image' => $firstMedia ? $text(MediaService::make()->getThumbnailUrl($firstMedia)) : null,
+        ];
     }
 
     /**

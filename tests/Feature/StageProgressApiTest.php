@@ -91,7 +91,7 @@ class StageProgressApiTest extends TestCase
         $response->assertOk()
             ->assertExactJsonStructure([
                 'layer_id', 'validated', 'total', 'percentage', 'completed', 'km_validated', 'km_total',
-                'tracks' => ['*' => ['id', 'name', 'distance', 'status', 'progress', 'validated_at', 'source']],
+                'tracks' => ['*' => ['id', 'name', 'distance', 'status', 'progress', 'validated_at', 'source', 'ref', 'from', 'to', 'ascent', 'descent', 'image', 'shareable']],
             ])
             ->assertJson([
                 'layer_id' => $layer->id,
