@@ -8,6 +8,7 @@ use App\Nova\Filters\ValidatedEcTrackLayerFilter;
 use App\Services\StageProgressService;
 use App\Support\LayerOwner;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -399,7 +400,7 @@ class StageProgressServiceTest extends TestCase
         $progress = $this->service->progressFor($walker, $layer);
         $byId = collect($progress['tracks'])->keyBy('id');
 
-        $this->assertSame(['id', 'name', 'distance', 'status', 'progress', 'validated_at', 'source'], array_keys($byId[$json->id]));
+        $this->assertSame(['id', 'name', 'distance', 'status', 'progress', 'validated_at', 'source'], array_slice(array_keys($byId[$json->id]), 0, 7));
         $this->assertEquals(['it' => 'Tappa 06: Pacentro - Caramanico Terme'], (array) $byId[$json->id]['name']);
         $this->assertSame(10.0, $byId[$json->id]['distance']);
         $this->assertSame(100, $byId[$json->id]['progress']);
@@ -417,6 +418,51 @@ class StageProgressServiceTest extends TestCase
         $this->assertSame(
             $progress['km_validated'],
             round(collect($progress['tracks'])->where('status', 'validated')->sum('distance'), 1),
+        );
+    }
+
+    public function test_tracks_expose_technical_details_and_shareable(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $walker = User::factory()->create();
+        $layer = $this->createLayer($owner->id);
+        $full = $this->track($owner->id, [$layer], [
+            'ref' => '01',
+            'from' => 'Pacentro',
+            'to' => 'Caramanico',
+            'manual_data' => ['ascent' => 850, 'descent' => '320'],
+        ]);
+        $full->addMedia(UploadedFile::fake()->image('stage.jpg', 800, 600))->toMediaCollection('default');
+        $fallback = $this->track($owner->id, [$layer], ['dem_data' => ['ascent' => 120, 'descent' => 90]]);
+        $empty = $this->track($owner->id, [$layer], ['ref' => '', 'manual_data' => ['ascent' => 0, 'descent' => 0]]);
+        $this->validate($walker, $full, $layer);
+
+        $tracks = collect($this->service->progressFor($walker, $layer)['tracks'])->keyBy('id');
+
+        $thumb = (new \Wm\WmPackage\Services\Models\MediaService)->getThumbnailUrl($full->fresh()->getMedia('*')->first());
+        $this->assertSame('01', $tracks[$full->id]['ref']);
+        $this->assertSame('Pacentro', $tracks[$full->id]['from']);
+        $this->assertSame('Caramanico', $tracks[$full->id]['to']);
+        $this->assertSame(850, $tracks[$full->id]['ascent']);
+        $this->assertSame(320, $tracks[$full->id]['descent']);
+        $this->assertSame($thumb, $tracks[$full->id]['image']);
+        $this->assertTrue($tracks[$full->id]['shareable']);
+
+        // osmfeatures_data non è una colonna di ec_tracks: senza from/to nelle properties restano null.
+        $this->assertNull($tracks[$fallback->id]['from']);
+        $this->assertNull($tracks[$fallback->id]['to']);
+        $this->assertSame(120, $tracks[$fallback->id]['ascent']);
+        $this->assertSame(90, $tracks[$fallback->id]['descent']);
+        $this->assertFalse($tracks[$fallback->id]['shareable']);
+
+        foreach (['ref', 'from', 'to', 'ascent', 'descent', 'image'] as $key) {
+            $this->assertArrayHasKey($key, $tracks[$empty->id]);
+            $this->assertNull($tracks[$empty->id][$key], $key);
+        }
+        $this->assertFalse($tracks[$empty->id]['shareable']);
+        $this->assertSame(
+            ['id', 'name', 'distance', 'status', 'progress', 'validated_at', 'source', 'ref', 'from', 'to', 'ascent', 'descent', 'image', 'shareable'],
+            array_keys($tracks[$empty->id]),
         );
     }
 
@@ -658,5 +704,53 @@ class StageProgressServiceTest extends TestCase
         $validation = $this->validate($walker, $this->track($owner->id, [$layer]), $layer);
 
         $this->assertSame([$validation->id], $walker->validatedEcTracks()->pluck('id')->all());
+    }
+
+    /**
+     * GET /api/layer/{id}/progress non deve caricare la geometria delle tappe
+     * (oc:8702 review): la query dei model seleziona solo
+     * STAGE_DETAIL_COLUMNS.
+     */
+    public function test_progress_does_not_load_stage_geometry(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $walker = User::factory()->create();
+        $layer = $this->createLayer($owner->id);
+        $this->track($owner->id, [$layer], ['ref' => '01', 'manual_data' => ['ascent' => 850]]);
+        $this->track($owner->id, [$layer], ['ref' => '02']);
+
+        $queries = [];
+        DB::listen(function ($query) use (&$queries) {
+            $queries[] = $query->sql;
+        });
+
+        $progress = $this->service->progressFor($walker, $layer);
+
+        $modelQueries = array_values(array_filter($queries, fn (string $sql) => preg_match('/from "ec_tracks" where "(ec_tracks"\.")?id" in/', $sql) === 1));
+        $this->assertCount(1, $modelQueries, implode("\n", $queries));
+        $this->assertStringNotContainsString('*', $modelQueries[0]);
+        $this->assertStringNotContainsString('geometry', $modelQueries[0]);
+        $this->assertSame(850, collect($progress['tracks'])->firstWhere('ref', '01')['ascent']);
+    }
+
+    /**
+     * `image` è la miniatura della prima media in ordine di `order_column`,
+     * come EcTrack::toSearchableArray(), non della prima per id.
+     */
+    public function test_image_is_the_first_media_by_order_column(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $layer = $this->createLayer($owner->id);
+        $track = $this->track($owner->id, [$layer], ['ref' => '01']);
+        $first = $track->addMedia(UploadedFile::fake()->image('a.jpg', 800, 600))->toMediaCollection('default');
+        $second = $track->addMedia(UploadedFile::fake()->image('b.jpg', 800, 600))->toMediaCollection('default');
+        DB::table('media')->where('id', $first->id)->update(['order_column' => 2]);
+        DB::table('media')->where('id', $second->id)->update(['order_column' => 1]);
+
+        $tracks = collect($this->service->progressFor(User::factory()->create(), $layer)['tracks'])->keyBy('id');
+
+        $expected = (new \Wm\WmPackage\Services\Models\MediaService)->getThumbnailUrl($second->fresh());
+        $this->assertSame($expected, $tracks[$track->id]['image']);
+        $this->assertSame($track->fresh()->toSearchableArray()['feature_image'], $tracks[$track->id]['image']);
     }
 }

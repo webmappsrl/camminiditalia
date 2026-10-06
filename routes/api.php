@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CertificationRequestController;
+use App\Http\Controllers\Api\PassportStageShareController;
 use App\Http\Controllers\Api\StageProgressController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,13 @@ Route::name('camminiditalia.api.layer.')
         Route::get('/{layer}/progress', [StageProgressController::class, 'progress'])
             ->whereNumber('layer')
             ->name('progress');
+        Route::post('/{layer}/stage/{track}/share-image', [PassportStageShareController::class, 'store'])
+            ->whereNumber(['layer', 'track'])
+            // Al più 10 richieste al minuto per utente: comporre l'immagine
+            // scarica tile e disegna con GD (secondi di CPU), e l'app la
+            // chiede solo al tocco su «Condividi»; la cache copre i ripetuti.
+            ->middleware('throttle:10,1')
+            ->name('stage.share-image');
     });
 
 Route::get('/passport', [StageProgressController::class, 'passport'])
