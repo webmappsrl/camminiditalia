@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Tests\Feature\Helpers\FakesCertificationDisk;
 use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
@@ -26,7 +27,7 @@ use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class StageProgressServiceTest extends TestCase
 {
-    use DatabaseTransactions, LayerTestHelpers;
+    use DatabaseTransactions, FakesCertificationDisk, LayerTestHelpers;
 
     private StageProgressService $service;
 
@@ -36,6 +37,8 @@ class StageProgressServiceTest extends TestCase
 
         Queue::fake();
         Http::fake();
+        // Le media delle tappe (oc:8702) vanno sul disco `wmfe`: in CI non c'è minio.
+        $this->fakeCertificationDisk();
 
         RolesAndPermissionsService::seedDatabase();
 
