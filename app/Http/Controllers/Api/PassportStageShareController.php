@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\PassportStageShare;
+use App\Models\PassportShare;
 use App\Models\ValidatedEcTrack;
+use App\Services\PassportShare\PassportShareStore;
 use App\Services\PassportShare\StageShareImageService;
 use App\Services\PassportShare\StageShareLayout;
 use App\Services\PassportShare\StageShareLocale;
@@ -14,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
-use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\Layer;
 
@@ -35,6 +35,7 @@ class PassportStageShareController extends Controller
     public function __construct(
         private readonly StageProgressService $progressService,
         private readonly StageShareImageService $imageService,
+        private readonly PassportShareStore $store,
     ) {}
 
     /**
@@ -73,31 +74,15 @@ class PassportStageShareController extends Controller
         $lang = StageShareLocale::fromAcceptLanguage($request->header('Accept-Language'));
 
         try {
-            $share = PassportStageShare::forUserAndTrack($user, $layer, $track);
-            $fingerprint = $this->fingerprint($layer, $track, $lang);
-            $media = $share->getFirstMedia(PassportStageShare::MEDIA_COLLECTION);
-
-            // Stessi dati di cammino e tappa, stessa lingua, stesso layout:
-            // l'immagine già salvata va bene, non si ricompone.
-            if ($media === null || ($share->snapshot['fingerprint'] ?? null) !== $fingerprint) {
-                $snapshot = $this->imageService->snapshot($layer, $track, $lang);
-                $image = $this->imageService->compose($layer, $track, $lang, $snapshot);
-                $media = $share->addMediaFromString($image->getEncoded())
-                    ->usingFileName('passport-stage-'.$share->uuid.'.png')
-                    ->toMediaCollection(PassportStageShare::MEDIA_COLLECTION);
-
-                // Istantanea statica: la pagina pubblica non ricalcola nulla.
-                $share->snapshot = $snapshot + [
-                    'lang' => $lang,
-                    'shared_at' => now()->toIso8601String(),
-                    'fingerprint' => $fingerprint,
-                ];
-                $share->save();
-            } else {
-                // Immagine riusata: cambia solo la data dell'ultima condivisione.
-                $share->snapshot = ['shared_at' => now()->toIso8601String()] + $share->snapshot;
-                $share->save();
-            }
+            $share = PassportShare::forUser($user, $layer, $track);
+            $media = $this->store->save(
+                $share,
+                $this->fingerprint($layer, $track, $lang),
+                $lang,
+                'passport-stage',
+                fn () => $this->imageService->snapshot($layer, $track, $lang),
+                fn (array $snapshot) => $this->imageService->compose($layer, $track, $lang, $snapshot),
+            );
         } catch (Throwable $e) {
             Log::error('[oc:8702] generazione immagine di condivisione della tappa fallita: '.$e->getMessage(), [
                 'layer_id' => $layer->id,
@@ -111,7 +96,7 @@ class PassportStageShareController extends Controller
 
         return response()->json([
             'image_url' => $media->getUrl(),
-            'share_url' => route('share.passport-stage', ['uuid' => $share->uuid]),
+            'share_url' => route('share.passport', ['uuid' => $share->uuid]),
         ]);
     }
 
@@ -130,31 +115,13 @@ class PassportStageShareController extends Controller
      */
     private function fingerprint(Layer $layer, EcTrack $track, string $lang): string
     {
-        $route = DB::query()
-            ->fromSub($this->progressService->layerTracksQuery($layer->id), 'lt')
-            ->join('ec_tracks as t', 't.id', '=', 'lt.ec_track_id')
-            ->selectRaw('count(*) as tracks, max(t.updated_at) as last_update')
-            ->first();
-
-        $media = DB::table('media')
-            ->where(fn ($query) => $query
-                ->where('model_type', $layer->getMorphClass())
-                ->where('model_id', $layer->id)
-                ->where('collection_name', 'logo'))
-            ->orWhere(fn ($query) => $query
-                ->where('model_type', (new App)->getMorphClass())
-                ->where('model_id', $layer->app_id)
-                ->whereIn('collection_name', StageShareLayout::CDI_LOGO_COLLECTIONS))
-            ->orderBy('id')
-            ->get(['id', 'collection_name', 'updated_at'])
-            ->map(fn ($row) => [$row->collection_name, $row->id, (string) $row->updated_at])
-            ->all();
+        $parts = $this->store->fingerprintParts($layer);
 
         return hash('sha256', json_encode([
-            'layer' => [$layer->id, (string) $layer->getRawOriginal('updated_at')],
+            'layer' => $parts['layer'],
             'track' => [$track->id, (string) $track->getRawOriginal('updated_at')],
-            'route' => [(int) ($route->tracks ?? 0), (string) ($route->last_update ?? '')],
-            'media' => $media,
+            'route' => $parts['route'],
+            'media' => $parts['media'],
             'lang' => $lang,
             'layout' => StageShareLayout::signature(),
         ]));

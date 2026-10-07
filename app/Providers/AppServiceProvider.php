@@ -10,7 +10,7 @@ use App\Observers\EcTrackGeometryAttributesObserver;
 use App\Observers\LayerableObserver;
 use App\Observers\LayerAttributesObserver;
 use App\Observers\LayerObserver;
-use App\Observers\PassportStageShareCleanupObserver;
+use App\Observers\PassportShareCleanupObserver;
 use App\Observers\UgcObserver;
 use App\Policies\CertificationRequestPolicy;
 use App\Policies\EcPoiPolicy;
@@ -19,8 +19,11 @@ use App\Policies\LayerPolicy;
 use App\Policies\TaxonomyPoiTypePolicy;
 use App\Policies\UgcPoiPolicy;
 use App\Policies\UgcTrackPolicy;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -94,13 +97,19 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\User::observe(CertificationRequestCleanupObserver::class);
         Layer::observe(CertificationRequestCleanupObserver::class);
 
-        // Condivisioni delle tappe del passaporto (oc:8702): stessa doppia
+        // Condivisioni del passaporto (oc:8702, oc:8703): stessa doppia
         // registrazione per User ed EcTrack, perché gli eventi Eloquent sono
         // per classe concreta.
-        WmUser::observe(PassportStageShareCleanupObserver::class);
-        \App\Models\User::observe(PassportStageShareCleanupObserver::class);
-        Layer::observe(PassportStageShareCleanupObserver::class);
-        EcTrack::observe(PassportStageShareCleanupObserver::class);
-        \App\Models\EcTrack::observe(PassportStageShareCleanupObserver::class);
+        WmUser::observe(PassportShareCleanupObserver::class);
+        \App\Models\User::observe(PassportShareCleanupObserver::class);
+        Layer::observe(PassportShareCleanupObserver::class);
+        EcTrack::observe(PassportShareCleanupObserver::class);
+        \App\Models\EcTrack::observe(PassportShareCleanupObserver::class);
+
+        // Immagine del cammino completato (oc:8703): al più 10 richieste al
+        // minuto per utente, con una chiave propria, separata da quella di
+        // `throttle:10,1` usata da certificazione e condivisione della tappa.
+        RateLimiter::for('passport-route-share', fn (Request $request) => Limit::perMinute(10)
+            ->by('passport-route-share:'.($request->user()?->id ?: $request->ip())));
     }
 }

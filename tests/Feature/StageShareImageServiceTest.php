@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\EcTrack;
+use App\Services\PassportShare\PassportShareCommon;
 use App\Services\PassportShare\StageShareIcons;
 use App\Services\PassportShare\StageShareImageService;
 use App\Services\PassportShare\StageShareLayout;
@@ -230,7 +231,7 @@ class StageShareImageServiceTest extends TestCase
     {
         $g = StageShareLayout::GRID_COLUMN_GAP;
         // colonna sinistra 300 (max di 300 e 200), destra 400 (max di 400 e 100)
-        $xs = StageShareImageService::gridCellXs([300, 400, 200, 100]);
+        $xs = PassportShareCommon::gridCellXs([300, 400, 200, 100]);
         $x0 = (int) round((StageShareLayout::CANVAS_WIDTH - (300 + $g + 400)) / 2);
 
         $this->assertSame([$x0, $x0 + 300 + $g, $x0, $x0 + 300 + $g], $xs);
@@ -239,7 +240,7 @@ class StageShareImageServiceTest extends TestCase
     public function test_grid_three_items_centres_the_last_one_alone(): void
     {
         $g = StageShareLayout::GRID_COLUMN_GAP;
-        $xs = StageShareImageService::gridCellXs([300, 400, 250]);
+        $xs = PassportShareCommon::gridCellXs([300, 400, 250]);
         $x0 = (int) round((StageShareLayout::CANVAS_WIDTH - (300 + $g + 400)) / 2);
 
         $this->assertSame([$x0, $x0 + 300 + $g, (int) round((StageShareLayout::CANVAS_WIDTH - 250) / 2)], $xs);
@@ -248,7 +249,7 @@ class StageShareImageServiceTest extends TestCase
     public function test_grid_two_items_are_two_centred_columns(): void
     {
         $g = StageShareLayout::GRID_COLUMN_GAP;
-        $xs = StageShareImageService::gridCellXs([200, 300]);
+        $xs = PassportShareCommon::gridCellXs([200, 300]);
         $x0 = (int) round((StageShareLayout::CANVAS_WIDTH - (200 + $g + 300)) / 2);
 
         $this->assertSame([$x0, $x0 + 200 + $g], $xs);
@@ -256,13 +257,13 @@ class StageShareImageServiceTest extends TestCase
 
     public function test_grid_one_item_is_centred(): void
     {
-        $this->assertSame([(int) round((StageShareLayout::CANVAS_WIDTH - 301) / 2)], StageShareImageService::gridCellXs([301]));
+        $this->assertSame([(int) round((StageShareLayout::CANVAS_WIDTH - 301) / 2)], PassportShareCommon::gridCellXs([301]));
     }
 
     public function test_grid_widest_columns_fit_inside_the_margins(): void
     {
         $max = StageShareLayout::GRID_ICON_SIZE + StageShareLayout::GRID_ICON_TEXT_GAP + StageShareLayout::GRID_VALUE_BOX_WIDTH;
-        $xs = StageShareImageService::gridCellXs([$max, $max]);
+        $xs = PassportShareCommon::gridCellXs([$max, $max]);
 
         $this->assertGreaterThanOrEqual(StageShareLayout::GRID_X, $xs[0]);
         $this->assertLessThanOrEqual(StageShareLayout::GRID_X + StageShareLayout::GRID_WIDTH, $xs[1] + $max);
@@ -501,7 +502,7 @@ class StageShareImageServiceTest extends TestCase
         $logo = Image::canvas($size, $size);
         $logo->rectangle(80, 80, 159, 159, fn ($draw) => $draw->background('#ff0000'));
 
-        (new ReflectionMethod(StageShareImageService::class, 'drawLayerLogo'))->invoke($this->service, $canvas, $logo, 0);
+        app(PassportShareCommon::class)->drawLayerLogo($canvas, $logo, 0);
 
         $left = (int) ((StageShareLayout::CANVAS_WIDTH - $size) / 2);
         // Parte trasparente del logo, dentro il riquadro: resta lo sfondo, nessun bianco.
@@ -522,7 +523,7 @@ class StageShareImageServiceTest extends TestCase
             ->usingFileName('logo.png')
             ->toMediaCollection('logo');
 
-        $logo = (new ReflectionMethod(StageShareImageService::class, 'loadLayerLogo'))->invoke($this->service, $layer->fresh());
+        $logo = app(PassportShareCommon::class)->loadLayerLogo($layer->fresh());
 
         $this->assertSame(StageShareLayout::LOGO_BOX_SIZE, $logo->width());
         $this->assertSame((int) (StageShareLayout::LOGO_BOX_SIZE / 2), $logo->height());
@@ -559,9 +560,9 @@ class StageShareImageServiceTest extends TestCase
         [$layer] = $this->layerWithStage();
         $app = $this->appWithoutIcons($layer);
         $app->addMediaFromString($this->solidPng('#0000ff'))->usingFileName('icon.png')->toMediaCollection('icon');
-        $load = new ReflectionMethod(StageShareImageService::class, 'loadCdiLogo');
+        $common = app(PassportShareCommon::class);
 
-        $opaque = $load->invoke($this->service, $app->fresh());
+        $opaque = $common->loadCdiLogo($app->fresh());
         $this->assertSame(127, imagecolorat($opaque->getCore(), 0, 0) >> 24 & 0x7F);
         $this->assertSame(0, imagecolorat($opaque->getCore(), (int) ($opaque->width() / 2), (int) ($opaque->height() / 2)) >> 24 & 0x7F);
 
@@ -569,7 +570,7 @@ class StageShareImageServiceTest extends TestCase
         $transparent->rectangle(0, 200, 511, 311, fn ($draw) => $draw->background('#0000ff'));
         $app->addMediaFromString($transparent->encode('png')->getEncoded())->usingFileName('icon.png')->toMediaCollection('icon');
 
-        $logo = $load->invoke($this->service, $app->fresh());
+        $logo = $common->loadCdiLogo($app->fresh());
         // Bordo della fascia, fuori da un cerchio: resta opaco perché non si ritaglia.
         $this->assertSame(0, imagecolorat($logo->getCore(), 0, (int) ($logo->height() / 2)) >> 24 & 0x7F);
     }
@@ -587,7 +588,7 @@ class StageShareImageServiceTest extends TestCase
 
         $background = Image::make(resource_path(StageShareLayout::BACKGROUND_PATH))->fit(StageShareLayout::CANVAS_WIDTH, StageShareLayout::CANVAS_HEIGHT);
         $this->assertSame($this->cdiLogoCenter($background), $this->cdiLogoCenter($image));
-        Log::shouldHaveReceived('warning')->withArgs(fn ($message, $context = []) => str_starts_with($message, '[oc:8702]') && ($context['app_id'] ?? null) === $app->id)->once();
+        Log::shouldHaveReceived('warning')->withArgs(fn ($message, $context = []) => str_starts_with($message, '[oc:8702, oc:8703]') && ($context['app_id'] ?? null) === $app->id)->once();
     }
 
     /**
@@ -629,6 +630,6 @@ class StageShareImageServiceTest extends TestCase
         $image = $this->compose($layer, $stage, 'it');
 
         $this->assertSame(1920, $image->height());
-        Log::shouldHaveReceived('warning')->withArgs(fn ($message, $context = []) => str_starts_with($message, '[oc:8702]') && ($context['app_id'] ?? null) === 999999999)->once();
+        Log::shouldHaveReceived('warning')->withArgs(fn ($message, $context = []) => str_starts_with($message, '[oc:8702, oc:8703]') && ($context['app_id'] ?? null) === 999999999)->once();
     }
 }
