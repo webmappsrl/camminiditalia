@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CertificationRequestController;
+use App\Http\Controllers\Api\PassportRouteShareController;
 use App\Http\Controllers\Api\PassportStageShareController;
 use App\Http\Controllers\Api\StageProgressController;
 use Illuminate\Support\Facades\Route;
@@ -13,7 +14,10 @@ use Illuminate\Support\Facades\Route;
  *
  * - `camminiditalia.api.layer.*` su `api/layer/{layer}/...`: richiesta di
  *   certificazione della credenziale cartacea (oc:8653) e progresso del
- *   camminatore sul cammino, `GET api/layer/{layer}/progress` (oc:8676);
+ *   camminatore sul cammino, `GET api/layer/{layer}/progress` (oc:8676),
+ *   immagine di condivisione della tappa,
+ *   `POST api/layer/{layer}/stage/{track}/share-image` (oc:8702), e del
+ *   cammino completato, `POST api/layer/{layer}/share-image` (oc:8703);
  * - `camminiditalia.api.passport`, `GET api/passport` (oc:8676): cammini in
  *   cui l'utente ha almeno una tappa validata, con i relativi totali.
  */
@@ -38,6 +42,13 @@ Route::name('camminiditalia.api.layer.')
             // chiede solo al tocco su «Condividi»; la cache copre i ripetuti.
             ->middleware('throttle:10,1')
             ->name('stage.share-image');
+        Route::post('/{layer}/share-image', [PassportRouteShareController::class, 'store'])
+            ->whereNumber('layer')
+            // Limite con nome proprio (oc:8703): `throttle:10,1` usa come
+            // chiave solo l'utente, quindi certificazione e condivisione
+            // della tappa consumerebbero le stesse 10 richieste al minuto.
+            ->middleware('throttle:passport-route-share')
+            ->name('route.share-image');
     });
 
 Route::get('/passport', [StageProgressController::class, 'passport'])

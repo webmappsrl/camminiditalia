@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\PassportStageShare;
+use App\Models\PassportShare;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
@@ -15,7 +15,11 @@ use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\User;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
-class PassportStageShareModelTest extends TestCase
+/**
+ * Modello unico delle condivisioni del passaporto (oc:8702, oc:8703): tappe e
+ * cammini nella tabella polimorfica `passport_shares`.
+ */
+class PassportShareModelTest extends TestCase
 {
     use DatabaseTransactions, FakesCertificationDisk, LayerTestHelpers;
 
@@ -35,19 +39,19 @@ class PassportStageShareModelTest extends TestCase
         $this->fakeCertificationDisk();
     }
 
-    public function test_for_user_and_track_is_idempotent_with_stable_uuid(): void
+    public function test_for_user_is_idempotent_with_stable_uuid(): void
     {
         $user = User::factory()->create();
         $layer = $this->createLayer();
         $track = EcTrack::factory()->create();
 
-        $first = PassportStageShare::forUserAndTrack($user, $layer, $track);
-        $second = PassportStageShare::forUserAndTrack($user, $layer, $track);
+        $first = PassportShare::forUser($user, $layer, $track);
+        $second = PassportShare::forUser($user, $layer, $track);
 
         $this->assertSame($first->id, $second->id);
         $this->assertNotEmpty($first->uuid);
         $this->assertSame($first->uuid, $second->uuid);
-        $this->assertSame(1, PassportStageShare::count());
+        $this->assertSame(1, PassportShare::count());
     }
 
     public function test_two_users_on_same_stage_get_different_uuids(): void
@@ -55,8 +59,8 @@ class PassportStageShareModelTest extends TestCase
         $layer = $this->createLayer();
         $track = EcTrack::factory()->create();
 
-        $a = PassportStageShare::forUserAndTrack(User::factory()->create(), $layer, $track);
-        $b = PassportStageShare::forUserAndTrack(User::factory()->create(), $layer, $track);
+        $a = PassportShare::forUser(User::factory()->create(), $layer, $track);
+        $b = PassportShare::forUser(User::factory()->create(), $layer, $track);
 
         $this->assertNotSame($a->id, $b->id);
         $this->assertNotSame($a->uuid, $b->uuid);
@@ -64,7 +68,7 @@ class PassportStageShareModelTest extends TestCase
 
     public function test_share_image_collection_keeps_a_single_media(): void
     {
-        $share = PassportStageShare::forUserAndTrack(
+        $share = PassportShare::forUser(
             User::factory()->create(),
             $this->createLayer(),
             EcTrack::factory()->create()
@@ -74,5 +78,21 @@ class PassportStageShareModelTest extends TestCase
         $share->addMedia(UploadedFile::fake()->image('two.jpg'))->toMediaCollection('share_image');
 
         $this->assertCount(1, $share->fresh()->getMedia('share_image'));
+    }
+
+    public function test_stage_and_route_of_the_same_layer_are_two_shares(): void
+    {
+        $user = User::factory()->create();
+        $layer = $this->createLayer();
+        $track = EcTrack::factory()->create();
+
+        $stage = PassportShare::forUser($user, $layer, $track);
+        $route = PassportShare::forUser($user, $layer, $layer);
+
+        $this->assertNotSame($stage->id, $route->id);
+        $this->assertFalse($stage->isRoute());
+        $this->assertTrue($route->isRoute());
+        $this->assertSame($layer->id, $route->shareable->id);
+        $this->assertSame($track->id, $stage->shareable->id);
     }
 }

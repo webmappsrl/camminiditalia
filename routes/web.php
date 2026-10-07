@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\PassportStageSharePageController;
+use App\Http\Controllers\PassportSharePageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -8,7 +8,8 @@ Route::get('/', function () {
     return redirect('/nova');
 });
 
-// Pagina pubblica della tappa condivisa dal passaporto (oc:8702).
-Route::get('/share/passport-stage/{uuid}', [PassportStageSharePageController::class, 'show'])
+// Pagina pubblica di una tappa (oc:8702) o di un cammino completato (oc:8703)
+// condivisi dal passaporto.
+Route::get('/share/passport/{uuid}', [PassportSharePageController::class, 'show'])
     ->whereUuid('uuid')
-    ->name('share.passport-stage');
+    ->name('share.passport');

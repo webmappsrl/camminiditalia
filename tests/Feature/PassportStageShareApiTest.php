@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\EcTrack;
-use App\Models\PassportStageShare;
+use App\Models\PassportShare;
 use App\Models\ValidatedEcTrack;
 use App\Services\PassportShare\StageShareImageService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -102,8 +102,8 @@ class PassportStageShareApiTest extends TestCase
         $response = $this->actingAs($walker, 'api')->postJson("/api/layer/{$layer->id}/stage/{$track->id}/share-image");
 
         $response->assertOk()->assertJsonStructure(['image_url', 'share_url']);
-        $share = PassportStageShare::where('user_id', $walker->id)->where('ec_track_id', $track->id)->firstOrFail();
-        $this->assertSame(route('share.passport-stage', ['uuid' => $share->uuid]), $response->json('share_url'));
+        $share = PassportShare::where('user_id', $walker->id)->where('shareable_id', $track->id)->firstOrFail();
+        $this->assertSame(route('share.passport', ['uuid' => $share->uuid]), $response->json('share_url'));
         $this->assertSame($share->getFirstMedia('share_image')->getUrl(), $response->json('image_url'));
         $this->assertNotNull($share->snapshot);
         $this->assertSame('Pacentro', $share->snapshot['from']);
@@ -119,7 +119,7 @@ class PassportStageShareApiTest extends TestCase
         $second = $this->actingAs($walker, 'api')->postJson($url)->assertOk();
 
         $this->assertSame($first->json('share_url'), $second->json('share_url'));
-        $this->assertSame(1, PassportStageShare::where('user_id', $walker->id)->count());
+        $this->assertSame(1, PassportShare::where('user_id', $walker->id)->count());
     }
 
     public function test_not_validated_stage_returns_403(): void
@@ -129,7 +129,7 @@ class PassportStageShareApiTest extends TestCase
 
         $this->actingAs($other, 'api')->postJson("/api/layer/{$layer->id}/stage/{$track->id}/share-image")
             ->assertStatus(403)->assertJsonStructure(['error']);
-        $this->assertSame(0, PassportStageShare::count());
+        $this->assertSame(0, PassportShare::count());
     }
 
     public function test_stage_of_another_layer_returns_404(): void
@@ -156,7 +156,7 @@ class PassportStageShareApiTest extends TestCase
             ->postJson("/api/layer/{$layer->id}/stage/{$track->id}/share-image", [], ['Accept-Language' => 'de-DE'])
             ->assertOk();
 
-        $share = PassportStageShare::where('user_id', $walker->id)->firstOrFail();
+        $share = PassportShare::where('user_id', $walker->id)->firstOrFail();
         $this->assertSame('Gran-Sasso-Weg', $share->snapshot['layer_name']);
         $this->assertSame('Etappe 01', $share->snapshot['stage_label']);
     }
@@ -198,7 +198,7 @@ class PassportStageShareApiTest extends TestCase
 
         $this->actingAs($walker, 'api')->postJson("/api/layer/{$layer->id}/stage/{$track->id}/share-image")->assertOk();
 
-        $share = PassportStageShare::where('user_id', $walker->id)->firstOrFail();
+        $share = PassportShare::where('user_id', $walker->id)->firstOrFail();
         $this->assertSame("passport-stage-{$share->uuid}.png", $share->getFirstMedia('share_image')->file_name);
     }
 
@@ -221,7 +221,7 @@ class PassportStageShareApiTest extends TestCase
 
         $this->assertSame($first->json('image_url'), $second->json('image_url'));
         $this->assertSame($first->json('share_url'), $second->json('share_url'));
-        $share = PassportStageShare::where('user_id', $walker->id)->firstOrFail();
+        $share = PassportShare::where('user_id', $walker->id)->firstOrFail();
         $this->assertIsString($share->snapshot['fingerprint']);
     }
 
@@ -234,7 +234,7 @@ class PassportStageShareApiTest extends TestCase
         $this->actingAs($walker, 'api')->postJson($url, [], ['Accept-Language' => 'it'])->assertOk();
         $this->actingAs($walker, 'api')->postJson($url, [], ['Accept-Language' => 'de'])->assertOk();
 
-        $share = PassportStageShare::where('user_id', $walker->id)->firstOrFail();
+        $share = PassportShare::where('user_id', $walker->id)->firstOrFail();
         $this->assertSame('de', $share->snapshot['lang']);
     }
 
@@ -267,7 +267,7 @@ class PassportStageShareApiTest extends TestCase
         $this->spyImageService(composeTimes: 2);
 
         $this->actingAs($walker, 'api')->postJson($url)->assertOk();
-        PassportStageShare::where('user_id', $walker->id)->firstOrFail()->clearMediaCollection('share_image');
+        PassportShare::where('user_id', $walker->id)->firstOrFail()->clearMediaCollection('share_image');
         $this->actingAs($walker, 'api')->postJson($url)->assertOk();
     }
 
@@ -350,7 +350,7 @@ class PassportStageShareApiTest extends TestCase
 
         $this->travelTo('2026-10-01 10:00:00');
         $first = $this->actingAs($walker, 'api')->postJson($url)->assertOk();
-        $before = PassportStageShare::where('user_id', $walker->id)->firstOrFail();
+        $before = PassportShare::where('user_id', $walker->id)->firstOrFail();
 
         $this->travelTo('2026-10-05 18:30:00');
         $second = $this->actingAs($walker, 'api')->postJson($url)->assertOk();
@@ -383,7 +383,7 @@ class PassportStageShareApiTest extends TestCase
     {
         [$layer, $track, $walker] = $this->validatedStage();
         $this->actingAs($walker, 'api')->postJson("/api/layer/{$layer->id}/stage/{$track->id}/share-image")->assertOk();
-        $share = PassportStageShare::where('user_id', $walker->id)->firstOrFail();
+        $share = PassportShare::where('user_id', $walker->id)->firstOrFail();
         $media = $share->getFirstMedia('share_image');
         $this->assertTrue($media->exists);
 
@@ -393,7 +393,7 @@ class PassportStageShareApiTest extends TestCase
             'user' => \App\Models\User::findOrFail($walker->id)->delete(),
         };
 
-        $this->assertDatabaseMissing('passport_stage_shares', ['id' => $share->id]);
+        $this->assertDatabaseMissing('passport_shares', ['id' => $share->id]);
         $this->assertDatabaseMissing('media', ['id' => $media->id]);
     }
 }

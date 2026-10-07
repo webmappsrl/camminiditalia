@@ -8,7 +8,8 @@
     {{-- Pagina di un singolo utente: raggiungibile dal link condiviso, non dai motori di ricerca. --}}
     <meta name="robots" content="noindex">
 
-    {{-- Open Graph (oc:8702): anteprima del link su WhatsApp e simili. La pagina è
+    {{-- Open Graph (oc:8702, oc:8703): anteprima del link su WhatsApp e simili, per una
+         tappa o un cammino completato. La pagina è
          un'istantanea statica: i valori non cambiano dopo la condivisione. --}}
     <meta property="og:type" content="website">
     <meta property="og:title" content="{{ $title }}">

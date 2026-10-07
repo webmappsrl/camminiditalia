@@ -35,7 +35,8 @@ final class StageShareLayout
      * di questa classe, di StageShareIcons e di StageShareText e il file di
      * sfondo, i font e le traduzioni entrano già nell'impronta da soli.
      * VERSION va incrementata quando cambia il codice che disegna
-     * (StageShareImageService, StageShareText, StageShareIcons) senza che
+     * (StageShareImageService, PassportShareCommon, StageShareText,
+     * StageShareIcons) senza che
      * cambi una costante, e SEMPRE quando cambia MapRenderService di
      * wm-package: sia il suo codice di disegno sia le sue costanti
      * (margini, zoom, marker, tile), che non sono nell'impronta.

@@ -5,28 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\User;
 
 /**
- * Condivisione di una tappa percorsa del passaporto (oc:8702). Una sola riga
- * per coppia utente-tappa: l'`uuid` è stabile e finisce nel link pubblico,
- * l'immagine di condivisione è una sola (collection `share_image`, singleFile).
+ * Condivisione del passaporto: una tappa percorsa (oc:8702) o un cammino
+ * completato (oc:8703), con la relazione polimorfica `shareable` (EcTrack o
+ * Layer). Una sola riga per utente e cosa condivisa: l'`uuid` è stabile e
+ * finisce nel link pubblico, l'immagine di condivisione è una sola
+ * (collection `share_image`, singleFile).
  *
  * @property int $id
  * @property string $uuid
  * @property int $user_id
  * @property int $layer_id
- * @property int $ec_track_id
+ * @property string $shareable_type
+ * @property int $shareable_id
  * @property ?array $snapshot
  * @property-read ?int $app_id
  */
-class PassportStageShare extends Model implements HasMedia
+class PassportShare extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
@@ -36,7 +39,8 @@ class PassportStageShare extends Model implements HasMedia
         'uuid',
         'user_id',
         'layer_id',
-        'ec_track_id',
+        'shareable_type',
+        'shareable_id',
         'snapshot',
     ];
 
@@ -72,11 +76,17 @@ class PassportStageShare extends Model implements HasMedia
     }
 
     /**
-     * Riga di condivisione della coppia utente-tappa, creata al primo uso.
+     * Riga di condivisione dell'utente per `$shareable`, creata al primo uso:
+     * una tappa del cammino `$layer`, o il cammino stesso (`$shareable` è
+     * `$layer`).
      */
-    public static function forUserAndTrack(User $user, Layer $layer, EcTrack $track): self
+    public static function forUser(User $user, Layer $layer, Model $shareable): self
     {
-        $keys = ['user_id' => $user->id, 'ec_track_id' => $track->id];
+        $keys = [
+            'user_id' => $user->id,
+            'shareable_type' => $shareable->getMorphClass(),
+            'shareable_id' => $shareable->getKey(),
+        ];
 
         try {
             return static::firstOrCreate($keys, ['layer_id' => $layer->id]);
@@ -86,6 +96,24 @@ class PassportStageShare extends Model implements HasMedia
             // esiste ormai, la si rilegge.
             return static::where($keys)->firstOrFail();
         }
+    }
+
+    /**
+     * Vero se la condivisione è di un cammino completato, non di una tappa.
+     */
+    public function isRoute(): bool
+    {
+        return $this->shareable_type === (new Layer)->getMorphClass();
+    }
+
+    /**
+     * La tappa (EcTrack) o il cammino (Layer) condivisi.
+     *
+     * @return MorphTo<Model, $this>
+     */
+    public function shareable(): MorphTo
+    {
+        return $this->morphTo();
     }
 
     /**
@@ -102,13 +130,5 @@ class PassportStageShare extends Model implements HasMedia
     public function layer(): BelongsTo
     {
         return $this->belongsTo(Layer::class);
-    }
-
-    /**
-     * @return BelongsTo<EcTrack, $this>
-     */
-    public function ecTrack(): BelongsTo
-    {
-        return $this->belongsTo(EcTrack::class, 'ec_track_id');
     }
 }
