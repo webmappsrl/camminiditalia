@@ -58,8 +58,9 @@
   propria a cui agganciare l'immagine.
 - **Etichette del cammino in un file a parte** (oc:8703): `passport_share.php` entra nella firma del
   layout della tappa, e cambiarlo rigenererebbe tutte le immagini delle tappe.
-- **Test di regressione byte per byte** (oc:8703): l'estrazione di `PassportShareCommon` non doveva
-  cambiare l'immagine della tappa né la sua firma (`StageShareImageRegressionTest`).
+- **Firma del layout della tappa fissata da un test** (oc:8703): l'estrazione di
+  `PassportShareCommon` non doveva cambiarla (`StageShareImageRegressionTest`), altrimenti si
+  rigenererebbero tutte le immagini salvate.
 - **Una riga per (utente, cosa condivisa)** (oc:8702, oc:8703): ricondividere aggiorna la stessa immagine e lo stesso
   link, invece di creare righe e file orfani.
 - **Niente tempo nell'immagine** (oc:8702): per le tappe validate con la credenziale cartacea non
@@ -82,6 +83,9 @@
   ricca del link su WhatsApp e simili.
 - **Link firmato con i dati nell'URL** (oc:8703, scartato): stessa anteprima senza tabella, ma link
   lungo, non ritirabile e con i dati in chiaro.
+- **Md5 del PNG della tappa come test permanente** (oc:8703, tolto): durante l'estrazione ha
+  dimostrato che l'immagine restava identica byte per byte, ma l'md5 dipende da GD, FreeType e
+  zlib e in CI non coincide con il Docker locale.
 
 ## Limiti noti
 

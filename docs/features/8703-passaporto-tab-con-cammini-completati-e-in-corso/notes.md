@@ -23,7 +23,9 @@ Le note d'insieme stanno in `webmapp-app/docs/features/8703-…/notes.md`.
 ## Decisioni
 
 - Prima di estrarre il codice comune in `PassportShareCommon`, test di regressione
-  `StageShareImageRegressionTest` (md5 dell'immagine della tappa e firma del layout invariati).
+  `StageShareImageRegressionTest` (md5 dell'immagine della tappa e firma del layout invariati). L'md5
+  è stato poi tolto dalla suite perché in CI non coincide con il Docker locale (GD, FreeType e zlib
+  diversi); resta il test sulla firma.
 - `PassportShareStore`: flusso comune di cache, media e snapshot e parti comuni dell'impronta per
   tappa e cammino; le impronte della tappa sono rimaste identiche.
 - Rate limiter con nome `passport-route-share`, separato da `throttle:10,1`.
@@ -35,6 +37,4 @@ Le note d'insieme stanno in `webmapp-app/docs/features/8703-…/notes.md`.
 
 - Nessuna foreign key sulla tappa in `passport_shares`: una tappa cancellata fuori da Eloquent
   lascia la condivisione orfana.
-- Test md5 byte-identico dell'immagine della tappa da verificare in CI (GD e font possono
-  differire dal Docker locale).
 - Con un cammino lungo e stretto lo zoom della mappa non migliora: i livelli dei tile sono interi.
