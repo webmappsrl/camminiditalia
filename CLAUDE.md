@@ -52,7 +52,7 @@ Vedi `wm-package/CLAUDE.md` per:
 
 ### Submodule wm-package
 
-Il progetto usa `wm-package` come submodule Git. **I container non montano il submodule ma la copia accanto al progetto, `../wm-package`**: le modifiche fatte in `wm-package/` non sono viste né dall'app né da `php artisan test`. Per eseguire i test del package sul submodule: `docker run --rm --network camminiditalia_default -e DB_HOST=postgres-camminiditalia -v "$PWD/wm-package:/app" -w /app wm-phpfpm:8.4 vendor/bin/pest <test>` (DB `wm_package` già presente nel Postgres del progetto) (oc:8637). Contiene:
+Il progetto usa `wm-package` come submodule Git, e **l'app lo carica da lì**: `composer.json` lo dichiara come repository `path` (`./wm-package`) e `vendor/wm/wm-package` punta al submodule. Il commit su cui sta il submodule cambia quindi il comportamento dell'app: dopo un cambio di branch va riallineato (oc:8719). `../wm-package` è montato nel container ma non è usato. Per eseguire i test del package sul submodule: `docker run --rm --network camminiditalia_default -e DB_HOST=postgres-camminiditalia -v "$PWD/wm-package:/app" -w /app wm-phpfpm:8.4 vendor/bin/pest <test>` (DB `wm_package` già presente nel Postgres del progetto) (oc:8637). Contiene:
 - Modelli base: `UgcPoi`, `UgcTrack`, `Layer`, `App`, `User`, `EcPoi`, `EcTrack`
 - Risorse Nova astratte: `AbstractUgcResource`, `AbstractEcResource`, ecc.
 - Policy base, Filters, Actions, Observers riusabili
@@ -140,6 +140,7 @@ La relazione user → layer è `$user->layers()` (`HasMany` via `user_id` su tab
 | Località nel dettaglio tappa: solo la regione | oc:8588 | `app/Providers/NovaServiceProvider.php`, `tests/Feature/TaxonomyWhereMenuVisibilityTest.php`; grosso della logica in `wm-package` | Vedi [docs/knowledge/localita-nel-dettaglio-tappa.md](docs/knowledge/localita-nel-dettaglio-tappa.md) |
 | Nome utente sul marker live attivabile per shard | oc:8637 | `.env-example`; logica e test interamente in `wm-package` | Variabile `ANALYTICS_SHOW_LIVE_USER_IDENTITY` documentata solo come riga commentata, non attiva in nessun ambiente: Cammini d'Italia vuole il marker anonimo. Vedi [wm-package/docs/knowledge/analytics-posthog.md](wm-package/docs/knowledge/analytics-posthog.md) |
 | Route shape modificabile a mano in Nova | oc:8646 | `app/Services/LayerAttributesService.php`, `app/Nova/Layer.php`, `config/wm-package.php`, `resources/lang/{it,en,fr,es,de}.json`, `tests/Feature/{LayerShapeOverride,LayerShapeOverrideField,LayerConfigJsonShapeManual}Test.php` | Vedi [docs/knowledge/route-shape-layer.md](docs/knowledge/route-shape-layer.md) |
+| Pulizia automatica dei punti GPS errati nelle tracce UGC | oc:8719 | solo puntatore del submodule; codice e test interamente in `wm-package` | Vedi [wm-package/docs/knowledge/8719-pulizia-automatica-dei-punti-gps-errati-nelle-tracce-ugc.md](wm-package/docs/knowledge/8719-pulizia-automatica-dei-punti-gps-errati-nelle-tracce-ugc.md). Dopo il deploy: `php artisan wm:clean-ugc-track-geometry --dry-run`, poi senza `--dry-run` |
 
 ## Decisioni architetturali
 
