@@ -38,6 +38,17 @@ trait LayerTestHelpers
         return $layer;
     }
 
+    /**
+     * Accende il passaporto sul cammino (`properties->passport_enabled`, oc:8763).
+     * Scrive con `saveQuietly()` per non far scattare i job di LayerObserver.
+     */
+    protected function enablePassport(Layer $layer): Layer
+    {
+        $layer->forceFill(['properties' => array_merge($layer->properties ?? [], ['passport_enabled' => true])])->saveQuietly();
+
+        return $layer;
+    }
+
     protected function releaseRecalculateLayerAttributesLock(int $layerId): void
     {
         app(UniqueLock::class)->release(new RecalculateLayerAttributesJob($layerId));

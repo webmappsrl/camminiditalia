@@ -9,6 +9,7 @@ use App\Services\StageProgressService;
 use App\Support\LayerOwner;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -482,11 +483,11 @@ class StageProgressServiceTest extends TestCase
         $this->assertSame([], $progress['tracks']);
     }
 
-    public function test_passport_lists_only_layers_with_validations(): void
+    public function test_passport_lists_only_enabled_layers_with_tracks(): void
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layer = $this->createLayer($owner->id);
+        $layer = $this->enablePassport($this->createLayer($owner->id));
         $untouched = $this->createLayer($owner->id);
         $old = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 4]]);
         $recent = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 6]]);
@@ -508,7 +509,11 @@ class StageProgressServiceTest extends TestCase
             'km_validated' => 10.0,
             'km_total' => 20.0,
             'last_validated_at' => Carbon::parse('2026-09-30 10:00:00')->toIso8601String(),
-        ], $passport[0]);
+        ], Arr::except($passport[0], 'validated_tracks'));
+        $this->assertEquals((object) [
+            $old->id => Carbon::parse('2026-09-01 08:00:00')->toIso8601String(),
+            $recent->id => Carbon::parse('2026-09-30 10:00:00')->toIso8601String(),
+        ], $passport[0]['validated_tracks']);
     }
 
     public function test_passport_includes_route_with_only_foreign_track_validated(): void
@@ -516,8 +521,8 @@ class StageProgressServiceTest extends TestCase
         $a = $this->createUserWithRole('Validator');
         $b = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layerA = $this->createLayer($a->id);
-        $layerB = $this->createLayer($b->id);
+        $layerA = $this->enablePassport($this->createLayer($a->id));
+        $layerB = $this->enablePassport($this->createLayer($b->id));
         $this->track($a->id, [$layerA], ['dem_data' => ['distance' => 3]]);
         $foreign = $this->track($b->id, [$layerA, $layerB], ['dem_data' => ['distance' => 5]]);
         $this->validate($walker, $foreign, $layerB);
@@ -554,7 +559,7 @@ class StageProgressServiceTest extends TestCase
         );
     }
 
-    public function test_passport_is_empty_without_validations(): void
+    public function test_passport_is_empty_without_enabled_layers(): void
     {
         $this->assertSame([], $this->service->passportFor(User::factory()->create()));
     }

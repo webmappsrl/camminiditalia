@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ValidatedEcTrack;
+use App\Support\PassportLayer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
@@ -188,16 +189,22 @@ class StageProgressService
     }
 
     /**
-     * Elementi di `routes` in GET /api/passport: un elemento per ogni layer
-     * in cui l'utente ha almeno una tappa validata fra le tappe del cammino
-     * (regola A), con i totali della regola A.
+     * Elementi di `routes` in GET /api/passport (oc:8763): un elemento per
+     * ogni cammino con il passaporto acceso (`properties->passport_enabled`,
+     * PassportLayer::enabledSql()) e almeno una tappa associata (regola A),
+     * anche con 0 tappe validate dall'utente; mai un cammino spento. Campi:
+     * totali della regola A, `last_validated_at` e `validated_tracks`, mappa
+     * `{<id tappa>: <data di convalida ISO 8601>}` (oggetto vuoto `{}`
+     * senza convalide). Una sola query, qualunque sia il numero di cammini.
      *
      * @return array<int, array<string, mixed>>
      */
     public function passportFor(User $user): array
     {
         $rows = $this->userTotalsQuery($user)
-            ->havingRaw('COUNT(v.id) > 0')
+            ->join('layers', 'layers.id', '=', 'ct.layer_id')
+            ->whereRaw(PassportLayer::enabledSql('layers'))
+            ->selectRaw('json_object_agg(v.ec_track_id, v.validated_at) FILTER (WHERE v.id IS NOT NULL) as validated_tracks')
             ->orderBy('ct.layer_id')
             ->get();
 
@@ -206,9 +213,21 @@ class StageProgressService
         return $rows
             ->map(fn (object $row) => ['layer_id' => (int) $row->layer_id, 'name' => $layers[$row->layer_id]->getStringName()]
                 + $this->progressFields($row)
-                + ['last_validated_at' => $this->isoDate($row->last_validated_at)])
+                + [
+                    'last_validated_at' => $this->isoDate($row->last_validated_at),
+                    'validated_tracks' => $this->validatedTracks($row->validated_tracks),
+                ])
             ->values()
             ->all();
+    }
+
+    /**
+     * Mappa `{<id tappa>: <data ISO 8601>}` dal JSON di json_object_agg;
+     * NULL (nessuna convalida) → oggetto vuoto, mai `[]`.
+     */
+    private function validatedTracks(?string $json): object
+    {
+        return (object) array_map(fn ($date) => $this->isoDate($date), json_decode($json ?? '{}', true));
     }
 
     /**

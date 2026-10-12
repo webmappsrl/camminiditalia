@@ -67,7 +67,7 @@ class StageProgressApiTest extends TestCase
 
     public function test_progress_without_auth_returns_401(): void
     {
-        $layer = $this->createLayer();
+        $layer = $this->enablePassport($this->createLayer());
 
         $this->getJson("/api/layer/{$layer->id}/progress")->assertStatus(401);
     }
@@ -81,7 +81,7 @@ class StageProgressApiTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layer = $this->createLayer($owner->id);
+        $layer = $this->enablePassport($this->createLayer($owner->id));
         $done = $this->track($owner->id, $layer, [10.04]);
         $todo = $this->track($owner->id, $layer, [20]);
         $this->validate($walker, $done, $layer);
@@ -116,8 +116,8 @@ class StageProgressApiTest extends TestCase
         $owner = $this->createUserWithRole('Validator');
         $stranger = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layer = $this->createLayer($owner->id);
-        $otherLayer = $this->createLayer($stranger->id);
+        $layer = $this->enablePassport($this->createLayer($owner->id));
+        $otherLayer = $this->enablePassport($this->createLayer($stranger->id));
         $own = $this->track($owner->id, $layer, [10]);
         $foreign = $this->track($stranger->id, $layer, [5]);
         $this->track($stranger->id, $layer, [2]);
@@ -154,7 +154,7 @@ class StageProgressApiTest extends TestCase
     public function test_progress_with_no_validations_returns_zero(): void
     {
         $owner = $this->createUserWithRole('Validator');
-        $layer = $this->createLayer($owner->id);
+        $layer = $this->enablePassport($this->createLayer($owner->id));
         $this->track($owner->id, $layer);
         $this->track($owner->id, $layer);
 
@@ -169,7 +169,7 @@ class StageProgressApiTest extends TestCase
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
         $other = User::factory()->create();
-        $layer = $this->createLayer($owner->id);
+        $layer = $this->enablePassport($this->createLayer($owner->id));
         $this->validate($other, $this->track($owner->id, $layer), $layer);
 
         $response = $this->actingAs($walker, 'api')->getJson("/api/layer/{$layer->id}/progress");
@@ -184,8 +184,8 @@ class StageProgressApiTest extends TestCase
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
         $other = User::factory()->create();
-        $mine = $this->createLayer($owner->id);
-        $theirs = $this->createLayer($owner->id);
+        $mine = $this->enablePassport($this->createLayer($owner->id));
+        $theirs = $this->enablePassport($this->createLayer($owner->id));
         $this->validate($walker, $this->track($owner->id, $mine), $mine);
         $this->validate($other, $this->track($owner->id, $theirs), $theirs);
 
@@ -195,14 +195,17 @@ class StageProgressApiTest extends TestCase
             ->assertExactJsonStructure([
                 'routes' => ['*' => [
                     'layer_id', 'name', 'validated', 'total', 'percentage', 'completed',
-                    'km_validated', 'km_total', 'last_validated_at',
+                    'km_validated', 'km_total', 'last_validated_at', 'validated_tracks',
                 ]],
             ]);
-        $this->assertSame([$mine->id], array_column($response->json('routes'), 'layer_id'));
+        // `theirs` è acceso ma l'utente non ha convalide: compare con 0, senza le convalide di $other.
+        $this->assertSame([$mine->id, $theirs->id], array_column($response->json('routes'), 'layer_id'));
+        $this->assertSame([1, 0], array_column($response->json('routes'), 'validated'));
         $this->assertSame('2026-09-30T10:00:00+00:00', $response->json('routes.0.last_validated_at'));
+        $this->assertNull($response->json('routes.1.last_validated_at'));
     }
 
-    public function test_passport_without_validations_returns_empty_routes(): void
+    public function test_passport_without_enabled_layers_returns_empty_routes(): void
     {
         $this->actingAs(User::factory()->create(), 'api')
             ->getJson('/api/passport')
@@ -214,7 +217,7 @@ class StageProgressApiTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layer = $this->createLayer($owner->id);
+        $layer = $this->enablePassport($this->createLayer($owner->id));
         $this->validate($walker, $this->track($owner->id, $layer, [17]), $layer);
 
         $progress = $this->actingAs($walker, 'api')->getJson("/api/layer/{$layer->id}/progress");
@@ -229,7 +232,7 @@ class StageProgressApiTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layer = $this->createLayer($owner->id);
+        $layer = $this->enablePassport($this->createLayer($owner->id));
         $track = $this->track($owner->id, $layer, [17]);
         DB::table('ec_tracks')->where('id', $track->id)->update(['name' => '{"it":null,"de":""}']);
 
@@ -246,8 +249,8 @@ class StageProgressApiTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $first = $this->createLayer($owner->id);
-        $second = $this->createLayer($owner->id);
+        $first = $this->enablePassport($this->createLayer($owner->id));
+        $second = $this->enablePassport($this->createLayer($owner->id));
         // validati in ordine inverso rispetto agli id
         $this->validate($walker, $this->track($owner->id, $second), $second, '2026-09-30 09:00:00');
         $this->validate($walker, $this->track($owner->id, $first), $first, '2026-09-30 11:00:00');
@@ -255,5 +258,78 @@ class StageProgressApiTest extends TestCase
         $response = $this->actingAs($walker, 'api')->getJson('/api/passport');
 
         $this->assertSame([$first->id, $second->id], array_column($response->json('routes'), 'layer_id'));
+    }
+
+    public function test_passport_lists_enabled_layer_without_validations(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $walker = User::factory()->create();
+        $layer = $this->enablePassport($this->createLayer($owner->id));
+        $this->track($owner->id, $layer);
+        $this->track($owner->id, $layer);
+
+        $response = $this->actingAs($walker, 'api')->getJson('/api/passport');
+
+        $response->assertOk();
+        $this->assertSame([$layer->id], array_column($response->json('routes'), 'layer_id'));
+        $this->assertSame(0, $response->json('routes.0.validated'));
+        $this->assertSame(2, $response->json('routes.0.total'));
+        $this->assertNull($response->json('routes.0.last_validated_at'));
+        $this->assertStringContainsString('"validated_tracks":{}', $response->getContent());
+    }
+
+    public function test_passport_omits_disabled_layer_with_validations(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $walker = User::factory()->create();
+        $layer = $this->createLayer($owner->id);
+        $this->validate($walker, $this->track($owner->id, $layer), $layer);
+
+        $this->actingAs($walker, 'api')->getJson('/api/passport')->assertOk()->assertExactJson(['routes' => []]);
+    }
+
+    public function test_passport_omits_enabled_layer_without_tracks(): void
+    {
+        $walker = User::factory()->create();
+        $this->enablePassport($this->createLayer());
+
+        $this->actingAs($walker, 'api')->getJson('/api/passport')->assertOk()->assertExactJson(['routes' => []]);
+    }
+
+    public function test_validated_tracks_maps_track_id_to_iso_date(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $walker = User::factory()->create();
+        $layer = $this->enablePassport($this->createLayer($owner->id));
+        $done = $this->track($owner->id, $layer);
+        $this->track($owner->id, $layer);
+        $this->validate($walker, $done, $layer);
+
+        $response = $this->actingAs($walker, 'api')->getJson('/api/passport');
+
+        $this->assertSame([(string) $done->id => '2026-09-30T10:00:00+00:00'], $response->json('routes.0.validated_tracks'));
+        $this->assertStringContainsString('"validated_tracks":{"'.$done->id.'":"2026-09-30T10:00:00+00:00"}', $response->getContent());
+    }
+
+    public function test_shared_track_counts_only_in_enabled_layer(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $walker = User::factory()->create();
+        $enabled = $this->enablePassport($this->createLayer($owner->id));
+        $disabled = $this->createLayer($owner->id);
+        $shared = $this->track($owner->id, $enabled);
+        DB::table('layerables')->insert([
+            'layer_id' => $disabled->id,
+            'layerable_type' => (new (config('wm-package.ec_track_model')))->getMorphClass(),
+            'layerable_id' => $shared->id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        $this->validate($walker, $shared, $disabled);
+
+        $response = $this->actingAs($walker, 'api')->getJson('/api/passport');
+
+        $this->assertSame([$enabled->id], array_column($response->json('routes'), 'layer_id'));
+        $this->assertSame([$shared->id], array_keys($response->json('routes.0.validated_tracks')));
     }
 }
