@@ -14,8 +14,12 @@ return [
      | Wm\WmPackage\Support (src/helpers.php: withoutInternalConfigKeys()).
      | shape_discontinuous: flag interno letto solo da App\Nova\Layer per
      | l'alert di discontinuità del cammino, mai da esporre pubblicamente.
+     | shape_manual: override manuale della tipologia (oc:8646), deve restare
+     | uguale a App\Services\LayerAttributesService::SHAPE_MANUAL_KEY (lo
+     | verifica LayerConfigJsonShapeManualTest). Al frontend arriva solo
+     | `shape`, già risolto con l'override.
      */
-    'internal_attribute_keys' => ['shape_discontinuous'],
+    'internal_attribute_keys' => ['shape_discontinuous', 'shape_manual'],
 
     /*
      | Mostra "Uso dei filtri sui cammini" nella card Analytics globale di Nova (oc:8585).

@@ -16,6 +16,7 @@ use Laravel\Nova\Panel;
 use Outl1ne\MultiselectField\Multiselect;
 use Wm\WmPackage\Enums\OsmWalkingNetwork;
 use Wm\WmPackage\Enums\Season;
+use Wm\WmPackage\Jobs\UpdateAppConfigJob;
 use Wm\WmPackage\Nova\Actions\AddLayersToConfigHomeAction;
 use Wm\WmPackage\Nova\Actions\ExecuteEcTrackDataChainAction;
 use Wm\WmPackage\Nova\Actions\RegenerateLayerPbfAction;
@@ -247,6 +248,36 @@ class Layer extends WmNovaLayer
                 })
                 ->help(__('Seasons in which this route is preferably walked'))
                 ->onlyOnForms(),
+
+            // Override manuale della tipologia (oc:8646), solo in edit: su un
+            // layer nuovo non c'è ancora un calcolo da correggere. Nessuna
+            // voce "Discontinuo" (oc:8463); "Automatica" = null = nessun override.
+            Select::make(__('Route shape'), 'properties->attributes->'.LayerAttributesService::SHAPE_MANUAL_KEY)
+                ->options([
+                    RouteShape::LINEAR->value => RouteShape::LINEAR->label(),
+                    RouteShape::ROUNDTRIP->value => RouteShape::ROUNDTRIP->label(),
+                ])
+                ->nullable()
+                ->placeholder(__('Automatic'))
+                ->resolveUsing(fn ($value) => is_string($value) ? $value : null)
+                // Eseguita da Nova dopo il save, come per Portata/Stagioni.
+                // Perché il config va rigenerato qui: vedi il docblock di
+                // applyManualShape(). afterCommit: la closure gira dentro la
+                // transazione di Nova, il worker deve leggere lo stato committato.
+                ->fillUsing(function ($request, $model, $attribute, $requestAttribute) {
+                    $value = $request->input($requestAttribute);
+                    $value = is_string($value) && $value !== '' ? $value : null;
+
+                    return function () use ($model, $value) {
+                        /** @var \Wm\WmPackage\Models\Layer $model */
+                        if (app(LayerAttributesService::class)->applyManualShape($model, $value)) {
+                            UpdateAppConfigJob::dispatch($model->app_id)->afterCommit();
+                        }
+                    };
+                })
+                ->help(__('Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.'))
+                ->onlyOnForms()
+                ->hideWhenCreating(),
         ]);
 
         // Il pannello editabile va inserito subito dopo il pannello

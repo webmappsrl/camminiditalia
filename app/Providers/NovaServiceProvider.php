@@ -90,14 +90,23 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(Layer::class),
                 ])->icon('document'),
 
-                // TaxonomyActivity e TaxonomyWhere non sono esposte nel menu: in
-                // camminiditalia non vengono usate (la modalità auto dei layer non
-                // passa dalla tassonomia, vedi oc:8311). Le risorse restano
-                // registrate — servono ai campi relazione delle altre risorse, e
-                // togliere la registrazione farebbe rispondere 404 a quei campi.
+                // TaxonomyActivity resta fuori dal menu: in camminiditalia non viene
+                // usata (la modalità auto dei layer non passa dalla tassonomia, vedi
+                // oc:8311). La risorsa resta registrata — serve ai campi relazione
+                // delle altre risorse, e togliere la registrazione farebbe rispondere
+                // 404 a quei campi.
+                // TaxonomyWhere è invece esposta, solo all'Administrator: con oc:8588
+                // le where diventano un dato mostrato al cliente (località nel
+                // dettaglio tappa, opzione "Località mostrate" dell'App), quindi va
+                // gestibile da Nova. La policy effettiva resta
+                // Wm\WmPackage\Policies\TaxonomyWherePolicy (viewAny/view per tutti,
+                // create/update/delete solo Administrator); il canSee qui limita solo
+                // la visibilità della voce di menu.
                 MenuSection::make('Taxonomies', [
                     MenuItem::resource(TaxonomyPoiType::class),
                     MenuItem::resource(TaxonomyTheme::class),
+                    MenuItem::resource(TaxonomyWhere::class)
+                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
                 ])->icon('document'),
 
             ];

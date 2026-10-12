@@ -1,5 +1,8 @@
 {
     "Discontinuous": "Discontinu",
     "Linear": "Linéaire",
-    "Roundtrip": "Boucle"
+    "Roundtrip": "Boucle",
+    "Automatic": "Automatique",
+    "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Laissez Automatique pour utiliser la typologie calculée à partir des étapes ; choisissez une valeur pour la corriger manuellement.",
+    "Route shape": "Typologie"
 }
