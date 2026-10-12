@@ -71,5 +71,7 @@
     "Completed": "Abgeschlossen",
     "In progress": "Laufend",
     "Last validation": "Letzte Validierung",
-    "Per user and route": "Nach Benutzer und Route"
+    "Per user and route": "Nach Benutzer und Route",
+    "Passport enabled": "Reisepass aktiv",
+    "Enable the Passport for this cammino in the app.": "Aktiviert den Reisepass für diese Route in der App."
 }

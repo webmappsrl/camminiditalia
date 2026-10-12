@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\CertificationRequestController;
 use App\Http\Controllers\Api\PassportRouteShareController;
 use App\Http\Controllers\Api\PassportStageShareController;
 use App\Http\Controllers\Api\StageProgressController;
+use App\Http\Middleware\EnsurePassportEnabled;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,12 +19,14 @@ use Illuminate\Support\Facades\Route;
  *   immagine di condivisione della tappa,
  *   `POST api/layer/{layer}/stage/{track}/share-image` (oc:8702), e del
  *   cammino completato, `POST api/layer/{layer}/share-image` (oc:8703);
- * - `camminiditalia.api.passport`, `GET api/passport` (oc:8676): cammini in
- *   cui l'utente ha almeno una tappa validata, con i relativi totali.
+ * - `camminiditalia.api.passport`, `GET api/passport` (oc:8676): cammini con
+ *   il passaporto acceso (oc:8763) e almeno una tappa, anche con 0 validate,
+ *   con i relativi totali e `validated_tracks`.
  */
 Route::name('camminiditalia.api.layer.')
     ->prefix('layer')
-    ->middleware('auth:api')
+    // 404 sui cammini senza `passport_enabled` (oc:8763), dopo l'autenticazione.
+    ->middleware(['auth:api', EnsurePassportEnabled::class])
     ->group(function () {
         Route::post('/{layer}/certification', [CertificationRequestController::class, 'store'])
             ->whereNumber('layer')

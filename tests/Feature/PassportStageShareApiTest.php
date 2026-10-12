@@ -86,7 +86,7 @@ class PassportStageShareApiTest extends TestCase
     private function validatedStage(): array
     {
         $owner = $this->createUserWithRole('Validator');
-        $layer = $this->createLayer($owner->id);
+        $layer = $this->enablePassport($this->createLayer($owner->id));
         $layer->forceFill(['name' => ['it' => 'Cammino del Gran Sasso', 'de' => 'Gran-Sasso-Weg']])->saveQuietly();
         $track = $this->stage($layer);
         $walker = User::factory()->create();

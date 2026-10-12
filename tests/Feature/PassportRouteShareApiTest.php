@@ -99,7 +99,7 @@ class PassportRouteShareApiTest extends TestCase
     private function route(bool $completed = true, ?float $secondDistance = 15.1): array
     {
         $owner = $this->createUserWithRole('Validator');
-        $layer = $this->createLayer($owner->id);
+        $layer = $this->enablePassport($this->createLayer($owner->id));
         $layer->forceFill(['name' => ['it' => 'Cammino del Gran Sasso', 'de' => 'Gran-Sasso-Weg']])->saveQuietly();
         $stages = [
             $this->stage($layer, '01', [[13.90, 42.10], [13.95, 42.12], [14.00, 42.15]], 20.4),
@@ -145,7 +145,7 @@ class PassportRouteShareApiTest extends TestCase
 
     public function test_route_without_stages_returns_403(): void
     {
-        $layer = $this->createLayer($this->createUserWithRole('Validator')->id);
+        $layer = $this->enablePassport($this->createLayer($this->createUserWithRole('Validator')->id));
         $walker = User::factory()->create();
 
         $this->actingAs($walker, 'api')->postJson("/api/layer/{$layer->id}/share-image")->assertStatus(403);
