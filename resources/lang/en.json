@@ -12,5 +12,9 @@
     "Unable to find the home content to sort.": "Unable to find the home content to sort.",
     "the route segments are not connected to each other": "the route segments are not connected to each other",
     "Automatic": "Automatic",
-    "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually."
+    "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.",
+    "Layers crossed by the track": "Routes crossed by the track",
+    "Layer crossed by the track": "Route crossed by the track",
+    "EcTracks crossed outside any layer": "Stages crossed outside any route",
+    "The track does not cross any EcTrack": "The track does not cross any stage"
 }

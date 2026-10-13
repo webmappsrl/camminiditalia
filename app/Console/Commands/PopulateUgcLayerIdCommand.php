@@ -5,18 +5,16 @@ namespace App\Console\Commands;
 use App\Jobs\ResolveUgcLayerJob;
 use Illuminate\Console\Command;
 use Wm\WmPackage\Models\UgcPoi;
-use Wm\WmPackage\Models\UgcTrack;
 
 class PopulateUgcLayerIdCommand extends Command
 {
     protected $signature = 'ugc:populate-layer-id';
 
-    protected $description = 'Accoda ResolveUgcLayerJob per tutti i UgcPoi e UgcTrack privi di layer_id';
+    protected $description = 'Accoda ResolveUgcLayerJob per tutti gli UgcPoi privi di layer_id (le UgcTrack non hanno layer_id: oc:8773)';
 
     public function handle(): int
     {
         $this->processModel(UgcPoi::class);
-        $this->processModel(UgcTrack::class);
 
         return self::SUCCESS;
     }
