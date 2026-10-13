@@ -13,7 +13,6 @@ use Tests\TestCase;
 use Wm\WmPackage\Models\App as WmApp;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\UgcPoi;
-use Wm\WmPackage\Models\UgcTrack;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class HasLayerOverrideTest extends TestCase
@@ -68,7 +67,7 @@ class HasLayerOverrideTest extends TestCase
     public function test_apply_manual_layer_override_sets_layer_id_and_marks_as_manual(): void
     {
         $layer = Layer::factory()->create();
-        $track = UgcTrack::factory()->create(['properties' => ['form' => ['id' => 'report']]]);
+        $track = UgcPoi::factory()->create(['properties' => ['form' => ['id' => 'report']]]);
         $admin = $this->makeAdmin();
 
         $this->subject::applyManualLayerOverride($track, $layer->id, $admin);
@@ -83,7 +82,7 @@ class HasLayerOverrideTest extends TestCase
     public function test_apply_manual_layer_override_can_clear_the_layer(): void
     {
         $layer = Layer::factory()->create();
-        $track = UgcTrack::factory()->create([
+        $track = UgcPoi::factory()->create([
             'properties' => ['layer_id' => $layer->id, 'layer_id_auto_resolved' => true, 'form' => ['id' => 'report', 'layer_id' => $layer->id]],
         ]);
         $admin = $this->makeAdmin();
@@ -148,7 +147,7 @@ class HasLayerOverrideTest extends TestCase
         $oldLayer = Layer::factory()->create();
         $newLayer = Layer::factory()->create();
 
-        $track = UgcTrack::factory()->create([
+        $track = UgcPoi::factory()->create([
             'properties' => ['form' => ['id' => 'report'], 'layer_id' => $oldLayer->id, 'layer_id_auto_resolved' => true],
         ]);
 
@@ -170,7 +169,7 @@ class HasLayerOverrideTest extends TestCase
     {
         $layer = Layer::factory()->create();
 
-        $track = UgcTrack::factory()->create([
+        $track = UgcPoi::factory()->create([
             'properties' => ['form' => ['id' => 'report'], 'layer_id' => $layer->id, 'layer_id_auto_resolved' => true],
         ]);
 
@@ -192,7 +191,7 @@ class HasLayerOverrideTest extends TestCase
     {
         $layer = Layer::factory()->create();
 
-        $track = UgcTrack::factory()->create([
+        $track = UgcPoi::factory()->create([
             'properties' => ['form' => ['id' => 'report'], 'layer_id' => $layer->id, 'layer_id_auto_resolved' => true],
         ]);
 
@@ -225,7 +224,7 @@ class HasLayerOverrideTest extends TestCase
         $autoResolvedLayer = Layer::factory()->create();
 
         // Stato al momento del render della pagina: nessun layer assegnato.
-        $track = UgcTrack::factory()->create([
+        $track = UgcPoi::factory()->create([
             'properties' => ['form' => ['id' => 'report']],
         ]);
 
@@ -259,7 +258,7 @@ class HasLayerOverrideTest extends TestCase
         $layer = Layer::factory()->create();
 
         $originalProperties = ['form' => ['id' => 'report'], 'layer_id' => $layer->id, 'layer_id_auto_resolved' => true];
-        $track = UgcTrack::factory()->create([
+        $track = UgcPoi::factory()->create([
             'properties' => $originalProperties,
         ]);
 

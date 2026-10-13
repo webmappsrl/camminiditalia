@@ -4,5 +4,9 @@
     "Roundtrip": "Boucle",
     "Automatic": "Automatique",
     "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Laissez Automatique pour utiliser la typologie calculée à partir des étapes ; choisissez une valeur pour la corriger manuellement.",
-    "Route shape": "Typologie"
+    "Route shape": "Typologie",
+    "Layers crossed by the track": "Chemins traversés par la trace",
+    "Layer crossed by the track": "Chemin traversé par la trace",
+    "EcTracks crossed outside any layer": "Étapes traversées hors de tout chemin",
+    "The track does not cross any EcTrack": "La trace ne traverse aucune étape"
 }
