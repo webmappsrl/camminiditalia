@@ -39,13 +39,11 @@ class CertificationRequestMailTest extends TestCase
         $user = $overrides['user'] ?? User::factory()->create();
         $layer = $overrides['layer'] ?? $this->createLayer();
 
-        $request = CertificationRequest::create([
+        $request = CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
             'app_id' => $layer->app_id,
-            'status' => CertificationRequest::STATUS_PENDING,
             'serial_number' => $overrides['serial_number'] ?? null,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         $request->addMedia(UploadedFile::fake()->image('original.jpg'))->toMediaCollection('default');
@@ -65,7 +63,7 @@ class CertificationRequestMailTest extends TestCase
         $layer = $this->createLayer();
 
         $service = app(CertificationRequestService::class);
-        $request = $service->submit($user, $layer, [UploadedFile::fake()->image('c1.jpg')], null);
+        $request = $service->submit($user, $layer, [UploadedFile::fake()->image('c1.jpg')], null, '2026-09-01', '2026-09-05');
 
         Queue::assertPushed(SendCertificationRequestMailJob::class, function ($job) use ($request) {
             return $job->request->id === $request->id;
@@ -79,17 +77,15 @@ class CertificationRequestMailTest extends TestCase
         $user = User::factory()->create();
         $layer = $this->createLayer();
 
-        CertificationRequest::create([
+        CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         $service = app(CertificationRequestService::class);
 
         try {
-            $service->submit($user, $layer, [UploadedFile::fake()->image('c1.jpg')], null);
+            $service->submit($user, $layer, [UploadedFile::fake()->image('c1.jpg')], null, '2026-09-01', '2026-09-05');
         } catch (\Throwable $e) {
             // atteso: richiesta pending già esistente
         }
@@ -175,6 +171,16 @@ class CertificationRequestMailTest extends TestCase
         $mail->assertSeeInHtml('Luigi Camminatore');
         $mail->assertSeeInHtml('luigi@test.com');
         $mail->assertSeeInHtml('SN-042');
+    }
+
+    public function test_new_request_mail_shows_walked_dates(): void
+    {
+        $request = $this->makeRequest();
+
+        $rendered = (new NewCertificationRequestMail($request))->render();
+
+        $this->assertStringContainsString('Percorso', $rendered);
+        $this->assertStringContainsString('dal 01/09/2026 al 05/09/2026', $rendered);
     }
 
     public function test_mail_subject_contains_layer_name(): void

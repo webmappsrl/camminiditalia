@@ -64,7 +64,7 @@ class CertificationRequestServiceTest extends TestCase
             UploadedFile::fake()->image('c2.jpg'),
         ];
 
-        $request = $this->service->submit($user, $layer, $images, 'SN-001');
+        $request = $this->service->submit($user, $layer, $images, 'SN-001', '2026-09-01', '2026-09-05');
 
         $this->assertTrue($request->exists);
         $this->assertSame(CertificationRequest::STATUS_PENDING, $request->status);
@@ -91,11 +91,9 @@ class CertificationRequestServiceTest extends TestCase
         $user = User::factory()->create();
         $layer = $this->createLayer();
 
-        CertificationRequest::create([
+        CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         $images = [UploadedFile::fake()->image('c1.jpg')];
@@ -103,7 +101,7 @@ class CertificationRequestServiceTest extends TestCase
         $this->expectException(PendingCertificationRequestExistsException::class);
 
         try {
-            $this->service->submit($user, $layer, $images, null);
+            $this->service->submit($user, $layer, $images, null, '2026-09-01', '2026-09-05');
         } finally {
             $this->assertSame(0, $this->certificationMediaQuery()->count());
             $this->assertEmpty(Storage::disk('wmfe')->allFiles());
@@ -126,7 +124,7 @@ class CertificationRequestServiceTest extends TestCase
         $thrown = null;
 
         try {
-            $this->service->submit($user, $layer, $images, null);
+            $this->service->submit($user, $layer, $images, null, '2026-09-01', '2026-09-05');
         } catch (Throwable $e) {
             $thrown = $e;
         }
@@ -153,6 +151,8 @@ class CertificationRequestServiceTest extends TestCase
                     'user_id' => $user->id,
                     'layer_id' => $layer->id,
                     'status' => CertificationRequest::STATUS_PENDING,
+                    'start_date' => '2026-09-01',
+                    'end_date' => '2026-09-05',
                     'disclaimer_accepted_at' => now(),
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -165,11 +165,27 @@ class CertificationRequestServiceTest extends TestCase
         $this->expectException(PendingCertificationRequestExistsException::class);
 
         try {
-            $this->service->submit($user, $layer, $images, null);
+            $this->service->submit($user, $layer, $images, null, '2026-09-01', '2026-09-05');
         } finally {
             $this->assertSame(0, $this->certificationMediaQuery()->count());
             $this->assertEmpty(Storage::disk('wmfe')->allFiles());
         }
+    }
+
+    public function test_submit_saves_dates(): void
+    {
+        $request = $this->service->submit(
+            User::factory()->create(),
+            $this->createLayer(),
+            [UploadedFile::fake()->image('c1.jpg')],
+            null,
+            '2026-09-01',
+            '2026-09-05',
+        );
+
+        $fresh = $request->fresh();
+        $this->assertSame('2026-09-01', $fresh->start_date->toDateString());
+        $this->assertSame('2026-09-05', $fresh->end_date->toDateString());
     }
 
     public function test_latest_for_returns_latest_request_in_any_status_or_null(): void
@@ -179,19 +195,16 @@ class CertificationRequestServiceTest extends TestCase
 
         $this->assertNull($this->service->latestFor($user, $layer));
 
-        CertificationRequest::create([
+        CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
             'status' => CertificationRequest::STATUS_REJECTED,
-            'disclaimer_accepted_at' => now(),
         ]);
         $this->assertSame(CertificationRequest::STATUS_REJECTED, $this->service->latestFor($user, $layer)->status);
 
-        $request = CertificationRequest::create([
+        $request = CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         $this->assertSame($request->id, $this->service->latestFor($user, $layer)->id);
@@ -204,6 +217,8 @@ class CertificationRequestServiceTest extends TestCase
             $this->createLayer(),
             [UploadedFile::fake()->image('c1.jpg')],
             null,
+            '2026-09-01',
+            '2026-09-05',
             'de',
         );
 

@@ -22,6 +22,7 @@
 
     <x-mail.field label="Camminatore">{{ $walkerDisplay }}</x-mail.field>
     <x-mail.field label="Inviata il">{{ $request->created_at?->format('d/m/Y, H:i') ?? '—' }}</x-mail.field>
+    <x-mail.field label="Percorso">dal {{ $request->start_date->format('d/m/Y') }} al {{ $request->end_date->format('d/m/Y') }}</x-mail.field>
     @if(!empty($request->serial_number))
     <x-mail.field label="Numero seriale">{{ $request->serial_number }}</x-mail.field>
     @endif

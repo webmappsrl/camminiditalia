@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('app_id')->nullable()->constrained('apps')->nullOnDelete();
             $table->string('status')->default('pending')->index();
             $table->text('serial_number')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
             $table->timestamp('disclaimer_accepted_at');
             // 5 caratteri: spazio per codici con regione (pt-BR) se le lingue crescono.
             $table->string('locale', 5)->default(CertificationRequest::DEFAULT_LOCALE);

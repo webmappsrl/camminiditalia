@@ -60,11 +60,9 @@ class CertificationRequestDecisionTest extends TestCase
 
     private function makeRequest(Layer $layer): CertificationRequest
     {
-        return CertificationRequest::create([
+        return CertificationRequest::factory()->create([
             'user_id' => $this->walker->id,
             'layer_id' => $layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
     }
 

@@ -5,9 +5,11 @@ namespace Tests\Feature;
 use App\Models\CertificationRequest;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Feature\Helpers\FakesCertificationDisk;
 use Tests\Feature\Helpers\LayerTestHelpers;
@@ -39,8 +41,90 @@ class CertificationRequestApiTest extends TestCase
     {
         return array_merge([
             'images' => [UploadedFile::fake()->image('c1.jpg')],
+            'start_date' => '2026-09-01',
+            'end_date' => '2026-09-05',
             'disclaimer_accepted' => true,
         ], $overrides);
+    }
+
+    /**
+     * Esegue la POST di una richiesta di certificazione su un layer con passaporto attivo.
+     *
+     * @param  array<string, mixed>  $overrides  Valori che sovrascrivono il payload valido.
+     * @param  array<int, string>  $without  Chiavi da togliere dal payload (per testare i campi mancanti).
+     */
+    private function postCertification(array $overrides, array $without = []): TestResponse
+    {
+        $layer = $this->enablePassport($this->createLayer());
+        $payload = array_diff_key($this->validPayload($overrides), array_flip($without));
+
+        return $this->actingAs(User::factory()->create(), 'api')
+            ->postJson("/api/layer/{$layer->id}/certification", $payload, ['Accept' => 'application/json']);
+    }
+
+    public function test_store_saves_start_and_end_date(): void
+    {
+        $this->postCertification([])->assertStatus(201);
+
+        $request = CertificationRequest::first();
+        $this->assertSame('2026-09-01', $request->start_date->toDateString());
+        $this->assertSame('2026-09-05', $request->end_date->toDateString());
+    }
+
+    public function test_store_requires_dates(): void
+    {
+        $this->postCertification([], ['start_date', 'end_date'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['start_date', 'end_date']);
+    }
+
+    public function test_store_rejects_wrong_date_format(): void
+    {
+        $this->postCertification(['start_date' => '01/09/2026'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['start_date']);
+    }
+
+    public function test_store_rejects_end_before_start(): void
+    {
+        $this->postCertification(['end_date' => '2026-08-31'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['end_date']);
+    }
+
+    public function test_store_rejects_start_date_after_tomorrow(): void
+    {
+        Carbon::setTestNow('2026-10-14 23:30:00');
+
+        try {
+            $this->postCertification(['start_date' => '2026-10-16', 'end_date' => '2026-10-16'])
+                ->assertStatus(422)
+                ->assertJsonValidationErrors(['start_date']);
+        } finally {
+            Carbon::setTestNow();
+        }
+    }
+
+    public function test_store_accepts_same_day(): void
+    {
+        $this->postCertification(['start_date' => '2026-09-01', 'end_date' => '2026-09-01'])
+            ->assertStatus(201);
+    }
+
+    public function test_store_accepts_tomorrow_and_rejects_after(): void
+    {
+        Carbon::setTestNow('2026-10-14 23:30:00');
+
+        try {
+            $this->postCertification(['start_date' => '2026-10-14', 'end_date' => '2026-10-15'])
+                ->assertStatus(201);
+
+            $this->postCertification(['start_date' => '2026-10-14', 'end_date' => '2026-10-16'])
+                ->assertStatus(422)
+                ->assertJsonValidationErrors(['end_date']);
+        } finally {
+            Carbon::setTestNow();
+        }
     }
 
     public function test_store_returns_201_with_pending_status(): void
@@ -171,6 +255,8 @@ class CertificationRequestApiTest extends TestCase
                 "/api/layer/{$layer->id}/certification",
                 [
                     'images' => [UploadedFile::fake()->create('credenziale.heif', 100, 'image/heif')],
+                    'start_date' => '2026-09-01',
+                    'end_date' => '2026-09-05',
                     'disclaimer_accepted' => true,
                 ],
                 ['Accept' => 'application/json']
@@ -205,11 +291,9 @@ class CertificationRequestApiTest extends TestCase
         $user = User::factory()->create();
         $layer = $this->enablePassport($this->createLayer());
 
-        CertificationRequest::create([
+        CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         $response = $this->actingAs($user, 'api')
@@ -244,11 +328,9 @@ class CertificationRequestApiTest extends TestCase
         $user = User::factory()->create();
         $layer = $this->enablePassport($this->createLayer());
 
-        $request = CertificationRequest::create([
+        $request = CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         $response = $this->actingAs($user, 'api')
@@ -268,11 +350,10 @@ class CertificationRequestApiTest extends TestCase
         $user = User::factory()->create();
         $layer = $this->enablePassport($this->createLayer());
 
-        $request = CertificationRequest::create([
+        $request = CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
             'status' => CertificationRequest::STATUS_APPROVED,
-            'disclaimer_accepted_at' => now(),
             'decided_at' => now(),
         ]);
 
@@ -292,11 +373,10 @@ class CertificationRequestApiTest extends TestCase
         $user = User::factory()->create();
         $layer = $this->enablePassport($this->createLayer());
 
-        CertificationRequest::create([
+        CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
             'status' => CertificationRequest::STATUS_REJECTED,
-            'disclaimer_accepted_at' => now(),
             'decided_at' => now(),
             'decision_note' => 'Foto illeggibile',
         ]);
@@ -313,11 +393,10 @@ class CertificationRequestApiTest extends TestCase
         $layer = $this->enablePassport($this->createLayer());
 
         foreach ([CertificationRequest::STATUS_REJECTED, CertificationRequest::STATUS_PENDING] as $status) {
-            CertificationRequest::create([
+            CertificationRequest::factory()->create([
                 'user_id' => $user->id,
                 'layer_id' => $layer->id,
                 'status' => $status,
-                'disclaimer_accepted_at' => now(),
             ]);
         }
 
@@ -360,11 +439,9 @@ class CertificationRequestApiTest extends TestCase
         $otherUser = User::factory()->create();
         $layer = $this->enablePassport($this->createLayer());
 
-        CertificationRequest::create([
+        CertificationRequest::factory()->create([
             'user_id' => $owner->id,
             'layer_id' => $layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         $response = $this->actingAs($otherUser, 'api')

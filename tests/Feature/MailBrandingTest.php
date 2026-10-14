@@ -47,12 +47,11 @@ class MailBrandingTest extends TestCase
 
     private function makeRequest(string $status = CertificationRequest::STATUS_PENDING, string $locale = 'it'): CertificationRequest
     {
-        return CertificationRequest::create([
+        return CertificationRequest::factory()->create([
             'user_id' => User::factory()->create(['name' => 'Mario Rossi'])->id,
             'layer_id' => $this->layer->id,
             'app_id' => $this->wmApp->id,
             'status' => $status,
-            'disclaimer_accepted_at' => now(),
             'locale' => $locale,
         ]);
     }

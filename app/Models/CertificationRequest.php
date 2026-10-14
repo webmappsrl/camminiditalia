@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,6 +23,8 @@ use Wm\WmPackage\Models\User as WmUser;
  * @property ?int $app_id
  * @property string $status
  * @property ?string $serial_number
+ * @property \Illuminate\Support\Carbon $start_date
+ * @property \Illuminate\Support\Carbon $end_date
  * @property \Illuminate\Support\Carbon $disclaimer_accepted_at
  * @property string $locale
  * @property ?string $decision_note
@@ -31,7 +34,7 @@ use Wm\WmPackage\Models\User as WmUser;
  */
 class CertificationRequest extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use HasFactory, InteractsWithMedia;
 
     public const STATUS_PENDING = 'pending';
 
@@ -58,6 +61,8 @@ class CertificationRequest extends Model implements HasMedia
         'app_id',
         'status',
         'serial_number',
+        'start_date',
+        'end_date',
         'disclaimer_accepted_at',
         'locale',
         'decision_note',
@@ -66,6 +71,8 @@ class CertificationRequest extends Model implements HasMedia
     ];
 
     protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
         'disclaimer_accepted_at' => 'datetime',
         'decided_at' => 'datetime',
     ];

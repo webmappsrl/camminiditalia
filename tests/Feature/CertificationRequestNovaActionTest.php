@@ -54,11 +54,9 @@ class CertificationRequestNovaActionTest extends TestCase
 
     private function makeRequest(): CertificationRequest
     {
-        return CertificationRequest::create([
+        return CertificationRequest::factory()->create([
             'user_id' => User::factory()->create(['name' => 'Mario Rossi'])->id,
             'layer_id' => $this->layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
     }
 

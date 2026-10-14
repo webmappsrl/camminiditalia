@@ -14,6 +14,8 @@ Vincoli che il codice da solo non spiega:
 - **decisione in due passaggi**: il primo modale Nova (`App\Nova\Actions\DecideCertificationRequest`) non scrive nulla e apre un secondo modale Vue (`resources/js/nova/certification-decision-confirm.js`); solo la conferma chiama `POST /nova-vendor/certification-decision/confirm` (`CertificationDecisionController`), che rifà autorizzazione e validazione. Nova mostra comunque il suo messaggio «action executed» dopo il primo passaggio;
 - le tappe validate sono esposte all'app e consultabili in Nova nella sezione «Tappe validate»: come si conta il progresso e chi vede cosa è in [8676-passaporto-camminatore-tappe-percorse-e-validate-dellutente.md](8676-passaporto-camminatore-tappe-percorse-e-validate-dellutente.md). Il pannello «Tappe validate» del dettaglio richiesta segue le stesse regole di visibilità (per cammino, non più per richiesta), quindi può mostrare meno tappe di quelle approvate se una tappa ha cambiato proprietario o è uscita dal cammino;
 - le richieste decise non si cancellano da Nova, nemmeno dall'Administrator (`delete` fuori da `ADMINISTRATOR_ABILITIES`). Una decisione sbagliata si corregge solo a mano sul DB: procedura in `docs/features/8671-…/notes.md`.
+- **date di percorrenza** (oc:8761): `start_date` ed `end_date` sono obbligatorie (`Y-m-d`), la fine non precede l'inizio e nessuna delle due va oltre **domani**; si vedono in Nova, in sola lettura, e nella mail al gestore («Percorso dal … al …»), ma non tornano all'app nella risposta del `GET`.
+
 
 ## Perché così
 
@@ -28,6 +30,9 @@ Vincoli che il codice da solo non spiega:
 - **Cancellazione a cascata accettata** (oc:8671, rischio accettato dal dev): `validated_ec_tracks.ec_track_id` e `layer_id` sono `cascadeOnDelete`. Un Validator che cancella una propria tappa ne elimina le validazioni per tutti; cancellare un layer elimina le sue richieste (anche decise) e le validazioni con quel `layer_id`. Il cliente chiedeva che le tappe riconosciute non si potessero cancellare: una richiesta decisa non si cancella da Nova, ma la cascade SQL elimina comunque le validazioni. Alternative valutate e non scelte per ora: `restrictOnDelete` su `ec_track_id`, `nullOnDelete` su `layer_id`.
 - **Anteprime delle foto nella mail al gestore** (oc:8671, rischio accettato dal dev): le foto della credenziale, con nome e cognome del camminatore, sono nella mail con URL pubblici (bucket `wmfe` leggibile, `GET /api/media/{id}` pubblica) che restano validi se la mail viene inoltrata. Il design delle mail è in [design-mail.md](design-mail.md).
 - **Rischio residuo accettato** (oc:8653): se il processo muore a metà caricamento resta una richiesta `pending` incompleta, visibile in Nova, che blocca nuovi invii finché non viene cancellata.
+- **Limite a domani, non a oggi** (oc:8761): il server è in UTC, mentre l'app limita le date all'oggi del dispositivo, che in Italia fra mezzanotte e le 2 con l'ora legale (fra mezzanotte e l'1 con l'ora solare) è già il giorno dopo per UTC. Un limite a oggi rifiuterebbe una richiesta legittima inviata in quelle ore.
+- **Colonne aggiunte modificando la migration di creazione** (oc:8761, decisione del dev: il passaporto non era in produzione): niente migration di aggiornamento. Dove la migration era già stata eseguita serve un rollback prima di aggiornare il codice, e la FK di `validated_ec_tracks` impedisce di togliere solo quella: il rollback toglie anche le migration successive, compreso l'archivio dei duplicati UGC. La procedura è nelle note del cantiere, `docs/features/8761-…/notes.md`.
+
 
 ## Come ci siamo arrivati
 
