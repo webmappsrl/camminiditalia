@@ -4,5 +4,9 @@
     "Roundtrip": "Rundweg",
     "Automatic": "Automatisch",
     "Leave on Automatic to use the shape computed from the stages; choose a value to correct it manually.": "Auf Automatisch lassen, um die aus den Etappen berechnete Streckenform zu verwenden; einen Wert wählen, um sie manuell zu korrigieren.",
-    "Route shape": "Streckenform"
+    "Route shape": "Streckenform",
+    "Layers crossed by the track": "Von der Spur durchquerte Wege",
+    "Layer crossed by the track": "Von der Spur durchquerter Weg",
+    "EcTracks crossed outside any layer": "Durchquerte Etappen ohne Weg",
+    "The track does not cross any EcTrack": "Die Spur durchquert keine Etappe"
 }

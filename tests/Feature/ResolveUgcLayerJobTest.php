@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App as WmApp;
 use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\UgcPoi;
 use Wm\WmPackage\Models\UgcTrack;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 use Wm\WmPackage\Services\UgcService;
@@ -29,15 +30,9 @@ class ResolveUgcLayerJobTest extends TestCase
             WmApp::factory()->create();
         }
 
-        // Queue::fake()/Mail::fake(): UgcTrack::factory()->create() qui sotto
-        // triggera sincronicamente (QUEUE_CONNECTION=sync in phpunit.xml)
-        // il dispatch automatico di ResolveUgcLayerJob da UgcObserver, che su
-        // un DB di test vuoto finisce nel ramo "nessun layer trovato" e
-        // costruisce una NewUgcReportMail su una UgcTrack (geometria linea):
-        // ST_X()/ST_Y() assumono un Point e falliscono, lasciando la
-        // transazione Postgres del test "aborted" (bug preesistente e non
-        // correlato, vedi tests/Feature/UgcNotificationTest.php — tutti gli
-        // altri test costruiscono NewUgcReportMail solo su UgcPoi).
+        // Queue::fake()/Mail::fake(): UgcPoi::factory()->create() qui sotto triggera il dispatch
+        // automatico di ResolveUgcLayerJob da UgcObserver: va intercettato, altrimenti con
+        // QUEUE_CONNECTION=sync il job girerebbe davvero durante il setup dei test.
         Queue::fake();
         Mail::fake();
 
@@ -56,7 +51,7 @@ class ResolveUgcLayerJobTest extends TestCase
         $correctLayer = Layer::factory()->create();
         $autoResolvedLayer = Layer::factory()->create();
 
-        $track = UgcTrack::factory()->create([
+        $track = UgcPoi::factory()->create([
             'properties' => ['form' => ['id' => 'report']],
         ]);
 
@@ -79,7 +74,7 @@ class ResolveUgcLayerJobTest extends TestCase
             $mock->shouldReceive('resolveLayerByProximity')
                 ->once()
                 ->andReturnUsing(function () use ($autoResolvedLayer, $track, $correctLayer, $overrideHelper) {
-                    $trackForManualEdit = UgcTrack::find($track->id);
+                    $trackForManualEdit = UgcPoi::find($track->id);
                     $overrideHelper::applyManualLayerOverride($trackForManualEdit, $correctLayer->id, null);
                     $trackForManualEdit->save();
 
@@ -99,7 +94,7 @@ class ResolveUgcLayerJobTest extends TestCase
     {
         $resolvedLayer = Layer::factory()->create();
 
-        $track = UgcTrack::factory()->create([
+        $track = UgcPoi::factory()->create([
             'properties' => ['form' => ['id' => 'report']],
         ]);
 
@@ -123,7 +118,7 @@ class ResolveUgcLayerJobTest extends TestCase
     {
         $manualLayer = Layer::factory()->create();
 
-        $track = UgcTrack::factory()->create([
+        $track = UgcPoi::factory()->create([
             'properties' => ['form' => ['id' => 'report']],
         ]);
 
@@ -142,6 +137,19 @@ class ResolveUgcLayerJobTest extends TestCase
         $track->refresh();
         $this->assertSame($manualLayer->id, $track->properties['layer_id']);
         $this->assertFalse($track->properties['layer_id_auto_resolved']);
+        Queue::assertNotPushed(SendUgcReportMailJob::class);
+    }
+
+    public function test_ugc_track_with_report_form_gets_no_layer_id_and_no_job(): void
+    {
+        // oc:8773: la UgcTrack non ha layer_id, l'observer locale non deve trattarla come un report.
+        $track = UgcTrack::factory()->create([
+            'properties' => ['form' => ['id' => 'report']],
+        ]);
+
+        $track->refresh();
+        $this->assertArrayNotHasKey('layer_id', $track->properties);
+        Queue::assertNotPushed(ResolveUgcLayerJob::class);
         Queue::assertNotPushed(SendUgcReportMailJob::class);
     }
 }
