@@ -23,6 +23,8 @@ class CertificationRequestController extends Controller
                 $layer,
                 $request->file('images'),
                 $request->input('serial_number'),
+                $request->input('start_date'),
+                $request->input('end_date'),
                 CertificationRequest::localeFromAcceptLanguage($request->header('Accept-Language')),
             );
         } catch (PendingCertificationRequestExistsException) {

@@ -37,20 +37,16 @@ class CertificationRequestModelTest extends TestCase
         $user = User::factory()->create();
         $layer = $this->createLayer();
 
-        CertificationRequest::create([
+        CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         $this->expectException(UniqueConstraintViolationException::class);
 
-        CertificationRequest::create([
+        CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
     }
 
@@ -59,18 +55,15 @@ class CertificationRequestModelTest extends TestCase
         $user = User::factory()->create();
         $layer = $this->createLayer();
 
-        CertificationRequest::create([
+        CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
             'status' => 'rejected',
-            'disclaimer_accepted_at' => now(),
         ]);
 
-        $second = CertificationRequest::create([
+        $second = CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         $this->assertTrue($second->exists);
@@ -82,12 +75,10 @@ class CertificationRequestModelTest extends TestCase
         $user = User::factory()->create();
         $layer = $this->createLayer();
 
-        $request = CertificationRequest::create([
+        $request = CertificationRequest::factory()->create([
             'user_id' => $user->id,
             'layer_id' => $layer->id,
             'app_id' => $layer->app_id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         $request->addMedia(UploadedFile::fake()->image('one.jpg'))->toMediaCollection('default');
@@ -110,14 +101,17 @@ class CertificationRequestModelTest extends TestCase
 
     public function test_locale_defaults_to_it(): void
     {
+        // Creazione diretta senza `locale`: verifica il default della colonna.
         $request = CertificationRequest::create([
             'user_id' => User::factory()->create()->id,
             'layer_id' => $this->createLayer()->id,
-            'status' => CertificationRequest::STATUS_PENDING,
+            'start_date' => '2026-09-01',
+            'end_date' => '2026-09-05',
             'disclaimer_accepted_at' => now(),
         ]);
+        $request->refresh();
 
-        $this->assertSame('it', $request->fresh()->locale);
+        $this->assertSame('it', $request->locale);
         $this->assertTrue($request->isPending());
     }
 
@@ -125,11 +119,10 @@ class CertificationRequestModelTest extends TestCase
     {
         $validator = $this->createUserWithRole('Validator');
 
-        $request = CertificationRequest::create([
+        $request = CertificationRequest::factory()->create([
             'user_id' => User::factory()->create()->id,
             'layer_id' => $this->createLayer($validator->id)->id,
             'status' => CertificationRequest::STATUS_REJECTED,
-            'disclaimer_accepted_at' => now(),
             'decided_at' => now(),
             'decided_by' => $validator->id,
             'decision_note' => 'Foto illeggibile',
@@ -140,5 +133,16 @@ class CertificationRequestModelTest extends TestCase
         $this->assertNotNull($fresh->decided_at);
         $this->assertSame('Foto illeggibile', $fresh->decision_note);
         $this->assertFalse($fresh->isPending());
+    }
+
+    public function test_start_and_end_date_are_cast_to_dates(): void
+    {
+        $request = CertificationRequest::factory()->create([
+            'user_id' => User::factory()->create()->id,
+            'layer_id' => $this->createLayer()->id,
+        ])->fresh();
+
+        $this->assertSame('2026-09-01', $request->start_date->toDateString());
+        $this->assertSame('2026-09-05', $request->end_date->toDateString());
     }
 }

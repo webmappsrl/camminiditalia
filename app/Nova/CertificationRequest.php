@@ -9,6 +9,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -109,6 +110,12 @@ class CertificationRequest extends Resource
                 ->readonly(),
 
             Text::make(__('Serial number'), 'serial_number')
+                ->readonly(),
+
+            Date::make(__('Start date'), 'start_date')
+                ->readonly(),
+
+            Date::make(__('End date'), 'end_date')
                 ->readonly(),
 
             Badge::make(__('Status'), 'status')

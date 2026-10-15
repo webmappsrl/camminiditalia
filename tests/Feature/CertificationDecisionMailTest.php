@@ -52,11 +52,9 @@ class CertificationDecisionMailTest extends TestCase
             ->map(fn ($name) => $this->createTrack($this->owner->id, $name, $this->layer)->id)
             ->all();
 
-        $request = CertificationRequest::create([
+        $request = CertificationRequest::factory()->create([
             'user_id' => $this->walker->id,
             'layer_id' => $this->layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
             'locale' => $locale,
         ]);
 

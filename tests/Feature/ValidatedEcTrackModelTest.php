@@ -47,11 +47,10 @@ class ValidatedEcTrackModelTest extends TestCase
         $this->walker = User::factory()->create();
         $this->track = $this->createTrack($owner->id, 'Tappa 1', $this->layer);
 
-        $this->certificationRequest = CertificationRequest::create([
+        $this->certificationRequest = CertificationRequest::factory()->create([
             'user_id' => $this->walker->id,
             'layer_id' => $this->layer->id,
             'status' => CertificationRequest::STATUS_APPROVED,
-            'disclaimer_accepted_at' => now(),
         ]);
     }
 

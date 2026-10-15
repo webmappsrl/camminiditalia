@@ -211,11 +211,10 @@ class ValidatedEcTrackNovaTest extends TestCase
     public function test_request_detail_panel_uses_layer_scoping(): void
     {
         $s = $this->scenario();
-        $request = CertificationRequest::create([
+        $request = CertificationRequest::factory()->create([
             'user_id' => $s['walker1']->id,
             'layer_id' => $s['layerA']->id,
             'status' => CertificationRequest::STATUS_APPROVED,
-            'disclaimer_accepted_at' => now(),
         ]);
         $s['manualA']->forceFill(['certification_request_id' => $request->id])->save();
         $s['foreignInA']->forceFill(['certification_request_id' => $request->id])->save();

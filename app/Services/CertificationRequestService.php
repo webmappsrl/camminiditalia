@@ -38,6 +38,8 @@ class CertificationRequestService
      * se il layer non ha owner).
      *
      * @param  UploadedFile[]  $images
+     * @param  string  $startDate  data di inizio percorrenza (Y-m-d)
+     * @param  string  $endDate  data di fine percorrenza (Y-m-d)
      *
      * @throws PendingCertificationRequestExistsException se esiste già una richiesta pending per (user, layer)
      */
@@ -46,6 +48,8 @@ class CertificationRequestService
         Layer $layer,
         array $images,
         ?string $serialNumber,
+        string $startDate,
+        string $endDate,
         string $locale = CertificationRequest::DEFAULT_LOCALE,
     ): CertificationRequest {
         if ($this->hasPending($user, $layer)) {
@@ -59,6 +63,8 @@ class CertificationRequestService
                 'app_id' => $layer->app_id,
                 'status' => CertificationRequest::STATUS_PENDING,
                 'serial_number' => $serialNumber,
+                'start_date' => $startDate,
+                'end_date' => $endDate,
                 'disclaimer_accepted_at' => now(),
                 'locale' => $locale,
             ]));

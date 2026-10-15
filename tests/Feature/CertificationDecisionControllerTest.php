@@ -48,11 +48,9 @@ class CertificationDecisionControllerTest extends TestCase
         $this->trackIds = collect(['Tappa 1', 'Tappa 2'])
             ->map(fn ($name) => $this->createTrack($this->owner->id, $name, $this->layer)->id)
             ->all();
-        $this->request = CertificationRequest::create([
+        $this->request = CertificationRequest::factory()->create([
             'user_id' => User::factory()->create()->id,
             'layer_id' => $this->layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
     }
 

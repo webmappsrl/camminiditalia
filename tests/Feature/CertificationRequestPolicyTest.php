@@ -35,11 +35,9 @@ class CertificationRequestPolicyTest extends TestCase
         $layer = $this->createLayer($this->owner->id);
         $walker = User::factory()->create();
 
-        $this->certificationRequest = CertificationRequest::create([
+        $this->certificationRequest = CertificationRequest::factory()->create([
             'user_id' => $walker->id,
             'layer_id' => $layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
     }
 

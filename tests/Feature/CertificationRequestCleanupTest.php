@@ -57,12 +57,10 @@ class CertificationRequestCleanupTest extends TestCase
 
     private function createRequestWithMedia(int $userId, Layer $layer): CertificationRequest
     {
-        $request = CertificationRequest::create([
+        $request = CertificationRequest::factory()->create([
             'user_id' => $userId,
             'layer_id' => $layer->id,
             'app_id' => $layer->app_id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         $request->addMedia(UploadedFile::fake()->image('one.jpg'))->toMediaCollection('default');

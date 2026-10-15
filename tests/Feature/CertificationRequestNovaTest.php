@@ -40,13 +40,11 @@ class CertificationRequestNovaTest extends TestCase
     {
         $walker = User::factory()->create();
 
-        $request = CertificationRequest::create([
+        $request = CertificationRequest::factory()->create([
             'user_id' => $walker->id,
             'layer_id' => $layer->id,
             'app_id' => $layer->app_id,
-            'status' => CertificationRequest::STATUS_PENDING,
             'serial_number' => 'SN-'.$walker->id,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         for ($i = 0; $i < $images; $i++) {
@@ -172,6 +170,23 @@ class CertificationRequestNovaTest extends TestCase
         $this->assertNotNull($walker);
         $this->assertSame('belongs-to-field', $walker['component']);
         $this->assertSame($request->user_id, $walker['belongsToId']);
+    }
+
+    public function test_detail_shows_readonly_walked_dates(): void
+    {
+        $admin = $this->createUserWithRole('Administrator');
+        $request = $this->makeRequest($this->createLayer($this->createUserWithRole('Validator')->id));
+
+        $response = $this->actingAs($admin)->getJson('/nova-api/certification-requests/'.$request->id);
+
+        $response->assertOk();
+        $fields = collect($response->json('resource.fields'));
+        foreach (['start_date' => 'Start date', 'end_date' => 'End date'] as $attribute => $name) {
+            $field = $fields->firstWhere('attribute', $attribute);
+            $this->assertNotNull($field, $attribute);
+            $this->assertSame(__($name), $field['name']);
+            $this->assertTrue($field['readonly']);
+        }
     }
 
     public function test_validator_sees_user_as_plain_text_without_link(): void

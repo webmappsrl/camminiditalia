@@ -135,11 +135,9 @@ class PassportLayerGateTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $layer = $this->createLayer($owner->id);
-        $request = CertificationRequest::create([
+        $request = CertificationRequest::factory()->create([
             'user_id' => User::factory()->create()->id,
             'layer_id' => $layer->id,
-            'status' => CertificationRequest::STATUS_PENDING,
-            'disclaimer_accepted_at' => now(),
         ]);
 
         $this->actingAs($owner)->postJson('/nova-vendor/certification-decision/confirm', [
