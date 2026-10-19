@@ -75,5 +75,9 @@
     "Last validation": "Dernière validation",
     "Per user and route": "Par utilisateur et chemin",
     "Passport enabled": "Passeport actif",
-    "Enable the Passport for this cammino in the app.": "Active le Passeport pour ce chemin dans l'app."
+    "Enable the Passport for this cammino in the app.": "Active le Passeport pour ce chemin dans l'app.",
+    "Layers crossed by the track": "Chemins traversés par la trace",
+    "Layer crossed by the track": "Chemin traversé par la trace",
+    "EcTracks crossed outside any layer": "Étapes traversées hors de tout chemin",
+    "The track does not cross any EcTrack": "La trace ne traverse aucune étape"
 }

@@ -2,24 +2,70 @@
 
 ## Come funziona oggi
 
-L'associazione UGC → layer vive in `properties->layer_id` (JSON, no FK) — vedi CLAUDE.md, sezione "UGC e form".
+**UgcTrack: nessun `layer_id`** (oc:8773). Una UGC track attraversa più cammini: le tappe e i
+cammini attraversati si ricavano dalla corrispondenza per segmenti calcolata da wm-package (vedi
+[wm-package/docs/knowledge/8773-associazione-delle-ugctrack-a-piu-cammini-tappe-invece-che-a-un-solo-layer.md](../../wm-package/docs/knowledge/8773-associazione-delle-ugctrack-a-piu-cammini-tappe-invece-che-a-un-solo-layer.md)).
+In camminiditalia: `App\Nova\UgcTrack` eredita dal package il campo "Cammini attraversati dalla
+traccia" e il filtro per cammino; `App\Observers\UgcObserver`, dopo `parent::created()`, non esegue per le UgcTrack la parte `layer_id` (mail e `ResolveUgcLayerJob`);
+`PopulateUgcLayerIdCommand` lavora solo sugli UgcPoi. Le etichette "cammino/tappa" sono override
+di `resources/lang/*.json` sulle chiavi del package. Parametri 400 m / 50 m: i default del package, gli stessi dell'algoritmo del passaporto
+(oc:8165, call del 03/09/2026).
 
-**Risoluzione automatica.** Alla creazione di un UGC con `properties->form->id === 'report'` e senza `layer_id` esplicito, `App\Observers\UgcObserver::created()` dispatcha `App\Jobs\ResolveUgcLayerJob`, che chiama `UgcService::resolveLayerByProximity()` (prende la EcTrack più vicina entro `UGC_LAYER_SEARCH_DISTANCE_METERS`, poi il layer di quella traccia con centroide più vicino). Inaffidabile su tracce UGC lunghe (oc:8466 — ticket Orchestrator, nessun cantiere `docs/features/` locale per la parte 1 dell'algoritmo: un cammino di 6 giorni/100km viene associato al layer sbagliato tra due cammini che condividono un corridoio). Il job è idempotente (controlla `layer_id` già presente prima di ripartire) e marca il risultato con `properties->layer_id_auto_resolved = true`.
+**UgcPoi: un solo `layer_id`** in `properties->layer_id` (JSON, no FK) — vedi CLAUDE.md, sezione
+"UGC e form".
 
-**Correzione manuale (oc:8575).** Solo l'Administrator può correggere il layer da Nova (`UgcTrack`/`UgcPoi`), tramite un campo `Select` editabile visibile solo in Update (`app/Nova/Traits/HasLayerOverride.php`), che coesiste con il link readonly esistente (`app/Nova/Traits/HasLayerFilterAndLink.php`, visibile solo in Detail). Il salvataggio manuale marca `properties->layer_id_auto_resolved = false`, non invia mail, non usa `saveQuietly()` (l'observer locale reagisce solo a `created()`, mai a `updated()`). La logica di mutazione condivisa (imposta `layer_id`+flag+allinea `form.layer_id`) vive in `App\Support\UgcLayerAssignment::apply()`, riusata sia dal job sia dall'override manuale.
+**Risoluzione automatica (UgcPoi report).** Alla creazione di un UgcPoi con
+`properties->form->id === 'report'` e senza `layer_id` esplicito, `App\Observers\UgcObserver::created()`
+dispatcha `App\Jobs\ResolveUgcLayerJob`, che chiama `UgcService::resolveLayerByProximity()`
+(EcTrack più vicina entro `UGC_LAYER_SEARCH_DISTANCE_METERS`, poi il layer di quella traccia con
+centroide più vicino). Il job è idempotente e marca il risultato con
+`properties->layer_id_auto_resolved = true`. Prima di inviare la mail controlla anche quel flag,
+altrimenti notificherebbe il gestore di un layer assegnato a mano.
 
-**Guardia anti race-condition, bidirezionale.** Il job automatico e la correzione manuale possono sovrapporsi (il job parte solo alla creazione ma può restare in coda; l'admin può correggere in qualsiasi momento):
-- *Job sovrascrive correzione manuale*: prima del salvataggio finale, `ResolveUgcLayerJob` ricontrolla con una query fresca dal DB se `layer_id_auto_resolved` è già `false` — se sì, abortisce. Copre anche il caso in cui la correzione manuale sia avvenuta *prima* che il job partisse (il ramo di idempotenza preesistente controlla lo stesso flag, non solo la presenza di `layer_id`, altrimenti rimanderebbe comunque la mail).
-- *Salvataggio non correlato sovrascrive risoluzione automatica*: il campo Nova editabile non confronta il valore inviato con lo stato attuale del DB (che potrebbe essere cambiato dopo il render della pagina), ma con un campo nascosto companion (`layerOverrideOriginalField`, stesso `resolveUsing` del campo visibile) che riporta il valore mostrato al render — un salvataggio che non tocca il select risottomette lo stesso valore per entrambi i campi e il confronto risulta "invariato", senza sovrascrivere nulla.
+**Correzione manuale (oc:8575).** Solo l'Administrator può correggere il layer di un UgcPoi da
+Nova, tramite un campo `Select` editabile visibile solo in Update (`app/Nova/Traits/HasLayerOverride.php`),
+che coesiste con il link readonly (`app/Nova/Traits/HasLayerFilterAndLink.php`, visibile solo in
+Detail). Il salvataggio manuale marca `properties->layer_id_auto_resolved = false`, non invia mail,
+non usa `saveQuietly()`. La logica di mutazione condivisa vive in
+`App\Support\UgcLayerAssignment::apply()`, riusata dal job e dall'override manuale.
+
+**Guardia anti race-condition, bidirezionale.**
+- *Job sovrascrive correzione manuale*: prima del salvataggio finale, `ResolveUgcLayerJob`
+  ricontrolla dal DB se `layer_id_auto_resolved` è già `false` — se sì, abortisce (anche se la
+  correzione è avvenuta prima che il job partisse).
+- *Salvataggio non correlato sovrascrive risoluzione automatica*: il campo Nova editabile confronta
+  il valore inviato con un campo nascosto companion (`layerOverrideOriginalField`) che riporta il
+  valore mostrato al render, non con lo stato attuale del DB.
 
 ## Perché così
 
-- **`App\Policies\UgcTrackPolicy` esplicita, con `update` Administrator-only** (oc:8575): `Wm\WmPackage\Policies\UgcTrackPolicy` era già attiva su `UgcTrack` tramite l'algoritmo di default di `Gate::guessPolicyName()` — **non serve `Gate::guessPolicyNamesUsing()` custom**, quel meccanismo è solo un override aggiuntivo: Laravel tenta comunque la convenzione namespace `Models\` → `Policies\` + `{ClassName}Policy` (verificato in `vendor/laravel/framework/src/Illuminate/Auth/Access/Gate.php:717-737`). La policy del package bypassa Administrator+Validator su tutto; la nuova classe locale replica esattamente questo comportamento, togliendo solo il Validator dal bypass sulla singola ability `update`.
-- **Registrare una `Gate::policy()` per un modello che non l'aveva prima cambia il comportamento di *tutte* le ability, non solo quella che si intende toccare**: in `vendor/laravel/nova/src/Authorizable.php`, solo `authorizedToViewAny()` (righe 64-77) ha la guardia `is_callable` che di default a `true` se la policy non definisce il metodo. `authorizedToCreate()` (righe 118-127) e `authorizedTo()` (righe 408-415, usato da `view`/`update`/`delete`/`restore`) NON hanno questa guardia — se la policy non definisce esplicitamente il metodo, quella ability viene negata a *tutti*, Administrator incluso. Chi registra per la prima volta una policy su un modello wm-package deve verificare se una policy "ombra" del package esisteva già (stesso schema di `EcTrackPolicy`/`EcPoiPolicy`, oc:8120/oc:8181), non assumere che "nessuna `Gate::policy()` esplicita" significhi "nessuna autorizzazione attiva".
-- **`fillUsing()` su un field Nova gira su *ogni* salvataggio Update della risorsa, non solo quando il campo viene toccato**: `vendor/laravel/nova/src/Fields/Field.php:395-402` (`fillAttribute()`) chiama il `fillCallback` incondizionatamente quando impostato, bypassando il controllo `$request->exists($requestAttribute)` che il path di default (`fillAttributeFromRequest()`) fa automaticamente. Un `fillUsing` che scrive dati derivati (flag, log) deve replicare quel controllo a mano, altrimenti scatta anche su modifiche che non riguardano il campo.
-- **Label Nova hardcoded in italiano invece di `__()`** (oc:8575, stesso pattern già in uso da `renderLayerLink()` introdotto in oc:8276): il locale attivo in produzione non è sempre `it` nonostante `resources/lang/it.json` abbia la traduzione — osservato concretamente (`"Layer"` mostrato invece di `"Cammino"` su alcuni record `UgcTrack` in produzione). Root cause non investigata; la mitigazione adottata (stringa fissa) vale per tutte le label di questi due trait.
+- **UgcTrack senza `layer_id`, cammini ricavati dalla corrispondenza per segmenti** (oc:8773): una
+  traccia lunga attraversa più tappe e più cammini; il valore singolo era incompleto e sulle tracce
+  lunghe sbagliato (oc:8466). Lo stesso dato serve al passaporto automatico (oc:8165).
+- **`App\Policies\UgcTrackPolicy` esplicita, con `update` Administrator-only** (oc:8575):
+  `Wm\WmPackage\Policies\UgcTrackPolicy` era già attiva su `UgcTrack` tramite l'algoritmo di default
+  di `Gate::guessPolicyName()` — **non serve `Gate::guessPolicyNamesUsing()` custom** (verificato in
+  `vendor/laravel/framework/src/Illuminate/Auth/Access/Gate.php:717-737`). La classe locale toglie
+  solo il Validator dal bypass sull'ability `update`. Effetto collaterale noto: il Validator ha ancora
+  `view`/`delete` su ogni UgcTrack via URL diretto (la lista è vuota per `indexQuery()`), fuori scope
+  di oc:8773.
+- **Registrare una `Gate::policy()` per un modello che non l'aveva prima cambia tutte le ability**:
+  in `vendor/laravel/nova/src/Authorizable.php` solo `authorizedToViewAny()` ha la guardia
+  `is_callable`; `authorizedToCreate()` e `authorizedTo()` no — un metodo mancante nega a tutti,
+  Administrator incluso.
+- **`fillUsing()` su un field Nova gira su ogni salvataggio Update** (`vendor/laravel/nova/src/Fields/Field.php:395-402`):
+  un `fillUsing` che scrive dati derivati deve replicare a mano il controllo `$request->exists(...)`.
+- **Label Nova hardcoded in italiano nei trait** (oc:8575, pattern di `renderLayerLink()` di oc:8276):
+  osservato "Layer" invece di "Cammino" su alcuni record in produzione; root cause non investigata.
+  Non dipende dal bug di precedenza delle traduzioni corretto in oc:8773 ("Layer" non è una chiave del
+  JSON del package).
 
 ## Come ci siamo arrivati
 
-- **Il ramo di idempotenza del job basato solo su "`layer_id` è vuoto?"** (preesistente) — superato in parte da oc:8575: ora controlla anche `layer_id_auto_resolved` prima di inviare la mail di notifica, per non notificare il gestore di un layer assegnato manualmente.
-- **`HasLayerOverride` è un trait nuovo di oc:8575** (non un'estrazione da un trait preesistente): la mutazione dati (campo editabile + `applyManualLayerOverride()`) è stata separata da subito da `HasLayerFilterAndLink` (che resta solo presentazione: link readonly e filtro), per evitare che un trait di presentazione Nova accumulasse anche logica di dominio.
+- **`layer_id` singolo anche sulle UgcTrack, con link, filtro e correzione manuale in Nova**
+  (oc:8079, oc:8276, oc:8575, superato da oc:8773 per le sole UgcTrack): il campo di correzione e il
+  link sono rimasti sugli UgcPoi; sulle UgcTrack li sostituiscono il campo e il filtro del package.
+- **Il ramo di idempotenza del job basato solo su "`layer_id` è vuoto?"** — superato in parte da
+  oc:8575: ora controlla anche `layer_id_auto_resolved` prima di inviare la mail.
+- **`HasLayerOverride` è un trait nuovo di oc:8575**, separato da subito da `HasLayerFilterAndLink`
+  (che resta solo presentazione).

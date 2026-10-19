@@ -7,6 +7,7 @@ use App\Jobs\SendUgcReportMailJob;
 use Illuminate\Database\Eloquent\Model;
 use Wm\WmPackage\Models\Abstracts\GeometryModel;
 use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\UgcTrack;
 use Wm\WmPackage\Observers\UgcObserver as BaseUgcObserver;
 
 class UgcObserver extends BaseUgcObserver
@@ -14,6 +15,13 @@ class UgcObserver extends BaseUgcObserver
     public function created(Model $model): void
     {
         parent::created($model);
+
+        // oc:8773: una UgcTrack non ha layer_id: la corrispondenza con i cammini è calcolata dal
+        // package (MatchUgcTrackToEcTracksJob), quindi niente lettura di layer_id, mail o
+        // ResolveUgcLayerJob.
+        if ($model instanceof UgcTrack) {
+            return;
+        }
 
         if (! $model instanceof GeometryModel) {
             return;

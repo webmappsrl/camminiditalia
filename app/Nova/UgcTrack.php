@@ -2,18 +2,19 @@
 
 namespace App\Nova;
 
-use App\Nova\Traits\HasLayerFilterAndLink;
-use App\Nova\Traits\HasLayerOverride;
 use App\Nova\Traits\HidesAppFromIndexTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Wm\WmPackage\Nova\UgcTrack as WmNovaUgcTrack;
 
+/**
+ * Le UgcTrack non hanno un cammino singolo (oc:8773): cammini e tappe attraversati, e il filtro
+ * per cammino, arrivano dal package (corrispondenza per segmenti). Link e correzione manuale su
+ * layer_id restano solo sugli UgcPoi.
+ */
 class UgcTrack extends WmNovaUgcTrack
 {
-    use HasLayerFilterAndLink;
-    use HasLayerOverride;
     use HidesAppFromIndexTrait;
 
     public static function label(): string
@@ -33,28 +34,5 @@ class UgcTrack extends WmNovaUgcTrack
         }
 
         return $query->whereRaw('1=0');
-    }
-
-    public function fields(NovaRequest $request): array
-    {
-        $fields = parent::fields($request);
-
-        if ($filterField = $this->layerFilterField($request)) {
-            $fields[] = $filterField;
-        }
-
-        if ($linkField = $this->layerLinkField($request)) {
-            $fields[] = $linkField;
-        }
-
-        if ($overrideField = $this->layerOverrideField($request)) {
-            $fields[] = $overrideField;
-        }
-
-        if ($overrideOriginalField = $this->layerOverrideOriginalField($request)) {
-            $fields[] = $overrideOriginalField;
-        }
-
-        return $fields;
     }
 }

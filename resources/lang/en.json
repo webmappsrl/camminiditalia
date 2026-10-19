@@ -83,5 +83,9 @@
     "Last validation": "Last validation",
     "Per user and route": "Per user and route",
     "Passport enabled": "Passport enabled",
-    "Enable the Passport for this cammino in the app.": "Enables the Passport for this route in the app."
+    "Enable the Passport for this cammino in the app.": "Enables the Passport for this route in the app.",
+    "Layers crossed by the track": "Routes crossed by the track",
+    "Layer crossed by the track": "Route crossed by the track",
+    "EcTracks crossed outside any layer": "Stages crossed outside any route",
+    "The track does not cross any EcTrack": "The track does not cross any stage"
 }
