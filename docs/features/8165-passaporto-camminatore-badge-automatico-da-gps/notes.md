@@ -139,6 +139,20 @@ comportamento in produzione per far passare un test. Il dev ha fermato quella st
   richiesto di riallineare una decina di test del package e di ricalcolare tutte le
   corrispondenze. Il limite è scritto nel codice e nella pagina di conoscenza del package.
 
+## Trovato durante il deploy su develop
+
+**`wm:match-ugc-tracks` da solo non riallinea niente dopo questo ticket.** Riaccoda le tracce mai
+calcolate, fallite o calcolate con parametri diversi da quelli correnti; il limite sui tratti
+dritti lunghi però non cambia nessun parametro, cambia il codice. Per il comando le
+corrispondenze esistenti sono già a posto, e restano quelle della regola vecchia.
+
+Serve azzerare prima lo stato dei calcoli (`TRUNCATE ugc_track_matching_runs`), una tabella di
+servizio che si ricostruisce da sé. In dev il `--dry-run` è passato da «0 tracce da calcolare» a
+269. Il passo è ora in `plan.md` e nel `CLAUDE.md`.
+
+La soluzione migliore sarebbe un'opzione sul comando per forzare il ricalcolo, da tenersi per le
+prossime volte: non fatta in questo ciclo su indicazione del dev.
+
 ## Follow-up
 
 - **L'informativa privacy non nomina i dati di posizione.** Il testo mostrato alla registrazione

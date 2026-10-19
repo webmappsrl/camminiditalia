@@ -629,8 +629,19 @@ Non sono task di sviluppo: sono i passi che il dev esegue al deploy, in quest'or
 
 1. Deploy di `wm-package` (task 1-3), poi di camminiditalia con il gitlink aggiornato.
 2. `php artisan migrate`.
-3. `php artisan wm:match-ugc-tracks --dry-run`, poi senza: il limite sui tratti dritti cambia le
-   corrispondenze già calcolate, e il verdetto deve partire da quelle nuove.
+3. **Azzerare lo stato dei calcoli di corrispondenza**, poi `wm:match-ugc-tracks --dry-run` e
+   senza. Senza il primo passo il comando non fa nulla: riaccoda solo le tracce mai calcolate,
+   fallite o calcolate con parametri diversi, e il limite sui tratti dritti lunghi non cambia
+   nessun parametro — cambia il codice. Le corrispondenze resterebbero quelle vecchie, calcolate
+   con la regola precedente, e il passaporto si baserebbe su dati sbagliati.
+
+   ```sql
+   TRUNCATE ugc_track_matching_runs;
+   ```
+
+   È una tabella di servizio — tiene solo l'esito dell'ultimo calcolo di ogni traccia — e si
+   ricostruisce da sé man mano che i job girano. Verificato in dev: dopo il `TRUNCATE` il
+   `--dry-run` passa da «0 tracce da calcolare» a 269.
 4. `php artisan camminiditalia:compute-stage-validations --dry-run`: **guardare i numeri e
    confrontarli con le 77 tappe a 26 persone** misurate in pianificazione. Uno scarto grosso vuol
    dire che qualcosa non torna, e dopo il lancio vero non si torna indietro.
