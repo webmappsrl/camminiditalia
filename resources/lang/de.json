@@ -79,5 +79,7 @@
     "Layers crossed by the track": "Von der Spur durchquerte Wege",
     "Layer crossed by the track": "Von der Spur durchquerter Weg",
     "EcTracks crossed outside any layer": "Durchquerte Etappen ohne Weg",
-    "The track does not cross any EcTrack": "Die Spur durchquert keine Etappe"
+    "The track does not cross any EcTrack": "Die Spur durchquert keine Etappe",
+    "Variant of": "Variante von",
+    "The stage this one is an alternative of: walking either of the two counts as the same stage of the route.": "Die Etappe, zu der diese eine Alternative ist: Wer die eine oder die andere geht, hat dieselbe Etappe des Weges zurückgelegt."
 }

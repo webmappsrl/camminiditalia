@@ -2,10 +2,10 @@
 
 namespace App\Nova\Lenses;
 
-use App\Models\ValidatedEcTrack as ValidatedEcTrackModel;
-use App\Nova\Filters\ValidatedEcTrackLayerFilter;
-use App\Nova\Filters\ValidatedEcTrackUserFilter;
-use App\Nova\ValidatedEcTrack;
+use App\Models\PassportStage as PassportStageModel;
+use App\Nova\Filters\PassportStageLayerFilter;
+use App\Nova\Filters\PassportStageUserFilter;
+use App\Nova\PassportStage;
 use App\Services\StageProgressService;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Laravel\Nova\Fields\DateTime;
@@ -21,14 +21,14 @@ use Wm\WmPackage\Models\User;
  * utente/layer da StageProgressService::summaryQuery(), che applica già lo
  * scoping di ruolo dentro l'aggregato (Administrator tutto, Validator i suoi
  * layer, altri nulla). L'`id` delle righe è `(user_id << StageProgressService::SUMMARY_ID_USER_SHIFT) | layer_id`, non
- * una validazione: ValidatedEcTrack::authorizedToView() è false sulle
+ * una validazione: PassportStage::authorizedToView() è false sulle
  * LensRequest, quindi nessun link al dettaglio. Nessuna action.
  *
  * Paginazione: summaryQuery() avvolge il GROUP BY in una subquery con alias
- * `validated_ec_tracks`, così simplePaginate(), filtri e ordinamenti lavorano
+ * `passport_stages`, così simplePaginate(), filtri e ordinamenti lavorano
  * su colonne semplici.
  */
-class ValidatedEcTrackSummary extends Lens
+class PassportStageSummary extends Lens
 {
     public function name(): string
     {
@@ -46,23 +46,23 @@ class ValidatedEcTrackSummary extends Lens
 
         $summary = $viewer instanceof User
             ? app(StageProgressService::class)->summaryQuery($viewer)
-            : ValidatedEcTrackModel::query()->whereRaw('1 = 0');
+            : PassportStageModel::query()->whereRaw('1 = 0');
 
         $summary->with(['user', 'layer'])->withCasts(['last_validated_at' => 'datetime']);
 
         return $request->withOrdering(
             $request->withFilters($summary),
-            fn (Builder $q) => $q->orderByDesc('validated_ec_tracks.last_validated_at'),
-        )->orderBy('validated_ec_tracks.id');
+            fn (Builder $q) => $q->orderByDesc('passport_stages.last_validated_at'),
+        )->orderBy('passport_stages.id');
     }
 
     public function fields(NovaRequest $request): array
     {
-        /** @var ValidatedEcTrackModel|\stdClass $row */
+        /** @var PassportStageModel|\stdClass $row */
         $row = $this->resource;
 
         return [
-            ValidatedEcTrack::userField($request, $row),
+            PassportStage::userField($request, $row),
 
             Text::make(__('Route'), 'layer_id', fn () => $row->layer instanceof Layer
                 ? $row->layer->getStringName()
@@ -82,8 +82,8 @@ class ValidatedEcTrackSummary extends Lens
     public function filters(NovaRequest $request): array
     {
         return [
-            new ValidatedEcTrackUserFilter,
-            new ValidatedEcTrackLayerFilter,
+            new PassportStageUserFilter,
+            new PassportStageLayerFilter,
         ];
     }
 

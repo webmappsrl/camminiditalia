@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Wm\WmPackage\Models\Layer;
@@ -23,14 +24,14 @@ use Wm\WmPackage\Models\User as WmUser;
  * @property ?int $app_id
  * @property string $status
  * @property ?string $serial_number
- * @property \Illuminate\Support\Carbon $start_date
- * @property \Illuminate\Support\Carbon $end_date
- * @property \Illuminate\Support\Carbon $disclaimer_accepted_at
+ * @property Carbon $start_date
+ * @property Carbon $end_date
+ * @property Carbon $disclaimer_accepted_at
  * @property string $locale
  * @property ?string $decision_note
- * @property ?\Illuminate\Support\Carbon $decided_at
+ * @property ?Carbon $decided_at
  * @property ?int $decided_by
- * @property \Illuminate\Support\Carbon $created_at
+ * @property Carbon $created_at
  */
 class CertificationRequest extends Model implements HasMedia
 {
@@ -107,11 +108,11 @@ class CertificationRequest extends Model implements HasMedia
     }
 
     /**
-     * @return HasMany<ValidatedEcTrack, $this>
+     * @return HasMany<PassportStage, $this>
      */
     public function validatedTracks(): HasMany
     {
-        return $this->hasMany(ValidatedEcTrack::class)->validated();
+        return $this->hasMany(PassportStage::class)->validated();
     }
 
     /**

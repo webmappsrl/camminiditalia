@@ -3,8 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\CertificationRequest;
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use App\Nova\Actions\DecideCertificationRequest;
+use App\Services\CertificationRequestService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -100,7 +101,7 @@ class CertificationRequestNovaActionTest extends TestCase
         $this->assertStringContainsString('Mario Rossi', $payload['user']);
         $this->assertSame('ok', $payload['note']);
         $this->assertArrayHasKey('labels', $payload);
-        $this->assertSame(0, ValidatedEcTrack::count());
+        $this->assertSame(0, PassportStage::count());
         $this->assertTrue($this->request->fresh()->isPending());
     }
 
@@ -134,7 +135,7 @@ class CertificationRequestNovaActionTest extends TestCase
             $this->assertNotEmpty($response->json('danger'), (string) $response->getContent());
             $this->assertNull($response->json('modal'));
         }
-        $this->assertSame(0, ValidatedEcTrack::count());
+        $this->assertSame(0, PassportStage::count());
         $this->assertTrue($this->request->fresh()->isPending());
     }
 
@@ -196,7 +197,7 @@ class CertificationRequestNovaActionTest extends TestCase
 
     public function test_detail_shows_validated_stages_and_decision(): void
     {
-        app(\App\Services\CertificationRequestService::class)
+        app(CertificationRequestService::class)
             ->decide($this->request, $this->owner, 'approve', [$this->trackIds[2]], false, 'Timbri ok');
 
         $response = $this->actingAs($this->owner)
@@ -215,21 +216,21 @@ class CertificationRequestNovaActionTest extends TestCase
 
     public function test_validated_ec_track_resource_is_read_only(): void
     {
-        app(\App\Services\CertificationRequestService::class)
+        app(CertificationRequestService::class)
             ->decide($this->request, $this->owner, 'approve', [$this->trackIds[2]], false, null);
-        $validated = ValidatedEcTrack::first();
+        $validated = PassportStage::first();
         $admin = $this->createUserWithRole('Administrator');
 
         $this->actingAs($admin)
             ->deleteJson('/nova-api/validated-ec-tracks?resources[]='.$validated->id);
-        $this->assertNotNull(ValidatedEcTrack::find($validated->id));
+        $this->assertNotNull(PassportStage::find($validated->id));
 
         $this->actingAs($admin)->getJson('/nova-api/validated-ec-tracks/creation-fields')->assertForbidden();
     }
 
     public function test_foreign_validator_does_not_see_validated_tracks(): void
     {
-        app(\App\Services\CertificationRequestService::class)
+        app(CertificationRequestService::class)
             ->decide($this->request, $this->owner, 'approve', [$this->trackIds[2]], false, null);
 
         $this->actingAs($this->createUserWithRole('Validator'))
@@ -262,9 +263,9 @@ class CertificationRequestNovaActionTest extends TestCase
 
     public function test_validated_track_source_labels(): void
     {
-        app(\App\Services\CertificationRequestService::class)
+        app(CertificationRequestService::class)
             ->decide($this->request, $this->owner, 'approve', [$this->trackIds[2]], false, null);
-        $validated = ValidatedEcTrack::first();
+        $validated = PassportStage::first();
         $validated->forceFill(['source' => 'other'])->save();
 
         $fields = collect($this->actingAs($this->owner)

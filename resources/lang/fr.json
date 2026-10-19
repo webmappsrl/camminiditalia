@@ -79,5 +79,7 @@
     "Layers crossed by the track": "Chemins traversés par la trace",
     "Layer crossed by the track": "Chemin traversé par la trace",
     "EcTracks crossed outside any layer": "Étapes traversées hors de tout chemin",
-    "The track does not cross any EcTrack": "La trace ne traverse aucune étape"
+    "The track does not cross any EcTrack": "La trace ne traverse aucune étape",
+    "Variant of": "Variante de",
+    "The stage this one is an alternative of: walking either of the two counts as the same stage of the route.": "L'étape dont celle-ci est une alternative : parcourir l'une ou l'autre compte comme la même étape du chemin."
 }

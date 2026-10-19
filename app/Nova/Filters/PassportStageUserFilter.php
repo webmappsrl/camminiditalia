@@ -2,7 +2,7 @@
 
 namespace App\Nova\Filters;
 
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use App\Nova\Filters\Concerns\DeduplicatesOptionLabels;
 use App\Services\StageProgressService;
 use App\Support\UserDisplay;
@@ -12,13 +12,13 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Wm\WmPackage\Models\User;
 
 /**
- * Camminatore (oc:8676). Filtra su `validated_ec_tracks.user_id`, colonna
+ * Camminatore (oc:8676). Filtra su `passport_stages.user_id`, colonna
  * presente sia nelle righe della risorsa sia in quelle aggregate della Lens
  * (StageProgressService::summaryQuery() usa lo stesso alias): nessuna
  * distinzione fra i due contesti. Opzioni: utenti con almeno una
  * validazione visibile al richiedente.
  */
-class ValidatedEcTrackUserFilter extends Filter
+class PassportStageUserFilter extends Filter
 {
     use DeduplicatesOptionLabels;
 
@@ -38,7 +38,7 @@ class ValidatedEcTrackUserFilter extends Filter
             return $query;
         }
 
-        return $query->where('validated_ec_tracks.user_id', (int) $value);
+        return $query->where('passport_stages.user_id', (int) $value);
     }
 
     /**
@@ -55,8 +55,8 @@ class ValidatedEcTrackUserFilter extends Filter
         }
 
         $userIds = app(StageProgressService::class)
-            ->scopeVisibleTo(ValidatedEcTrack::query(), $viewer)
-            ->select('validated_ec_tracks.user_id');
+            ->scopeVisibleTo(PassportStage::query(), $viewer)
+            ->select('passport_stages.user_id');
 
         return $this->optionsFromLabels(
             User::whereIn('id', $userIds)->get()

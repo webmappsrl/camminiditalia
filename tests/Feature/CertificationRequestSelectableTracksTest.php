@@ -3,8 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\CertificationRequest;
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use App\Services\CertificationRequestService;
+use App\Support\EcTrackLabel;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -83,7 +84,7 @@ class CertificationRequestSelectableTracksTest extends TestCase
         }
 
         $labels = $this->service->selectableTracks($this->makeRequest($layer))
-            ->map(fn ($track) => \App\Support\EcTrackLabel::for($track))
+            ->map(fn ($track) => EcTrackLabel::for($track))
             ->all();
 
         $this->assertSame(['tappa 1', 'Tappa 2', 'Tappa 10'], array_values($labels));
@@ -96,11 +97,11 @@ class CertificationRequestSelectableTracksTest extends TestCase
         $walker = User::factory()->create();
         $validated = $this->createTrack($owner->id, 'Tappa 1', $layer);
         $open = $this->createTrack($owner->id, 'Tappa 2', $layer);
-        ValidatedEcTrack::create([
+        PassportStage::create([
             'user_id' => $walker->id,
             'ec_track_id' => $validated->id,
             'layer_id' => $layer->id,
-            'source' => ValidatedEcTrack::SOURCE_MANUAL,
+            'source' => PassportStage::SOURCE_MANUAL,
             'validated_at' => now(),
         ]);
         $request = $this->makeRequest($layer, $walker);

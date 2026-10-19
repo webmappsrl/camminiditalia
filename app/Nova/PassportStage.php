@@ -2,11 +2,11 @@
 
 namespace App\Nova;
 
-use App\Models\ValidatedEcTrack as ValidatedEcTrackModel;
-use App\Nova\Filters\ValidatedEcTrackLayerFilter;
-use App\Nova\Filters\ValidatedEcTrackSourceFilter;
-use App\Nova\Filters\ValidatedEcTrackUserFilter;
-use App\Nova\Lenses\ValidatedEcTrackSummary;
+use App\Models\PassportStage as PassportStageModel;
+use App\Nova\Filters\PassportStageLayerFilter;
+use App\Nova\Filters\PassportStageSourceFilter;
+use App\Nova\Filters\PassportStageUserFilter;
+use App\Nova\Lenses\PassportStageSummary;
 use App\Services\StageProgressService;
 use App\Support\EcTrackLabel;
 use App\Support\UserDisplay;
@@ -18,6 +18,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Nova;
 use WeakMap;
 use Wm\WmPackage\Models\EcTrack;
@@ -32,12 +33,12 @@ use Wm\WmPackage\Models\Layer;
  * pannello HasMany del dettaglio richiesta, che passa da indexQuery().
  * Guest e utenti senza ruolo: 403 sull'intera risorsa.
  */
-class ValidatedEcTrack extends Resource
+class PassportStage extends Resource
 {
     /**
-     * @var class-string<ValidatedEcTrackModel>
+     * @var class-string<PassportStageModel>
      */
-    public static $model = ValidatedEcTrackModel::class;
+    public static $model = PassportStageModel::class;
 
     public static $title = 'id';
 
@@ -98,8 +99,8 @@ class ValidatedEcTrack extends Resource
 
     public static function defaultOrderings(Builder $query): Builder
     {
-        return $query->orderByDesc('validated_ec_tracks.validated_at')
-            ->orderByDesc('validated_ec_tracks.id');
+        return $query->orderByDesc('passport_stages.validated_at')
+            ->orderByDesc('passport_stages.id');
     }
 
     /**
@@ -158,7 +159,7 @@ class ValidatedEcTrack extends Resource
 
     public function fields(NovaRequest $request): array
     {
-        /** @var ValidatedEcTrackModel $validated */
+        /** @var PassportStageModel $validated */
         $validated = $this->resource;
 
         return [
@@ -175,8 +176,8 @@ class ValidatedEcTrack extends Resource
                 ->sortable(),
 
             Text::make(__('Source'), fn () => match ($validated->source) {
-                ValidatedEcTrackModel::SOURCE_MANUAL => __('Paper passport'),
-                ValidatedEcTrackModel::SOURCE_GPS => __('GPS'),
+                PassportStageModel::SOURCE_MANUAL => __('Paper passport'),
+                PassportStageModel::SOURCE_GPS => __('GPS'),
                 default => $validated->source,
             }),
         ];
@@ -185,14 +186,14 @@ class ValidatedEcTrack extends Resource
     public function filters(NovaRequest $request): array
     {
         return [
-            new ValidatedEcTrackSourceFilter,
-            new ValidatedEcTrackUserFilter,
-            new ValidatedEcTrackLayerFilter,
+            new PassportStageSourceFilter,
+            new PassportStageUserFilter,
+            new PassportStageLayerFilter,
         ];
     }
 
     /**
-     * Colonna «User», condivisa con la Lens ValidatedEcTrackSummary:
+     * Colonna «User», condivisa con la Lens PassportStageSummary:
      * Administrator link al detail Nova dell'utente, Validator solo il nome.
      * `$row` può essere uno stdClass quando Nova risolve i campi senza riga
      * (es. ordinamento della Lens): la closure non viene allora eseguita.
@@ -200,7 +201,7 @@ class ValidatedEcTrack extends Resource
     public static function userField(NovaRequest $request, object $row): Text
     {
         $isAdmin = (bool) $request->user()?->hasRole('Administrator');
-        $user = fn () => $row instanceof ValidatedEcTrackModel ? $row->user : null;
+        $user = fn () => $row instanceof PassportStageModel ? $row->user : null;
 
         $userColumn = Text::make(__('User'), 'user_id', fn () => $isAdmin
             ? static::userLink($user())
@@ -213,12 +214,12 @@ class ValidatedEcTrack extends Resource
     /**
      * Riepilogo per camminatore e cammino (oc:8676).
      *
-     * @return array<int, \Laravel\Nova\Lenses\Lens>
+     * @return array<int, Lens>
      */
     public function lenses(NovaRequest $request): array
     {
         return [
-            new ValidatedEcTrackSummary,
+            new PassportStageSummary,
         ];
     }
 
@@ -259,7 +260,7 @@ class ValidatedEcTrack extends Resource
 
         $service = app(StageProgressService::class);
         $user = $request->user();
-        $visibleTracks = ValidatedEcTrackModel::query()->select('ec_track_id');
+        $visibleTracks = PassportStageModel::query()->select('ec_track_id');
         $visibleTracks = $user !== null ? $service->scopeVisibleTo($visibleTracks, $user) : $visibleTracks->whereRaw('1 = 0');
 
         $rows = $service->managedTracksQuery()

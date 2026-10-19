@@ -87,5 +87,7 @@
     "Layers crossed by the track": "Routes crossed by the track",
     "Layer crossed by the track": "Route crossed by the track",
     "EcTracks crossed outside any layer": "Stages crossed outside any route",
-    "The track does not cross any EcTrack": "The track does not cross any stage"
+    "The track does not cross any EcTrack": "The track does not cross any stage",
+    "Variant of": "Variant of",
+    "The stage this one is an alternative of: walking either of the two counts as the same stage of the route.": "The stage this one is an alternative of: walking either of the two counts as the same stage of the route."
 }

@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\CertificationRequest;
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -69,7 +69,7 @@ class CertificationDecisionControllerTest extends TestCase
         $this->confirm($this->owner)->assertOk()->assertJsonStructure(['message']);
 
         $this->assertSame(CertificationRequest::STATUS_APPROVED, $this->request->fresh()->status);
-        $this->assertSame([$this->trackIds[0]], ValidatedEcTrack::pluck('ec_track_id')->all());
+        $this->assertSame([$this->trackIds[0]], PassportStage::pluck('ec_track_id')->all());
     }
 
     public function test_administrator_confirms_rejection_with_note(): void
@@ -103,7 +103,7 @@ class CertificationDecisionControllerTest extends TestCase
         $this->confirm($this->owner)
             ->assertStatus(422)
             ->assertJson(['message' => __('This request has already been decided.')]);
-        $this->assertSame(0, ValidatedEcTrack::count());
+        $this->assertSame(0, PassportStage::count());
     }
 
     public function test_confirm_with_track_not_selectable_gets_422(): void

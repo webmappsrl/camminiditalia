@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\PassportShare;
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use App\Services\PassportShare\PassportShareStore;
 use App\Services\PassportShare\StageShareImageService;
 use App\Services\PassportShare\StageShareLayout;
@@ -61,10 +61,10 @@ class PassportStageShareController extends Controller
             return response()->json(['error' => 'La tappa non appartiene a questo cammino.'], 404);
         }
 
-        $validated = DB::table('validated_ec_tracks as v')
+        $validated = DB::table('passport_stages as v')
             ->where('v.user_id', $user->id)
             ->where('v.ec_track_id', $track->id)
-            ->whereRaw(ValidatedEcTrack::validatedSql('v'))
+            ->whereRaw(PassportStage::validatedSql('v'))
             ->exists();
 
         if (! $validated) {

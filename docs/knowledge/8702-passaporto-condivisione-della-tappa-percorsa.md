@@ -63,8 +63,11 @@
   rigenererebbero tutte le immagini salvate.
 - **Una riga per (utente, cosa condivisa)** (oc:8702, oc:8703): ricondividere aggiorna la stessa immagine e lo stesso
   link, invece di creare righe e file orfani.
-- **Niente tempo nell'immagine** (oc:8702): per le tappe validate con la credenziale cartacea non
-  esiste; arriverà con la validazione da GPS (oc:8165).
+- **Niente tempo nell'immagine** (oc:8702, confermato da oc:8165): per le tappe validate con la
+  credenziale cartacea non esiste, e nemmeno la validazione automatica lo porta — il calcolo
+  guarda quali segmenti sono stati percorsi, non quando. Un tempo si potrebbe ricavare dalle
+  UGC track collegate alla validazione (`passport_stage_ugc_track`), ma sarebbe la somma di
+  uscite diverse, non il tempo di una percorrenza.
 - **`ref` o nome della tappa** (oc:8702): il backend non conosce l'ordine di percorrenza; `ref` è il
   dato che il gestore controlla. Un `ref` che contiene già «Tappa» viene normalizzato.
 - **Impronta calcolata, non versione a mano** (oc:8702): cambiare una misura, lo sfondo, un font o
@@ -93,6 +96,7 @@
   non passano dall'observer: lì media e file restano. Con la tabella polimorfica non c'è più la
   foreign key sulla tappa, quindi anche la riga resta.
 - Le immagini non scadono: restano finché non cambiano i dati o si cancella il proprietario.
-- I km del cammino comprendono le varianti (da rivedere con oc:8165).
+- I km del cammino non comprendono più le varianti (oc:8165): un gruppo di tappe alternative
+  conta una volta sola, con la distanza della sua tappa principale.
 - Una tappa in più cammini usa una sola riga: la pagina pubblica prende il cammino dell'ultima
   condivisione.

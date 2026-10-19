@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\CertificationRequest;
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Http;
@@ -17,7 +17,7 @@ use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\User;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
-class ValidatedEcTrackModelTest extends TestCase
+class PassportStageModelTest extends TestCase
 {
     use CreatesCertificationTracks, DatabaseTransactions, LayerTestHelpers;
 
@@ -54,14 +54,14 @@ class ValidatedEcTrackModelTest extends TestCase
         ]);
     }
 
-    private function makeValidation(array $overrides = []): ValidatedEcTrack
+    private function makeValidation(array $overrides = []): PassportStage
     {
-        return ValidatedEcTrack::create(array_merge([
+        return PassportStage::create(array_merge([
             'user_id' => $this->walker->id,
             'ec_track_id' => $this->track->id,
             'layer_id' => $this->layer->id,
             'certification_request_id' => $this->certificationRequest->id,
-            'source' => ValidatedEcTrack::SOURCE_MANUAL,
+            'source' => PassportStage::SOURCE_MANUAL,
             'validated_at' => now(),
         ], $overrides));
     }
@@ -101,7 +101,7 @@ class ValidatedEcTrackModelTest extends TestCase
 
         $this->walker->delete();
 
-        $this->assertNull(ValidatedEcTrack::find($validation->id));
+        $this->assertNull(PassportStage::find($validation->id));
     }
 
     public function test_validated_scope_filters_on_validated_at_and_keeps_existing_rows(): void
@@ -109,12 +109,12 @@ class ValidatedEcTrackModelTest extends TestCase
         $validation = $this->makeValidation();
 
         $this->assertStringContainsString(
-            '"validated_ec_tracks"."validated_at" is not null',
-            ValidatedEcTrack::validated()->toSql(),
+            '"passport_stages"."validated_at" is not null',
+            PassportStage::validated()->toSql(),
         );
-        $this->assertSame('v.validated_at IS NOT NULL', ValidatedEcTrack::validatedSql('v'));
-        $this->assertSame([$validation->id], ValidatedEcTrack::validated()->pluck('id')->all());
-        $this->assertSame([$validation->id], \App\Models\User::findOrFail($this->walker->id)->validatedEcTracks()->pluck('id')->all());
+        $this->assertSame('v.validated_at IS NOT NULL', PassportStage::validatedSql('v'));
+        $this->assertSame([$validation->id], PassportStage::validated()->pluck('id')->all());
+        $this->assertSame([$validation->id], \App\Models\User::findOrFail($this->walker->id)->passportStages()->pluck('id')->all());
         $this->assertStringContainsString('is not null', $this->certificationRequest->validatedTracks()->toSql());
     }
 }

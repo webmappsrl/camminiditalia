@@ -3,15 +3,16 @@
 namespace Tests\Feature;
 
 use App\Models\EcTrack;
-use App\Models\ValidatedEcTrack;
-use App\Nova\Filters\ValidatedEcTrackLayerFilter;
-use App\Nova\Filters\ValidatedEcTrackUserFilter;
+use App\Models\PassportStage;
+use App\Nova\Filters\PassportStageLayerFilter;
+use App\Nova\Filters\PassportStageUserFilter;
 use App\Services\StageProgressService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Testing\TestResponse;
 use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
@@ -25,7 +26,7 @@ use Wm\WmPackage\Services\RolesAndPermissionsService;
  * camminatore/cammino, numeri con la regola A (tutte le tappe del cammino),
  * scoping delle righe per ruolo, nessun link al dettaglio.
  */
-class ValidatedEcTrackSummaryLensTest extends TestCase
+class PassportStageSummaryLensTest extends TestCase
 {
     use DatabaseTransactions, LayerTestHelpers;
 
@@ -72,13 +73,13 @@ class ValidatedEcTrackSummaryLensTest extends TestCase
         return $track;
     }
 
-    private function validate(User $walker, WmEcTrack $track, Layer $layer, ?Carbon $at = null): ValidatedEcTrack
+    private function validate(User $walker, WmEcTrack $track, Layer $layer, ?Carbon $at = null): PassportStage
     {
-        return ValidatedEcTrack::create([
+        return PassportStage::create([
             'user_id' => $walker->id,
             'ec_track_id' => $track->id,
             'layer_id' => $layer->id,
-            'source' => ValidatedEcTrack::SOURCE_MANUAL,
+            'source' => PassportStage::SOURCE_MANUAL,
             'validated_at' => $at ?? now(),
         ]);
     }
@@ -91,7 +92,7 @@ class ValidatedEcTrackSummaryLensTest extends TestCase
     /**
      * @param  array<class-string, mixed>  $filters
      */
-    private function lens(User $viewer, array $filters = [], string $query = ''): \Illuminate\Testing\TestResponse
+    private function lens(User $viewer, array $filters = [], string $query = ''): TestResponse
     {
         $uri = self::URI.'?perPage=100'.$query;
         if ($filters !== []) {
@@ -235,7 +236,7 @@ class ValidatedEcTrackSummaryLensTest extends TestCase
         $this->validate($walker, $shared, $layerB);
 
         $admin = $this->createUserWithRole('Administrator');
-        $rows = $this->rows($admin, [ValidatedEcTrackUserFilter::class => $walker->id]);
+        $rows = $this->rows($admin, [PassportStageUserFilter::class => $walker->id]);
 
         $this->assertSame('1 / 2', $rows[self::rowId($walker->id, $layerA->id)][__('Stages')]);
         $this->assertSame('1 / 1', $rows[self::rowId($walker->id, $layerB->id)][__('Stages')]);
@@ -250,12 +251,12 @@ class ValidatedEcTrackSummaryLensTest extends TestCase
         $this->assertEqualsCanonicalizing([
             self::rowId($s['walker1']->id, $s['layerA']->id),
             self::rowId($s['walker1']->id, $s['layerB']->id),
-        ], array_keys($this->rows($admin, [ValidatedEcTrackUserFilter::class => $s['walker1']->id])));
+        ], array_keys($this->rows($admin, [PassportStageUserFilter::class => $s['walker1']->id])));
 
         $this->assertEqualsCanonicalizing([
             self::rowId($s['walker1']->id, $s['layerB']->id),
             self::rowId($s['walker2']->id, $s['layerB']->id),
-        ], array_keys($this->rows($admin, [ValidatedEcTrackLayerFilter::class => $s['layerB']->id])));
+        ], array_keys($this->rows($admin, [PassportStageLayerFilter::class => $s['layerB']->id])));
     }
 
     public function test_lens_rows_have_no_detail_link_and_no_actions(): void
