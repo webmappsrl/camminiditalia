@@ -28,6 +28,8 @@ abstract class TestCase extends BaseTestCase
     {
         parent::refreshApplication();
 
+        $this->isolateRedisCache();
+
         if (config('app.running_in_ci')) {
             return;
         }
@@ -40,5 +42,22 @@ abstract class TestCase extends BaseTestCase
                 "Controlla che .env.testing sia presente e lancia 'php artisan config:clear' se hai una config cache attiva."
             );
         }
+    }
+
+    /**
+     * Lo store `redis` diventa `array` per tutta la suite (oc:8165, stessa scelta di wm-package
+     * in oc:8660).
+     *
+     * `CACHE_STORE=array` in phpunit.xml non basta: un job che dichiara
+     * `uniqueVia() { return Cache::store('redis'); }` chiede quello store per nome e finisce sul
+     * Redis vero. I lock di `ShouldBeUnique` ci restano fino alla loro scadenza — un'ora — e
+     * sopravvivono alla fine della suite: da lì in poi ogni dispatch con lo stesso identificativo
+     * viene scartato **in silenzio**, e il test che lo attende fallisce senza un errore che
+     * spieghi perché. Succedeva già prima di questo ticket: in Redis si accumulano lock di
+     * `BuildAppPoisGeojsonJob` lasciati dalle esecuzioni dei test.
+     */
+    private function isolateRedisCache(): void
+    {
+        config(['cache.stores.redis' => ['driver' => 'array', 'serialize' => false]]);
     }
 }

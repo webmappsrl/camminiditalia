@@ -90,6 +90,15 @@ class AppServiceProvider extends ServiceProvider
         EcTrack::observe(EcTrackGeometryAttributesObserver::class);
         \App\Models\EcTrack::observe(EcTrackGeometryAttributesObserver::class);
 
+        // Passaporto automatico (oc:8165): il verdetto sulle tappe si rifà quando la
+        // corrispondenza di una camminata è pronta. wm-package non emette eventi a fine
+        // calcolo, ma `markComputed()` scrive questa riga con Eloquent.
+        \Wm\WmPackage\Models\UgcTrackMatchingRun::observe(\App\Observers\UgcTrackMatchingRunObserver::class);
+
+        // Accensione del passaporto su un cammino (oc:8165): le sue tappe entrano nel calcolo
+        // per la prima volta, e chi ci ha già camminato deve trovarsele popolate.
+        Layer::observe(\App\Observers\PassportLayerObserver::class);
+
         // Doppia registrazione: la guard `api` usa App\Models\User, mentre Wm\WmPackage\Models\User
         // copre il codice del package che istanzia direttamente quella classe (gli eventi
         // Eloquent sono per classe concreta, un observer non vale per la sottoclasse/parent).

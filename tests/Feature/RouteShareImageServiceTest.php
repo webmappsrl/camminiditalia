@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\EcTrack;
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use App\Services\PassportShare\RouteShareImageService;
 use App\Services\PassportShare\StageShareLayout;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -94,7 +94,7 @@ class RouteShareImageServiceTest extends TestCase
 
     private function validate(User $user, WmEcTrack $track, Layer $layer, string $source, string $at): void
     {
-        ValidatedEcTrack::create([
+        PassportStage::create([
             'user_id' => $user->id,
             'ec_track_id' => $track->id,
             'layer_id' => $layer->id,
@@ -180,8 +180,8 @@ class RouteShareImageServiceTest extends TestCase
     {
         [$layer, $stages] = $this->route();
         $walker = User::factory()->create();
-        $this->validate($walker, $stages[0], $layer, ValidatedEcTrack::SOURCE_GPS, '2026-09-28 09:00:00');
-        $this->validate($walker, $stages[1], $layer, ValidatedEcTrack::SOURCE_GPS, '2026-09-29 18:00:00');
+        $this->validate($walker, $stages[0], $layer, PassportStage::SOURCE_GPS, '2026-09-28 09:00:00');
+        $this->validate($walker, $stages[1], $layer, PassportStage::SOURCE_GPS, '2026-09-29 18:00:00');
 
         $snapshot = app(RouteShareImageService::class)->snapshot($walker, $layer, 'it');
 
@@ -192,8 +192,8 @@ class RouteShareImageServiceTest extends TestCase
     {
         [$layer, $stages] = $this->route();
         $walker = User::factory()->create();
-        $this->validate($walker, $stages[0], $layer, ValidatedEcTrack::SOURCE_GPS, '2026-09-28 09:00:00');
-        $this->validate($walker, $stages[1], $layer, ValidatedEcTrack::SOURCE_MANUAL, '2026-09-29 18:00:00');
+        $this->validate($walker, $stages[0], $layer, PassportStage::SOURCE_GPS, '2026-09-28 09:00:00');
+        $this->validate($walker, $stages[1], $layer, PassportStage::SOURCE_MANUAL, '2026-09-29 18:00:00');
 
         $snapshot = app(RouteShareImageService::class)->snapshot($walker, $layer, 'it');
 
@@ -222,8 +222,8 @@ class RouteShareImageServiceTest extends TestCase
         [$layer, $stages] = $this->route();
         $walker = User::factory()->create();
         // Stesso giorno in Italia (12 aprile), due giorni diversi in UTC.
-        $this->validate($walker, $stages[0], $layer, ValidatedEcTrack::SOURCE_GPS, '2026-04-11 23:30:00');
-        $this->validate($walker, $stages[1], $layer, ValidatedEcTrack::SOURCE_GPS, '2026-04-12 08:00:00');
+        $this->validate($walker, $stages[0], $layer, PassportStage::SOURCE_GPS, '2026-04-11 23:30:00');
+        $this->validate($walker, $stages[1], $layer, PassportStage::SOURCE_GPS, '2026-04-12 08:00:00');
 
         $snapshot = app(RouteShareImageService::class)->snapshot($walker, $layer, 'it');
 

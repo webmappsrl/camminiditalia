@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\EcTrack;
 use App\Models\PassportShare;
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use App\Services\PassportShare\RouteShareImageService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
@@ -82,11 +82,11 @@ class PassportRouteShareApiTest extends TestCase
 
     private function validate(User $user, WmEcTrack $track, Layer $layer, string $at = '2026-09-30 10:00:00'): void
     {
-        ValidatedEcTrack::create([
+        PassportStage::create([
             'user_id' => $user->id,
             'ec_track_id' => $track->id,
             'layer_id' => $layer->id,
-            'source' => ValidatedEcTrack::SOURCE_MANUAL,
+            'source' => PassportStage::SOURCE_MANUAL,
             'validated_at' => $at,
         ]);
     }
@@ -201,7 +201,7 @@ class PassportRouteShareApiTest extends TestCase
         $this->spyImageService(composeTimes: 2);
 
         $this->actingAs($walker, 'api')->postJson($url)->assertOk();
-        DB::table('validated_ec_tracks')
+        DB::table('passport_stages')
             ->where('user_id', $walker->id)
             ->where('ec_track_id', $stages[0]->id)
             ->update(['validated_at' => '2026-10-02 09:00:00']);

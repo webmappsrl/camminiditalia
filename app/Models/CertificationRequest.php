@@ -107,11 +107,11 @@ class CertificationRequest extends Model implements HasMedia
     }
 
     /**
-     * @return HasMany<ValidatedEcTrack, $this>
+     * @return HasMany<PassportStage, $this>
      */
     public function validatedTracks(): HasMany
     {
-        return $this->hasMany(ValidatedEcTrack::class)->validated();
+        return $this->hasMany(PassportStage::class)->validated();
     }
 
     /**

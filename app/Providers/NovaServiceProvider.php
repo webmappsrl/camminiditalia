@@ -12,6 +12,7 @@ use App\Nova\EcPoi;
 use App\Nova\EcTrack;
 use App\Nova\Layer;
 use App\Nova\Media;
+use App\Nova\PassportStage;
 use App\Nova\TaxonomyActivity;
 use App\Nova\TaxonomyPoiType;
 use App\Nova\TaxonomyTheme;
@@ -20,7 +21,6 @@ use App\Nova\Tile;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
 use App\Nova\User as NovaUser;
-use App\Nova\ValidatedEcTrack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
@@ -98,11 +98,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
                 // Passaporto del camminatore (oc:8653, oc:8676): lo scoping per
                 // layer del Validator è nelle risorse (CertificationRequest e la
-                // sua policy, ValidatedEcTrack); il canSee qui limita solo la
+                // sua policy, PassportStage); il canSee qui limita solo la
                 // visibilità della voce.
                 MenuSection::make(__('Passport'), [
                     MenuItem::resource(CertificationRequest::class),
-                    MenuItem::resource(ValidatedEcTrack::class),
+                    MenuItem::resource(PassportStage::class),
                 ])->icon('identification')
                     ->canSee(fn (Request $request) => $request->user()->hasAnyRole(['Administrator', 'Validator'])),
 

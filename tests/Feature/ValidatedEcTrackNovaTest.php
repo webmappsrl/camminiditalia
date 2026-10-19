@@ -4,11 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\CertificationRequest;
 use App\Models\EcTrack;
-use App\Models\ValidatedEcTrack;
-use App\Nova\Filters\ValidatedEcTrackLayerFilter;
-use App\Nova\Filters\ValidatedEcTrackSourceFilter;
-use App\Nova\Filters\ValidatedEcTrackUserFilter;
-use App\Nova\ValidatedEcTrack as NovaValidatedEcTrack;
+use App\Models\PassportStage;
+use App\Nova\Filters\PassportStageLayerFilter;
+use App\Nova\Filters\PassportStageSourceFilter;
+use App\Nova\Filters\PassportStageUserFilter;
+use App\Nova\PassportStage as NovaPassportStage;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -29,7 +29,7 @@ use Wm\WmPackage\Services\RolesAndPermissionsService;
  * Sezione Nova «Tappe validate» (oc:8676): scoping per cammino, campi, filtri
  * e sola lettura.
  */
-class ValidatedEcTrackNovaTest extends TestCase
+class PassportStageNovaTest extends TestCase
 {
     use DatabaseTransactions, LayerTestHelpers;
 
@@ -76,9 +76,9 @@ class ValidatedEcTrackNovaTest extends TestCase
         return $track;
     }
 
-    private function validate(User $walker, WmEcTrack $track, Layer $layer, string $source = ValidatedEcTrack::SOURCE_MANUAL, ?int $requestId = null, ?Carbon $at = null): ValidatedEcTrack
+    private function validate(User $walker, WmEcTrack $track, Layer $layer, string $source = PassportStage::SOURCE_MANUAL, ?int $requestId = null, ?Carbon $at = null): PassportStage
     {
-        return ValidatedEcTrack::create([
+        return PassportStage::create([
             'user_id' => $walker->id,
             'ec_track_id' => $track->id,
             'layer_id' => $layer->id,
@@ -101,7 +101,7 @@ class ValidatedEcTrackNovaTest extends TestCase
      */
     private function indexIds(User $user): array
     {
-        return NovaValidatedEcTrack::indexQuery($this->novaRequestFor($user), ValidatedEcTrack::query())
+        return NovaPassportStage::indexQuery($this->novaRequestFor($user), PassportStage::query())
             ->pluck('id')->sort()->values()->all();
     }
 
@@ -146,10 +146,10 @@ class ValidatedEcTrackNovaTest extends TestCase
         return [
             'a' => $a, 'b' => $b, 'layerA' => $layerA, 'layerB' => $layerB,
             'walker1' => $walker1, 'walker2' => $walker2,
-            'manualA' => $this->validate($walker1, $tA1, $layerA, ValidatedEcTrack::SOURCE_MANUAL),
-            'gpsA' => $this->validate($walker2, $tA2, $layerA, ValidatedEcTrack::SOURCE_GPS),
+            'manualA' => $this->validate($walker1, $tA1, $layerA, PassportStage::SOURCE_MANUAL),
+            'gpsA' => $this->validate($walker2, $tA2, $layerA, PassportStage::SOURCE_GPS),
             'foreignInA' => $this->validate($walker1, $tForeignInA, $layerA),
-            'onB' => $this->validate($walker2, $tB, $layerB, ValidatedEcTrack::SOURCE_GPS),
+            'onB' => $this->validate($walker2, $tB, $layerB, PassportStage::SOURCE_GPS),
         ];
     }
 
@@ -204,7 +204,7 @@ class ValidatedEcTrackNovaTest extends TestCase
                 [403, 404]
             );
             $this->assertSame([], $this->indexIds($user));
-            $this->assertFalse(NovaValidatedEcTrack::authorizedToViewAny($this->novaRequestFor($user)));
+            $this->assertFalse(NovaPassportStage::authorizedToViewAny($this->novaRequestFor($user)));
         }
     }
 
@@ -286,20 +286,20 @@ class ValidatedEcTrackNovaTest extends TestCase
         // Regola B: foreignInA ha layer_id = A, ma la tappa è gestita in B: il filtro B la include.
         $this->assertSame(
             collect([$s['foreignInA'], $s['onB']])->pluck('id')->sort()->values()->all(),
-            $this->apiIds($admin, [ValidatedEcTrackLayerFilter::class => $s['layerB']->id])
+            $this->apiIds($admin, [PassportStageLayerFilter::class => $s['layerB']->id])
         );
         $this->assertSame(
             collect([$s['manualA'], $s['gpsA']])->pluck('id')->sort()->values()->all(),
-            $this->apiIds($admin, [ValidatedEcTrackLayerFilter::class => $s['layerA']->id])
+            $this->apiIds($admin, [PassportStageLayerFilter::class => $s['layerA']->id])
         );
 
         // Opzioni: Administrator tutti i layer con tappe, Validator solo i propri.
-        $adminOptions = (new ValidatedEcTrackLayerFilter)->options($this->novaRequestFor($admin));
+        $adminOptions = (new PassportStageLayerFilter)->options($this->novaRequestFor($admin));
         $this->assertContains($s['layerA']->id, $adminOptions);
         $this->assertContains($s['layerB']->id, $adminOptions);
         $this->assertSame(
             [$s['layerA']->getStringName() => $s['layerA']->id],
-            (new ValidatedEcTrackLayerFilter)->options($this->novaRequestFor($s['a']))
+            (new PassportStageLayerFilter)->options($this->novaRequestFor($s['a']))
         );
     }
 
@@ -307,13 +307,13 @@ class ValidatedEcTrackNovaTest extends TestCase
     {
         $s = $this->scenario();
 
-        $this->assertSame([$s['gpsA']->id], $this->apiIds($s['a'], [ValidatedEcTrackSourceFilter::class => 'gps']));
-        $this->assertSame([$s['manualA']->id], $this->apiIds($s['a'], [ValidatedEcTrackSourceFilter::class => 'manual']));
-        $this->assertSame([$s['manualA']->id], $this->apiIds($s['a'], [ValidatedEcTrackUserFilter::class => $s['walker1']->id]));
+        $this->assertSame([$s['gpsA']->id], $this->apiIds($s['a'], [PassportStageSourceFilter::class => 'gps']));
+        $this->assertSame([$s['manualA']->id], $this->apiIds($s['a'], [PassportStageSourceFilter::class => 'manual']));
+        $this->assertSame([$s['manualA']->id], $this->apiIds($s['a'], [PassportStageUserFilter::class => $s['walker1']->id]));
 
         $this->assertSame(
             [__('Paper passport') => 'manual', __('GPS') => 'gps'],
-            (new ValidatedEcTrackSourceFilter)->options($this->novaRequestFor($s['a']))
+            (new PassportStageSourceFilter)->options($this->novaRequestFor($s['a']))
         );
 
         // Camminatori: solo chi ha validazioni visibili al richiedente.
@@ -321,9 +321,9 @@ class ValidatedEcTrackNovaTest extends TestCase
         $this->validate($outsider, $this->track($s['b']->id, [$s['layerB']]), $s['layerB']);
         $this->assertSame(
             ['Anna Bianchi' => $s['walker2']->id, 'Mario Rossi' => $s['walker1']->id],
-            (new ValidatedEcTrackUserFilter)->options($this->novaRequestFor($s['a']))
+            (new PassportStageUserFilter)->options($this->novaRequestFor($s['a']))
         );
-        $this->assertSame([], (new ValidatedEcTrackUserFilter)->options($this->novaRequestFor($this->createUserWithRole('Guest'))));
+        $this->assertSame([], (new PassportStageUserFilter)->options($this->novaRequestFor($this->createUserWithRole('Guest'))));
     }
 
     public function test_resource_is_read_only(): void
@@ -332,16 +332,16 @@ class ValidatedEcTrackNovaTest extends TestCase
         $admin = $this->createUserWithRole('Administrator');
         $request = Request::create('/');
         $request->setUserResolver(fn () => $admin);
-        $resource = new NovaValidatedEcTrack($s['manualA']);
+        $resource = new NovaPassportStage($s['manualA']);
 
-        $this->assertFalse(NovaValidatedEcTrack::authorizedToCreate($request));
+        $this->assertFalse(NovaPassportStage::authorizedToCreate($request));
         $this->assertFalse($resource->authorizedToUpdate($request));
         $this->assertFalse($resource->authorizedToDelete($request));
 
         $this->actingAs($admin)->getJson(self::URI.'/creation-fields')->assertForbidden();
         $this->actingAs($admin)->putJson(self::URI.'/'.$s['manualA']->id, ['source' => 'gps'])->assertForbidden();
         $this->actingAs($admin)->deleteJson(self::URI.'?resources[]='.$s['manualA']->id);
-        $this->assertDatabaseHas('validated_ec_tracks', ['id' => $s['manualA']->id, 'source' => 'manual']);
+        $this->assertDatabaseHas('passport_stages', ['id' => $s['manualA']->id, 'source' => 'manual']);
     }
 
     public function test_menu_item_visible_only_to_administrator_and_validator(): void

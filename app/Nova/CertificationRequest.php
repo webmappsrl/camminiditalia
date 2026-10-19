@@ -157,7 +157,7 @@ class CertificationRequest extends Resource
                 ->alwaysShow()
                 ->onlyOnDetail(),
 
-            HasMany::make(__('Validated stages'), 'validatedTracks', ValidatedEcTrack::class),
+            HasMany::make(__('Validated stages'), 'validatedTracks', PassportStage::class),
         ];
     }
 

@@ -50,10 +50,10 @@ class User extends WmUser
     /**
      * Tappe validate del camminatore (oc:8671/oc:8676).
      *
-     * @return HasMany<ValidatedEcTrack, $this>
+     * @return HasMany<PassportStage, $this>
      */
-    public function validatedEcTracks(): HasMany
+    public function passportStages(): HasMany
     {
-        return $this->hasMany(ValidatedEcTrack::class)->validated();
+        return $this->hasMany(PassportStage::class)->validated();
     }
 }
