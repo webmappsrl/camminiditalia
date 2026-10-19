@@ -22,8 +22,10 @@ use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcTrack as WmEcTrack;
 use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\Media;
 use Wm\WmPackage\Models\User;
 use Wm\WmPackage\Nova\Traits\HasDemClassification;
+use Wm\WmPackage\Services\Models\MediaService;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class StageProgressServiceTest extends TestCase
@@ -444,8 +446,8 @@ class StageProgressServiceTest extends TestCase
         $tracks = collect($this->service->progressFor($walker, $layer)['tracks'])->keyBy('id');
 
         $fullMedia = $full->fresh()->getMedia('*')->first();
-        $this->assertInstanceOf(\Wm\WmPackage\Models\Media::class, $fullMedia);
-        $thumb = (new \Wm\WmPackage\Services\Models\MediaService)->getThumbnailUrl($fullMedia);
+        $this->assertInstanceOf(Media::class, $fullMedia);
+        $thumb = (new MediaService)->getThumbnailUrl($fullMedia);
         $this->assertSame('01', $tracks[$full->id]['ref']);
         $this->assertSame('Pacentro', $tracks[$full->id]['from']);
         $this->assertSame('Caramanico', $tracks[$full->id]['to']);
@@ -760,8 +762,8 @@ class StageProgressServiceTest extends TestCase
         $tracks = collect($this->service->progressFor(User::factory()->create(), $layer)['tracks'])->keyBy('id');
 
         $secondMedia = $second->fresh();
-        $this->assertInstanceOf(\Wm\WmPackage\Models\Media::class, $secondMedia);
-        $expected = (new \Wm\WmPackage\Services\Models\MediaService)->getThumbnailUrl($secondMedia);
+        $this->assertInstanceOf(Media::class, $secondMedia);
+        $expected = (new MediaService)->getThumbnailUrl($secondMedia);
         $this->assertSame($expected, $tracks[$track->id]['image']);
         $this->assertSame($track->fresh()->toSearchableArray()['feature_image'], $tracks[$track->id]['image']);
     }

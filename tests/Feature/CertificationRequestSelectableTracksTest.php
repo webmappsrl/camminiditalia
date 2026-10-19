@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\CertificationRequest;
 use App\Models\PassportStage;
 use App\Services\CertificationRequestService;
+use App\Support\EcTrackLabel;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -83,7 +84,7 @@ class CertificationRequestSelectableTracksTest extends TestCase
         }
 
         $labels = $this->service->selectableTracks($this->makeRequest($layer))
-            ->map(fn ($track) => \App\Support\EcTrackLabel::for($track))
+            ->map(fn ($track) => EcTrackLabel::for($track))
             ->all();
 
         $this->assertSame(['tappa 1', 'Tappa 2', 'Tappa 10'], array_values($labels));

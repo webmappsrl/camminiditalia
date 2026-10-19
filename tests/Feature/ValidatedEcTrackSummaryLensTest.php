@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Testing\TestResponse;
 use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
@@ -91,7 +92,7 @@ class PassportStageSummaryLensTest extends TestCase
     /**
      * @param  array<class-string, mixed>  $filters
      */
-    private function lens(User $viewer, array $filters = [], string $query = ''): \Illuminate\Testing\TestResponse
+    private function lens(User $viewer, array $filters = [], string $query = ''): TestResponse
     {
         $uri = self::URI.'?perPage=100'.$query;
         if ($filters !== []) {

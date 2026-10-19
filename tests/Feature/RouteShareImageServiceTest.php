@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\EcTrack;
 use App\Models\PassportStage;
+use App\Services\PassportShare\RouteShareIcons;
 use App\Services\PassportShare\RouteShareImageService;
 use App\Services\PassportShare\StageShareLayout;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -232,7 +233,7 @@ class RouteShareImageServiceTest extends TestCase
 
     public function test_layout_signature_covers_the_calendar_icon(): void
     {
-        $this->assertArrayHasKey(\App\Services\PassportShare\RouteShareIcons::class, RouteShareImageService::signatureConstants());
+        $this->assertArrayHasKey(RouteShareIcons::class, RouteShareImageService::signatureConstants());
         $this->assertArrayHasKey(RouteShareImageService::class, RouteShareImageService::signatureConstants());
     }
 }

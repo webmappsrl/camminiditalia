@@ -11,6 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Wm\WmPackage\Models\User;
 
 class SendCertificationRequestMailJob implements ShouldQueue
 {
@@ -37,7 +38,7 @@ class SendCertificationRequestMailJob implements ShouldQueue
             return;
         }
 
-        /** @var \Wm\WmPackage\Models\User $owner */
+        /** @var User $owner */
         Mail::to($owner->email)->send(new NewCertificationRequestMail($this->request));
     }
 }

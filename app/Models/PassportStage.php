@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Carbon;
 use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\UgcTrack;
@@ -23,9 +24,9 @@ use Wm\WmPackage\Models\User;
  * @property int $layer_id
  * @property ?int $certification_request_id
  * @property string $source
- * @property ?\Illuminate\Support\Carbon $validated_at nullo finché la tappa non è validata (oc:8165)
+ * @property ?Carbon $validated_at nullo finché la tappa non è validata (oc:8165)
  * @property int $progress quota di segmenti percorsi, 0-100 (oc:8165)
- * @property-read ?\Illuminate\Database\Eloquent\Model $ecTrack
+ * @property-read ?Model $ecTrack
  */
 class PassportStage extends Model
 {
@@ -94,7 +95,7 @@ class PassportStage extends Model
     /**
      * Modello da config('wm-package.ec_track_model'), come Layer::ecTracks().
      *
-     * @return BelongsTo<\Illuminate\Database\Eloquent\Model, $this>
+     * @return BelongsTo<Model, $this>
      */
     public function ecTrack(): BelongsTo
     {

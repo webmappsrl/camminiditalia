@@ -18,6 +18,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Nova;
 use WeakMap;
 use Wm\WmPackage\Models\EcTrack;
@@ -213,7 +214,7 @@ class PassportStage extends Resource
     /**
      * Riepilogo per camminatore e cammino (oc:8676).
      *
-     * @return array<int, \Laravel\Nova\Lenses\Lens>
+     * @return array<int, Lens>
      */
     public function lenses(NovaRequest $request): array
     {

@@ -6,6 +6,7 @@ use App\Models\EcTrack;
 use App\Models\PassportShare;
 use App\Models\PassportStage;
 use App\Services\PassportShare\RouteShareImageService;
+use App\Services\PassportShare\StageShareImageService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -225,7 +226,7 @@ class PassportRouteShareApiTest extends TestCase
     {
         [$layer, $walker, $stages] = $this->route();
         $this->spyImageService(composeTimes: 1);
-        $stageMock = $this->mock(\App\Services\PassportShare\StageShareImageService::class);
+        $stageMock = $this->mock(StageShareImageService::class);
         $stageMock->shouldReceive('snapshot')->andReturn(['layer_name' => 'Cammino', 'stage_label' => 'Tappa 01', 'from' => null, 'to' => null, 'distance_km' => null, 'ascent_m' => null]);
         $stageMock->shouldReceive('compose')->andReturnUsing(fn () => Image::canvas(10, 10, '#ff0000')->encode('png'));
 

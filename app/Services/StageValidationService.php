@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\PassportStage;
 use App\Support\PassportLayer;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Wm\WmPackage\Models\UgcTrack;
 use Wm\WmPackage\Services\Models\UgcTrackMatchingService;
@@ -200,7 +201,7 @@ class StageValidationService
      * I parametri correnti di ciascuna App, come tabella derivata: serve a scartare in SQL le
      * corrispondenze vecchie senza caricarle.
      */
-    private function currentParams(): \Illuminate\Database\Query\Builder
+    private function currentParams(): Builder
     {
         $appIds = DB::table('ugc_track_ec_track_matches')->distinct()->pluck('app_id');
 

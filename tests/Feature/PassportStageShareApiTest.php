@@ -388,7 +388,7 @@ class PassportStageShareApiTest extends TestCase
         $this->assertTrue($media->exists);
 
         match ($owner) {
-            'track' => \App\Models\EcTrack::findOrFail($track->id)->delete(),
+            'track' => EcTrack::findOrFail($track->id)->delete(),
             'layer' => $layer->delete(),
             'user' => \App\Models\User::findOrFail($walker->id)->delete(),
             default => $this->fail("Owner sconosciuto nel data provider: {$owner}"),

@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\RecomputePassportStagesForLayerJob;
 use App\Models\PassportStage;
 use App\Services\StageValidationService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcTrack;
@@ -267,27 +269,27 @@ class StageValidationServiceTest extends TestCase
 
     public function test_switching_the_passport_on_queues_the_computation()
     {
-        \Illuminate\Support\Facades\Queue::fake();
+        Queue::fake();
 
         $off = Layer::factory()->create(['app_id' => $this->app_->id, 'properties' => []]);
 
         $off->properties = ['passport_enabled' => true];
         $off->save();
 
-        \Illuminate\Support\Facades\Queue::assertPushed(
-            \App\Jobs\RecomputePassportStagesForLayerJob::class,
+        Queue::assertPushed(
+            RecomputePassportStagesForLayerJob::class,
             fn ($job) => $job->layerId === $off->id
         );
     }
 
     public function test_switching_the_passport_off_queues_nothing()
     {
-        \Illuminate\Support\Facades\Queue::fake();
+        Queue::fake();
 
         $this->layer->properties = [];
         $this->layer->save();
 
-        \Illuminate\Support\Facades\Queue::assertNotPushed(\App\Jobs\RecomputePassportStagesForLayerJob::class);
+        Queue::assertNotPushed(RecomputePassportStagesForLayerJob::class);
     }
 
     public function test_the_layer_job_populates_the_passport()
@@ -297,7 +299,7 @@ class StageValidationServiceTest extends TestCase
         $stage = $this->stage();
         $this->matched($this->walk(), $stage, [0, 1, 2, 3, 4, 5, 6, 7], 10);
 
-        (new \App\Jobs\RecomputePassportStagesForLayerJob($this->layer->id))
+        (new RecomputePassportStagesForLayerJob($this->layer->id))
             ->handle(app(StageValidationService::class));
 
         $this->assertNotNull($this->row($stage)->validated_at);

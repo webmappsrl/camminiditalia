@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Jobs\RecomputeStageValidationsJob;
 use App\Models\PassportStage;
+use App\Services\StageValidationService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
@@ -140,7 +141,7 @@ class RecomputeStageValidationsJobTest extends TestCase
         $walk = $this->walk();
         $this->matched($walk, $stage, [0, 1, 2, 3, 4, 5, 6, 7], 10);
 
-        (new RecomputeStageValidationsJob($this->user->id))->handle(app(\App\Services\StageValidationService::class));
+        (new RecomputeStageValidationsJob($this->user->id))->handle(app(StageValidationService::class));
 
         $row = PassportStage::where(['user_id' => $this->user->id, 'ec_track_id' => $stage->id])->first();
         $this->assertSame(80, $row->progress);
@@ -151,7 +152,7 @@ class RecomputeStageValidationsJobTest extends TestCase
     {
         $stage = $this->stage();
         $this->matched($this->walk(), $stage, [0, 1, 2, 3, 4, 5, 6, 7], 10);
-        $service = app(\App\Services\StageValidationService::class);
+        $service = app(StageValidationService::class);
 
         (new RecomputeStageValidationsJob($this->user->id))->handle($service);
         $first = PassportStage::where('user_id', $this->user->id)->get(['ec_track_id', 'progress', 'validated_at'])->toArray();

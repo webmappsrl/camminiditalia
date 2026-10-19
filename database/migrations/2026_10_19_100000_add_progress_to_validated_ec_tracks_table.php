@@ -26,7 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         // Le righe non validate non hanno posto in uno schema con validated_at NOT NULL.
-        \DB::table('validated_ec_tracks')->whereNull('validated_at')->delete();
+        DB::table('validated_ec_tracks')->whereNull('validated_at')->delete();
 
         Schema::table('validated_ec_tracks', function (Blueprint $table) {
             $table->dropColumn('progress');
