@@ -168,7 +168,7 @@ Tutte le mail del progetto hanno lo stesso design. Ogni vista in `resources/view
 - Nessuna modifica a `SHARD_NAME`/al suo fallback su `APP_NAME` — scope ridotto deliberatamente in fase di reverse-interaction: solo la nuova variabile dedicata alle query PostHog
 
 ### Box informativi + EcTrackPolicy (oc:8181)
-- Pattern identico a `EcPoiPolicy` (oc:8120): policy del package registrata in `AppServiceProvider` con `Gate::policy(EcTrack::class, EcTrackPolicy::class)`.
+- Pattern identico a `EcPoiPolicy` (oc:8120): `Gate::policy(EcTrack::class, EcTrackPolicy::class)` in `AppServiceProvider`. All'epoca puntava alla policy del package; da oc:8587 la classe registrata è quella **locale** (`App\Policies\EcTrackPolicy`) — vedi la sezione di oc:8587 più sotto.
 - Validator: `update`/`delete`/`view` solo sulle proprie EcTrack (`user_id`); Layer resta Administrator-only (`LayerPolicy::update()` blocca tutti i Validator).
 - Test: `EcTrackPolicyTest.php` (mirror di `EcPoiPolicyTest.php`) + regressione `EcPoiPolicyTest.php`; integrazione Nova in `wm-package/tests/Feature/Nova/ConfigDetailAuthorizationInheritanceTest.php`.
 - Frontend `config_detail` (consumo wm-core) fuori scope in questo repo — solo fix autorizzazione consumer emerso in review backend.
@@ -256,7 +256,7 @@ Tutte le mail del progetto hanno lo stesso design. Ogni vista in `resources/view
 - `authorizedToCreate` su una Nova Resource è metodo **statico** — `authorizedToUpdate` e `authorizedToDelete` sono di istanza
 - Nova genera il `uriKey` delle action dal metodo `name()` (non dal nome della classe) — es. `ExecuteEcPoiDataChainAction` con `name()` "Execute EcPoi Data Chain" → `execute-ecpoi-data-chain` (non `execute-ec-poi-data-chain-action`)
 - `EcPoi::factory()->create()` richiede `'properties' => []` nei test — altrimenti `AbstractObserver` del package fallisce con `TypeError` (tenta di accedere come array una stringa JSON)
-- `DownloadEcPoiAction` non riceve `canSee`/`canRun` espliciti: il default Nova filtra già le action in base ad `authorizedToUpdate`, che blocca i Validator
+- `DownloadEcPoiAction` non riceve `canSee`/`canRun` espliciti e si appoggia al filtro di default di Nova su `authorizedToUpdate`. ⚠️ Da oc:8611 quel metodo è ownership-based (`app/Nova/EcPoi.php`: vero per un Validator sul proprio EcPoi), quindi **l'action non è più preclusa ai Validator**: la riga valeva finché l'update era vietato a tutti loro
 - Policy del package sovrascritta con `Gate::policy(EcPoi::class, EcPoiPolicy::class)` in `AppServiceProvider` — pattern già usato per `UgcPoiPolicy`
 
 ### Fix UI layer owner (oc:8089)
