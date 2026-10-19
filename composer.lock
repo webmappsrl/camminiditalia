@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5971625da2a5f644bb66b056fdbf242f",
+    "content-hash": "393db742614def06bfbbf6c67350c3f1",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -11743,11 +11743,11 @@
         },
         {
             "name": "wm/wm-package",
-            "version": "dev-feature/oc-8349-translatable-field-flexible",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./wm-package",
-                "reference": "4ce87a20ce22bcfa44bdb030106756ff3f438945"
+                "reference": "912bbfca2f6858ae27f34f337627bd991f0d5644"
             },
             "require": {
                 "chillerlan/php-qrcode": "^5.0",
@@ -11771,6 +11771,7 @@
                 "marshmallow/nova-tiptap": "^5.1 || ^6.0",
                 "matchish/laravel-scout-elasticsearch": "^7.10",
                 "ndamiens/gisconverter": "^1.0",
+                "outl1ne/nova-multiselect-field": "^5.0.1",
                 "php": ">8.1",
                 "predis/predis": "^2.3",
                 "sentry/sentry-laravel": "^4.13",
@@ -13923,6 +13924,55 @@
             "time": "2025-05-14T10:56:57+00:00"
         },
         {
+            "name": "phpstan/phpstan-mockery",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan-mockery.git",
+                "reference": "89a949d0ac64298e88b7c7fa00caee565c198394"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan-mockery/zipball/89a949d0ac64298e88b7c7fa00caee565c198394",
+                "reference": "89a949d0ac64298e88b7c7fa00caee565c198394",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0",
+                "phpstan/phpstan": "^2.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.6.11",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^9.6"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan Mockery extension",
+            "support": {
+                "issues": "https://github.com/phpstan/phpstan-mockery/issues",
+                "source": "https://github.com/phpstan/phpstan-mockery/tree/2.0.0"
+            },
+            "time": "2024-10-14T03:18:12+00:00"
+        },
+        {
             "name": "phpstan/phpstan-phpunit",
             "version": "2.0.12",
             "source": {
@@ -15726,5 +15776,5 @@
         "php": "^8.2"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

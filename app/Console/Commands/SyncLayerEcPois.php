@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\EcPoi;
+use App\Support\LayerOwner;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\DB;
@@ -52,7 +53,7 @@ class SyncLayerEcPois extends Command
                 ]);
             }
 
-            $ownerId = $layer->user_id ?? config('camminiditalia.default_owner_id');
+            $ownerId = LayerOwner::idFor($layer);
             EcPoi::whereIn('id', $poiIds)->update(['user_id' => $ownerId]);
         });
 

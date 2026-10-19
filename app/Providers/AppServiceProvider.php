@@ -2,21 +2,28 @@
 
 namespace App\Providers;
 
+use App\Models\CertificationRequest;
 use App\Models\TaxonomyPoiType;
+use App\Observers\CertificationRequestCleanupObserver;
 use App\Observers\EcPoiValidatorLayerObserver;
 use App\Observers\EcTrackGeometryAttributesObserver;
 use App\Observers\LayerableObserver;
 use App\Observers\LayerAttributesObserver;
 use App\Observers\LayerObserver;
+use App\Observers\PassportShareCleanupObserver;
 use App\Observers\UgcObserver;
+use App\Policies\CertificationRequestPolicy;
 use App\Policies\EcPoiPolicy;
 use App\Policies\EcTrackPolicy;
 use App\Policies\LayerPolicy;
 use App\Policies\TaxonomyPoiTypePolicy;
 use App\Policies\UgcPoiPolicy;
 use App\Policies\UgcTrackPolicy;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -26,6 +33,7 @@ use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\Layerable;
 use Wm\WmPackage\Models\UgcPoi;
 use Wm\WmPackage\Models\UgcTrack;
+use Wm\WmPackage\Models\User as WmUser;
 use Wm\WmPackage\Policies\PermissionPolicy;
 use Wm\WmPackage\Policies\RolePolicy;
 
@@ -70,6 +78,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(TaxonomyPoiType::class, TaxonomyPoiTypePolicy::class);
         Gate::policy(EcPoi::class, EcPoiPolicy::class);
         Gate::policy(EcTrack::class, EcTrackPolicy::class);
+        Gate::policy(CertificationRequest::class, CertificationRequestPolicy::class);
 
         UgcPoi::observe(UgcObserver::class);
         UgcTrack::observe(UgcObserver::class);
@@ -80,5 +89,27 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\EcPoi::observe(EcPoiValidatorLayerObserver::class);
         EcTrack::observe(EcTrackGeometryAttributesObserver::class);
         \App\Models\EcTrack::observe(EcTrackGeometryAttributesObserver::class);
+
+        // Doppia registrazione: la guard `api` usa App\Models\User, mentre Wm\WmPackage\Models\User
+        // copre il codice del package che istanzia direttamente quella classe (gli eventi
+        // Eloquent sono per classe concreta, un observer non vale per la sottoclasse/parent).
+        WmUser::observe(CertificationRequestCleanupObserver::class);
+        \App\Models\User::observe(CertificationRequestCleanupObserver::class);
+        Layer::observe(CertificationRequestCleanupObserver::class);
+
+        // Condivisioni del passaporto (oc:8702, oc:8703): stessa doppia
+        // registrazione per User ed EcTrack, perché gli eventi Eloquent sono
+        // per classe concreta.
+        WmUser::observe(PassportShareCleanupObserver::class);
+        \App\Models\User::observe(PassportShareCleanupObserver::class);
+        Layer::observe(PassportShareCleanupObserver::class);
+        EcTrack::observe(PassportShareCleanupObserver::class);
+        \App\Models\EcTrack::observe(PassportShareCleanupObserver::class);
+
+        // Immagine del cammino completato (oc:8703): al più 10 richieste al
+        // minuto per utente, con una chiave propria, separata da quella di
+        // `throttle:10,1` usata da certificazione e condivisione della tappa.
+        RateLimiter::for('passport-route-share', fn (Request $request) => Limit::perMinute(10)
+            ->by('passport-route-share:'.($request->user()?->id ?: $request->ip())));
     }
 }

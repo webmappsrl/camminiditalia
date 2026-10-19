@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Jobs\RecalculateLayerAttributesJob;
+use App\Support\LayerOwner;
 use Illuminate\Support\Facades\Log;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Observers\LayerObserver as WmLayerObserver;
@@ -29,7 +30,7 @@ class LayerObserver extends WmLayerObserver
             return;
         }
 
-        $newOwnerId = $layer->user_id ?? config('camminiditalia.default_owner_id');
+        $newOwnerId = LayerOwner::idFor($layer);
         $oldOwnerId = $layer->getOriginal('user_id');
 
         $trackIds = $layer->ecTracks()->pluck('ec_tracks.id')->toArray();

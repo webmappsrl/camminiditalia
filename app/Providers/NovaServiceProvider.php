@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Http\Controllers\LayerFeatureController;
+use App\Http\Controllers\Nova\CertificationDecisionController;
 use App\Models\User;
 use App\Nova\App;
+use App\Nova\CertificationRequest;
 use App\Nova\Dashboards\Main;
 use App\Nova\EcPoi;
 use App\Nova\EcTrack;
@@ -18,6 +20,7 @@ use App\Nova\Tile;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
 use App\Nova\User as NovaUser;
+use App\Nova\ValidatedEcTrack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
@@ -43,6 +46,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
         Nova::serving(function (ServingNova $event) {
             Nova::script('config-home-sorter', resource_path('js/nova/config-home-sorter.js'));
+            Nova::script('certification-decision-confirm', resource_path('js/nova/certification-decision-confirm.js'));
         });
 
         // Queste route sovrascrivono quelle del wm-package permettendo
@@ -53,6 +57,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             ->group(function () {
                 Route::get('/features/{layerId}', [LayerFeatureController::class, 'getFeatures']);
                 Route::post('/sync/{layerId}', [LayerFeatureController::class, 'sync']);
+            });
+
+        // Secondo passaggio dell'azione "Decidi richiesta" (oc:8671): stessi
+        // middleware delle API Nova (autenticazione + accesso al pannello).
+        Route::middleware(config('nova.api_middleware', []))
+            ->prefix('nova-vendor/certification-decision')
+            ->group(function () {
+                Route::post('/confirm', [CertificationDecisionController::class, 'confirm']);
             });
 
         $this->getFooter();
@@ -83,6 +95,16 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(UgcPoi::class),
                     MenuItem::resource(UgcTrack::class),
                 ])->icon('document'),
+
+                // Passaporto del camminatore (oc:8653, oc:8676): lo scoping per
+                // layer del Validator è nelle risorse (CertificationRequest e la
+                // sua policy, ValidatedEcTrack); il canSee qui limita solo la
+                // visibilità della voce.
+                MenuSection::make(__('Passport'), [
+                    MenuItem::resource(CertificationRequest::class),
+                    MenuItem::resource(ValidatedEcTrack::class),
+                ])->icon('identification')
+                    ->canSee(fn (Request $request) => $request->user()->hasAnyRole(['Administrator', 'Validator'])),
 
                 MenuSection::make('EC', [
                     MenuItem::resource(EcPoi::class),

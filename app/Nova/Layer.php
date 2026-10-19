@@ -8,6 +8,7 @@ use App\Nova\Traits\FiltersUsersByRoleTrait;
 use App\Services\LayerAttributesService;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
@@ -18,6 +19,7 @@ use Wm\WmPackage\Enums\OsmWalkingNetwork;
 use Wm\WmPackage\Enums\Season;
 use Wm\WmPackage\Jobs\UpdateAppConfigJob;
 use Wm\WmPackage\Nova\Actions\AddLayersToConfigHomeAction;
+use Wm\WmPackage\Nova\Actions\BulkEditAction;
 use Wm\WmPackage\Nova\Actions\ExecuteEcTrackDataChainAction;
 use Wm\WmPackage\Nova\Actions\RegenerateLayerPbfAction;
 use Wm\WmPackage\Nova\Layer as WmNovaLayer;
@@ -31,7 +33,7 @@ class Layer extends WmNovaLayer
         /** @var User|null $user */
         $user = Auth::user();
 
-        if ($user && ! $user->hasRole('Administrator')) {
+        if ($user && ! self::isAdministrator($user)) {
             return $query->where('user_id', $user->id);
         }
 
@@ -63,7 +65,7 @@ class Layer extends WmNovaLayer
         $fields = array_map(function ($field) use ($currentUser) {
             if ($field instanceof BelongsTo && $field->attribute === 'layerOwner') {
                 $field->canSee(function () use ($currentUser) {
-                    return $currentUser && $currentUser->hasRole('Administrator');
+                    return self::isAdministrator($currentUser);
                 });
                 $field->help('⚠️ Modificando il gestore, tutte le tracce e i POI associati a questo layer verranno automaticamente trasferiti al nuovo gestore.');
             }
@@ -308,6 +310,14 @@ class Layer extends WmNovaLayer
         } else {
             $fields[] = $manualAttributesPanel;
         }
+
+        // Interruttore del Passaporto sul cammino (oc:8763): lo decide solo
+        // l'Administrator. La LayerPolicy lascia modificare il cammino anche
+        // al proprietario non Validator, quindi la sola lettura sta sul
+        // campo e non sulla policy. Il valore vive in properties (JSON).
+        $fields[] = Boolean::make(__('Passport enabled'), 'properties->passport_enabled')
+            ->readonly(fn ($request) => ! self::isAdministrator($request->user()))
+            ->help(__('Enable the Passport for this cammino in the app.'));
 
         array_unshift($fields, Panel::make(__('Route attributes'), [
             Text::make(__('Route attributes'), 'attributes_state', function () {
@@ -743,15 +753,21 @@ class Layer extends WmNovaLayer
             // Restrict RegenerateLayerPbfAction, ExecuteEcTrackDataChainAction and AddLayersToConfigHomeAction to administrators only
             if ($action instanceof RegenerateLayerPbfAction || $action instanceof ExecuteEcTrackDataChainAction || $action instanceof AddLayersToConfigHomeAction) {
                 $action->canSee(function () use ($currentUser) {
-                    return $currentUser && $currentUser->hasRole('Administrator');
+                    return self::isAdministrator($currentUser);
                 });
                 $action->canRun(function ($request, $model) use ($currentUser) {
-                    return $currentUser && $currentUser->hasRole('Administrator');
+                    return self::isAdministrator($currentUser);
                 });
             }
 
             return $action;
         }, $actions);
+
+        // Modifica in blocco dell'interruttore del Passaporto, solo Administrator
+        $isAdmin = self::isAdministrator($currentUser);
+        $actions[] = (new BulkEditAction(self::class, ['properties->passport_enabled']))
+            ->canSee(fn () => $isAdmin)
+            ->canRun(fn ($req, $model) => $isAdmin);
 
         return $actions;
     }
@@ -760,6 +776,11 @@ class Layer extends WmNovaLayer
     {
         $currentUser = $request->user();
 
-        return $currentUser && $currentUser->hasRole('Administrator');
+        return self::isAdministrator($currentUser);
+    }
+
+    private static function isAdministrator(?User $user): bool
+    {
+        return $user !== null && $user->hasRole('Administrator');
     }
 }
