@@ -355,7 +355,6 @@ class StageShareImageServiceTest extends TestCase
         $this->assertEqualsWithDelta(14.00, $captured['xmax'], 1e-9);
         $this->assertEqualsWithDelta(42.10, $captured['ymin'], 1e-9);
         $this->assertEqualsWithDelta(42.15, $captured['ymax'], 1e-9);
-        $this->assertSame(0.30, $capturedRatio);
         $this->assertSame(StageShareLayout::STAGE_FOCUS_MARGIN_RATIO, $capturedRatio);
     }
 
@@ -582,13 +581,13 @@ class StageShareImageServiceTest extends TestCase
     {
         [$layer, $stage] = $this->layerWithStage();
         $app = $this->appWithoutIcons($layer);
-        Log::spy();
+        $log = Log::spy();
 
         $image = $this->compose($layer, $stage, 'it');
 
         $background = Image::make(resource_path(StageShareLayout::BACKGROUND_PATH))->fit(StageShareLayout::CANVAS_WIDTH, StageShareLayout::CANVAS_HEIGHT);
         $this->assertSame($this->cdiLogoCenter($background), $this->cdiLogoCenter($image));
-        Log::shouldHaveReceived('warning')->withArgs(fn ($message, $context = []) => str_starts_with($message, '[oc:8702, oc:8703]') && ($context['app_id'] ?? null) === $app->id)->once();
+        $log->shouldHaveReceived('warning')->withArgs(fn ($message, $context = []) => str_starts_with($message, '[oc:8702, oc:8703]') && ($context['app_id'] ?? null) === $app->id)->once();
     }
 
     /**
@@ -625,11 +624,11 @@ class StageShareImageServiceTest extends TestCase
     {
         [$layer, $stage] = $this->layerWithStage();
         $layer->app_id = 999999999;
-        Log::spy();
+        $log = Log::spy();
 
         $image = $this->compose($layer, $stage, 'it');
 
         $this->assertSame(1920, $image->height());
-        Log::shouldHaveReceived('warning')->withArgs(fn ($message, $context = []) => str_starts_with($message, '[oc:8702, oc:8703]') && ($context['app_id'] ?? null) === 999999999)->once();
+        $log->shouldHaveReceived('warning')->withArgs(fn ($message, $context = []) => str_starts_with($message, '[oc:8702, oc:8703]') && ($context['app_id'] ?? null) === 999999999)->once();
     }
 }

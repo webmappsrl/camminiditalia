@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\Media;
 use Wm\WmPackage\Models\User;
 use Wm\WmPackage\Services\Models\MediaService;
 
@@ -175,7 +176,7 @@ class StageProgressService
             'to' => $text($track->properties['to'] ?? data_get($track->osmfeatures_data ?? null, 'properties.to')),
             'ascent' => $number('ascent'),
             'descent' => $number('descent'),
-            'image' => $firstMedia ? $text(MediaService::make()->getThumbnailUrl($firstMedia)) : null,
+            'image' => $firstMedia instanceof Media ? $text(MediaService::make()->getThumbnailUrl($firstMedia)) : null,
         ];
     }
 

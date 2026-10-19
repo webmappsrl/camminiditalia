@@ -391,6 +391,7 @@ class PassportStageShareApiTest extends TestCase
             'track' => \App\Models\EcTrack::findOrFail($track->id)->delete(),
             'layer' => $layer->delete(),
             'user' => \App\Models\User::findOrFail($walker->id)->delete(),
+            default => $this->fail("Owner sconosciuto nel data provider: {$owner}"),
         };
 
         $this->assertDatabaseMissing('passport_shares', ['id' => $share->id]);

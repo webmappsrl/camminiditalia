@@ -145,12 +145,6 @@ parameters:
 			path: database/migrations/2026_04_22_113119_zz_2026_04_03_000004_rename_theme_filters_and_create_app_filter_layers_table.php
 
 		-
-			message: '#^Call to an undefined method Mockery\\ExpectationInterface\|Mockery\\HigherOrderMessage\:\:twice\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Feature/LayerFeatureControllerTest.php
-
-		-
 			message: '#^Undefined variable\: \$this$#'
 			identifier: variable.undefined
 			count: 1

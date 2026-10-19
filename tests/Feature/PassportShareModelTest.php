@@ -92,7 +92,7 @@ class PassportShareModelTest extends TestCase
         $this->assertNotSame($stage->id, $route->id);
         $this->assertFalse($stage->isRoute());
         $this->assertTrue($route->isRoute());
-        $this->assertSame($layer->id, $route->shareable->id);
-        $this->assertSame($track->id, $stage->shareable->id);
+        $this->assertSame($layer->id, $route->shareable->getKey());
+        $this->assertSame($track->id, $stage->shareable->getKey());
     }
 }
