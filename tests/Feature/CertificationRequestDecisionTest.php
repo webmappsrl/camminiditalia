@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Exceptions\CertificationDecisionException;
 use App\Jobs\SendCertificationDecisionMailJob;
 use App\Models\CertificationRequest;
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use App\Services\CertificationRequestService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Http;
@@ -80,7 +80,7 @@ class CertificationRequestDecisionTest extends TestCase
             $fresh->validatedTracks()->pluck('ec_track_id')->all()
         );
         $row = $fresh->validatedTracks()->first();
-        $this->assertSame(ValidatedEcTrack::SOURCE_MANUAL, $row->source);
+        $this->assertSame(PassportStage::SOURCE_MANUAL, $row->source);
         $this->assertSame($this->layer->id, $row->layer_id);
         $this->assertSame($this->walker->id, $row->user_id);
     }
@@ -113,7 +113,7 @@ class CertificationRequestDecisionTest extends TestCase
         $fresh = $this->request->fresh();
         $this->assertSame(CertificationRequest::STATUS_REJECTED, $fresh->status);
         $this->assertSame('Foto illeggibile', $fresh->decision_note);
-        $this->assertSame(0, ValidatedEcTrack::count());
+        $this->assertSame(0, PassportStage::count());
     }
 
     public function test_empty_note_is_stored_as_null(): void
@@ -145,7 +145,7 @@ class CertificationRequestDecisionTest extends TestCase
         $this->assertSame(CertificationRequest::STATUS_APPROVED, $fresh->status);
         $this->assertNull($fresh->decision_note);
         $this->assertTrue($decidedAt->equalTo($fresh->decided_at));
-        $this->assertSame(1, ValidatedEcTrack::count());
+        $this->assertSame(1, PassportStage::count());
     }
 
     public function test_decide_rejects_track_not_owned_by_layer_owner(): void
@@ -157,7 +157,7 @@ class CertificationRequestDecisionTest extends TestCase
         try {
             $this->service->decide($this->request, $this->owner, 'approve', [$this->trackIds[0], $foreign->id], false, null);
         } finally {
-            $this->assertSame(0, ValidatedEcTrack::count());
+            $this->assertSame(0, PassportStage::count());
             $this->assertTrue($this->request->fresh()->isPending());
         }
     }
@@ -173,11 +173,11 @@ class CertificationRequestDecisionTest extends TestCase
 
     public function test_decide_already_validated_track_is_readable_error(): void
     {
-        ValidatedEcTrack::create([
+        PassportStage::create([
             'user_id' => $this->walker->id,
             'ec_track_id' => $this->trackIds[0],
             'layer_id' => $this->layer->id,
-            'source' => ValidatedEcTrack::SOURCE_MANUAL,
+            'source' => PassportStage::SOURCE_MANUAL,
             'validated_at' => now(),
         ]);
 
@@ -218,5 +218,46 @@ class CertificationRequestDecisionTest extends TestCase
         $new = $this->makeRequest($this->layer);
 
         $this->assertTrue($new->exists);
+    }
+
+    /**
+     * oc:8165: chi manda la credenziale cartacea è proprio chi ha camminato, quindi è normale
+     * che abbia già righe di progresso GPS. Il vincolo unico (user_id, ec_track_id) impone di
+     * promuovere quella riga, non di crearne una seconda.
+     */
+    public function test_approval_promotes_an_existing_gps_progress_row(): void
+    {
+        PassportStage::create([
+            'user_id' => $this->walker->id,
+            'ec_track_id' => $this->trackIds[0],
+            'layer_id' => $this->layer->id,
+            'source' => PassportStage::SOURCE_GPS,
+            'validated_at' => null,
+            'progress' => 60,
+        ]);
+
+        $this->service->decide($this->request, $this->owner, 'approve', [$this->trackIds[0], $this->trackIds[1]], false, null);
+
+        $promoted = PassportStage::where([
+            'user_id' => $this->walker->id,
+            'ec_track_id' => $this->trackIds[0],
+        ])->first();
+
+        $this->assertNotNull($promoted->validated_at, 'la tappa risulta validata');
+        $this->assertSame(PassportStage::SOURCE_MANUAL, $promoted->source);
+        $this->assertSame($this->request->id, $promoted->certification_request_id);
+        $this->assertSame(60, $promoted->progress, 'la copertura calcolata resta quella che era');
+
+        $this->assertDatabaseHas('passport_stages', [
+            'user_id' => $this->walker->id,
+            'ec_track_id' => $this->trackIds[1],
+            'source' => PassportStage::SOURCE_MANUAL,
+        ]);
+
+        $this->assertSame(
+            CertificationRequest::STATUS_APPROVED,
+            $this->request->fresh()->status,
+            'la decisione non fallisce per le altre tappe'
+        );
     }
 }

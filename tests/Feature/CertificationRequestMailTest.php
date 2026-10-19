@@ -14,6 +14,7 @@ use Tests\Feature\Helpers\FakesCertificationDisk;
 use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
+use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\User;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
@@ -186,7 +187,7 @@ class CertificationRequestMailTest extends TestCase
     public function test_mail_subject_contains_layer_name(): void
     {
         $layer = $this->createLayer();
-        \Wm\WmPackage\Models\Layer::whereKey($layer->id)->update(['name' => 'Via Francigena Test']);
+        Layer::whereKey($layer->id)->update(['name' => 'Via Francigena Test']);
         $layer = $layer->fresh();
         $request = $this->makeRequest(['layer' => $layer]);
 

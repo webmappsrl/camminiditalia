@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\EcTrack;
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
@@ -56,11 +56,11 @@ class StageProgressApiTest extends TestCase
 
     private function validate(User $user, WmEcTrack $track, Layer $layer, string $at = '2026-09-30 10:00:00'): void
     {
-        ValidatedEcTrack::create([
+        PassportStage::create([
             'user_id' => $user->id,
             'ec_track_id' => $track->id,
             'layer_id' => $layer->id,
-            'source' => ValidatedEcTrack::SOURCE_MANUAL,
+            'source' => PassportStage::SOURCE_MANUAL,
             'validated_at' => $at,
         ]);
     }

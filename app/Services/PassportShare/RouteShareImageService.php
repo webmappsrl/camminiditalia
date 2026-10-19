@@ -2,7 +2,7 @@
 
 namespace App\Services\PassportShare;
 
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use App\Services\StageProgressService;
 use Illuminate\Support\Carbon;
 use Intervention\Image\Facades\Image;
@@ -171,7 +171,7 @@ class RouteShareImageService
         }
 
         foreach ($tracks as $track) {
-            if ($track['validated_at'] === null || $track['source'] !== ValidatedEcTrack::SOURCE_GPS) {
+            if ($track['validated_at'] === null || $track['source'] !== PassportStage::SOURCE_GPS) {
                 return null;
             }
         }

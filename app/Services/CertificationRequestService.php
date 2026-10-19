@@ -7,7 +7,7 @@ use App\Exceptions\PendingCertificationRequestExistsException;
 use App\Jobs\SendCertificationDecisionMailJob;
 use App\Jobs\SendCertificationRequestMailJob;
 use App\Models\CertificationRequest;
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use App\Support\EcTrackLabel;
 use App\Support\UserDisplay;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -110,7 +110,7 @@ class CertificationRequestService
      *
      * In transazione, con la richiesta riletta sotto lock: così due decisioni
      * contemporanee sulla stessa richiesta non possono passare entrambe il
-     * controllo `pending`. Approva scrive una riga in validated_ec_tracks per
+     * controllo `pending`. Approva scrive una riga in passport_stages per
      * ogni tappa; Rifiuta ignora tappe e selectAll. La mail al camminatore parte
      * solo dopo il commit.
      *
@@ -135,15 +135,24 @@ class CertificationRequestService
 
             try {
                 foreach ($tracks as $track) {
-                    // oc:8165: qui va gestita la promozione di una riga parziale esistente (vincolo unico user_id, ec_track_id).
-                    ValidatedEcTrack::create([
-                        'user_id' => $locked->user_id,
-                        'ec_track_id' => $track->id,
-                        'layer_id' => $locked->layer_id,
-                        'certification_request_id' => $locked->id,
-                        'source' => ValidatedEcTrack::SOURCE_MANUAL,
-                        'validated_at' => $now,
-                    ]);
+                    // Chi manda la credenziale cartacea è proprio chi ha camminato, quindi è
+                    // normale che la tappa abbia già una riga di avanzamento GPS (oc:8165). Il
+                    // vincolo unico (user_id, ec_track_id) impone di promuovere quella riga: un
+                    // create() qui faceva fallire l'intera approvazione, anche per le altre
+                    // tappe. La percentuale calcolata resta com'è: è un dato sul percorso
+                    // registrato, non sulla decisione del gestore.
+                    PassportStage::updateOrCreate(
+                        [
+                            'user_id' => $locked->user_id,
+                            'ec_track_id' => $track->id,
+                        ],
+                        [
+                            'layer_id' => $locked->layer_id,
+                            'certification_request_id' => $locked->id,
+                            'source' => PassportStage::SOURCE_MANUAL,
+                            'validated_at' => $now,
+                        ]
+                    );
                 }
             } catch (UniqueConstraintViolationException $e) {
                 throw new CertificationDecisionException(__('Some selected stages cannot be validated for this request.'), previous: $e);
@@ -301,7 +310,7 @@ class CertificationRequestService
      */
     private function validatedTrackIds(CertificationRequest $request): array
     {
-        return ValidatedEcTrack::validated()->where('user_id', $request->user_id)
+        return PassportStage::validated()->where('user_id', $request->user_id)
             ->pluck('ec_track_id')
             ->map(fn ($id) => (int) $id)
             ->all();

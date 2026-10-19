@@ -5,8 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Carbon;
 use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\UgcTrack;
 use Wm\WmPackage\Models\User;
 
 /**
@@ -21,10 +24,11 @@ use Wm\WmPackage\Models\User;
  * @property int $layer_id
  * @property ?int $certification_request_id
  * @property string $source
- * @property \Illuminate\Support\Carbon $validated_at
- * @property-read ?\Illuminate\Database\Eloquent\Model $ecTrack
+ * @property ?Carbon $validated_at nullo finché la tappa non è validata (oc:8165)
+ * @property int $progress quota di segmenti percorsi, 0-100 (oc:8165)
+ * @property-read ?Model $ecTrack
  */
-class ValidatedEcTrack extends Model
+class PassportStage extends Model
 {
     public const SOURCE_MANUAL = 'manual';
 
@@ -37,16 +41,18 @@ class ValidatedEcTrack extends Model
         'certification_request_id',
         'source',
         'validated_at',
+        'progress',
     ];
 
     protected $casts = [
         'validated_at' => 'datetime',
+        'progress' => 'integer',
     ];
 
     /**
-     * Solo le tappe validate. Oggi è sempre vera (`validated_at` NOT NULL):
-     * è il punto unico per escludere le righe di avanzamento parziale di
-     * oc:8165. Per le query raw vedi validatedSql().
+     * Solo le tappe validate. Dal oc:8165 la tabella ospita anche righe di avanzamento
+     * parziale, con `validated_at` nullo: è il punto unico per escluderle. Per le query raw
+     * vedi validatedSql().
      *
      * @param  Builder<static>  $query
      * @return Builder<static>
@@ -58,7 +64,7 @@ class ValidatedEcTrack extends Model
 
     /**
      * Stessa condizione di scopeValidated() per le query raw/JoinClause su
-     * `validated_ec_tracks` con alias (es. `v`). Nelle LEFT JOIN va messa
+     * `passport_stages` con alias (es. `v`). Nelle LEFT JOIN va messa
      * nella clausola ON, non nel WHERE.
      */
     public static function validatedSql(string $alias): string
@@ -75,9 +81,21 @@ class ValidatedEcTrack extends Model
     }
 
     /**
+     * Le UGC track che hanno prodotto questa riga (oc:8165): è il «numero di uscite» mostrato
+     * sulla tappa sbloccata, e serve a rifare i conti quando una UGC track viene cancellata.
+     * Vuota sulle validazioni concesse a mano.
+     *
+     * @return BelongsToMany<UgcTrack, $this>
+     */
+    public function ugcTracks(): BelongsToMany
+    {
+        return $this->belongsToMany(UgcTrack::class, 'passport_stage_ugc_track');
+    }
+
+    /**
      * Modello da config('wm-package.ec_track_model'), come Layer::ecTracks().
      *
-     * @return BelongsTo<\Illuminate\Database\Eloquent\Model, $this>
+     * @return BelongsTo<Model, $this>
      */
     public function ecTrack(): BelongsTo
     {

@@ -6,9 +6,9 @@ use App\Jobs\RecalculateLayerAttributesJob;
 use App\Models\EcTrack;
 use App\Services\LayerAttributesService;
 use Illuminate\Bus\UniqueLock;
-use Illuminate\Cache\RedisStore;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -158,13 +158,19 @@ class RecalculateLayerAttributesJobTest extends TestCase
      * una transazione per il test, quindi la seconda diventa una savepoint
      * innestata che non riproduce l'abort della transazione di livello
      * superiore — l'unica verifica affidabile qui è che il lock passi
-     * davvero da Redis, non dallo store di default.
+     * davvero dallo store `redis`, non da quello di default.
+     *
+     * Si confronta lo store per nome e non per classe (oc:8165): dalla suite in poi
+     * `cache.stores.redis` ha driver `array`, perché i lock di ShouldBeUnique finiti nel Redis
+     * vero sopravvivevano un'ora e facevano scartare in silenzio i dispatch dei test successivi
+     * (vedi `Tests\TestCase::isolateRedisCache()`). Il controllo che conta resta: il job non
+     * deve ripiegare sullo store di default.
      */
     public function test_unique_via_uses_redis_not_the_default_database_store(): void
     {
-        $this->assertInstanceOf(
-            RedisStore::class,
-            (new RecalculateLayerAttributesJob(42))->uniqueVia()->getStore()
-        );
+        $uniqueVia = (new RecalculateLayerAttributesJob(42))->uniqueVia();
+
+        $this->assertSame(Cache::store('redis'), $uniqueVia);
+        $this->assertNotSame(Cache::store(), $uniqueVia, 'non deve usare lo store di default');
     }
 }

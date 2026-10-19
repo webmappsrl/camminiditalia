@@ -13,6 +13,7 @@ use Mockery;
 use Tests\Feature\Helpers\FakesCertificationDisk;
 use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Wm\WmPackage\Jobs\UpdateAppConfigJob;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\Layer;
@@ -108,7 +109,7 @@ class CertificationRequestCleanupTest extends TestCase
         // Il provider del guard `api` è configurato su App\Models\User (config/auth.php):
         // il token va generato a partire da quella classe, altrimenti il claim `prv`
         // (lock_subject) non combacia e la richiesta successiva risulta 401.
-        $token = \Tymon\JWTAuth\Facades\JWTAuth::fromUser(\App\Models\User::find($user->id));
+        $token = JWTAuth::fromUser(\App\Models\User::find($user->id));
 
         $response = $this->withHeaders(['Authorization' => "Bearer {$token}"])
             ->postJson('/api/auth/delete');

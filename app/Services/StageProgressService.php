@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use App\Support\PassportLayer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -22,7 +22,7 @@ use Wm\WmPackage\Services\Models\MediaService;
  * - A, «tappe del cammino» (routeTracksQuery()): tutte le tappe associate al
  *   layer, a prescindere dal proprietario. È la regola dell'utente finale:
  *   API progress/passport e numeri della Lens. Una tappa è validata se esiste
- *   una riga `validated_ec_tracks` per (utente, tappa), qualunque sia il
+ *   una riga `passport_stages` per (utente, tappa), qualunque sia il
  *   `layer_id`/`source` della riga: una tappa condivisa risulta validata in
  *   tutti i cammini che la contengono.
  * - B, «tappe del gestore» (managedTracksQuery()): tappe associate al layer
@@ -63,7 +63,30 @@ class StageProgressService
         return $this->layerTracksBaseQuery()
             ->select('layerables.layer_id', 'ec_tracks.id as ec_track_id')
             ->selectRaw($this->distanceSql().' as distance_km')
+            ->selectRaw($this->rootSql().' as root_ec_track_id')
             ->distinct();
+    }
+
+    /**
+     * La radice del gruppo di una tappa dentro il suo cammino (oc:8165): la tappa principale se
+     * è presente in **quel** cammino, altrimenti la tappa stessa.
+     *
+     * La condizione sul cammino non è un dettaglio: una variante associata a un cammino che non
+     * contiene la sua principale non è un'alternativa di niente, ed è una tappa come le altre.
+     */
+    private function rootSql(): string
+    {
+        $morphClass = (new (config('wm-package.ec_track_model')))->getMorphClass();
+
+        return "COALESCE((
+            SELECT tv.main_ec_track_id
+            FROM ec_track_variants tv
+            JOIN layerables lp ON lp.layerable_id = tv.main_ec_track_id
+                AND lp.layerable_type = '{$morphClass}'
+                AND lp.layer_id = layerables.layer_id
+            WHERE tv.ec_track_id = ec_tracks.id
+            LIMIT 1
+        ), ec_tracks.id)";
     }
 
     /**
@@ -103,18 +126,19 @@ class StageProgressService
     public function progressFor(User $user, Layer $layer): array
     {
         $totals = $this->userTotalsQuery($user)
-            ->where('ct.layer_id', $layer->id)
+            ->where('g.layer_id', $layer->id)
             ->first();
 
+        // Qui la join NON filtra sulle sole validate (oc:8165): serve anche la riga di una
+        // tappa in corso, per mostrarne la percentuale. Chi distingue è `validated_at`.
         $rows = DB::query()
             ->fromSub($this->layerTracksQuery($layer->id), 'lt')
-            ->leftJoin('validated_ec_tracks as v', function (JoinClause $join) use ($user) {
+            ->leftJoin('passport_stages as v', function (JoinClause $join) use ($user) {
                 $join->on('v.ec_track_id', '=', 'lt.ec_track_id')
-                    ->where('v.user_id', '=', $user->id)
-                    ->whereRaw(ValidatedEcTrack::validatedSql('v'));
+                    ->where('v.user_id', '=', $user->id);
             })
             ->orderBy('lt.ec_track_id')
-            ->get(['lt.ec_track_id', 'lt.name_raw', 'lt.distance_km', 'v.validated_at', 'v.source']);
+            ->get(['lt.ec_track_id', 'lt.name_raw', 'lt.distance_km', 'v.validated_at', 'v.source', 'v.progress']);
 
         // Una sola query per i model delle tappe (con media): niente N+1, e
         // solo le colonne di stageDetails(), senza geometria.
@@ -134,7 +158,7 @@ class StageProgressService
                     'name' => $this->translations($row->name_raw),
                     'distance' => round((float) $row->distance_km, 1),
                     'status' => $validated ? self::STATUS_VALIDATED : self::STATUS_NOT_VALIDATED,
-                    'progress' => $this->trackProgress($validated),
+                    'progress' => $this->trackProgress($validated, $row->progress ?? null),
                     'validated_at' => $validated ? $this->isoDate($row->validated_at) : null,
                     'source' => $validated ? $row->source : null,
                 ] + $this->stageDetails($models->get($row->ec_track_id))
@@ -183,10 +207,18 @@ class StageProgressService
     /**
      * Percentuale (0-100) della tappa percorsa.
      */
-    private function trackProgress(bool $validated): int
+    /**
+     * Quanto della tappa risulta percorso. Una tappa validata vale 100 anche se la copertura
+     * calcolata è minore: può essere stata validata a mano dal gestore, o esserlo stata quando
+     * il tracciato era diverso, e una validazione non si rimangia (oc:8165).
+     */
+    private function trackProgress(bool $validated, ?int $progress): int
     {
-        // oc:8165: il valore verrà dalla colonna `progress` di validated_ec_tracks.
-        return $validated ? 100 : 0;
+        if ($validated) {
+            return 100;
+        }
+
+        return max(0, min(100, (int) $progress));
     }
 
     /**
@@ -202,11 +234,29 @@ class StageProgressService
      */
     public function passportFor(User $user): array
     {
+        // L'elenco delle tappe validate è una sottoquery correlata al cammino e non
+        // un'aggregazione sulla join (oc:8165): dal raggruppamento per gruppi di varianti le
+        // singole righe di validazione non arrivano più al livello esterno, e un gruppo con due
+        // tappe validate — chi ha percorso entrambi i rami — le perderebbe entrambe tranne una.
+        // Il DISTINCT dentro serve perché `layerables` non ha un vincolo di unicità (oc:8139):
+        // un pivot duplicato produrrebbe chiavi ripetute nel JSON.
+        $morphClass = (new (config('wm-package.ec_track_model')))->getMorphClass();
+
         $rows = $this->userTotalsQuery($user)
-            ->join('layers', 'layers.id', '=', 'ct.layer_id')
+            ->join('layers', 'layers.id', '=', 'g.layer_id')
             ->whereRaw(PassportLayer::enabledSql('layers'))
-            ->selectRaw('json_object_agg(v.ec_track_id, v.validated_at) FILTER (WHERE v.id IS NOT NULL) as validated_tracks')
-            ->orderBy('ct.layer_id')
+            ->selectRaw('(
+                SELECT json_object_agg(x.ec_track_id, x.validated_at)
+                FROM (
+                    SELECT DISTINCT vt.ec_track_id, vt.validated_at
+                    FROM passport_stages vt
+                    JOIN layerables lt ON lt.layerable_id = vt.ec_track_id
+                        AND lt.layerable_type = ?
+                        AND lt.layer_id = g.layer_id
+                    WHERE vt.user_id = ? AND vt.validated_at IS NOT NULL
+                ) x
+            ) as validated_tracks', [$morphClass, $user->id])
+            ->orderBy('g.layer_id')
             ->get();
 
         $layers = Layer::whereIn('id', $rows->pluck('layer_id'))->get()->keyBy('id');
@@ -233,12 +283,12 @@ class StageProgressService
 
     /**
      * Una riga per coppia utente/layer (ogni layer che contiene la tappa
-     * secondo la regola A, non `validated_ec_tracks.layer_id`): `id`,
+     * secondo la regola A, non `passport_stages.layer_id`): `id`,
      * `user_id`, `layer_id`,
      * `validated`, `total`, `last_validated_at`. `id` = `(user_id <<
      * SUMMARY_ID_USER_SHIFT) | layer_id`: unico e stabile per coppia (con MIN(v.id) una tappa condivisa
      * fra due layer darebbe lo stesso id a due
-     * righe). Avvolta in una subquery con alias `validated_ec_tracks`, così
+     * righe). Avvolta in una subquery con alias `passport_stages`, così
      * filtri e ordinamenti lavorano su colonne semplici. Base della Lens.
      * I numeri (`validated`, `total`, `last_validated_at`) seguono la regola
      * A, identici a quelli dell'app.
@@ -250,22 +300,23 @@ class StageProgressService
      * scopeVisibleTo() non si applica qui: le righe aggregate non hanno
      * `ec_track_id`.
      *
-     * @return Builder<ValidatedEcTrack>
+     * @return Builder<PassportStage>
      */
     public function summaryQuery(?User $viewer = null): Builder
     {
+        // Gruppi, non tappe (oc:8165): gli stessi numeri che l'app mostra al camminatore.
         $layerTotals = DB::query()
             ->fromSub($this->routeTracksQuery(), 'ct_all')
             ->groupBy('ct_all.layer_id')
             ->select('ct_all.layer_id')
-            ->selectRaw('COUNT(*) as total');
+            ->selectRaw('COUNT(DISTINCT ct_all.root_ec_track_id) as total');
 
-        $grouped = DB::table('validated_ec_tracks as v')
+        $grouped = DB::table('passport_stages as v')
             ->joinSub($this->routeTracksQuery(), 'ct', 'ct.ec_track_id', '=', 'v.ec_track_id')
             ->joinSub($layerTotals, 'lt', 'lt.layer_id', '=', 'ct.layer_id')
-            ->whereRaw(ValidatedEcTrack::validatedSql('v'))
+            ->whereRaw(PassportStage::validatedSql('v'))
             ->groupBy('v.user_id', 'ct.layer_id', 'lt.total')
-            ->selectRaw('(v.user_id::bigint << '.self::SUMMARY_ID_USER_SHIFT.') | ct.layer_id as id, v.user_id, ct.layer_id, COUNT(*) as validated, lt.total, MAX(v.validated_at) as last_validated_at');
+            ->selectRaw('(v.user_id::bigint << '.self::SUMMARY_ID_USER_SHIFT.') | ct.layer_id as id, v.user_id, ct.layer_id, COUNT(DISTINCT ct.root_ec_track_id) as validated, lt.total, MAX(v.validated_at) as last_validated_at');
 
         if ($viewer !== null && ! $viewer->hasRole('Administrator')) {
             if ($viewer->hasRole('Validator')) {
@@ -275,16 +326,16 @@ class StageProgressService
             }
         }
 
-        return ValidatedEcTrack::query()->fromSub($grouped, 'validated_ec_tracks');
+        return PassportStage::query()->fromSub($grouped, 'passport_stages');
     }
 
     /**
-     * Scoping di ruolo su una query di `validated_ec_tracks` (righe singole,
+     * Scoping di ruolo su una query di `passport_stages` (righe singole,
      * con `ec_track_id`), regola B: Administrator vede tutto; Validator solo
      * le validazioni di tappe di sua gestione (managedTracksQuery()) in un
      * layer di cui è proprietario effettivo (ownedLayerIdsQuery()), qualunque
      * sia la fonte; ogni altro
-     * ruolo nulla. Esclude sempre le righe non validate (ValidatedEcTrack::scopeValidated()).
+     * ruolo nulla. Esclude sempre le righe non validate (PassportStage::scopeValidated()).
      *
      * @template TModel of \Illuminate\Database\Eloquent\Model
      *
@@ -302,7 +353,7 @@ class StageProgressService
 
         if ($user->hasRole('Validator')) {
             return $query->whereIn(
-                'validated_ec_tracks.ec_track_id',
+                'passport_stages.ec_track_id',
                 $this->managedTracksQuery()
                     ->whereIn('layerables.layer_id', $this->ownedLayerIdsQuery($user))
                     ->select('ec_tracks.id'),
@@ -341,20 +392,38 @@ class StageProgressService
      */
     private function userTotalsQuery(User $user): QueryBuilder
     {
-        return DB::query()
+        // Due livelli (oc:8165). Prima si riduce ogni gruppo di tappe alternative a una riga
+        // sola: il gruppo è percorso se lo è una qualsiasi delle sue tappe, e i suoi chilometri
+        // si contano una volta sola. Poi si somma per cammino. Senza questo passaggio un
+        // cammino con rami alternativi non raggiungerebbe mai il 100%, perché le varianti
+        // stanno nello stesso cammino della principale e ne gonfiano il totale.
+        $groups = DB::query()
             ->fromSub($this->routeTracksQuery(), 'ct')
-            ->leftJoin('validated_ec_tracks as v', function (JoinClause $join) use ($user) {
+            ->leftJoin('passport_stages as v', function (JoinClause $join) use ($user) {
                 $join->on('v.ec_track_id', '=', 'ct.ec_track_id')
                     ->where('v.user_id', '=', $user->id)
-                    ->whereRaw(ValidatedEcTrack::validatedSql('v'));
+                    ->whereRaw(PassportStage::validatedSql('v'));
             })
-            ->groupBy('ct.layer_id')
+            ->groupBy('ct.layer_id', 'ct.root_ec_track_id')
             ->select('ct.layer_id')
+            // I km di un gruppo sono quelli della sua tappa principale: è il percorso ufficiale
+            // del cammino, dichiarato dal gestore, e dà un totale uguale per tutti invece di uno
+            // che dipende da quale ramo è il più lungo. Su Via Vandelli i due rami di partenza
+            // differiscono di 19 km, quindi la scelta si vede. Il COALESCE copre il caso in cui
+            // la radice sia la tappa stessa (nessuna variante, o principale fuori dal cammino).
+            ->selectRaw('COALESCE(MAX(ct.distance_km) FILTER (WHERE ct.ec_track_id = ct.root_ec_track_id), MAX(ct.distance_km)) as distance_km')
+            ->selectRaw('COUNT(v.id) > 0 as validated')
+            ->selectRaw('MAX(v.validated_at) as validated_at');
+
+        return DB::query()
+            ->fromSub($groups, 'g')
+            ->groupBy('g.layer_id')
+            ->select('g.layer_id')
             ->selectRaw('COUNT(*) as total')
-            ->selectRaw('COUNT(v.id) as validated')
-            ->selectRaw('COALESCE(SUM(ct.distance_km), 0) as km_total')
-            ->selectRaw('COALESCE(SUM(CASE WHEN v.id IS NOT NULL THEN ct.distance_km ELSE 0 END), 0) as km_validated')
-            ->selectRaw('MAX(v.validated_at) as last_validated_at');
+            ->selectRaw('COUNT(*) FILTER (WHERE g.validated) as validated')
+            ->selectRaw('COALESCE(SUM(g.distance_km), 0) as km_total')
+            ->selectRaw('COALESCE(SUM(CASE WHEN g.validated THEN g.distance_km ELSE 0 END), 0) as km_validated')
+            ->selectRaw('MAX(g.validated_at) as last_validated_at');
     }
 
     /**

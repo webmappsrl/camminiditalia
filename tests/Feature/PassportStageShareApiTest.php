@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\EcTrack;
 use App\Models\PassportShare;
-use App\Models\ValidatedEcTrack;
+use App\Models\PassportStage;
 use App\Services\PassportShare\StageShareImageService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
@@ -71,11 +71,11 @@ class PassportStageShareApiTest extends TestCase
 
     private function validate(User $user, WmEcTrack $track, Layer $layer): void
     {
-        ValidatedEcTrack::create([
+        PassportStage::create([
             'user_id' => $user->id,
             'ec_track_id' => $track->id,
             'layer_id' => $layer->id,
-            'source' => ValidatedEcTrack::SOURCE_MANUAL,
+            'source' => PassportStage::SOURCE_MANUAL,
             'validated_at' => '2026-09-30 10:00:00',
         ]);
     }
@@ -388,7 +388,7 @@ class PassportStageShareApiTest extends TestCase
         $this->assertTrue($media->exists);
 
         match ($owner) {
-            'track' => \App\Models\EcTrack::findOrFail($track->id)->delete(),
+            'track' => EcTrack::findOrFail($track->id)->delete(),
             'layer' => $layer->delete(),
             'user' => \App\Models\User::findOrFail($walker->id)->delete(),
             default => $this->fail("Owner sconosciuto nel data provider: {$owner}"),

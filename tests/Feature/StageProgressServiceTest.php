@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\EcTrack;
-use App\Models\ValidatedEcTrack;
-use App\Nova\Filters\ValidatedEcTrackLayerFilter;
+use App\Models\PassportStage;
+use App\Nova\Filters\PassportStageLayerFilter;
 use App\Services\StageProgressService;
 use App\Support\LayerOwner;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -22,8 +22,10 @@ use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcTrack as WmEcTrack;
 use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\Media;
 use Wm\WmPackage\Models\User;
 use Wm\WmPackage\Nova\Traits\HasDemClassification;
+use Wm\WmPackage\Services\Models\MediaService;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class StageProgressServiceTest extends TestCase
@@ -80,9 +82,9 @@ class StageProgressServiceTest extends TestCase
         return $track;
     }
 
-    private function validate(User $user, WmEcTrack $track, Layer $layer, string $source = ValidatedEcTrack::SOURCE_MANUAL, ?Carbon $at = null): ValidatedEcTrack
+    private function validate(User $user, WmEcTrack $track, Layer $layer, string $source = PassportStage::SOURCE_MANUAL, ?Carbon $at = null): PassportStage
     {
-        return ValidatedEcTrack::create([
+        return PassportStage::create([
             'user_id' => $user->id,
             'ec_track_id' => $track->id,
             'layer_id' => $layer->id,
@@ -162,7 +164,7 @@ class StageProgressServiceTest extends TestCase
             $this->track($a->id, [$layerA]);
         }
         $foreign = $this->track($b->id, [$layerA, $layerB]);
-        $this->validate($walker, $foreign, $layerB, ValidatedEcTrack::SOURCE_GPS);
+        $this->validate($walker, $foreign, $layerB, PassportStage::SOURCE_GPS);
 
         $progress = $this->service->progressFor($walker, $layerA);
 
@@ -444,8 +446,8 @@ class StageProgressServiceTest extends TestCase
         $tracks = collect($this->service->progressFor($walker, $layer)['tracks'])->keyBy('id');
 
         $fullMedia = $full->fresh()->getMedia('*')->first();
-        $this->assertInstanceOf(\Wm\WmPackage\Models\Media::class, $fullMedia);
-        $thumb = (new \Wm\WmPackage\Services\Models\MediaService)->getThumbnailUrl($fullMedia);
+        $this->assertInstanceOf(Media::class, $fullMedia);
+        $thumb = (new MediaService)->getThumbnailUrl($fullMedia);
         $this->assertSame('01', $tracks[$full->id]['ref']);
         $this->assertSame('Pacentro', $tracks[$full->id]['from']);
         $this->assertSame('Caramanico', $tracks[$full->id]['to']);
@@ -495,8 +497,8 @@ class StageProgressServiceTest extends TestCase
         $recent = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 6]]);
         $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 10]]);
         $this->track($owner->id, [$untouched]);
-        $this->validate($walker, $old, $layer, ValidatedEcTrack::SOURCE_MANUAL, Carbon::parse('2026-09-01 08:00:00'));
-        $this->validate($walker, $recent, $layer, ValidatedEcTrack::SOURCE_GPS, Carbon::parse('2026-09-30 10:00:00'));
+        $this->validate($walker, $old, $layer, PassportStage::SOURCE_MANUAL, Carbon::parse('2026-09-01 08:00:00'));
+        $this->validate($walker, $recent, $layer, PassportStage::SOURCE_GPS, Carbon::parse('2026-09-30 10:00:00'));
 
         $passport = $this->service->passportFor($walker);
 
@@ -557,7 +559,7 @@ class StageProgressServiceTest extends TestCase
         $this->assertSame(13, (int) $row->getAttribute('total'));
         $this->assertSame(
             6,
-            $this->service->scopeVisibleTo(ValidatedEcTrack::query()->where('user_id', $walker->id), $validator)->count(),
+            $this->service->scopeVisibleTo(PassportStage::query()->where('user_id', $walker->id), $validator)->count(),
         );
     }
 
@@ -573,9 +575,9 @@ class StageProgressServiceTest extends TestCase
         $tracks = collect(range(1, 3))->map(fn () => $this->track($owner->id, [$layer]));
         $first = User::factory()->create();
         $second = User::factory()->create();
-        $this->validate($first, $tracks[0], $layer, ValidatedEcTrack::SOURCE_MANUAL, Carbon::parse('2026-09-01 08:00:00'));
-        $this->validate($first, $tracks[1], $layer, ValidatedEcTrack::SOURCE_MANUAL, Carbon::parse('2026-09-02 08:00:00'));
-        $this->validate($second, $tracks[2], $layer, ValidatedEcTrack::SOURCE_GPS, Carbon::parse('2026-09-03 08:00:00'));
+        $this->validate($first, $tracks[0], $layer, PassportStage::SOURCE_MANUAL, Carbon::parse('2026-09-01 08:00:00'));
+        $this->validate($first, $tracks[1], $layer, PassportStage::SOURCE_MANUAL, Carbon::parse('2026-09-02 08:00:00'));
+        $this->validate($second, $tracks[2], $layer, PassportStage::SOURCE_GPS, Carbon::parse('2026-09-03 08:00:00'));
 
         $rows = $this->service->summaryQuery()
             ->where('layer_id', $layer->id)
@@ -609,15 +611,15 @@ class StageProgressServiceTest extends TestCase
         $elsewhere = $this->track($other->id, [$foreign]);
 
         $manual = $this->validate($walker, $counting, $own);
-        $gps = $this->validate($otherWalker, $counting, $foreign, ValidatedEcTrack::SOURCE_GPS);
+        $gps = $this->validate($otherWalker, $counting, $foreign, PassportStage::SOURCE_GPS);
         $hidden = $this->validate($walker, $notCounting, $own);
         $elsewhereValidation = $this->validate($walker, $elsewhere, $foreign);
         $this->assertNull($gps->certification_request_id);
 
         $ids = [$manual->id, $gps->id, $hidden->id, $elsewhereValidation->id];
         $visible = fn (User $user) => $this->service
-            ->scopeVisibleTo(ValidatedEcTrack::query()->whereIn('validated_ec_tracks.id', $ids), $user)
-            ->pluck('validated_ec_tracks.id')
+            ->scopeVisibleTo(PassportStage::query()->whereIn('passport_stages.id', $ids), $user)
+            ->pluck('passport_stages.id')
             ->map(fn ($id) => (int) $id)
             ->all();
 
@@ -672,8 +674,8 @@ class StageProgressServiceTest extends TestCase
         // Elenco
         $this->assertSame(
             [$validation->id],
-            $this->service->scopeVisibleTo(ValidatedEcTrack::query()->where('validated_ec_tracks.id', $validation->id), $validator)
-                ->pluck('validated_ec_tracks.id')
+            $this->service->scopeVisibleTo(PassportStage::query()->where('passport_stages.id', $validation->id), $validator)
+                ->pluck('passport_stages.id')
                 ->map(fn ($id) => (int) $id)
                 ->all(),
         );
@@ -681,7 +683,7 @@ class StageProgressServiceTest extends TestCase
         // Filtro cammino, su risorsa e Lens
         foreach ([NovaRequest::create('/'), LensRequest::create('/')] as $request) {
             $request->setUserResolver(fn () => $validator);
-            $this->assertContains($orphan->id, (new ValidatedEcTrackLayerFilter)->options($request));
+            $this->assertContains($orphan->id, (new PassportStageLayerFilter)->options($request));
         }
     }
 
@@ -705,15 +707,15 @@ class StageProgressServiceTest extends TestCase
         );
     }
 
-    public function test_user_has_validated_ec_tracks_relation(): void
+    public function test_user_has_passport_stages_relation(): void
     {
         $owner = $this->createUserWithRole('Validator');
         $layer = $this->createLayer($owner->id);
-        // validatedEcTracks() è definita solo sul modello locale, non su Wm\WmPackage\Models\User.
+        // passportStages() è definita solo sul modello locale, non su Wm\WmPackage\Models\User.
         $walker = \App\Models\User::factory()->create();
         $validation = $this->validate($walker, $this->track($owner->id, [$layer]), $layer);
 
-        $this->assertSame([$validation->id], $walker->validatedEcTracks()->pluck('id')->all());
+        $this->assertSame([$validation->id], $walker->passportStages()->pluck('id')->all());
     }
 
     /**
@@ -760,8 +762,8 @@ class StageProgressServiceTest extends TestCase
         $tracks = collect($this->service->progressFor(User::factory()->create(), $layer)['tracks'])->keyBy('id');
 
         $secondMedia = $second->fresh();
-        $this->assertInstanceOf(\Wm\WmPackage\Models\Media::class, $secondMedia);
-        $expected = (new \Wm\WmPackage\Services\Models\MediaService)->getThumbnailUrl($secondMedia);
+        $this->assertInstanceOf(Media::class, $secondMedia);
+        $expected = (new MediaService)->getThumbnailUrl($secondMedia);
         $this->assertSame($expected, $tracks[$track->id]['image']);
         $this->assertSame($track->fresh()->toSearchableArray()['feature_image'], $tracks[$track->id]['image']);
     }

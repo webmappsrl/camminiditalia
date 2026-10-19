@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\ValidatedEcTrack;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +14,9 @@ return new class extends Migration
             $table->foreignId('ec_track_id')->constrained('ec_tracks')->cascadeOnDelete();
             $table->foreignId('layer_id')->constrained('layers')->cascadeOnDelete();
             $table->foreignId('certification_request_id')->nullable()->index()->constrained('certification_requests')->nullOnDelete();
-            $table->string('source')->default(ValidatedEcTrack::SOURCE_MANUAL);
+            // Valore letterale e non la costante del model: la classe è stata rinominata in
+            // PassportStage (oc:8165) e una migration già eseguita non deve dipenderne.
+            $table->string('source')->default('manual');
             $table->timestamp('validated_at');
             $table->timestamps();
 

@@ -8,6 +8,7 @@ use App\Nova\CertificationRequest as NovaCertificationRequest;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
@@ -73,7 +74,7 @@ class CertificationRequestNovaTest extends TestCase
     /**
      * Crea due layer con owner diversi, 2 richieste sul primo e 1 sul secondo.
      *
-     * @return array{0: User, 1: \Illuminate\Support\Collection<int, CertificationRequest>, 2: CertificationRequest}
+     * @return array{0: User, 1: Collection<int, CertificationRequest>, 2: CertificationRequest}
      */
     private function seedTwoLayers(): array
     {
