@@ -27,4 +27,15 @@ return [
     'passport' => [
         'coverage_threshold' => (int) env('PASSPORT_COVERAGE_THRESHOLD', 80),
     ],
+
+    /*
+     * Esperienze (oc:8169). `enabled` è l'interruttore delle API `api/experiences`
+     * (false: 404 su tutte, anche senza autenticazione); `ugc_link_window_days` sono
+     * i giorni entro cui una registrazione (UgcTrack) può essere collegata a
+     * un'esperienza dopo la sua creazione.
+     */
+    'experiences' => [
+        'enabled' => (bool) env('CAMMINIDITALIA_EXPERIENCES_ENABLED', true),
+        'ugc_link_window_days' => (int) env('CAMMINIDITALIA_EXPERIENCE_LINK_DAYS', 30),
+    ],
 ];
