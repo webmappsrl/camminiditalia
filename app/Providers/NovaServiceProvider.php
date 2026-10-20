@@ -10,6 +10,7 @@ use App\Nova\CertificationRequest;
 use App\Nova\Dashboards\Main;
 use App\Nova\EcPoi;
 use App\Nova\EcTrack;
+use App\Nova\Experience;
 use App\Nova\Layer;
 use App\Nova\Media;
 use App\Nova\PassportStage;
@@ -103,6 +104,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 MenuSection::make(__('Passport'), [
                     MenuItem::resource(CertificationRequest::class),
                     MenuItem::resource(PassportStage::class),
+                    // Esperienze (oc:8169): al Validator si mostrano solo quelle pubbliche,
+                    // che oggi non esistono, quindi la voce aprirebbe un elenco sempre vuoto.
+                    // Da riaccendere quando le esperienze potranno diventare pubbliche.
+                    MenuItem::resource(Experience::class)
+                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
                 ])->icon('identification')
                     ->canSee(fn (Request $request) => $request->user()->hasAnyRole(['Administrator', 'Validator'])),
 
