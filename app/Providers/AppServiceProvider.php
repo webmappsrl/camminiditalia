@@ -116,7 +116,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Esperienze (oc:8169): stessa doppia registrazione, per ripulire media e file.
         WmUser::observe(ExperienceCleanupObserver::class);
-        \App\Models\User::observe(ExperienceCleanupObserver::class);
+        User::observe(ExperienceCleanupObserver::class);
         Layer::observe(ExperienceCleanupObserver::class);
 
         // Condivisioni del passaporto (oc:8702, oc:8703): stessa doppia
