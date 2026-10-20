@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Middleware\EnsureExperiencesEnabled;
+use App\Http\Middleware\ProtectExperienceMedia;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,11 +23,11 @@ return Application::configure(basePath: dirname(__DIR__))
         // priorità Laravel ordina `auth:api` (con SubstituteBindings del gruppo `api`) davanti
         // al middleware della route e chi non è autenticato riceverebbe 401 invece di 404.
         $middleware->prependToPriorityList(
-            before: \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
-            prepend: \App\Http\Middleware\EnsureExperiencesEnabled::class,
+            before: AuthenticatesRequests::class,
+            prepend: EnsureExperiencesEnabled::class,
         );
         // Foto delle esperienze (oc:8169) sulle API dei media di wm-package: vedi il middleware.
-        $middleware->appendToGroup('api', \App\Http\Middleware\ProtectExperienceMedia::class);
+        $middleware->appendToGroup('api', ProtectExperienceMedia::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->renderable(function (PostTooLargeException $e, Request $request) {

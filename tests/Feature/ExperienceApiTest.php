@@ -3,12 +3,16 @@
 namespace Tests\Feature;
 
 use App\Jobs\LinkExperienceUgcTracksJob;
+use App\Models\EcTrack;
 use App\Models\Experience;
+use App\Services\ExperienceService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Testing\TestResponse;
+use Illuminate\Validation\ValidationException;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Tests\Feature\Helpers\CreatesCertificationTracks;
 use Tests\Feature\Helpers\FakesCertificationDisk;
 use Tests\Feature\Helpers\LayerTestHelpers;
@@ -106,7 +110,7 @@ class ExperienceApiTest extends TestCase
         // La stessa tappa anche nel layer con id più basso.
         \DB::table('layerables')->insert([
             'layer_id' => min($low->id, $high->id),
-            'layerable_type' => \App\Models\EcTrack::class,
+            'layerable_type' => EcTrack::class,
             'layerable_id' => $track->id,
             'created_at' => now(),
             'updated_at' => now(),
@@ -185,7 +189,7 @@ class ExperienceApiTest extends TestCase
     {
         $layer = $this->createLayer();
         $walker = $this->createUserWithoutRole();
-        $this->mock(\App\Services\ExperienceService::class, function ($mock) {
+        $this->mock(ExperienceService::class, function ($mock) {
             $mock->makePartial();
             $mock->shouldReceive('storeImages')->andThrow(new \RuntimeException('S3 non raggiungibile'));
         });
@@ -368,7 +372,7 @@ class ExperienceApiTest extends TestCase
         $layer = $this->createLayer();
         $experience = Experience::factory()->create(['user_id' => $user->id, 'layer_id' => $layer->id, 'description' => $description]);
         $images = array_map(fn ($i) => UploadedFile::fake()->image("p{$i}.jpg", 20 + $i * 7, 20 + $i * 3), $n > 0 ? range(1, $n) : []);
-        app(\App\Services\ExperienceService::class)->storeImages($experience, $images);
+        app(ExperienceService::class)->storeImages($experience, $images);
 
         return $experience->fresh();
     }
@@ -459,7 +463,7 @@ class ExperienceApiTest extends TestCase
         $this->updateExperience($walker, $experience, ['description' => 'x', 'keep_media_ids' => json_encode([$foreign->id])])
             ->assertOk()
             ->assertJsonCount(0, 'photos');
-        $this->assertNotNull(\Spatie\MediaLibrary\MediaCollections\Models\Media::find($foreign->id));
+        $this->assertNotNull(Media::find($foreign->id));
     }
 
     public function test_modifica_esperienza_altrui_404(): void
@@ -497,7 +501,7 @@ class ExperienceApiTest extends TestCase
         $layer = $this->createLayer();
         $experience = Experience::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id, 'description' => 'testo']);
         $photo = UploadedFile::fake()->image('a.jpg', 33, 21);
-        app(\App\Services\ExperienceService::class)->storeImages($experience, [$photo]);
+        app(ExperienceService::class)->storeImages($experience, [$photo]);
         $oldId = $experience->fresh()->getFirstMedia(Experience::MEDIA_COLLECTION)->id;
 
         // Stesso contenuto (stesso hash) ricaricato mentre la vecchia copia esce.
@@ -643,9 +647,9 @@ class ExperienceApiTest extends TestCase
         $gif = UploadedFile::fake()->image('a.gif', 20, 20);
 
         try {
-            app(\App\Services\ExperienceService::class)->storeImages($experience, [$gif]);
+            app(ExperienceService::class)->storeImages($experience, [$gif]);
             $this->fail('Attesa ValidationException');
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('images', $e->errors());
         }
 
