@@ -4,11 +4,14 @@ namespace App\Nova;
 
 use App\Enums\RouteShape;
 use App\Models\User;
+use App\Nova\Actions\BulkEditPassportAction;
 use App\Nova\Traits\FiltersUsersByRoleTrait;
 use App\Services\LayerAttributesService;
+use App\Support\PassportLayer;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
@@ -19,7 +22,6 @@ use Wm\WmPackage\Enums\OsmWalkingNetwork;
 use Wm\WmPackage\Enums\Season;
 use Wm\WmPackage\Jobs\UpdateAppConfigJob;
 use Wm\WmPackage\Nova\Actions\AddLayersToConfigHomeAction;
-use Wm\WmPackage\Nova\Actions\BulkEditAction;
 use Wm\WmPackage\Nova\Actions\ExecuteEcTrackDataChainAction;
 use Wm\WmPackage\Nova\Actions\RegenerateLayerPbfAction;
 use Wm\WmPackage\Nova\Layer as WmNovaLayer;
@@ -311,13 +313,32 @@ class Layer extends WmNovaLayer
             $fields[] = $manualAttributesPanel;
         }
 
-        // Interruttore del Passaporto sul cammino (oc:8763): lo decide solo
-        // l'Administrator. La LayerPolicy lascia modificare il cammino anche
+        // Interruttori del Passaporto sul cammino (oc:8763, divisi in oc:8809): li decide
+        // solo l'Administrator. La LayerPolicy lascia modificare il cammino anche
         // al proprietario non Validator, quindi la sola lettura sta sul
-        // campo e non sulla policy. Il valore vive in properties (JSON).
-        $fields[] = Boolean::make(__('Passport enabled'), 'properties->passport_enabled')
+        // campo e non sulla policy. I valori vivono in properties (JSON).
+        // Il GPS acceso implica il cartaceo: nel form il cartaceo si blocca su «sì»
+        // (il vincolo vero lo applica PassportLayerObserver::saving()).
+        $paperAttribute = 'properties->'.PassportLayer::PAPER_KEY;
+        $gpsAttribute = 'properties->'.PassportLayer::GPS_KEY;
+
+        $fields[] = Boolean::make(__('Paper passport'), $paperAttribute)
             ->readonly(fn ($request) => ! self::isAdministrator($request->user()))
-            ->help(__('Enable the Passport for this cammino in the app.'));
+            ->dependsOn(
+                [$gpsAttribute],
+                function (Boolean $field, NovaRequest $request, FormData $formData) use ($gpsAttribute) {
+                    // Qui non vale `=== true`: il valore arriva dal form come stringa o bool
+                    // ("true", "1", true), non dal booleano JSON salvato.
+                    if (filter_var($formData->get($gpsAttribute), FILTER_VALIDATE_BOOLEAN)) {
+                        $field->readonly()->setValue(true);
+                    }
+                }
+            )
+            ->help(__('Opens the Passport of this cammino in the app: requests to certify the paper credential, progress and sharing. It cannot be turned off while the automatic passport is on.'));
+
+        $fields[] = Boolean::make(__('Automatic passport (GPS)'), $gpsAttribute)
+            ->readonly(fn ($request) => ! self::isAdministrator($request->user()))
+            ->help(__('Unlocks the stages from the GPS tracks recorded in the app. Turning it on also turns on the paper passport; turning it off deletes the stages unlocked by GPS on this cammino, except those that are also part of another cammino with the automatic passport on.'));
 
         array_unshift($fields, Panel::make(__('Route attributes'), [
             Text::make(__('Route attributes'), 'attributes_state', function () {
@@ -763,9 +784,9 @@ class Layer extends WmNovaLayer
             return $action;
         }, $actions);
 
-        // Modifica in blocco dell'interruttore del Passaporto, solo Administrator
+        // Modifica in blocco degli interruttori del Passaporto, solo Administrator
         $isAdmin = self::isAdministrator($currentUser);
-        $actions[] = (new BulkEditAction(self::class, ['properties->passport_enabled']))
+        $actions[] = (new BulkEditPassportAction)
             ->canSee(fn () => $isAdmin)
             ->canRun(fn ($req, $model) => $isAdmin);
 

@@ -224,7 +224,7 @@ class StageProgressService
     /**
      * Elementi di `routes` in GET /api/passport (oc:8763): un elemento per
      * ogni cammino con il passaporto acceso (`properties->passport_enabled`,
-     * PassportLayer::enabledSql()) e almeno una tappa associata (regola A),
+     * PassportLayer::paperEnabledSql()) e almeno una tappa associata (regola A),
      * anche con 0 tappe validate dall'utente; mai un cammino spento. Campi:
      * totali della regola A, `last_validated_at` e `validated_tracks`, mappa
      * `{<id tappa>: <data di convalida ISO 8601>}` (oggetto vuoto `{}`
@@ -244,7 +244,7 @@ class StageProgressService
 
         $rows = $this->userTotalsQuery($user)
             ->join('layers', 'layers.id', '=', 'g.layer_id')
-            ->whereRaw(PassportLayer::enabledSql('layers'))
+            ->whereRaw(PassportLayer::paperEnabledSql('layers'))
             ->selectRaw('(
                 SELECT json_object_agg(x.ec_track_id, x.validated_at)
                 FROM (

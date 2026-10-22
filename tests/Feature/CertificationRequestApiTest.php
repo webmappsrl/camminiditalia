@@ -55,7 +55,7 @@ class CertificationRequestApiTest extends TestCase
      */
     private function postCertification(array $overrides, array $without = []): TestResponse
     {
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
         $payload = array_diff_key($this->validPayload($overrides), array_flip($without));
 
         return $this->actingAs(User::factory()->create(), 'api')
@@ -130,7 +130,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_store_returns_201_with_pending_status(): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         $response = $this->actingAs($user, 'api')
             ->postJson(
@@ -156,7 +156,7 @@ class CertificationRequestApiTest extends TestCase
 
     public function test_store_without_auth_returns_401(): void
     {
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         $response = $this->postJson(
             "/api/layer/{$layer->id}/certification",
@@ -230,7 +230,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_store_validation(\Closure $payloadFactory, string $expectedErrorKey): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         $response = $this->actingAs($user, 'api')
             ->postJson(
@@ -248,7 +248,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_store_accepts_heif_images(): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         $response = $this->actingAs($user, 'api')
             ->postJson(
@@ -268,7 +268,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_store_ignores_notes_field_and_saves_serial_number(): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         $response = $this->actingAs($user, 'api')
             ->postJson(
@@ -289,7 +289,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_store_with_existing_pending_returns_409(): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         CertificationRequest::factory()->create([
             'user_id' => $user->id,
@@ -314,7 +314,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_show_returns_none_without_request(): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         $response = $this->actingAs($user, 'api')
             ->getJson("/api/layer/{$layer->id}/certification", ['Accept' => 'application/json']);
@@ -326,7 +326,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_show_returns_pending_with_submitted_at(): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         $request = CertificationRequest::factory()->create([
             'user_id' => $user->id,
@@ -348,7 +348,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_show_returns_latest_approved_request_with_decision(): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         $request = CertificationRequest::factory()->create([
             'user_id' => $user->id,
@@ -371,7 +371,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_show_returns_latest_rejected_request_with_note(): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         CertificationRequest::factory()->create([
             'user_id' => $user->id,
@@ -390,7 +390,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_show_returns_most_recent_when_multiple(): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         foreach ([CertificationRequest::STATUS_REJECTED, CertificationRequest::STATUS_PENDING] as $status) {
             CertificationRequest::factory()->create([
@@ -427,7 +427,7 @@ class CertificationRequestApiTest extends TestCase
         $headers = ['Accept' => 'application/json', 'Accept-Language' => $header ?? ''];
 
         $this->actingAs(User::factory()->create(), 'api')
-            ->postJson("/api/layer/{$this->enablePassport($this->createLayer())->id}/certification", $this->validPayload(), $headers)
+            ->postJson("/api/layer/{$this->enableGpsPassport($this->createLayer())->id}/certification", $this->validPayload(), $headers)
             ->assertStatus(201);
 
         $this->assertSame($expected, CertificationRequest::first()->locale);
@@ -437,7 +437,7 @@ class CertificationRequestApiTest extends TestCase
     {
         $owner = User::factory()->create();
         $otherUser = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         CertificationRequest::factory()->create([
             'user_id' => $owner->id,
@@ -454,7 +454,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_post_too_large_returns_json_413(): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         $postMaxSizeBytes = $this->iniSizeToBytes(ini_get('post_max_size'));
 
@@ -477,7 +477,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_eleventh_post_in_a_minute_is_throttled(): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         for ($i = 0; $i < 10; $i++) {
             $response = $this->actingAs($user, 'api')
@@ -494,7 +494,7 @@ class CertificationRequestApiTest extends TestCase
     public function test_get_is_not_throttled(): void
     {
         $user = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         for ($i = 0; $i < 11; $i++) {
             $this->actingAs($user, 'api')

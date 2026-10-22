@@ -20,7 +20,9 @@ use Wm\WmPackage\Services\Models\UgcTrackMatchingService;
  * Due garanzie, scritte nella clausola dell'upsert e non in un `if`, così reggono anche se il
  * job e l'azione Nova della certificazione cartacea scrivono insieme:
  * - una validazione concessa a mano non viene mai toccata;
- * - una tappa validata non torna mai non validata, e la sua data non si sposta.
+ * - il calcolo non toglie mai una validazione e non sposta la sua data: se la copertura scende
+ *   la tappa resta validata. L'unica revoca è lo spegnimento del GPS sul cammino (oc:8809),
+ *   che passa da `revokeGpsForLayer()`.
  */
 class StageValidationService
 {
@@ -79,7 +81,7 @@ class StageValidationService
 
     /**
      * Ricalcola il passaporto di tutte le persone che hanno camminato sulle tappe di un cammino
-     * (oc:8165). Serve quando il gestore accende il passaporto su quel cammino: senza, chi ci ha
+     * (oc:8165). Serve quando il gestore accende il GPS su quel cammino: senza, chi ci ha
      * già camminato non vedrebbe nulla fino alla sua prossima uscita.
      *
      * @return array{validated:int, updated:int}
@@ -114,8 +116,42 @@ class StageValidationService
     }
 
     /**
+     * Revoca le tappe sbloccate dal GPS quando il GPS di un cammino viene spento (oc:8809).
+     *
+     * Si cancellano le righe `source = 'gps'` delle tappe del cammino, salvo quelle che
+     * appartengono a un cammino con il GPS acceso **nel momento in cui il job gira**, quel
+     * cammino stesso compreso: se è stato riacceso nel frattempo, protegge le sue tappe e la
+     * revoca in coda non cancella niente.
+     *
+     * Le validazioni a mano non si toccano. Non si usa `passport_stages.layer_id`: è il cammino
+     * in cui la tappa è stata vista per prima, non un'appartenenza. Le righe del pivot con le
+     * UGC track spariscono a cascata.
+     *
+     * @return int righe cancellate
+     */
+    public function revokeGpsForLayer(int $layerId): int
+    {
+        $morph = $this->matching->ecTrackMorphClass();
+
+        return PassportStage::where('source', PassportStage::SOURCE_GPS)
+            ->whereIn('ec_track_id', DB::table('layerables')
+                ->select('layerable_id')
+                ->where('layer_id', $layerId)
+                ->where('layerable_type', $morph))
+            ->whereNotExists(fn ($q) => $q
+                ->select(DB::raw(1))
+                ->from('layerables as other')
+                ->join('layers', 'layers.id', '=', 'other.layer_id')
+                ->whereColumn('other.layerable_id', 'passport_stages.ec_track_id')
+                ->where('other.layerable_type', $morph)
+                ->whereRaw(PassportLayer::gpsEnabledSql('layers')))
+            ->delete();
+    }
+
+    /**
      * Quante tappe si sbloccherebbero e a quante persone, senza scrivere nulla. È il `--dry-run`
-     * del command: il primo lancio è irreversibile, perché una validazione non si revoca.
+     * del command, utile soprattutto prima del primo lancio: il calcolo non si annulla da solo,
+     * perché non toglie validazioni (le toglie solo lo spegnimento del GPS).
      *
      * @return array{tappe:int, persone:int}
      */
@@ -174,8 +210,8 @@ class StageValidationService
             ->groupBy('u.user_id', 'm.ec_track_id')
             ->selectRaw('u.user_id, m.ec_track_id, COUNT(DISTINCT seg.idx) AS covered, MAX(m.total_segments) AS total');
 
-        // Solo i cammini con il passaporto acceso (oc:8763): su quelli spenti il passaporto non
-        // esiste per nessuno, e una tappa che appartiene solo a cammini spenti non va calcolata.
+        // Solo i cammini con il GPS acceso (oc:8809): su quelli senza GPS le tappe non si sbloccano
+        // da sole, e una tappa che appartiene solo a cammini spenti non va calcolata.
         // La join è sui cammini accesi, quindi `layer_id` della riga è per forza uno di quelli.
         return DB::query()
             ->fromSub($segments, 'c')
@@ -183,7 +219,7 @@ class StageValidationService
                 ->on('l.layerable_id', '=', 'c.ec_track_id')
                 ->where('l.layerable_type', $this->matching->ecTrackMorphClass()))
             ->join('layers', 'layers.id', '=', 'l.layer_id')
-            ->whereRaw(PassportLayer::enabledSql('layers'))
+            ->whereRaw(PassportLayer::gpsEnabledSql('layers'))
             ->groupBy('c.user_id', 'c.ec_track_id', 'c.covered', 'c.total')
             ->selectRaw('c.user_id, c.ec_track_id, MIN(l.layer_id) AS layer_id,
                          LEAST(100, FLOOR(c.covered * 100.0 / NULLIF(c.total, 0)))::int AS progress')
