@@ -27,8 +27,8 @@
   massimo reale misurato è 19,9MB (tabella `media` di prod, disk `wmfe`, 3.860 file). Il dev ha
   scelto di farne il default condiviso fra shard, registrato nella procedura wm-package.
 - **Snapshot solo su prod** (fatto dal dev prima dell'esecuzione); per `camminidev` il dev ha
-  scelto di non farlo — in compenso il piano prevede `docker commit` del container php come
-  evidenza a costo zero.
+  scelto di non farlo, e ha scartato anche il `docker commit` del container php previsto dal
+  piano (Task 5 Step 2): su dev restano solo le evidenze leggere raccolte in sola lettura.
 - **Mitigazione-ponte a caldo su prod** (override `session.upload_progress` + reload FPM, senza
   rebuild) proposta e **scartata dal dev**: si va dritti alla patch.
 - **Rotazione segreti fuori scope**, comprese le credenziali SFTP del well-known registry
