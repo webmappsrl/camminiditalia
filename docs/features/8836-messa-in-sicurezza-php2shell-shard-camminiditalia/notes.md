@@ -43,6 +43,10 @@
   pianificazione: tutte le estensioni del Dockerfile presenti in `php -m` del container → l'immagine
   di prod deriva da questo Dockerfile.
 
+- **Test di upload legittimo end-to-end su dev saltato** su scelta del dev (né dall'app né via
+  API con token): coperto solo a livello di trasporto (POST 20/60/100/120MB → arrivano all'app,
+  140MB → 413 dal proxy host, il cui limite sta fra 120 e 140MB, compatibile col nostro 128M).
+
 ## Follow-up
 
 - I Dockerfile di `boilerplate-test` e `laravel-postgis-boilerplate` pinnano ancora
