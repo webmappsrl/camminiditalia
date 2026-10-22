@@ -24,7 +24,7 @@ class EnsurePassportEnabled
             $layer = Layer::find($layer);
         }
 
-        abort_unless($layer instanceof Layer && PassportLayer::isEnabled($layer), 404);
+        abort_unless($layer instanceof Layer && PassportLayer::isPaperEnabled($layer), 404);
 
         return $next($request);
     }

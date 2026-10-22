@@ -17,8 +17,8 @@ use Wm\WmPackage\Services\Models\UgcTrackMatchingService;
  * tappa ritoccata, le varianti dichiarate — perché in quei casi il package rifà le
  * corrispondenze ma nessun evento dice al passaporto di rifare i conti.
  *
- * **Il lancio senza `--dry-run` è irreversibile**: una validazione, una volta scritta, non si
- * revoca. Guardare prima i conteggi.
+ * **Il lancio senza `--dry-run` non si annulla da solo**: il calcolo non toglie validazioni,
+ * le toglie solo lo spegnimento del GPS su un cammino (oc:8809). Guardare prima i conteggi.
  */
 class ComputeStageValidationsCommand extends Command
 {
@@ -70,7 +70,7 @@ class ComputeStageValidationsCommand extends Command
 
     /**
      * Le persone che hanno almeno una UGC track registrata su una tappa di un cammino **con il
-     * passaporto acceso**: per le altre non c'è niente da calcolare.
+     * GPS acceso**: per le altre non c'è niente da calcolare.
      *
      * @return array<int>
      */
@@ -83,7 +83,7 @@ class ComputeStageValidationsCommand extends Command
                 ->on('l.layerable_id', '=', 'm.ec_track_id')
                 ->where('l.layerable_type', UgcTrackMatchingService::make()->ecTrackMorphClass()))
             ->join('layers', 'layers.id', '=', 'l.layer_id')
-            ->whereRaw(PassportLayer::enabledSql('layers'))
+            ->whereRaw(PassportLayer::gpsEnabledSql('layers'))
             ->distinct()
             ->orderBy('u.user_id')
             ->pluck('u.user_id')

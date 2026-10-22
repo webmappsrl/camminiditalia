@@ -491,7 +491,7 @@ class StageProgressServiceTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer($owner->id));
+        $layer = $this->enableGpsPassport($this->createLayer($owner->id));
         $untouched = $this->createLayer($owner->id);
         $old = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 4]]);
         $recent = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 6]]);
@@ -525,8 +525,8 @@ class StageProgressServiceTest extends TestCase
         $a = $this->createUserWithRole('Validator');
         $b = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layerA = $this->enablePassport($this->createLayer($a->id));
-        $layerB = $this->enablePassport($this->createLayer($b->id));
+        $layerA = $this->enableGpsPassport($this->createLayer($a->id));
+        $layerB = $this->enableGpsPassport($this->createLayer($b->id));
         $this->track($a->id, [$layerA], ['dem_data' => ['distance' => 3]]);
         $foreign = $this->track($b->id, [$layerA, $layerB], ['dem_data' => ['distance' => 5]]);
         $this->validate($walker, $foreign, $layerB);
