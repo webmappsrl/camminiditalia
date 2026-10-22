@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Popola il passaporto di un cammino appena acceso (oc:8165).
+ * Popola il passaporto di un cammino su cui è appena stato acceso il GPS (oc:8165, oc:8809).
  *
  * Tocca tutte le persone che hanno camminato sulle sue tappe, quindi sta in coda e non nella
  * richiesta che accende il flag.

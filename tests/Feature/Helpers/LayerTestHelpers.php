@@ -4,6 +4,7 @@ namespace Tests\Feature\Helpers;
 
 use App\Jobs\RecalculateLayerAttributesJob;
 use App\Models\User;
+use App\Support\PassportLayer;
 use Illuminate\Bus\UniqueLock;
 use Wm\WmPackage\Models\Layer;
 
@@ -39,12 +40,28 @@ trait LayerTestHelpers
     }
 
     /**
-     * Accende il passaporto sul cammino (`properties->passport_enabled`, oc:8763).
+     * Accende sul cammino sia il passaporto cartaceo sia quello GPS (oc:8763, oc:8809).
      * Scrive con `saveQuietly()` per non far scattare i job di LayerObserver.
      */
-    protected function enablePassport(Layer $layer): Layer
+    protected function enableGpsPassport(Layer $layer): Layer
     {
-        $layer->forceFill(['properties' => array_merge($layer->properties ?? [], ['passport_enabled' => true])])->saveQuietly();
+        return $this->setPassportFlags($layer, [PassportLayer::PAPER_KEY => true, PassportLayer::GPS_KEY => true]);
+    }
+
+    /**
+     * Accende solo il passaporto cartaceo sul cammino (GPS spento).
+     */
+    protected function enablePaperPassport(Layer $layer): Layer
+    {
+        return $this->setPassportFlags($layer, [PassportLayer::PAPER_KEY => true]);
+    }
+
+    /**
+     * @param  array<string, bool>  $flags
+     */
+    private function setPassportFlags(Layer $layer, array $flags): Layer
+    {
+        $layer->forceFill(['properties' => array_merge($layer->properties ?? [], $flags)])->saveQuietly();
 
         return $layer;
     }

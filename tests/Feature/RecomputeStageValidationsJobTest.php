@@ -40,7 +40,7 @@ class RecomputeStageValidationsJobTest extends TestCase
         // Il passaporto si accende per singolo cammino (oc:8763): senza il flag non si calcola nulla.
         $this->layer = Layer::factory()->create([
             'app_id' => $this->app_->id,
-            'properties' => ['passport_enabled' => true],
+            'properties' => ['passport_gps_enabled' => true],
         ]);
 
         config(['camminiditalia.passport.coverage_threshold' => 80]);
