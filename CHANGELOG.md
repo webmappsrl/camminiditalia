@@ -1,5 +1,62 @@
 # Changelog
 
+## [1.4.0](https://github.com/webmappsrl/camminiditalia/compare/v1.3.0...v1.4.0) (2026-10-22)
+
+
+### Features
+
+* **oc:8165:** le tappe si sbloccano dalle UGC track registrate ([0132bd4](https://github.com/webmappsrl/camminiditalia/commit/0132bd4c72a4dbceeb8602558f97e5ac4583ce9a))
+* **oc:8165:** passaporto camminatore, le tappe si sbloccano dalle UGC track registrate ([27a6934](https://github.com/webmappsrl/camminiditalia/commit/27a693402108d04cbc8b546fe5d0a9bbd4508231))
+* **oc:8575:** Override manuale in Nova ([#62](https://github.com/webmappsrl/camminiditalia/issues/62)) ([41454f1](https://github.com/webmappsrl/camminiditalia/commit/41454f1491e013db74e956e31523b5320c344084))
+* **oc:8585:** abilita l'analytics dei filtri avanzati per camminiditalia ([dbb7f10](https://github.com/webmappsrl/camminiditalia/commit/dbb7f103d030ed0ce427b3f0f3db08e00a94b644))
+* **oc:8588:** voce Taxonomy Where nel menu Nova, solo Administrator ([#71](https://github.com/webmappsrl/camminiditalia/issues/71)) ([483ae98](https://github.com/webmappsrl/camminiditalia/commit/483ae98684c7df5750352c5b394047185a75babe))
+* **oc:8596:** Autorizzazioni "Tipi POI" ([#65](https://github.com/webmappsrl/camminiditalia/issues/65)) ([d00bd04](https://github.com/webmappsrl/camminiditalia/commit/d00bd048ba1e6a226578b1b4b00367764a0fa48d))
+* **oc:8637:** documenta ANALYTICS_SHOW_LIVE_USER_IDENTITY ([#72](https://github.com/webmappsrl/camminiditalia/issues/72)) ([a29cfa7](https://github.com/webmappsrl/camminiditalia/commit/a29cfa7688efdc79dbcaf6af5efa56caa2ce92ab))
+* **oc:8646:** Route shape del layer modificabile manualmente in Nova ([#73](https://github.com/webmappsrl/camminiditalia/issues/73)) ([932cef0](https://github.com/webmappsrl/camminiditalia/commit/932cef0d9eb9c5b161a186413e177ecfd7e0c392))
+* **oc:8653:** backend della validazione della credenziale cartacea ([#74](https://github.com/webmappsrl/camminiditalia/issues/74)) ([7604132](https://github.com/webmappsrl/camminiditalia/commit/76041328dc51e65341183ac6b263b05ff4569032))
+* **oc:8671:** decisione sulla richiesta di certificazione e tappe validate ([#75](https://github.com/webmappsrl/camminiditalia/issues/75)) ([a4bfb87](https://github.com/webmappsrl/camminiditalia/commit/a4bfb87f77975d12cdc8bcdd23e787aaa0829add))
+* **oc:8676:** tappe percorse e progresso per cammino del passaporto camminatore ([#76](https://github.com/webmappsrl/camminiditalia/issues/76)) ([a625e77](https://github.com/webmappsrl/camminiditalia/commit/a625e77ed99d96718b9db11641639aa5ace2ae75))
+* **oc:8702:** condivisione della tappa percorsa del passaporto ([#77](https://github.com/webmappsrl/camminiditalia/issues/77)) ([07af364](https://github.com/webmappsrl/camminiditalia/commit/07af36428f6bda3373fd90ff0f595e16fe6bac7c))
+* **oc:8703:** immagine del cammino completato e tabella unica delle condivisioni ([#79](https://github.com/webmappsrl/camminiditalia/issues/79)) ([2eaf5af](https://github.com/webmappsrl/camminiditalia/commit/2eaf5afb8a9430886e0b377e99be8f6a35337374))
+* **oc:8719:** pulizia automatica dei punti GPS errati nelle tracce UGC ([#78](https://github.com/webmappsrl/camminiditalia/issues/78)) ([16913e0](https://github.com/webmappsrl/camminiditalia/commit/16913e0516169b8664ef17e7c827381f03f6995b))
+* **oc:8742:** bump wm-package, dati tecnici delle tracce UGC (properties.stats) ([2f14dda](https://github.com/webmappsrl/camminiditalia/commit/2f14dda4187e390fba3b3eccb00b1805e86d9d75))
+* **oc:8742:** bump wm-package, dati tecnici delle tracce UGC in properties.stats ([91b9fb3](https://github.com/webmappsrl/camminiditalia/commit/91b9fb3e9f5e6fffb13d47857e4e124e80dd1582))
+* **oc:8747:** bump wm-package, mappa Nova delle UgcTrack con i cammini dell'App ([dbca034](https://github.com/webmappsrl/camminiditalia/commit/dbca034460625961791bd7308359dd817795cdb1))
+* **oc:8747:** bump wm-package, mappa Nova delle UgcTrack con i cammini dell'App nella zona ([64b615a](https://github.com/webmappsrl/camminiditalia/commit/64b615aad011bdfc44a213f491332eb40e7ea537))
+* **oc:8747:** bump wm-package, origine della UgcTrack in Nova ([9d38b55](https://github.com/webmappsrl/camminiditalia/commit/9d38b55585c24f4c38fee3a7f74cb768ca4eba44))
+* **oc:8747:** bump wm-package, origine della UgcTrack in Nova ([7f7eda0](https://github.com/webmappsrl/camminiditalia/commit/7f7eda0525eeea1562aec3ba3cde636fd985b734))
+* **oc:8761:** date di percorrenza obbligatorie nella richiesta di certificazione ([#91](https://github.com/webmappsrl/camminiditalia/issues/91)) ([8171550](https://github.com/webmappsrl/camminiditalia/commit/817155086dc656bf4507af6ecb0585804922597b))
+* **oc:8763:** passaporto attivo per singolo cammino ([#84](https://github.com/webmappsrl/camminiditalia/issues/84)) ([35ab125](https://github.com/webmappsrl/camminiditalia/commit/35ab125b3503d4223291b91f22da0f2968f1850a))
+* **oc:8773:** bump wm-package, UGC track associate a più cammini e tappe ([f4fca64](https://github.com/webmappsrl/camminiditalia/commit/f4fca645284c0ca20b6d9143d72dbae37c275b09))
+* **oc:8773:** UGC track associate a più cammini e tappe ([7e206d3](https://github.com/webmappsrl/camminiditalia/commit/7e206d3b8f677ff01c3d23ae64a8d125078d5df4))
+* **oc:8836:** messa in sicurezza PHP2Shell — pin php 8.4.27 e hardening pool FPM ([#97](https://github.com/webmappsrl/camminiditalia/issues/97)) ([bc0167e](https://github.com/webmappsrl/camminiditalia/commit/bc0167e6dba29ea8a4e180ca380698f09e5babdb))
+
+
+### Bug Fixes
+
+* **oc:8463:** RouteShape discontinuo esposto come Lineare, alert solo in Nova ([#63](https://github.com/webmappsrl/camminiditalia/issues/63)) ([5db350f](https://github.com/webmappsrl/camminiditalia/commit/5db350f30efae6e40cb2d1efb6a3de3013e7a110))
+* **oc:8587:** Validator non vede più EcTrack/EcPoi dopo trasferimento ownership layer ([#66](https://github.com/webmappsrl/camminiditalia/issues/66)) ([c9b778a](https://github.com/webmappsrl/camminiditalia/commit/c9b778adbfa76482a829c3dff41d7d58dbfe4c28))
+* **oc:8611:** associazione EcTrack-EcPoi in Nova non trovava le tracce/POI per il Validator ([#67](https://github.com/webmappsrl/camminiditalia/issues/67)) ([b8aa7fd](https://github.com/webmappsrl/camminiditalia/commit/b8aa7fd10da15212c696940f37347c0355b22d10))
+* **oc:8611:** sblocco eliminazione EcPoi per il Validator ([#68](https://github.com/webmappsrl/camminiditalia/issues/68)) ([caf7635](https://github.com/webmappsrl/camminiditalia/commit/caf7635e2b26af472df4be29ee69562a8e2cad2f))
+* **oc:8623:** Administrator possono assegnare Validator/Guest in Nova ([#70](https://github.com/webmappsrl/camminiditalia/issues/70)) ([493de00](https://github.com/webmappsrl/camminiditalia/commit/493de00d596d29cc1fc6d01247ca002f423cd516))
+* **oc:8718:** UGC duplicati per uuid — bump wm-package e migration archivio ([#80](https://github.com/webmappsrl/camminiditalia/issues/80)) ([7544536](https://github.com/webmappsrl/camminiditalia/commit/7544536be492f14c02082b0e2f7cb843a718ad35))
+* **oc:8773:** bump wm-package, supervisor della coda ugc-track-matching ([60587d0](https://github.com/webmappsrl/camminiditalia/commit/60587d086c6111df7eadb1225b22db695b7d229f))
+* **oc:8773:** bump wm-package, supervisor della coda ugc-track-matching in produzione ([d6d3c64](https://github.com/webmappsrl/camminiditalia/commit/d6d3c649fb3d8e54ffd44d2dc6efffae79839ca1))
+* **oc:8784:** il deploy riavvia Horizon nel suo container ([c4dcb7a](https://github.com/webmappsrl/camminiditalia/commit/c4dcb7a5ddb4672b8bb86db33c321f408d32c76e))
+* **oc:8784:** il deploy riavvia Horizon nel suo container ([03be996](https://github.com/webmappsrl/camminiditalia/commit/03be9960f128374b796e4c4ee6e45490d123b121))
+* PHPStan verde sul branch Passaporto ([e9b747e](https://github.com/webmappsrl/camminiditalia/commit/e9b747e7bfadbedc3d60b63d4763cda234006284))
+* **test:** isola EcTrackGeometryAttributesObserverTest dal disco S3 reale wmfe ([56f1aa1](https://github.com/webmappsrl/camminiditalia/commit/56f1aa14fbc54676a160eec98f7648de362422fa))
+
+
+### Miscellaneous Chores
+
+* gitlink wm-package al merge della PR [#310](https://github.com/webmappsrl/camminiditalia/issues/310) ([50ff00b](https://github.com/webmappsrl/camminiditalia/commit/50ff00bfb1c30b423585b5422832aa294a30213b))
+* gitlink wm-package alla pulizia dei nomi di shard ([4b3b49b](https://github.com/webmappsrl/camminiditalia/commit/4b3b49bec483a67e618d617696d330e771459934))
+* **oc:8773:** bump wm-package al merge della PR [#306](https://github.com/webmappsrl/camminiditalia/issues/306) ([b96a9ce](https://github.com/webmappsrl/camminiditalia/commit/b96a9ce727fe2f206eb06bbf93ed46ee3e553141))
+* **oc:8776:** bump wm-package, mappa della UGC track leggibile ([9a7d080](https://github.com/webmappsrl/camminiditalia/commit/9a7d080310439bd04f54d2ce4bfc8483b04acfb0))
+* **oc:8776:** bump wm-package, mappa della UGC track leggibile ([0c3e728](https://github.com/webmappsrl/camminiditalia/commit/0c3e728e2a2a83f605f043903726b59b6c6d7de1))
+* **oc:8803:** gitlink wm-package al link unico dell'App con QR code ([#95](https://github.com/webmappsrl/camminiditalia/issues/95)) ([dc98b5b](https://github.com/webmappsrl/camminiditalia/commit/dc98b5bd360d08df28b262177683c8df033efa83))
+
 ## [1.3.0](https://github.com/webmappsrl/camminiditalia/compare/v1.2.0...v1.3.0) (2026-08-25)
 
 
