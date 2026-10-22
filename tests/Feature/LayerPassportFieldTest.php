@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\RecalculateLayerAttributesJob;
+use App\Jobs\RecomputePassportStagesForLayerJob;
 use App\Jobs\RevokeGpsPassportStagesForLayerJob;
 use App\Models\User;
 use App\Nova\Actions\BulkEditPassportAction;
@@ -250,7 +252,7 @@ class LayerPassportFieldTest extends TestCase
     {
         $this->actingAs($this->makeUser('Administrator'));
 
-        $fields = (new BulkEditPassportAction)->fields(app(\Laravel\Nova\Http\Requests\NovaRequest::class));
+        $fields = (new BulkEditPassportAction)->fields(app(NovaRequest::class));
 
         $this->assertEqualsCanonicalizing(
             ['properties->passport_enabled', 'properties->passport_gps_enabled'],
@@ -278,7 +280,7 @@ class LayerPassportFieldTest extends TestCase
             $layers
         );
 
-        Queue::assertNotPushed(\App\Jobs\RecalculateLayerAttributesJob::class);
-        Queue::assertPushed(\App\Jobs\RecomputePassportStagesForLayerJob::class, 2);
+        Queue::assertNotPushed(RecalculateLayerAttributesJob::class);
+        Queue::assertPushed(RecomputePassportStagesForLayerJob::class, 2);
     }
 }
