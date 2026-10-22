@@ -44,6 +44,10 @@ Formattare il codice:
 docker exec laravel-camminiditalia composer format   # esegue Laravel Pint
 ```
 
+Una modifica a `docker/configs/phpfpm/` **non arriva sui server col deploy automatico** (che non
+ribuilda né ricrea i container): servono build `--pull` e recreate manuali — vedi
+[docs/knowledge/8836-messa-in-sicurezza-php2shell-shard-camminiditalia.md](docs/knowledge/8836-messa-in-sicurezza-php2shell-shard-camminiditalia.md).
+
 ## Architettura
 
 ### Submodule wm-package
@@ -160,6 +164,7 @@ Tutte le mail del progetto hanno lo stesso design. Ogni vista in `resources/view
 | Passaporto camminatore: badge automatico da GPS e varianti di tappa | oc:8165 | `app/Services/StageValidationService.php`, `app/Services/StageProgressService.php`, `app/Models/EcTrackVariant.php`, `app/Models/PassportStage.php`, `app/Jobs/RecomputeStageValidationsJob.php`, `app/Observers/UgcTrackMatchingRunObserver.php`, `app/Console/Commands/ComputeStageValidationsCommand.php`, `app/Nova/EcTrack.php`, `app/Observers/PassportLayerObserver.php`, migration `2026_10_19_*` (fra cui il rename di `validated_ec_tracks` in **`passport_stages`**), `config/camminiditalia.php`, `resources/lang/*.json`, `tests/TestCase.php`; in `wm-package` il limite sui tratti dritti lunghi e `UgcTrack::origin()` | Le tappe si sbloccano dalle UGC track registrate (80% dei segmenti) sui soli cammini con il passaporto acceso, e una tappa può essere variante di un'altra: nel cammino contano per una sola. All'accensione di un cammino il passaporto di chi ci ha già camminato si popola da solo. Vedi [docs/knowledge/8676-passaporto-camminatore-tappe-percorse-e-validate-dellutente.md](docs/knowledge/8676-passaporto-camminatore-tappe-percorse-e-validate-dellutente.md). Rilasciato in produzione, passi post-deploy eseguiti |
 | Mappa della UGC track leggibile: tracce e tappe sovrapposte | oc:8776 | gitlink `wm-package`; codice e test interamente in `wm-package` | Traccia sottile con contorno, solo le tappe toccate (più larghe dove la traccia passa), segmenti alternati da lontano dove passano più cammini, tooltip con tutte le linee. Vedi [wm-package/docs/knowledge/8776-mappa-della-ugc-track-in-nova-tracce-e-tappe-sovrapposte-leggibili.md](wm-package/docs/knowledge/8776-mappa-della-ugc-track-in-nova-tracce-e-tappe-sovrapposte-leggibili.md). Nessun passo dopo il deploy: le tappe mostrate usano la corrispondenza di oc:8773 già calcolata |
 | QR code unico per scaricare l'app | oc:8803 | gitlink `wm-package`; codice e test interamente in `wm-package` | Link `/app/{id}/open` con QR nel tab Release di Nova App: App Store su iOS, l'app o Google Play su Android, webapp altrove. Vedi [wm-package/docs/knowledge/link-e-qr-code-verso-l-app.md](wm-package/docs/knowledge/link-e-qr-code-verso-l-app.md) |
+| Messa in sicurezza PHP2Shell: pin immagine PHP, hardening pool FPM, procedura di aggiornamento | oc:8836 | `docker/configs/phpfpm/{Dockerfile,www.conf}`, gitlink `wm-package` | Vedi [docs/knowledge/8836-messa-in-sicurezza-php2shell-shard-camminiditalia.md](docs/knowledge/8836-messa-in-sicurezza-php2shell-shard-camminiditalia.md) |
 
 ## Decisioni architetturali
 
