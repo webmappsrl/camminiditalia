@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\CertificationRequestController;
+use App\Http\Controllers\Api\ExperienceController;
 use App\Http\Controllers\Api\PassportRouteShareController;
 use App\Http\Controllers\Api\PassportStageShareController;
 use App\Http\Controllers\Api\StageProgressController;
+use App\Http\Middleware\EnsureExperiencesEnabled;
 use App\Http\Middleware\EnsurePassportEnabled;
 use Illuminate\Support\Facades\Route;
 
@@ -57,3 +59,28 @@ Route::name('camminiditalia.api.layer.')
 Route::get('/passport', [StageProgressController::class, 'passport'])
     ->middleware('auth:api')
     ->name('camminiditalia.api.passport');
+
+/*
+ * Esperienze dei camminatori (oc:8169): elenco, creazione, modifica ed
+ * eliminazione, solo le proprie. L'interruttore viene prima dell'autenticazione:
+ * spento, 404 anche a chi non è autenticato.
+ */
+Route::name('camminiditalia.api.experiences.')
+    ->prefix('experiences')
+    ->middleware([EnsureExperiencesEnabled::class, 'auth:api'])
+    ->group(function () {
+        Route::get('/', [ExperienceController::class, 'index'])->name('index');
+        // Upload di foto (ricodifica con GD): al più 10 richieste al minuto per utente,
+        // con un limite proprio (`experiences`) che non consuma quello del passaporto.
+        Route::post('/', [ExperienceController::class, 'store'])
+            ->middleware('throttle:experiences')
+            ->name('store');
+        // Binding implicito per id: il 404 sull'esperienza altrui sta in controller e request, non dipende dalla cache delle route.
+        Route::post('/{experience}', [ExperienceController::class, 'update'])
+            ->whereNumber('experience')
+            ->middleware('throttle:experiences')
+            ->name('update');
+        Route::delete('/{experience}', [ExperienceController::class, 'destroy'])
+            ->whereNumber('experience')
+            ->name('destroy');
+    });

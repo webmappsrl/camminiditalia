@@ -365,4 +365,41 @@ class StageValidationServiceTest extends TestCase
         $linked = $this->row($stage)->ugcTracks()->pluck('ugc_tracks.id')->all();
         $this->assertSame([$current->id], $linked, 'una corrispondenza stantia non ha contribuito');
     }
+
+    public function test_stages_walked_by_track_without_stages_returns_empty()
+    {
+        $this->matched($this->walk(), $this->stage(), range(0, 9), 10);
+
+        $this->assertSame([], $this->service->stagesWalkedByTrack($this->user->id, []));
+    }
+
+    public function test_stages_walked_by_track_groups_per_track_without_union()
+    {
+        $a = $this->stage();
+        $b = $this->stage();
+        $first = $this->walk();
+        $second = $this->walk();
+        // Tutta A e metà B con la prima, l'altra metà di B con la seconda: per unione B sarebbe
+        // percorsa, per singola registrazione no.
+        $this->matched($first, $a, range(0, 9), 10);
+        $this->matched($first, $b, [0, 1, 2, 3, 4], 10);
+        $this->matched($second, $b, [5, 6, 7, 8, 9], 10);
+
+        $walked = $this->service->stagesWalkedByTrack($this->user->id, [$a->id, $b->id]);
+
+        $this->assertSame([$first->id => [$a->id]], $walked);
+    }
+
+    public function test_stages_walked_by_track_ignores_stale_parameters()
+    {
+        $stage = $this->stage();
+        $current = $this->walk();
+        $stale = $this->walk();
+        $this->matched($current, $stage, range(0, 7), 10);
+        $this->matched($stale, $stage, range(0, 9), 10, segmentLength: 200);
+
+        $walked = $this->service->stagesWalkedByTrack($this->user->id, [$stage->id]);
+
+        $this->assertSame([$current->id => [$stage->id]], $walked);
+    }
 }

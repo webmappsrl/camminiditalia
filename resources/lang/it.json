@@ -115,5 +115,17 @@
     "EcTracks crossed outside any layer": "Tappe attraversate fuori da ogni cammino",
     "The track does not cross any EcTrack": "La traccia non attraversa nessuna tappa",
     "Variant of": "Variante di",
-    "The stage this one is an alternative of: walking either of the two counts as the same stage of the route.": "La tappa di cui questa è un'alternativa: percorrere l'una o l'altra vale come la stessa tappa del cammino."
+    "The stage this one is an alternative of: walking either of the two counts as the same stage of the route.": "La tappa di cui questa è un'alternativa: percorrere l'una o l'altra vale come la stessa tappa del cammino.",
+    "Experiences": "Esperienze",
+    "Experience": "Esperienza",
+    "Text": "Testo",
+    "Public": "Pubblica",
+    "Date": "Data",
+    "Recordings": "Registrazioni",
+    "Write a text or add at least one photo.": "Scrivi un testo o aggiungi almeno una foto.",
+    "The stage does not belong to any route.": "La tappa non appartiene a nessun cammino.",
+    "The stage does not belong to this route.": "La tappa non appartiene a questo cammino.",
+    "The photo could not be processed.": "Non è stato possibile elaborare la foto.",
+    "An experience can have at most :max photos.": "Un'esperienza può avere al massimo :max foto.",
+    "keep_media_ids must be a JSON array of integers.": "keep_media_ids deve essere un array JSON di numeri interi."
 }
