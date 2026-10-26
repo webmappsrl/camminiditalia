@@ -20,12 +20,9 @@ Regole:
   spegnere. Vale nel form del layer e nella modifica in blocco. I testi di aiuto dei due campi lo
   spiegano. Se nello stesso salvataggio si accende il GPS e si spegne il cartaceo, vince
   l'accensione del GPS;
-- spegnere il GPS su un cammino cancella le tappe sbloccate dal GPS (`source = gps`) che fanno
-  parte di quel cammino (`layerables`) e di nessun cammino con il GPS acceso nel momento in cui la
-  revoca gira (quel cammino compreso, se nel frattempo è stato riacceso). Non si
-  usa `passport_stages.layer_id`, che è il cammino in cui la tappa è stata validata per prima e non
-  dice a quale cammino appartiene. Restano le tappe confermate con la credenziale cartacea
-  (`source = manual`);
+- spegnere il GPS su un cammino ferma lo sblocco automatico su quel cammino, ma **non cancella**
+  le tappe già sbloccate: «una volta che c'è il timbro è fatta» (scrum del 23/10; nella prima
+  versione lo spegnimento le revocava, vedi [notes.md](notes.md));
 - spegnere il cartaceo (possibile solo con il GPS spento) non cancella nulla, come oggi;
 - accendere il GPS fa partire il ricalcolo per chi ha già camminato sul cammino. È lo stesso
   ricalcolo che oggi parte all'accensione del passaporto (`RecomputePassportStagesForLayerJob`);
@@ -35,11 +32,12 @@ Le regole dei due flag stanno in una sola classe, usata sia dal form Nova sia da
 blocco. La modifica in blocco diventa un'Action locale che estende la `BulkEditAction` di
 wm-package: ne eredita i campi a tre scelte e riscrive solo il salvataggio. Salva in modo
 silenzioso (`saveQuietly()`), come il package, e chiama di persona i due passi del passaporto
-(vincolo prima, ricalcolo o revoca dopo), così non scattano gli altri observer del layer.
+(vincolo prima, ricalcolo dopo), così non scattano gli altri observer del layer.
 
 Al rilascio il GPS parte spento su tutti i cammini (la chiave `passport_gps_enabled` non esiste) e
-la chiave `passport_enabled` resta com'è. Nessuna migration: le righe `source = gps` eventualmente
-presenti al rilascio si cancellano a mano sul DB (in produzione il 22/10 erano 0).
+la chiave `passport_enabled` resta com'è. Nessuna migration: se al rilascio ci sono righe `source = gps`
+(in produzione il 22/10 e il 26/10 erano 0), cosa farne si decide con il team, perché un timbro dato
+non si toglie.
 
 ## Perché
 
@@ -69,34 +67,28 @@ l'implementazione: vedi [notes.md](notes.md)).
 - [ ] Le regole dei due flag stanno in una sola classe, usata dal form e dall'Action
 - [ ] Action locale «Passaporto: modifica in blocco» che estende la `BulkEditAction`, con i due
   campi e le tre scelte («non cambiare», «sì», «no»); salva con `saveQuietly()` e chiama i passi
-  del passaporto (vincolo, ricalcolo, revoca), senza far scattare gli altri observer del layer
+  del passaporto (vincolo, ricalcolo), senza far scattare gli altri observer del layer
 - [ ] Il calcolo automatico (`StageValidationService`, `ComputeStageValidationsCommand`,
   ricalcolo per layer) considera solo i cammini con il GPS acceso
 - [ ] Accendere il GPS fa partire il ricalcolo per layer; accendere il solo cartaceo no
-- [ ] Spegnere il GPS cancella le righe `gps` delle tappe del cammino che non stanno in un altro
-  cammino con il GPS acceso; le righe `manual` restano
-- [ ] Il docblock di `PassportLayerObserver` («allo spegnimento non si cancella nulla») va
-  riscritto con le due regole: lo spegnimento del cartaceo non cancella, quello del GPS sì
+- [ ] Spegnere il GPS non cancella nessuna tappa: ferma solo il calcolo su quel cammino
 - [ ] Le API per l'app (`/api/passport`, `/api/layer/{layer}/...`) restano governate dal solo
   cartaceo: per l'app non cambia nulla
 - [ ] Etichette, testi di aiuto e messaggi tradotti in it (default), en, fr, es, de
 - [ ] Guida cliente `docs/guide/passaporto-attivazione/` aggiornata: testo e 3 screenshot
   rifatti dal Nova locale
-- [ ] Test: vincolo fra i flag (form e Action), calcolo solo con il GPS
-  acceso, cancellazione allo spegnimento del GPS con tappa condivisa fra due cammini
+- [ ] Test: vincolo fra i flag (form e Action), calcolo solo con il GPS acceso, nessuna
+  cancellazione allo spegnimento del GPS
 
 ## Rischi
 
-- **Cancellare le righe GPS revoca tappe che l'utente ha già visto in app.** È voluto, e le righe
-  si ricreano dalle tracce UGC riaccendendo il GPS. In produzione il 22/10 le righe `gps` erano 0;
-  se al rilascio ce ne fossero (passaporto acceso prima del deploy con il codice attuale), si
-  cancellano a mano sul DB, altrimenti restano visibili in app finché non si accende e rispegne
-  il GPS su quel cammino.
-- **Tappa condivisa fra più cammini.** `passport_stages` ha una riga per utente e tappa, e
-  `layer_id` non indica l'appartenenza: la cancellazione usa `layerables` ed esclude le tappe che
-  stanno in un altro cammino con il GPS acceso. Una tappa sbloccata dal GPS in un cammino compare
-  sbloccata anche in un cammino solo cartaceo che la contiene: è corretto, per quell'utente la
-  tappa è sbloccata.
+- **Le tappe sbloccate dal GPS restano anche spegnendolo.** È voluto (scrum del 23/10). Le righe
+  `gps` create prima del deploy con il codice attuale, su cammini dove il cliente voleva il solo
+  cartaceo, restano quindi visibili in app: al rilascio si controllano in produzione e si cancellano
+  a mano (il 22/10 erano 0).
+- **Tappa condivisa fra più cammini.** `passport_stages` ha una riga per utente e tappa: una tappa
+  sbloccata dal GPS in un cammino compare sbloccata anche in un cammino solo cartaceo che la
+  contiene. È corretto, per quell'utente la tappa è sbloccata.
 - **La `BulkEditAction` di wm-package salta gli observer** (`saveQuietly()`): per questo la
   modifica in blocco del passaporto passa a un'Action locale che la estende e chiama di persona i
   passi del passaporto. Rischio: un futuro observer di layer che debba reagire al flag non scatta
@@ -115,8 +107,8 @@ Tutto nel repo principale `camminiditalia`:
 
 - `app/Support/PassportLayer.php` — chiave cartacea, controllo GPS (PHP e SQL) e regole fra i due
   flag (o una classe dedicata accanto)
-- `app/Observers/PassportLayerObserver.php` — ricalcolo all'accensione del GPS, cancellazione
-  allo spegnimento, docblock riscritto
+- `app/Observers/PassportLayerObserver.php` — vincolo sul salvataggio, ricalcolo all'accensione del
+  GPS, docblock riscritto
 - `app/Services/StageValidationService.php`, `app/Console/Commands/ComputeStageValidationsCommand.php`,
   `app/Jobs/RecomputePassportStagesForLayerJob.php` — filtro sul GPS
 - `app/Services/StageProgressService.php`, `routes/api.php`, `app/Http/Middleware/EnsurePassportEnabled.php`

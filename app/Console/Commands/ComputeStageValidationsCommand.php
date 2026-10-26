@@ -17,8 +17,8 @@ use Wm\WmPackage\Services\Models\UgcTrackMatchingService;
  * tappa ritoccata, le varianti dichiarate — perché in quei casi il package rifà le
  * corrispondenze ma nessun evento dice al passaporto di rifare i conti.
  *
- * **Il lancio senza `--dry-run` non si annulla da solo**: il calcolo non toglie validazioni,
- * le toglie solo lo spegnimento del GPS su un cammino (oc:8809). Guardare prima i conteggi.
+ * **Il lancio senza `--dry-run` non si annulla da solo**: il calcolo non toglie mai
+ * validazioni, e nemmeno lo spegnimento del GPS le toglie (oc:8809). Guardare prima i conteggi.
  */
 class ComputeStageValidationsCommand extends Command
 {

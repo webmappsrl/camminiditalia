@@ -15,7 +15,7 @@ Le regole che legano i due interruttori:
 
 - **Accendere il passaporto automatico accende anche quello cartaceo.**
 - **Finché il passaporto automatico è acceso, quello cartaceo non si può spegnere**: per spegnere il Passaporto di un cammino, spegni prima il passaporto automatico.
-- **Spegnere il passaporto automatico cancella le tappe che erano state sbloccate dal GPS** su quel cammino. Le tappe confermate con la credenziale cartacea restano. Se lo riaccendi, le tappe si sbloccano di nuovo dalle tracce già registrate, con la data della riaccensione.
+- **Spegnere il passaporto automatico ferma lo sblocco automatico** su quel cammino, ma **le tappe già sbloccate restano**: una volta ottenuto, il timbro non si toglie. Da quel momento le nuove tappe si possono ottenere solo con la credenziale cartacea.
 
 ## Come funziona, in breve
 
@@ -71,7 +71,7 @@ No. Tappe validate e richieste restano salvate e tornano visibili se riaccendi i
 
 **Ho spento il passaporto automatico: cosa perdono i camminatori?**
 
-Le tappe che erano state sbloccate dal GPS su quel cammino. Restano quelle confermate con la credenziale cartacea. Se riaccendi il passaporto automatico, le tappe si sbloccano di nuovo dalle tracce già registrate, con la data della riaccensione.
+Nulla: le tappe già sbloccate dal GPS restano. Da quel momento, però, su quel cammino nessuna nuova tappa si sblocca da sola: si ottengono solo con la credenziale cartacea.
 
 **Perché non riesco a togliere la spunta dal passaporto cartaceo?**
 

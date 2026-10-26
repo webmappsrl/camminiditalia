@@ -13,7 +13,8 @@ use Illuminate\Queue\SerializesModels;
  * Popola il passaporto di un cammino su cui è appena stato acceso il GPS (oc:8165, oc:8809).
  *
  * Tocca tutte le persone che hanno camminato sulle sue tappe, quindi sta in coda e non nella
- * richiesta che accende il flag.
+ * richiesta che accende il flag. Lo spegnimento del GPS non ha un job gemello: ferma il calcolo
+ * su quel cammino senza toccare le tappe già sbloccate (oc:8809, scrum 23/10).
  */
 class RecomputePassportStagesForLayerJob implements ShouldQueue
 {

@@ -21,8 +21,8 @@ use Wm\WmPackage\Services\Models\UgcTrackMatchingService;
  * job e l'azione Nova della certificazione cartacea scrivono insieme:
  * - una validazione concessa a mano non viene mai toccata;
  * - il calcolo non toglie mai una validazione e non sposta la sua data: se la copertura scende
- *   la tappa resta validata. L'unica revoca è lo spegnimento del GPS sul cammino (oc:8809),
- *   che passa da `revokeGpsForLayer()`.
+ *   la tappa resta validata. Nemmeno lo spegnimento del GPS su un cammino toglie nulla: ferma
+ *   solo il calcolo su quel cammino (oc:8809, scrum 23/10).
  */
 class StageValidationService
 {
@@ -116,42 +116,9 @@ class StageValidationService
     }
 
     /**
-     * Revoca le tappe sbloccate dal GPS quando il GPS di un cammino viene spento (oc:8809).
-     *
-     * Si cancellano le righe `source = 'gps'` delle tappe del cammino, salvo quelle che
-     * appartengono a un cammino con il GPS acceso **nel momento in cui il job gira**, quel
-     * cammino stesso compreso: se è stato riacceso nel frattempo, protegge le sue tappe e la
-     * revoca in coda non cancella niente.
-     *
-     * Le validazioni a mano non si toccano. Non si usa `passport_stages.layer_id`: è il cammino
-     * in cui la tappa è stata vista per prima, non un'appartenenza. Le righe del pivot con le
-     * UGC track spariscono a cascata.
-     *
-     * @return int righe cancellate
-     */
-    public function revokeGpsForLayer(int $layerId): int
-    {
-        $morph = $this->matching->ecTrackMorphClass();
-
-        return PassportStage::where('source', PassportStage::SOURCE_GPS)
-            ->whereIn('ec_track_id', DB::table('layerables')
-                ->select('layerable_id')
-                ->where('layer_id', $layerId)
-                ->where('layerable_type', $morph))
-            ->whereNotExists(fn ($q) => $q
-                ->select(DB::raw(1))
-                ->from('layerables as other')
-                ->join('layers', 'layers.id', '=', 'other.layer_id')
-                ->whereColumn('other.layerable_id', 'passport_stages.ec_track_id')
-                ->where('other.layerable_type', $morph)
-                ->whereRaw(PassportLayer::gpsEnabledSql('layers')))
-            ->delete();
-    }
-
-    /**
      * Quante tappe si sbloccherebbero e a quante persone, senza scrivere nulla. È il `--dry-run`
      * del command, utile soprattutto prima del primo lancio: il calcolo non si annulla da solo,
-     * perché non toglie validazioni (le toglie solo lo spegnimento del GPS).
+     * perché non toglie mai validazioni.
      *
      * @return array{tappe:int, persone:int}
      */

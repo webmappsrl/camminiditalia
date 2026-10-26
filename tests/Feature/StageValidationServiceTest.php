@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Jobs\RecomputePassportStagesForLayerJob;
 use App\Models\PassportStage;
+use App\Observers\PassportLayerObserver;
 use App\Services\StageValidationService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
@@ -65,21 +66,12 @@ class StageValidationServiceTest extends TestCase
         return $track;
     }
 
-    private function attachToLayer(EcTrack $stage, Layer $layer): void
-    {
-        DB::table('layerables')->insert([
-            'layer_id' => $layer->id,
-            'layerable_id' => $stage->id,
-            'layerable_type' => UgcTrackMatchingService::make()->ecTrackMorphClass(),
-        ]);
-    }
-
-    private function passportRow(EcTrack $stage, string $source, ?int $layerId = null): PassportStage
+    private function passportRow(EcTrack $stage, string $source): PassportStage
     {
         return PassportStage::create([
             'user_id' => $this->user->id,
             'ec_track_id' => $stage->id,
-            'layer_id' => $layerId ?? $this->layer->id,
+            'layer_id' => $this->layer->id,
             'source' => $source,
             'validated_at' => now(),
             'progress' => 100,
@@ -287,78 +279,20 @@ class StageValidationServiceTest extends TestCase
         $this->assertNotNull($this->row($stage)->validated_at);
     }
 
-    public function test_revoke_gps_for_layer_deletes_gps_rows_of_its_stages()
-    {
-        $gpsStage = $this->stage();
-        $manualStage = $this->stage();
-        $this->passportRow($gpsStage, PassportStage::SOURCE_GPS);
-        $this->passportRow($manualStage, PassportStage::SOURCE_MANUAL);
-        $this->layer->forceFill(['properties' => []])->saveQuietly();
-
-        $deleted = $this->service->revokeGpsForLayer($this->layer->id);
-
-        $this->assertSame(1, $deleted);
-        $this->assertNull($this->row($gpsStage));
-        $this->assertNotNull($this->row($manualStage));
-    }
-
-    public function test_revoke_gps_keeps_rows_when_layer_was_turned_back_on()
+    public function test_turning_gps_off_keeps_gps_rows(): void
     {
         $stage = $this->stage();
         $this->passportRow($stage, PassportStage::SOURCE_GPS);
 
-        // Il GPS di A è acceso quando il job di revoca gira: A protegge le sue tappe.
-        $this->assertSame(0, $this->service->revokeGpsForLayer($this->layer->id));
+        // Spegnere il GPS non tocca le tappe già sbloccate (oc:8809, scrum 23/10). Passa dai passi
+        // del passaporto senza far scattare LayerObserver, che qui trasferirebbe l'ownership.
+        $before = $this->layer->properties;
+        $this->layer->properties = ['passport_enabled' => true, 'passport_gps_enabled' => false];
+        $this->layer->saveQuietly();
+        app(PassportLayerObserver::class)->dispatchOnGpsTurnedOn($this->layer, $before);
+
         $this->assertNotNull($this->row($stage));
-    }
-
-    public function test_revoke_gps_does_not_protect_stage_shared_with_paper_only_layer()
-    {
-        $paperOnly = Layer::factory()->create([
-            'app_id' => $this->app_->id,
-            'properties' => ['passport_enabled' => true],
-        ]);
-        $stage = $this->stage();
-        $this->attachToLayer($stage, $paperOnly);
-        $this->passportRow($stage, PassportStage::SOURCE_GPS);
-        $this->layer->forceFill(['properties' => []])->saveQuietly();
-
-        $this->assertSame(1, $this->service->revokeGpsForLayer($this->layer->id));
-        $this->assertNull($this->row($stage));
-    }
-
-    public function test_revoke_gps_keeps_stage_shared_with_another_gps_layer()
-    {
-        $other = Layer::factory()->create([
-            'app_id' => $this->app_->id,
-            'properties' => ['passport_gps_enabled' => true],
-        ]);
-        $stage = $this->stage();
-        $this->attachToLayer($stage, $other);
-        $this->passportRow($stage, PassportStage::SOURCE_GPS, $this->layer->id);
-
-        // Il cammino A (questo) è appena stato spento.
-        $this->layer->forceFill(['properties' => []])->saveQuietly();
-
-        $this->assertSame(0, $this->service->revokeGpsForLayer($this->layer->id));
-        $this->assertNotNull($this->row($stage));
-    }
-
-    public function test_revoke_gps_ignores_layer_id_column()
-    {
-        // `layer_id` della riga è solo il cammino in cui la tappa è stata vista per prima.
-        $other = Layer::factory()->create([
-            'app_id' => $this->app_->id,
-            'properties' => [],
-        ]);
-        $stage = $this->stage();
-        $this->attachToLayer($stage, $other);
-        $this->passportRow($stage, PassportStage::SOURCE_GPS, $other->id);
-
-        $this->layer->forceFill(['properties' => []])->saveQuietly();
-
-        $this->assertSame(1, $this->service->revokeGpsForLayer($this->layer->id));
-        $this->assertNull($this->row($stage));
+        $this->assertSame(PassportStage::SOURCE_GPS, $this->row($stage)->source);
     }
 
     public function test_coverage_skips_paper_only_layers()

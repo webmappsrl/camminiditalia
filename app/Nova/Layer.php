@@ -338,7 +338,7 @@ class Layer extends WmNovaLayer
 
         $fields[] = Boolean::make(__('Automatic passport (GPS)'), $gpsAttribute)
             ->readonly(fn ($request) => ! self::isAdministrator($request->user()))
-            ->help(__('Unlocks the stages from the GPS tracks recorded in the app. Turning it on also turns on the paper passport; turning it off deletes the stages unlocked by GPS on this cammino, except those that are also part of another cammino with the automatic passport on.'));
+            ->help(__('Unlocks the stages from the GPS tracks recorded in the app. Turning it on also turns on the paper passport; turning it off stops the automatic unlocking, but the stages already unlocked stay.'));
 
         array_unshift($fields, Panel::make(__('Route attributes'), [
             Text::make(__('Route attributes'), 'attributes_state', function () {

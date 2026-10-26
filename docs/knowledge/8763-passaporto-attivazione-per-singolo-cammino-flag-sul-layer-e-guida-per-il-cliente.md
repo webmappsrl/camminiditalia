@@ -33,10 +33,9 @@ gli amministratori. Guida per il cliente:
 - **Il calcolo da GPS** (servizio, job dopo una UGC track, command, ricalcolo per cammino) passa da
   `StageValidationService::coverage()`, che considera solo i cammini col GPS acceso: con il solo
   cartaceo nessuna tappa si sblocca da sola.
-- **Accendere il GPS** accoda `RecomputePassportStagesForLayerJob`; **spegnerlo** accoda
-  `RevokeGpsPassportStagesForLayerJob`, che cancella le righe `source = gps` delle tappe del cammino
-  (`layerables`, non `passport_stages.layer_id`) che non stanno in nessun cammino col GPS acceso nel
-  momento in cui il job gira. Le righe `manual` restano.
+- **Accendere il GPS** accoda `RecomputePassportStagesForLayerJob`; **spegnerlo** non accoda nulla
+  e non cancella nessuna tappa: il calcolo smette di considerare quel cammino, le tappe già sbloccate
+  restano.
 - **Spegnere il cartaceo** (possibile solo col GPS spento) non cancella nulla: tappe convalidate,
   richieste e condivisioni restano; le richieste in attesa restano decidibili in Nova (che non passa
   dal middleware) e la mail di esito parte, ma l'app non mostra il cammino finché è spento.
@@ -44,7 +43,7 @@ gli amministratori. Guida per il cliente:
   `Administrator` (`LayerPolicy::update` lascia modificare il layer anche a un proprietario non
   `Validator`). La modifica in blocco è `BulkEditPassportAction`, solo per `Administrator`: estende la
   `BulkEditAction` di wm-package (ne eredita i campi a tre scelte), salva con `saveQuietly()` e
-  chiama di persona i passi di `PassportLayerObserver` (`saving()` e `dispatchForFlagChange()`). Un
+  chiama di persona i passi di `PassportLayerObserver` (`saving()` e `dispatchOnGpsTurnedOn()`). Un
   observer di layer che debba reagire ai flag non scatta dalla modifica in blocco.
 
 ## Perché così
@@ -58,13 +57,9 @@ gli amministratori. Guida per il cliente:
   GPS è visibile agli Administrator e spento di default: quando accenderlo lo decide il cliente.
 - **La chiave del cartaceo resta `passport_enabled`** (oc:8809): cambia solo l'etichetta in Nova;
   nessun dato da spostare.
-- **Spegnere il GPS revoca le tappe sbloccate dal GPS** (oc:8809): il cliente non vuole il GPS attivo
-  su quel cammino, quindi le validazioni automatiche non devono restare visibili. Riaccendendolo si
-  ricreano dalle UGC track, con la data della riaccensione. Le tappe condivise con un cammino col GPS
-  acceso restano, perché lì sono ancora valide.
-- **La revoca rilegge i flag quando gira, compreso il cammino stesso** (oc:8809): con 2 worker sulla
-  coda `ugc-track-matching`, uno spegni-riaccendi rapido poteva far girare la revoca dopo il
-  ricalcolo e cancellare le tappe appena ricreate.
+- **Spegnere il GPS non toglie le tappe già sbloccate** (oc:8809, scrum del 23/10/2026): «una volta
+  che c'è il timbro è fatta». Vale la stessa regola del ricalcolo (vedi
+  [8676-…](8676-passaporto-camminatore-tappe-percorse-e-validate-dellutente.md)).
 - **Modifica in blocco con salvataggio silenzioso** (oc:8809): un `save()` per cammino fa scattare
   `LayerObserver::saved`, che accoda un `RecalculateLayerAttributesJob` per ogni cammino; il flag del
   passaporto non cambia nessun attributo.
@@ -87,9 +82,13 @@ gli amministratori. Guida per il cliente:
   l'app non legge la chiave, ma il rename spostava dati senza beneficio; il dev ha preferito cambiare
   solo l'etichetta.
 - **Migration che cancella le righe `gps` al rilascio** (oc:8809, tolta su decisione del dev): in
-  produzione il 22/10/2026 erano 0; se al rilascio ce ne sono si cancellano a mano.
+  produzione il 22/10/2026 erano 0. Se al rilascio ce ne sono, non si cancellano d'ufficio: un timbro
+  dato non si toglie (scrum del 23/10/2026), quindi si decide con il team.
 - **Modifica in blocco con `BulkEditAction` del package** (oc:8763, superata da oc:8809): il suo
-  `saveQuietly()` non applicava il vincolo GPS ⇒ cartaceo né faceva partire ricalcolo e revoca.
+  `saveQuietly()` non applicava il vincolo GPS ⇒ cartaceo né faceva partire il ricalcolo.
+- **Spegnere il GPS revocava le tappe sbloccate dal GPS** (oc:8809, prima versione, tolta dopo lo
+  scrum del 23/10/2026): un job cancellava le righe `gps` delle tappe del cammino non coperte da altri
+  cammini col GPS acceso. Abbandonata perché un timbro già dato non si toglie.
 - **Passaporto sempre attivo su tutti i cammini** (oc:8653–oc:8703, superato da oc:8763): il cliente
   ha chiesto di poterlo accendere cammino per cammino.
 - **Elenco separato `enabled_layer_ids`** (oc:8763, scartato in fase di dialogo): avrebbe affiancato

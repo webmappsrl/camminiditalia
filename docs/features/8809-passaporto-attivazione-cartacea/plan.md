@@ -9,6 +9,10 @@
 **Obiettivo:** separare il passaporto di un cammino in due flag, cartaceo (API dell'app) e GPS
 (sblocco automatico delle tappe), con il vincolo GPS ⇒ cartaceo.
 
+> ⚠️ Questo piano è stato superato in più punti dopo l'implementazione: chiave cartacea invariata e
+> nessuna migration, revoca allo spegnimento del GPS tolta (scrum del 23/10), Action che estende la
+> `BulkEditAction`. Lo stato vero è in [notes.md](notes.md), «Divergenze dal piano, task per task».
+
 **Architettura:** le regole dei flag stanno in `App\Support\PassportLayer` (lettura, SQL,
 normalizzazione). `PassportLayerObserver` normalizza su `saving` e reagisce su `updated`
 (ricalcolo all'accensione del GPS, revoca allo spegnimento). Il form Nova e una nuova Action
@@ -118,7 +122,7 @@ così ogni chiamata dimenticata fallisce invece di cambiare significato in silen
 
 ### Task 3: Ricalcolo all'accensione del GPS, revoca allo spegnimento
 
-> ⚠️ L'implementazione ha deviato da questo task: [notes.md](notes.md#task-3-la-revoca-guarda-anche-il-cammino-stesso)
+> ⚠️ L'implementazione ha deviato da questo task: [notes.md](notes.md#task-3-spegnere-il-gps-non-revoca-nulla)
 
 **Files:**
 - Modify: `app/Observers/PassportLayerObserver.php` (logica e docblock), `app/Services/StageValidationService.php`,
@@ -231,6 +235,8 @@ chiavi `Passport enabled` e `Enable the Passport for this cammino in the app.` s
 - [ ] **Step 5 (commit):** `feat(oc:8809): modifica in blocco dei due flag del passaporto`
 
 ### Task 6: Guida cliente e screenshot
+
+> ⚠️ L'implementazione ha deviato da questo task: [notes.md](notes.md#task-6-la-guida-dice-che-le-tappe-restano)
 
 **Files:**
 - Modify: `docs/guide/passaporto-attivazione/README.md`, i 3 `.png` della cartella

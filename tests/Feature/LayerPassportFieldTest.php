@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Jobs\RecalculateLayerAttributesJob;
 use App\Jobs\RecomputePassportStagesForLayerJob;
-use App\Jobs\RevokeGpsPassportStagesForLayerJob;
+use App\Models\PassportStage;
 use App\Models\User;
 use App\Nova\Actions\BulkEditPassportAction;
 use App\Nova\Layer as LayerResource;
@@ -15,6 +15,7 @@ use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
+use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
@@ -223,17 +224,36 @@ class LayerPassportFieldTest extends TestCase
         $this->assertFalse($properties['passport_gps_enabled']);
     }
 
-    public function test_bulk_gps_off_dispatches_revoke(): void
+    public function test_bulk_gps_off_keeps_gps_stages_and_queues_nothing(): void
     {
+        Queue::fake();
         $layer = Layer::factory()->create([
             'user_id' => $this->makeUser('Administrator')->id,
             'properties' => ['passport_enabled' => true, 'passport_gps_enabled' => true],
         ]);
+        $track = EcTrack::factory()->create(['user_id' => $layer->user_id, 'properties' => []]);
+        $layer->ecTracks()->attach($track->id);
+        $user = $this->makeUser('Guest');
+        $stage = PassportStage::create([
+            'user_id' => $user->id,
+            'ec_track_id' => $track->id,
+            'layer_id' => $layer->id,
+            'source' => PassportStage::SOURCE_GPS,
+            'validated_at' => now(),
+            'progress' => 100,
+        ]);
+
+        // Nuovo fake dopo la creazione dei dati: butta via quanto accodato dalle factory, così
+        // `assertNothingPushed()` vale solo per l'Action. Più forte di `assertNotPushed()` sul
+        // ricalcolo: fallisce per qualunque job accodato, quindi anche per una revoca delle
+        // tappe GPS (che sarebbe un job con un'altra classe).
         Queue::fake();
 
         $this->adminAction()->handleForLayers($this->fieldsFor(['properties->passport_gps_enabled' => '0', 'properties->passport_enabled' => null]), collect([$layer]));
 
-        Queue::assertPushed(RevokeGpsPassportStagesForLayerJob::class);
+        $this->assertFalse($layer->fresh()->properties['passport_gps_enabled']);
+        $this->assertNotNull(PassportStage::find($stage->id));
+        Queue::assertNothingPushed();
     }
 
     public function test_bulk_null_fields_change_nothing(): void

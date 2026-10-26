@@ -17,12 +17,13 @@ use Wm\WmPackage\Nova\Actions\BulkEditAction;
  * I campi li eredita da `BulkEditAction` del package, limitato alle due chiavi del passaporto:
  * i Boolean della risorsa diventano Select tri-stato (vuoto = non cambiare). Si riscrive solo
  * `handle()`, perché deve applicare il vincolo «GPS acceso ⇒ cartaceo acceso» e far partire
- * ricalcolo e revoca delle tappe.
+ * il ricalcolo delle tappe all'accensione del GPS (lo spegnimento non toglie nulla).
  *
- * Salva con `saveQuietly()` e chiama a mano i passi di `PassportLayerObserver` (`saving()` e `dispatchForFlagChange()`): un `save()`
- * farebbe scattare anche `LayerObserver`, che a ogni salvataggio accoda il ricalcolo degli
- * attributi del cammino, qui inutile su tutti i cammini selezionati. Un futuro observer di
- * layer che debba reagire al flag del passaporto quindi da qui non scatta: va chiamato a mano.
+ * Salva con `saveQuietly()` e chiama a mano i passi di `PassportLayerObserver` (`saving()` e
+ * `dispatchOnGpsTurnedOn()`): un `save()` farebbe scattare anche `LayerObserver`, che a ogni
+ * salvataggio accoda il ricalcolo degli attributi del cammino, qui inutile su tutti i cammini
+ * selezionati. Un futuro observer di layer che debba reagire al flag del passaporto quindi da
+ * qui non scatta: va chiamato a mano.
  *
  * Il tutto-o-niente vale per blocco: Nova chiama `handle()` a chunk (200 modelli), quindi una
  * selezione più grande può applicarsi a metà. Oggi i cammini sono 122, un chunk solo.
@@ -89,11 +90,13 @@ class BulkEditPassportAction extends BulkEditAction
                 // Il «prima» si legge qui: dopo saveQuietly() getOriginal() ha già il valore nuovo.
                 $before = $layer->properties ?? [];
                 $layer->properties = $properties;
+                // Ridondante: `PassportLayer::normalize()` ha già sistemato le properties. Resta
+                // solo per seguire l'observer se in futuro `saving()` facesse altro.
                 $observer->saving($layer);
                 $layer->saveQuietly();
 
                 if ($layer->wasChanged('properties')) {
-                    $observer->dispatchForFlagChange($layer, $before);
+                    $observer->dispatchOnGpsTurnedOn($layer, $before);
                 }
             }
         });

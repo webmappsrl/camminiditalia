@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Jobs\RecomputePassportStagesForLayerJob;
-use App\Jobs\RevokeGpsPassportStagesForLayerJob;
 use App\Support\PassportLayer;
 use Wm\WmPackage\Models\Layer;
 
@@ -17,12 +16,9 @@ use Wm\WmPackage\Models\Layer;
  * prossima uscita. Il calcolo gira in coda, perché tocca tutte le persone che hanno camminato
  * su quelle tappe.
  *
- * Spegnimento del GPS: si revocano le tappe sbloccate dal GPS (non quelle validate a mano), a
- * meno che la tappa non appartenga anche a un altro cammino con il GPS acceso. Il motivo
- * (oc:8809): il cliente non vuole il GPS attivo su quel cammino, quindi le validazioni
- * automatiche non devono restare.
- *
- * Il cartaceo, acceso o spento con il GPS spento, non muove nulla: spegnerlo non revoca niente.
+ * Spegnimento del GPS: non cancella niente, nemmeno le tappe sbloccate dal GPS («una volta che
+ * c'è il timbro è fatta»). Ferma solo il calcolo automatico su quel cammino, già garantito da
+ * `PassportLayer::gpsEnabledSql()` (oc:8809, scrum 23/10). Il cartaceo non muove nulla.
  */
 class PassportLayerObserver
 {
@@ -45,25 +41,25 @@ class PassportLayerObserver
         $before = $layer->getOriginal('properties');
         $before = is_string($before) ? json_decode($before, true) : $before;
 
-        $this->dispatchForFlagChange($layer, $before ?? []);
+        $this->dispatchOnGpsTurnedOn($layer, $before ?? []);
     }
 
     /**
-     * Accoda ricalcolo o revoca confrontando il GPS di prima con quello attuale. È separato da
-     * `updated()` per chi salva in silenzio (`saveQuietly()`): a salvataggio concluso
-     * `getOriginal()` ha già il valore nuovo, quindi il «prima» va passato da fuori.
+     * Accoda il ricalcolo se il GPS è passato da spento ad acceso, confrontando il GPS di prima
+     * con quello attuale.
+     *
+     * È separato da `updated()` per chi salva in silenzio (`saveQuietly()`): a salvataggio
+     * concluso `getOriginal()` ha già il valore nuovo, quindi il «prima» va passato da fuori.
      *
      * @param  array<string, mixed>  $before  properties prima del salvataggio
      */
-    public function dispatchForFlagChange(Layer $layer, array $before): void
+    public function dispatchOnGpsTurnedOn(Layer $layer, array $before): void
     {
         $wasGps = PassportLayer::gpsEnabledIn($before);
         $isGps = PassportLayer::isGpsEnabled($layer);
 
         if (! $wasGps && $isGps) {
             RecomputePassportStagesForLayerJob::dispatch($layer->id)->afterCommit();
-        } elseif ($wasGps && ! $isGps) {
-            RevokeGpsPassportStagesForLayerJob::dispatch($layer->id)->afterCommit();
         }
     }
 }
