@@ -17,6 +17,9 @@ use Wm\WmPackage\Services\Models\UgcTrackMatchingService;
  * le UGC track **registrate** di una persona sulla stessa tappa e si confronta la quota coperta
  * con la soglia configurata.
  *
+ * Espone anche il verdetto per singola registrazione (`stagesWalkedByTrack()`), con la stessa
+ * base e la stessa soglia, usato dal legame fra esperienze e registrazioni (oc:8169).
+ *
  * Due garanzie, scritte nella clausola dell'upsert e non in un `if`, così reggono anche se il
  * job e l'azione Nova della certificazione cartacea scrivono insieme:
  * - una validazione concessa a mano non viene mai toccata;
@@ -36,6 +39,50 @@ class StageValidationService
     }
 
     /**
+     * Il verdetto: una copertura percentuale basta a dire la tappa percorsa. Unico punto in cui
+     * si confronta con la soglia, usato dal passaporto e dal legame delle esperienze (oc:8169).
+     */
+    public function isWalked(int $progress): bool
+    {
+        return $progress >= $this->threshold();
+    }
+
+    /**
+     * Le tappe che ciascuna UGC track registrata di una persona ha percorso **da sola**, con la
+     * stessa regola del passaporto: segmenti distinti sul totale, solo corrispondenze calcolate
+     * con i parametri correnti, verdetto di `isWalked()`.
+     *
+     * Serve al legame delle esperienze (oc:8169), che ragiona sulla singola registrazione e non
+     * sulla persona: per questo i segmenti non si uniscono fra UGC track diverse. Manca anche il
+     * filtro sui cammini con il passaporto acceso, che è la condizione d'esistenza del passaporto
+     * e non parte del criterio «tappa percorsa».
+     *
+     * @param  array<int>  $ecTrackIds
+     * @return array<int, array<int>> id della UGC track => id delle tappe percorse
+     */
+    public function stagesWalkedByTrack(int $userId, array $ecTrackIds): array
+    {
+        if ($ecTrackIds === []) {
+            return [];
+        }
+
+        $rows = $this->matchedSegments($userId, $ecTrackIds)
+            ->groupBy('u.id', 'm.ec_track_id')
+            ->selectRaw('u.id AS ugc_track_id, m.ec_track_id, '
+                .$this->progressSql('COUNT(DISTINCT seg.idx)', 'MAX(m.total_segments)').' AS progress')
+            ->get();
+
+        $walked = [];
+        foreach ($rows as $row) {
+            if ($this->isWalked((int) $row->progress)) {
+                $walked[(int) $row->ugc_track_id][] = (int) $row->ec_track_id;
+            }
+        }
+
+        return $walked;
+    }
+
+    /**
      * Ricalcola e scrive l'avanzamento di una persona.
      *
      * @param  ?array<int>  $ecTrackIds  limita il calcolo a queste tappe
@@ -49,14 +96,13 @@ class StageValidationService
             return ['validated' => 0, 'updated' => 0];
         }
 
-        $threshold = $this->threshold();
         $now = now();
         $validated = 0;
 
         foreach (array_chunk($rows, 200) as $chunk) {
             $values = [];
             foreach ($chunk as $row) {
-                $overThreshold = $row->progress >= $threshold;
+                $overThreshold = $this->isWalked($row->progress);
                 $validated += $overThreshold ? 1 : 0;
 
                 $values[] = [
@@ -124,8 +170,6 @@ class StageValidationService
      */
     public function previewForAllUsers(): array
     {
-        $threshold = $this->threshold();
-
         // Solo le tappe che si sbloccherebbero **adesso**: quelle già validate — a mano o da un
         // calcolo precedente — non si sbloccano una seconda volta, e contarle gonficerebbe il
         // numero a ogni rilancio, proprio quello su cui si decide se procedere.
@@ -137,7 +181,7 @@ class StageValidationService
 
         $rows = array_filter(
             $this->coverage(null, null),
-            fn ($row) => $row->progress >= $threshold && ! $already->has($row->user_id.':'.$row->ec_track_id)
+            fn ($row) => $this->isWalked($row->progress) && ! $already->has($row->user_id.':'.$row->ec_track_id)
         );
 
         return [
@@ -159,21 +203,7 @@ class StageValidationService
      */
     private function coverage(?int $userId, ?array $ecTrackIds): array
     {
-        $segments = DB::query()
-            ->fromSub(
-                UgcTrack::recorded()
-                    ->getQuery()
-                    ->select('ugc_tracks.id', 'ugc_tracks.user_id')
-                    ->when($userId !== null, fn ($q) => $q->where('ugc_tracks.user_id', $userId)),
-                'u'
-            )
-            ->join('ugc_track_ec_track_matches as m', 'm.ugc_track_id', '=', 'u.id')
-            ->joinSub($this->currentParams(), 'p', fn ($join) => $join
-                ->on('p.app_id', '=', 'm.app_id')
-                ->on('p.segment_length_meters', '=', 'm.segment_length_meters')
-                ->on('p.max_distance_meters', '=', 'm.max_distance_meters'))
-            ->when($ecTrackIds !== null, fn ($q) => $q->whereIn('m.ec_track_id', $ecTrackIds))
-            ->crossJoin(DB::raw('LATERAL jsonb_array_elements_text(m.matched_segments) AS seg(idx)'))
+        $segments = $this->matchedSegments($userId, $ecTrackIds)
             ->groupBy('u.user_id', 'm.ec_track_id')
             ->selectRaw('u.user_id, m.ec_track_id, COUNT(DISTINCT seg.idx) AS covered, MAX(m.total_segments) AS total');
 
@@ -189,7 +219,7 @@ class StageValidationService
             ->whereRaw(PassportLayer::gpsEnabledSql('layers'))
             ->groupBy('c.user_id', 'c.ec_track_id', 'c.covered', 'c.total')
             ->selectRaw('c.user_id, c.ec_track_id, MIN(l.layer_id) AS layer_id,
-                         LEAST(100, FLOOR(c.covered * 100.0 / NULLIF(c.total, 0)))::int AS progress')
+                         '.$this->progressSql('c.covered', 'c.total').' AS progress')
             ->get()
             ->map(fn ($row) => (object) [
                 'user_id' => (int) $row->user_id,
@@ -198,6 +228,38 @@ class StageValidationService
                 'progress' => (int) $row->progress,
             ])
             ->all();
+    }
+
+    /**
+     * Un segmento percorso per riga (`seg.idx`), con la UGC track (`u.id`, `u.user_id`) e la
+     * corrispondenza (`m`): solo UGC track registrate e corrispondenze con i parametri correnti
+     * dell'App. Base comune della copertura per persona e di quella per singola UGC track.
+     *
+     * @param  ?array<int>  $ecTrackIds
+     */
+    private function matchedSegments(?int $userId, ?array $ecTrackIds): Builder
+    {
+        return DB::query()
+            ->fromSub(
+                UgcTrack::recorded()
+                    ->getQuery()
+                    ->select('ugc_tracks.id', 'ugc_tracks.user_id')
+                    ->when($userId !== null, fn ($q) => $q->where('ugc_tracks.user_id', $userId)),
+                'u'
+            )
+            ->join('ugc_track_ec_track_matches as m', 'm.ugc_track_id', '=', 'u.id')
+            ->joinSub($this->currentParams(), 'p', fn ($join) => $join
+                ->on('p.app_id', '=', 'm.app_id')
+                ->on('p.segment_length_meters', '=', 'm.segment_length_meters')
+                ->on('p.max_distance_meters', '=', 'm.max_distance_meters'))
+            ->when($ecTrackIds !== null, fn ($q) => $q->whereIn('m.ec_track_id', $ecTrackIds))
+            ->crossJoin(DB::raw('LATERAL jsonb_array_elements_text(m.matched_segments) AS seg(idx)'));
+    }
+
+    /** Percentuale coperta, intera e al massimo 100 (espressione SQL). */
+    private function progressSql(string $covered, string $total): string
+    {
+        return "LEAST(100, FLOOR({$covered} * 100.0 / NULLIF({$total}, 0)))::int";
     }
 
     /**
