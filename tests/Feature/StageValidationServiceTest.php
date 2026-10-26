@@ -4,10 +4,10 @@ namespace Tests\Feature;
 
 use App\Jobs\RecomputePassportStagesForLayerJob;
 use App\Models\PassportStage;
+use App\Observers\PassportLayerObserver;
 use App\Services\StageValidationService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcTrack;
@@ -43,7 +43,7 @@ class StageValidationServiceTest extends TestCase
         $this->user = User::factory()->create(['app_id' => $this->app_->id]);
         $this->layer = Layer::factory()->create([
             'app_id' => $this->app_->id,
-            'properties' => ['passport_enabled' => true],
+            'properties' => ['passport_gps_enabled' => true],
         ]);
         $this->service = app(StageValidationService::class);
 
@@ -64,6 +64,18 @@ class StageValidationServiceTest extends TestCase
         ]);
 
         return $track;
+    }
+
+    private function passportRow(EcTrack $stage, string $source): PassportStage
+    {
+        return PassportStage::create([
+            'user_id' => $this->user->id,
+            'ec_track_id' => $stage->id,
+            'layer_id' => $this->layer->id,
+            'source' => $source,
+            'validated_at' => now(),
+            'progress' => 100,
+        ]);
     }
 
     /** UGC track registrata (ha i punti grezzi) o importata. */
@@ -267,29 +279,31 @@ class StageValidationServiceTest extends TestCase
         $this->assertNotNull($this->row($stage)->validated_at);
     }
 
-    public function test_switching_the_passport_on_queues_the_computation()
+    public function test_turning_gps_off_keeps_gps_rows(): void
     {
-        Queue::fake();
+        $stage = $this->stage();
+        $this->passportRow($stage, PassportStage::SOURCE_GPS);
 
-        $off = Layer::factory()->create(['app_id' => $this->app_->id, 'properties' => []]);
+        // Spegnere il GPS non tocca le tappe già sbloccate (oc:8809, scrum 23/10). Passa dai passi
+        // del passaporto senza far scattare LayerObserver, che qui trasferirebbe l'ownership.
+        $before = $this->layer->properties;
+        $this->layer->properties = ['passport_enabled' => true, 'passport_gps_enabled' => false];
+        $this->layer->saveQuietly();
+        app(PassportLayerObserver::class)->dispatchOnGpsTurnedOn($this->layer, $before);
 
-        $off->properties = ['passport_enabled' => true];
-        $off->save();
-
-        Queue::assertPushed(
-            RecomputePassportStagesForLayerJob::class,
-            fn ($job) => $job->layerId === $off->id
-        );
+        $this->assertNotNull($this->row($stage));
+        $this->assertSame(PassportStage::SOURCE_GPS, $this->row($stage)->source);
     }
 
-    public function test_switching_the_passport_off_queues_nothing()
+    public function test_coverage_skips_paper_only_layers()
     {
-        Queue::fake();
+        $this->layer->forceFill(['properties' => ['passport_enabled' => true]])->saveQuietly();
+        $stage = $this->stage();
+        $this->matched($this->walk(), $stage, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10);
 
-        $this->layer->properties = [];
-        $this->layer->save();
+        $this->service->recomputeForUser($this->user->id);
 
-        Queue::assertNotPushed(RecomputePassportStagesForLayerJob::class);
+        $this->assertNull($this->row($stage));
     }
 
     public function test_the_layer_job_populates_the_passport()

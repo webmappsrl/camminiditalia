@@ -94,7 +94,7 @@ class PassportLayerGateTest extends TestCase
 
     public function test_stage_share_image_on_enabled_layer_passes_the_gate(): void
     {
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enablePaperPassport($this->createLayer());
         $stage = $this->stage($layer);
 
         // tappa non validata dall'utente: supera il gate e arriva al controller (403, non 404)
@@ -114,7 +114,7 @@ class PassportLayerGateTest extends TestCase
 
     public function test_progress_on_enabled_layer_returns_200(): void
     {
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enablePaperPassport($this->createLayer());
 
         $this->actingAs(User::factory()->create(), 'api')
             ->getJson("/api/layer/{$layer->id}/progress")
@@ -170,10 +170,29 @@ class PassportLayerGateTest extends TestCase
         $layer = $this->createLayer();
         $layer->forceFill(['properties' => $properties])->saveQuietly();
 
-        $this->assertSame($expected, PassportLayer::isEnabled($layer->fresh()));
+        $this->assertSame($expected, PassportLayer::isPaperEnabled($layer->fresh()));
         $this->assertSame(
             $expected,
-            Layer::whereRaw(PassportLayer::enabledSql())->whereKey($layer->id)->exists()
+            Layer::whereRaw(PassportLayer::paperEnabledSql())->whereKey($layer->id)->exists()
+        );
+    }
+
+    #[DataProvider('passportValues')]
+    public function test_php_and_sql_rules_agree_for_gps(array $properties, bool $expected): void
+    {
+        // Stessi valori del cartaceo, riferiti alla chiave del GPS.
+        $properties = array_combine(
+            array_map(fn ($key) => $key === PassportLayer::PAPER_KEY ? PassportLayer::GPS_KEY : $key, array_keys($properties)),
+            $properties
+        );
+
+        $layer = $this->createLayer();
+        $layer->forceFill(['properties' => $properties])->saveQuietly();
+
+        $this->assertSame($expected, PassportLayer::isGpsEnabled($layer->fresh()));
+        $this->assertSame(
+            $expected,
+            Layer::whereRaw(PassportLayer::gpsEnabledSql())->whereKey($layer->id)->exists()
         );
     }
 }
