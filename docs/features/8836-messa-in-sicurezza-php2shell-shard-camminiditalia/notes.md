@@ -4,7 +4,25 @@
 
 ## Deviazioni dal piano
 
-(nessuna finora)
+- Task 5 Step 2 (`docker commit` su dev): **saltato su scelta del dev** (vedi Decisioni).
+- Task 5 Step 8 (upload legittimo end-to-end su dev): **saltato su scelta del dev**; coperto solo
+  a livello di trasporto (vedi Decisioni).
+- Il merge develop→main è stato fatto con un merge diretto (non PR), dopo un commit docs
+  intermedio su develop per le note aggiornate; il primo tentativo di `gh pr merge` era stato
+  bloccato dal classificatore dell'auto mode e sbloccato dal dev («riprova»).
+
+## Esito dell'esecuzione (22/10/2026)
+
+- **Locale, dev e prod su PHP 8.4.27**, verificato con `php -v` in ogni container che usa
+  `wm-phpfpm:8.4`; pool con `session.upload_progress.enabled=0`, 32M/128M (`php-fpm -tt`);
+  Horizon running su dev e prod; sito di prod risponde.
+- Test funzionali (dev e prod): POST 140MB → **413** dal proxy host (limite fra 120 e 140MB,
+  compatibile col nostro 128M); POST 20/60/100/120MB arrivano all'app; worker vivi.
+- **Verifica di compromissione (prod, log 19→22/10): nessuna evidenza** — probe .php solo
+  404/301, traversal/.env bloccati da Apache (AH10244), POST 200 solo su endpoint legittimi,
+  500 riconducibili a errori applicativi noti (`/api/v2/elasticsearch`), nessun file PHP recente
+  nelle directory scrivibili, crontab puliti. Evidenze copiate fuori macchina prima del patch.
+- Tag `wm-phpfpm:8.4-pre-8836` rimossi da dev e prod a verifica conclusa.
 
 ## Bug trovati
 
@@ -51,5 +69,8 @@
 
 - I Dockerfile di `boilerplate-test` e `laravel-postgis-boilerplate` pinnano ancora
   `php:8.4.3-fpm` (macchina locale del dev): da allineare quando capita.
-- Verifica upload legittimo via Nova/API con credenziali: su forestas (oc:8833) era rimasto
-  l'unico criterio aperto; qui è nel piano (Task 5/6 Step 8).
+- Verifica upload legittimo via Nova/API con credenziali: saltata anche qui su scelta del dev
+  (come su forestas, oc:8833) — resta il criterio non coperto end-to-end.
+- Ricontrollo dei 413 nei log FPM/Apache di prod dopo qualche giorno d'uso reale (a caldo nessun
+  upload legittimo respinto).
+- Rotazione segreti: da valutare dal dev a fine giro di tutti gli shard (tag `php2shell`).

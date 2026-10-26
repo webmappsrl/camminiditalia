@@ -67,7 +67,7 @@ class StageProgressApiTest extends TestCase
 
     public function test_progress_without_auth_returns_401(): void
     {
-        $layer = $this->enablePassport($this->createLayer());
+        $layer = $this->enableGpsPassport($this->createLayer());
 
         $this->getJson("/api/layer/{$layer->id}/progress")->assertStatus(401);
     }
@@ -81,7 +81,7 @@ class StageProgressApiTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer($owner->id));
+        $layer = $this->enableGpsPassport($this->createLayer($owner->id));
         $done = $this->track($owner->id, $layer, [10.04]);
         $todo = $this->track($owner->id, $layer, [20]);
         $this->validate($walker, $done, $layer);
@@ -116,8 +116,8 @@ class StageProgressApiTest extends TestCase
         $owner = $this->createUserWithRole('Validator');
         $stranger = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer($owner->id));
-        $otherLayer = $this->enablePassport($this->createLayer($stranger->id));
+        $layer = $this->enableGpsPassport($this->createLayer($owner->id));
+        $otherLayer = $this->enableGpsPassport($this->createLayer($stranger->id));
         $own = $this->track($owner->id, $layer, [10]);
         $foreign = $this->track($stranger->id, $layer, [5]);
         $this->track($stranger->id, $layer, [2]);
@@ -154,7 +154,7 @@ class StageProgressApiTest extends TestCase
     public function test_progress_with_no_validations_returns_zero(): void
     {
         $owner = $this->createUserWithRole('Validator');
-        $layer = $this->enablePassport($this->createLayer($owner->id));
+        $layer = $this->enableGpsPassport($this->createLayer($owner->id));
         $this->track($owner->id, $layer);
         $this->track($owner->id, $layer);
 
@@ -169,7 +169,7 @@ class StageProgressApiTest extends TestCase
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
         $other = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer($owner->id));
+        $layer = $this->enableGpsPassport($this->createLayer($owner->id));
         $this->validate($other, $this->track($owner->id, $layer), $layer);
 
         $response = $this->actingAs($walker, 'api')->getJson("/api/layer/{$layer->id}/progress");
@@ -184,8 +184,8 @@ class StageProgressApiTest extends TestCase
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
         $other = User::factory()->create();
-        $mine = $this->enablePassport($this->createLayer($owner->id));
-        $theirs = $this->enablePassport($this->createLayer($owner->id));
+        $mine = $this->enableGpsPassport($this->createLayer($owner->id));
+        $theirs = $this->enableGpsPassport($this->createLayer($owner->id));
         $this->validate($walker, $this->track($owner->id, $mine), $mine);
         $this->validate($other, $this->track($owner->id, $theirs), $theirs);
 
@@ -217,7 +217,7 @@ class StageProgressApiTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer($owner->id));
+        $layer = $this->enableGpsPassport($this->createLayer($owner->id));
         $this->validate($walker, $this->track($owner->id, $layer, [17]), $layer);
 
         $progress = $this->actingAs($walker, 'api')->getJson("/api/layer/{$layer->id}/progress");
@@ -232,7 +232,7 @@ class StageProgressApiTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer($owner->id));
+        $layer = $this->enableGpsPassport($this->createLayer($owner->id));
         $track = $this->track($owner->id, $layer, [17]);
         DB::table('ec_tracks')->where('id', $track->id)->update(['name' => '{"it":null,"de":""}']);
 
@@ -249,8 +249,8 @@ class StageProgressApiTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $first = $this->enablePassport($this->createLayer($owner->id));
-        $second = $this->enablePassport($this->createLayer($owner->id));
+        $first = $this->enableGpsPassport($this->createLayer($owner->id));
+        $second = $this->enableGpsPassport($this->createLayer($owner->id));
         // validati in ordine inverso rispetto agli id
         $this->validate($walker, $this->track($owner->id, $second), $second, '2026-09-30 09:00:00');
         $this->validate($walker, $this->track($owner->id, $first), $first, '2026-09-30 11:00:00');
@@ -264,7 +264,7 @@ class StageProgressApiTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer($owner->id));
+        $layer = $this->enableGpsPassport($this->createLayer($owner->id));
         $this->track($owner->id, $layer);
         $this->track($owner->id, $layer);
 
@@ -291,7 +291,7 @@ class StageProgressApiTest extends TestCase
     public function test_passport_omits_enabled_layer_without_tracks(): void
     {
         $walker = User::factory()->create();
-        $this->enablePassport($this->createLayer());
+        $this->enableGpsPassport($this->createLayer());
 
         $this->actingAs($walker, 'api')->getJson('/api/passport')->assertOk()->assertExactJson(['routes' => []]);
     }
@@ -300,7 +300,7 @@ class StageProgressApiTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $layer = $this->enablePassport($this->createLayer($owner->id));
+        $layer = $this->enableGpsPassport($this->createLayer($owner->id));
         $done = $this->track($owner->id, $layer);
         $this->track($owner->id, $layer);
         $this->validate($walker, $done, $layer);
@@ -315,7 +315,7 @@ class StageProgressApiTest extends TestCase
     {
         $owner = $this->createUserWithRole('Validator');
         $walker = User::factory()->create();
-        $enabled = $this->enablePassport($this->createLayer($owner->id));
+        $enabled = $this->enableGpsPassport($this->createLayer($owner->id));
         $disabled = $this->createLayer($owner->id);
         $shared = $this->track($owner->id, $enabled);
         DB::table('layerables')->insert([
