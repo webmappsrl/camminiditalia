@@ -86,5 +86,9 @@
     "EcTracks crossed outside any layer": "Etapas atravesadas fuera de todo camino",
     "The track does not cross any EcTrack": "La traza no atraviesa ninguna etapa",
     "Variant of": "Variante de",
-    "The stage this one is an alternative of: walking either of the two counts as the same stage of the route.": "La etapa de la que esta es una alternativa: recorrer una u otra cuenta como la misma etapa del camino."
+    "The stage this one is an alternative of: walking either of the two counts as the same stage of the route.": "La etapa de la que esta es una alternativa: recorrer una u otra cuenta como la misma etapa del camino.",
+    "A stage cannot be a variant of itself.": "Una etapa no puede ser variante de sí misma.",
+    "The main stage is already a variant: variants live on a single level.": "La etapa principal ya es una variante: las variantes tienen un solo nivel.",
+    "This stage is already the main stage of other variants: it cannot become a variant itself.": "Esta etapa ya es la etapa principal de otras variantes: no puede convertirse a su vez en una variante.",
+    "The chosen main stage is not among the stages you can choose.": "La etapa principal elegida no está entre las que puedes indicar."
 }

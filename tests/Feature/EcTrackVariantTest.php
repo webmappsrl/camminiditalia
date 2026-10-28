@@ -102,4 +102,45 @@ class EcTrackVariantTest extends TestCase
 
         $this->assertSame([], EcTrackVariant::mainIdsFor([$main->id, $plain->id]));
     }
+
+    public function test_violation_rejects_a_stage_variant_of_itself()
+    {
+        $stage = $this->track();
+
+        $this->assertSame('A stage cannot be a variant of itself.', EcTrackVariant::violation($stage->id, $stage->id));
+    }
+
+    public function test_violation_rejects_a_main_that_is_already_a_variant()
+    {
+        $a = $this->track();
+        $b = $this->track();
+        $c = $this->track();
+        EcTrackVariant::create(['ec_track_id' => $b->id, 'main_ec_track_id' => $a->id]);
+
+        $this->assertSame(
+            'The main stage is already a variant: variants live on a single level.',
+            EcTrackVariant::violation($c->id, $b->id)
+        );
+    }
+
+    public function test_violation_rejects_a_stage_that_already_has_variants()
+    {
+        $a = $this->track();
+        $b = $this->track();
+        $c = $this->track();
+        EcTrackVariant::create(['ec_track_id' => $b->id, 'main_ec_track_id' => $a->id]);
+
+        $this->assertSame(
+            'This stage is already the main stage of other variants: it cannot become a variant itself.',
+            EcTrackVariant::violation($a->id, $c->id)
+        );
+    }
+
+    public function test_violation_allows_a_valid_pair()
+    {
+        $main = $this->track();
+        $variant = $this->track();
+
+        $this->assertNull(EcTrackVariant::violation($variant->id, $main->id));
+    }
 }

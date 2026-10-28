@@ -37,22 +37,32 @@ class EcTrackVariant extends Model
     protected static function booted(): void
     {
         static::saving(function (self $variant) {
-            if ($variant->ec_track_id === $variant->main_ec_track_id) {
-                throw new RuntimeException('Una tappa non può essere variante di sé stessa.');
-            }
-
-            if (static::whereKey($variant->main_ec_track_id)->exists()) {
-                throw new RuntimeException(
-                    'La tappa principale è già una variante: le varianti vivono su un solo livello.'
-                );
-            }
-
-            if (static::where('main_ec_track_id', $variant->ec_track_id)->exists()) {
-                throw new RuntimeException(
-                    'Questa tappa è già principale di altre varianti: non può diventare a sua volta una variante.'
-                );
+            if ($key = static::violation((int) $variant->ec_track_id, (int) $variant->main_ec_track_id)) {
+                throw new RuntimeException(__($key));
             }
         });
+    }
+
+    /**
+     * Il motivo per cui la tappa non può essere variante della principale indicata, come chiave
+     * di traduzione, o null se il collegamento è ammesso. Lo usano il guard del model e la
+     * validazione del campo Nova (oc:8862), così le regole stanno in un punto solo.
+     */
+    public static function violation(int $ecTrackId, int $mainEcTrackId): ?string
+    {
+        if ($ecTrackId === $mainEcTrackId) {
+            return 'A stage cannot be a variant of itself.';
+        }
+
+        if (static::whereKey($mainEcTrackId)->exists()) {
+            return 'The main stage is already a variant: variants live on a single level.';
+        }
+
+        if (static::where('main_ec_track_id', $ecTrackId)->exists()) {
+            return 'This stage is already the main stage of other variants: it cannot become a variant itself.';
+        }
+
+        return null;
     }
 
     /**
