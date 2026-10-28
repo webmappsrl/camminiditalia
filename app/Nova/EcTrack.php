@@ -108,13 +108,36 @@ class EcTrack extends WmNovaEcTrack
     private function variantField($currentUser): Select
     {
         return Select::make(__('Variant of'), 'variant_of_ec_track_id')
-            ->options(fn () => $this->variantOptions())
+            ->options(fn () => $this->variantOptions($currentUser))
             ->searchable()
             ->nullable()
             ->displayUsingLabels()
-            ->resolveUsing(fn () => ($id = $this->variantResourceId()) === null
-                ? null
-                : EcTrackVariant::whereKey($id)->value('main_ec_track_id'))
+            // In creazione non c'è ancora una tappa: le opzioni sarebbero vuote e le regole
+            // non avrebbero su cosa ragionare, mentre il fill gira dopo il salvataggio.
+            ->hideWhenCreating()
+            ->resolveUsing(fn () => $this->savedMainId())
+            // I controlli scattano solo se il valore cambia (oc:8862): un collegamento invariato
+            // resta valido anche se nel frattempo la principale è uscita dal cammino, o se la
+            // principale di un Validator l'ha scelta l'admin fra tappe non sue.
+            ->rules('nullable', function ($attribute, $value, $fail) use ($currentUser) {
+                $trackId = $this->variantResourceId();
+
+                if ($trackId === null || (int) $value === $this->savedMainId()) {
+                    return;
+                }
+
+                // Prima le regole del model: una principale diventata variante dopo l'apertura
+                // del form esce anche dalle opzioni, e il motivo vero è questo.
+                if ($key = EcTrackVariant::violation($trackId, (int) $value)) {
+                    $fail(__($key));
+
+                    return;
+                }
+
+                if (! array_key_exists((int) $value, $this->variantOptions($currentUser))) {
+                    $fail(__('The chosen main stage is not among the stages you can choose.'));
+                }
+            })
             ->fillUsing(function (NovaRequest $request, $model, $attribute, $requestAttribute) {
                 return function () use ($request, $model, $requestAttribute) {
                     $mainId = $request->input($requestAttribute);
@@ -123,6 +146,10 @@ class EcTrack extends WmNovaEcTrack
                     if (blank($mainId)) {
                         EcTrackVariant::whereKey($trackId)->delete();
 
+                        return;
+                    }
+
+                    if ((int) $mainId === $this->savedMainId()) {
                         return;
                     }
 
@@ -137,18 +164,22 @@ class EcTrack extends WmNovaEcTrack
             // su un solo livello, e lasciare il campo vuol dire far scegliere al gestore un
             // valore che il guard del model rifiuta al salvataggio, con un errore 500 al posto
             // di un messaggio.
+            // Il Validator lo vede sulle sue tappe (oc:8862): sulle altre la policy non gli fa
+            // aprire il form.
             ->canSee(fn () => $currentUser
-                && $currentUser->hasRole('Administrator')
+                && $currentUser->hasAnyRole(['Administrator', 'Validator'])
                 && ! $this->isVariantRoot());
     }
 
     /**
      * Le tappe che possono fare da principale: quelle dei cammini di questa tappa, tolte lei
-     * stessa e quelle che sono già varianti di qualcun altro (un solo livello).
+     * stessa e quelle che sono già varianti di qualcun altro (un solo livello). Al Validator
+     * solo le sue (oc:8862), più la principale già salvata anche se non è sua: senza, il form
+     * la perderebbe e il collegamento creato dall'admin non si potrebbe conservare.
      *
      * @return array<int, string>
      */
-    private function variantOptions(): array
+    private function variantOptions($user): array
     {
         $id = $this->variantResourceId();
 
@@ -163,16 +194,32 @@ class EcTrack extends WmNovaEcTrack
             ->where('layerable_type', $morphClass)
             ->pluck('layer_id');
 
-        return DB::table('layerables')
+        $options = DB::table('layerables')
             ->join('ec_tracks', 'ec_tracks.id', '=', 'layerables.layerable_id')
             ->whereIn('layerables.layer_id', $layerIds)
             ->where('layerables.layerable_type', $morphClass)
             ->where('ec_tracks.id', '!=', $id)
             ->whereNotIn('ec_tracks.id', DB::table('ec_track_variants')->select('ec_track_id'))
+            ->when($user && ! $user->hasRole('Administrator'), fn ($query) => $query->where('ec_tracks.user_id', $user->id))
             ->distinct()
-            ->pluck('ec_tracks.name', 'ec_tracks.id')
-            ->map(fn ($name) => $this->plainName($name))
-            ->all();
+            ->pluck('ec_tracks.name', 'ec_tracks.id');
+
+        $currentMainId = $this->savedMainId();
+
+        if ($currentMainId !== null && ! $options->has($currentMainId)) {
+            $options = $options->union(DB::table('ec_tracks')->where('id', $currentMainId)->pluck('name', 'id'));
+        }
+
+        return $options->map(fn ($name) => $this->plainName($name))->all();
+    }
+
+    /** La principale già salvata per questa tappa, o null se non è una variante. */
+    private function savedMainId(): ?int
+    {
+        $id = $this->variantResourceId();
+        $mainId = $id === null ? null : EcTrackVariant::whereKey($id)->value('main_ec_track_id');
+
+        return $mainId === null ? null : (int) $mainId;
     }
 
     /** Vero se questa tappa è già la principale di altre varianti. */
