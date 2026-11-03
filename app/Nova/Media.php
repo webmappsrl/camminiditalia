@@ -2,7 +2,7 @@
 
 namespace App\Nova;
 
-use App\Models\Experience;
+use App\Models\Diary;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Wm\WmPackage\Nova\Media as WmNovaMedia;
@@ -17,38 +17,38 @@ class Media extends WmNovaMedia
 {
     public static function indexQuery(NovaRequest $request, Builder $query): Builder
     {
-        return self::withoutExperienceMedia($request, parent::indexQuery($request, $query));
+        return self::withoutDiaryMedia($request, parent::indexQuery($request, $query));
     }
 
     public static function detailQuery(NovaRequest $request, Builder $query): Builder
     {
-        return self::withoutExperienceMedia($request, parent::detailQuery($request, $query));
+        return self::withoutDiaryMedia($request, parent::detailQuery($request, $query));
     }
 
     public static function editQuery(NovaRequest $request, Builder $query): Builder
     {
-        return self::withoutExperienceMedia($request, parent::editQuery($request, $query));
+        return self::withoutDiaryMedia($request, parent::editQuery($request, $query));
     }
 
     public static function replicateQuery(NovaRequest $request, Builder $query): Builder
     {
-        return self::withoutExperienceMedia($request, parent::replicateQuery($request, $query));
+        return self::withoutDiaryMedia($request, parent::replicateQuery($request, $query));
     }
 
     public static function relatableQuery(NovaRequest $request, Builder $query): Builder
     {
-        return self::withoutExperienceMedia($request, parent::relatableQuery($request, $query));
+        return self::withoutDiaryMedia($request, parent::relatableQuery($request, $query));
     }
 
     /**
      * Esclude i media delle esperienze per chi non è Administrator.
      */
-    private static function withoutExperienceMedia(NovaRequest $request, Builder $query): Builder
+    private static function withoutDiaryMedia(NovaRequest $request, Builder $query): Builder
     {
         if ($request->user()?->hasRole('Administrator')) {
             return $query;
         }
 
-        return $query->where('model_type', '!=', (new Experience)->getMorphClass());
+        return $query->where('model_type', '!=', (new Diary)->getMorphClass());
     }
 }

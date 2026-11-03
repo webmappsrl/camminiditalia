@@ -125,8 +125,8 @@
     "The main stage is already a variant: variants live on a single level.": "La tappa principale è già una variante: le varianti vivono su un solo livello.",
     "This stage is already the main stage of other variants: it cannot become a variant itself.": "Questa tappa è già principale di altre varianti: non può diventare a sua volta una variante.",
     "The chosen main stage is not among the stages you can choose.": "La tappa principale scelta non è fra quelle che puoi indicare.",
-    "Experiences": "Esperienze",
-    "Experience": "Esperienza",
+    "Diaries": "Diari",
+    "Diary": "Diario",
     "Text": "Testo",
     "Public": "Pubblica",
     "Date": "Data",
@@ -135,6 +135,9 @@
     "The stage does not belong to any route.": "La tappa non appartiene a nessun cammino.",
     "The stage does not belong to this route.": "La tappa non appartiene a questo cammino.",
     "The photo could not be processed.": "Non è stato possibile elaborare la foto.",
-    "An experience can have at most :max photos.": "Un'esperienza può avere al massimo :max foto.",
-    "keep_media_ids must be a JSON array of integers.": "keep_media_ids deve essere un array JSON di numeri interi."
+    "A diary can have at most :max photos.": "Un diario può avere al massimo :max foto.",
+    "keep_media_ids must be a JSON array of integers.": "keep_media_ids deve essere un array JSON di numeri interi.",
+    "Publication consent": "Consenso alla pubblicazione",
+    "With consent": "Con consenso",
+    "Without consent": "Senza consenso"
 }

@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Jobs\LinkExperienceUgcTracksJob;
+use App\Jobs\LinkDiaryUgcTracksJob;
+use App\Models\Diary;
 use App\Models\EcTrack;
-use App\Models\Experience;
-use App\Services\ExperienceService;
+use App\Services\DiaryService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
@@ -23,7 +23,7 @@ use Wm\WmPackage\Models\UgcTrack;
 use Wm\WmPackage\Models\User;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
-class ExperienceApiTest extends TestCase
+class DiaryApiTest extends TestCase
 {
     use CreatesCertificationTracks, DatabaseTransactions, FakesCertificationDisk, LayerTestHelpers;
 
@@ -43,9 +43,9 @@ class ExperienceApiTest extends TestCase
         Http::fake();
     }
 
-    private function postExperience(User $user, array $payload): TestResponse
+    private function postDiary(User $user, array $payload): TestResponse
     {
-        return $this->actingAs($user, 'api')->postJson('/api/experiences', $payload);
+        return $this->actingAs($user, 'api')->postJson('/api/diaries', $payload);
     }
 
     /**
@@ -88,12 +88,48 @@ class ExperienceApiTest extends TestCase
         return UploadedFile::fake()->createWithContent($name, substr($jpeg, 0, strpos($jpeg, "\xFF\xDA")));
     }
 
+    public function test_crea_salva_il_consenso_alla_pubblicazione(): void
+    {
+        $layer = $this->createLayer();
+        $walker = $this->createUserWithoutRole();
+
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'Bel giro', 'publication_consent' => '1'])
+            ->assertStatus(201)
+            ->assertJsonPath('publication_consent', true);
+
+        $this->assertTrue(Diary::where('uuid', self::UUID_A)->first()->publication_consent);
+    }
+
+    public function test_crea_senza_consenso_vale_false(): void
+    {
+        $layer = $this->createLayer();
+        $walker = $this->createUserWithoutRole();
+
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'Bel giro'])
+            ->assertStatus(201)
+            ->assertJsonPath('publication_consent', false);
+    }
+
+    public function test_modifica_cambia_il_consenso(): void
+    {
+        $layer = $this->createLayer();
+        $walker = $this->createUserWithoutRole();
+        $diary = Diary::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id, 'description' => 'Bel giro']);
+
+        $this->actingAs($walker, 'api')
+            ->postJson("/api/diaries/{$diary->id}", ['description' => 'Bel giro', 'keep_media_ids' => '[]', 'publication_consent' => '1'])
+            ->assertOk()
+            ->assertJsonPath('publication_consent', true);
+
+        $this->assertTrue($diary->fresh()->publication_consent);
+    }
+
     public function test_crea_da_cammino(): void
     {
         $layer = $this->createLayer();
         $walker = $this->createUserWithoutRole();
 
-        $this->postExperience($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'Bel giro'])
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'Bel giro'])
             ->assertStatus(201)
             ->assertJsonPath('layer.id', $layer->id)
             ->assertJsonPath('ec_track', null)
@@ -117,7 +153,7 @@ class ExperienceApiTest extends TestCase
         ]);
         $lowest = min($low->id, $high->id);
 
-        $this->postExperience($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'ec_track_id' => $track->id, 'description' => 'x'])
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'ec_track_id' => $track->id, 'description' => 'x'])
             ->assertStatus(201)
             ->assertJsonPath('layer.id', $lowest)
             ->assertJsonPath('ec_track.id', $track->id);
@@ -130,7 +166,7 @@ class ExperienceApiTest extends TestCase
         $other = $this->createLayer();
         $track = $this->createTrack($owner->id, 'Tappa', $other);
 
-        $this->postExperience($this->createUserWithoutRole(), [
+        $this->postDiary($this->createUserWithoutRole(), [
             'uuid' => self::UUID_A, 'layer_id' => $layer->id, 'ec_track_id' => $track->id, 'description' => 'x',
         ])->assertStatus(422)->assertJsonValidationErrors(['ec_track_id']);
     }
@@ -139,7 +175,7 @@ class ExperienceApiTest extends TestCase
     {
         $layer = $this->createLayer();
 
-        $this->postExperience($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => '   '])
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => '   '])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['description']);
     }
@@ -149,7 +185,7 @@ class ExperienceApiTest extends TestCase
         $layer = $this->createLayer();
         $images = array_map(fn ($i) => UploadedFile::fake()->image("f{$i}.jpg"), range(1, 7));
 
-        $this->postExperience($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => $images])
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => $images])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['images']);
     }
@@ -161,15 +197,15 @@ class ExperienceApiTest extends TestCase
         $a = UploadedFile::fake()->image('a.jpg', 30, 30);
         $b = UploadedFile::fake()->image('b.jpg', 50, 40);
 
-        $this->postExperience($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$a]])->assertStatus(201);
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$a]])->assertStatus(201);
 
         $a2 = new UploadedFile($a->getRealPath(), 'image_0.jpg', 'image/jpeg', null, true);
-        $this->postExperience($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$a2, $b]])
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$a2, $b]])
             ->assertStatus(200)
             ->assertJsonCount(2, 'photos');
 
-        $this->assertSame(1, Experience::count());
-        $this->assertSame(2, Experience::first()->getMedia(Experience::MEDIA_COLLECTION)->count());
+        $this->assertSame(1, Diary::count());
+        $this->assertCount(2, Diary::first()->getMedia(Diary::MEDIA_COLLECTION));
     }
 
     public function test_stesso_uuid_aggiorna_il_testo_corretto(): void
@@ -177,34 +213,34 @@ class ExperienceApiTest extends TestCase
         $layer = $this->createLayer();
         $walker = $this->createUserWithoutRole();
 
-        $this->postExperience($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'primo testo'])->assertStatus(201);
-        $this->postExperience($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'testo corretto'])
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'primo testo'])->assertStatus(201);
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'testo corretto'])
             ->assertStatus(200)
             ->assertJsonPath('description', 'testo corretto');
 
-        $this->assertSame(1, Experience::count());
+        $this->assertSame(1, Diary::count());
     }
 
     public function test_errore_di_storage_non_lascia_un_esperienza_vuota(): void
     {
         $layer = $this->createLayer();
         $walker = $this->createUserWithoutRole();
-        $this->mock(ExperienceService::class, function ($mock) {
+        $this->mock(DiaryService::class, function ($mock) {
             $mock->makePartial();
             $mock->shouldReceive('storeImages')->andThrow(new \RuntimeException('S3 non raggiungibile'));
         });
 
-        $this->postExperience($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [UploadedFile::fake()->image('a.jpg', 30, 30)]])
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [UploadedFile::fake()->image('a.jpg', 30, 30)]])
             ->assertStatus(500);
 
-        $this->assertSame(0, Experience::count());
+        $this->assertSame(0, Diary::count());
     }
 
     public function test_il_limite_delle_esperienze_non_consuma_quello_del_passaporto(): void
     {
-        $route = app('router')->getRoutes()->getByName('camminiditalia.api.experiences.store');
+        $route = app('router')->getRoutes()->getByName('camminiditalia.api.diaries.store');
 
-        $this->assertContains('throttle:experiences', $route->gatherMiddleware());
+        $this->assertContains('throttle:diaries', $route->gatherMiddleware());
         $this->assertNotContains('throttle:10,1', $route->gatherMiddleware());
     }
 
@@ -212,10 +248,10 @@ class ExperienceApiTest extends TestCase
     {
         $layer = $this->createLayer();
 
-        $this->postExperience($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'x'])->assertStatus(201);
-        $this->postExperience($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'y'])->assertStatus(201);
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'x'])->assertStatus(201);
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'y'])->assertStatus(201);
 
-        $this->assertSame(2, Experience::count());
+        $this->assertSame(2, Diary::count());
     }
 
     public function test_index_del_cammino_include_le_tappe(): void
@@ -225,16 +261,16 @@ class ExperienceApiTest extends TestCase
         $other = $this->createLayer();
         $track = $this->createTrack($walker->id, 'Tappa', $layer);
 
-        $onRoute = Experience::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id]);
-        $onStage = Experience::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id, 'ec_track_id' => $track->id]);
-        Experience::factory()->create(['user_id' => $walker->id, 'layer_id' => $other->id]);
+        $onRoute = Diary::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id]);
+        $onStage = Diary::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id, 'ec_track_id' => $track->id]);
+        Diary::factory()->create(['user_id' => $walker->id, 'layer_id' => $other->id]);
 
         $ids = fn (TestResponse $r) => collect($r->json('data'))->pluck('id')->sort()->values()->all();
 
-        $r = $this->actingAs($walker, 'api')->getJson("/api/experiences?layer_id={$layer->id}")->assertOk();
+        $r = $this->actingAs($walker, 'api')->getJson("/api/diaries?layer_id={$layer->id}")->assertOk();
         $this->assertSame([$onRoute->id, $onStage->id], $ids($r));
 
-        $r = $this->actingAs($walker, 'api')->getJson("/api/experiences?ec_track_id={$track->id}")->assertOk();
+        $r = $this->actingAs($walker, 'api')->getJson("/api/diaries?ec_track_id={$track->id}")->assertOk();
         $this->assertSame([$onStage->id], $ids($r));
     }
 
@@ -242,17 +278,17 @@ class ExperienceApiTest extends TestCase
     {
         $layer = $this->createLayer();
         $walker = $this->createUserWithoutRole();
-        Experience::factory()->create(['user_id' => $this->createUserWithoutRole()->id, 'layer_id' => $layer->id]);
+        Diary::factory()->create(['user_id' => $this->createUserWithoutRole()->id, 'layer_id' => $layer->id]);
 
-        $this->actingAs($walker, 'api')->getJson('/api/experiences')
+        $this->actingAs($walker, 'api')->getJson('/api/diaries')
             ->assertOk()
             ->assertJsonCount(0, 'data');
     }
 
     public function test_non_autenticato_riceve_401(): void
     {
-        $this->getJson('/api/experiences')->assertStatus(401);
-        $this->postJson('/api/experiences', [])->assertStatus(401);
+        $this->getJson('/api/diaries')->assertStatus(401);
+        $this->postJson('/api/diaries', [])->assertStatus(401);
     }
 
     public function test_i_media_portano_l_app_id_del_cammino(): void
@@ -260,12 +296,12 @@ class ExperienceApiTest extends TestCase
         $layer = $this->createLayer();
         $walker = $this->createUserWithoutRole();
 
-        $this->postExperience($walker, [
+        $this->postDiary($walker, [
             'uuid' => self::UUID_A, 'layer_id' => $layer->id,
             'images' => [UploadedFile::fake()->image('a.jpg')],
         ])->assertStatus(201);
 
-        $media = Experience::first()->getFirstMedia(Experience::MEDIA_COLLECTION);
+        $media = Diary::first()->getFirstMedia(Diary::MEDIA_COLLECTION);
         $this->assertSame((int) Layer::find($layer->id)->app_id, (int) $media->app_id);
     }
 
@@ -278,10 +314,10 @@ class ExperienceApiTest extends TestCase
         // Verifica del presupposto: il file di partenza ha davvero l'EXIF.
         $this->assertSame(6, exif_read_data($upload->getRealPath())['Orientation'] ?? null);
 
-        $this->postExperience($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$upload]])
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$upload]])
             ->assertStatus(201);
 
-        $media = Experience::first()->getFirstMedia(Experience::MEDIA_COLLECTION);
+        $media = Diary::first()->getFirstMedia(Diary::MEDIA_COLLECTION);
         $stored = \Storage::disk('wmfe')->get($media->getPathRelativeToRoot());
         $tmp = tempnam(sys_get_temp_dir(), 'chk_');
         file_put_contents($tmp, $stored);
@@ -298,10 +334,10 @@ class ExperienceApiTest extends TestCase
         $layer = $this->createLayer();
         $svg = UploadedFile::fake()->createWithContent('a.svg', '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>');
 
-        $this->postExperience($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$svg]])
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$svg]])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['images.0']);
-        $this->assertSame(0, Experience::count());
+        $this->assertSame(0, Diary::count());
     }
 
     public function test_jpg_corrotto_da_422_e_non_crea_righe(): void
@@ -309,34 +345,34 @@ class ExperienceApiTest extends TestCase
         $layer = $this->createLayer();
         $broken = $this->corruptJpeg();
 
-        $this->postExperience($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$broken]])
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$broken]])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['images']);
-        $this->assertSame(0, Experience::count());
+        $this->assertSame(0, Diary::count());
     }
 
     public function test_tappa_senza_cammino_rifiutata(): void
     {
         $track = $this->createTrack($this->createUserWithoutRole()->id, 'Orfana');
 
-        $this->postExperience($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'ec_track_id' => $track->id, 'description' => 'x'])
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'ec_track_id' => $track->id, 'description' => 'x'])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['ec_track_id']);
-        $this->assertSame(0, Experience::count());
+        $this->assertSame(0, Diary::count());
     }
 
     public function test_collisione_sull_uuid_rilegge_la_riga_esistente(): void
     {
         $layer = $this->createLayer();
         $walker = $this->createUserWithoutRole();
-        $existing = Experience::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id, 'uuid' => self::UUID_A]);
+        $existing = Diary::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id, 'uuid' => self::UUID_A]);
 
         // Simula la corsa: la riga compare fra il controllo e l'insert, createOrFirst deve rileggerla.
-        $found = Experience::createOrFirst(['user_id' => $walker->id, 'uuid' => self::UUID_A], ['layer_id' => $layer->id]);
+        $found = Diary::createOrFirst(['user_id' => $walker->id, 'uuid' => self::UUID_A], ['layer_id' => $layer->id]);
 
         $this->assertTrue($found->is($existing));
         $this->assertFalse($found->wasRecentlyCreated);
-        $this->assertSame(1, Experience::count());
+        $this->assertSame(1, Diary::count());
     }
 
     public function test_due_foto_identiche_nella_stessa_richiesta_diventano_un_media(): void
@@ -345,7 +381,7 @@ class ExperienceApiTest extends TestCase
         $a = UploadedFile::fake()->image('a.jpg', 30, 30);
         $b = new UploadedFile($a->getRealPath(), 'b.jpg', 'image/jpeg', null, true);
 
-        $this->postExperience($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$a, $b]])
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$a, $b]])
             ->assertStatus(201)
             ->assertJsonCount(1, 'photos');
     }
@@ -356,40 +392,40 @@ class ExperienceApiTest extends TestCase
         $good = UploadedFile::fake()->image('ok.jpg', 30, 30);
         $broken = $this->corruptJpeg();
 
-        $this->postExperience($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$good, $broken]])
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$good, $broken]])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['images']);
 
-        $this->assertSame(0, Experience::count());
+        $this->assertSame(0, Diary::count());
         $this->assertSame([], \Storage::disk('wmfe')->allFiles());
     }
 
     /**
      * Esperienza dell'utente con `$n` foto distinte già salvate.
      */
-    private function experienceWithPhotos(User $user, int $n, ?string $description = 'testo'): Experience
+    private function diaryWithPhotos(User $user, int $n, ?string $description = 'testo'): Diary
     {
         $layer = $this->createLayer();
-        $experience = Experience::factory()->create(['user_id' => $user->id, 'layer_id' => $layer->id, 'description' => $description]);
+        $diary = Diary::factory()->create(['user_id' => $user->id, 'layer_id' => $layer->id, 'description' => $description]);
         $images = array_map(fn ($i) => UploadedFile::fake()->image("p{$i}.jpg", 20 + $i * 7, 20 + $i * 3), $n > 0 ? range(1, $n) : []);
-        app(ExperienceService::class)->storeImages($experience, $images);
+        app(DiaryService::class)->storeImages($diary, $images);
 
-        return $experience->fresh();
+        return $diary->fresh();
     }
 
-    private function updateExperience(User $user, Experience $experience, array $payload): TestResponse
+    private function updateDiary(User $user, Diary $diary, array $payload): TestResponse
     {
-        return $this->actingAs($user, 'api')->post("/api/experiences/{$experience->id}", $payload, ['Accept' => 'application/json']);
+        return $this->actingAs($user, 'api')->post("/api/diaries/{$diary->id}", $payload, ['Accept' => 'application/json']);
     }
 
     public function test_modifica_testo_e_toglie_foto(): void
     {
         $walker = $this->createUserWithoutRole();
-        $experience = $this->experienceWithPhotos($walker, 2);
-        [$first, $second] = $experience->getMedia(Experience::MEDIA_COLLECTION)->all();
+        $diary = $this->diaryWithPhotos($walker, 2);
+        [$first, $second] = $diary->getMedia(Diary::MEDIA_COLLECTION)->all();
         $removedPath = $second->getPathRelativeToRoot();
 
-        $this->updateExperience($walker, $experience, ['description' => 'nuovo', 'keep_media_ids' => json_encode([$first->id])])
+        $this->updateDiary($walker, $diary, ['description' => 'nuovo', 'keep_media_ids' => json_encode([$first->id])])
             ->assertOk()
             ->assertJsonPath('description', 'nuovo')
             ->assertJsonCount(1, 'photos')
@@ -401,10 +437,10 @@ class ExperienceApiTest extends TestCase
     public function test_modifica_aggiunge_foto_nuove(): void
     {
         $walker = $this->createUserWithoutRole();
-        $experience = $this->experienceWithPhotos($walker, 1);
-        $keep = $experience->getFirstMedia(Experience::MEDIA_COLLECTION)->id;
+        $diary = $this->diaryWithPhotos($walker, 1);
+        $keep = $diary->getFirstMedia(Diary::MEDIA_COLLECTION)->id;
 
-        $this->updateExperience($walker, $experience, [
+        $this->updateDiary($walker, $diary, [
             'keep_media_ids' => json_encode([$keep]),
             'images' => [UploadedFile::fake()->image('nuova.jpg', 90, 50)],
         ])->assertOk()->assertJsonCount(2, 'photos');
@@ -413,9 +449,9 @@ class ExperienceApiTest extends TestCase
     public function test_keep_media_ids_obbligatorio(): void
     {
         $walker = $this->createUserWithoutRole();
-        $experience = $this->experienceWithPhotos($walker, 1);
+        $diary = $this->diaryWithPhotos($walker, 1);
 
-        $this->updateExperience($walker, $experience, ['description' => 'x'])
+        $this->updateDiary($walker, $diary, ['description' => 'x'])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['keep_media_ids']);
     }
@@ -423,9 +459,9 @@ class ExperienceApiTest extends TestCase
     public function test_keep_vuoto_toglie_tutte_se_resta_testo(): void
     {
         $walker = $this->createUserWithoutRole();
-        $experience = $this->experienceWithPhotos($walker, 2);
+        $diary = $this->diaryWithPhotos($walker, 2);
 
-        $this->updateExperience($walker, $experience, ['description' => 'solo testo', 'keep_media_ids' => '[]'])
+        $this->updateDiary($walker, $diary, ['description' => 'solo testo', 'keep_media_ids' => '[]'])
             ->assertOk()
             ->assertJsonCount(0, 'photos');
         $this->assertSame([], \Storage::disk('wmfe')->allFiles());
@@ -434,21 +470,21 @@ class ExperienceApiTest extends TestCase
     public function test_modifica_che_svuota_tutto_rifiutata(): void
     {
         $walker = $this->createUserWithoutRole();
-        $experience = $this->experienceWithPhotos($walker, 1);
+        $diary = $this->diaryWithPhotos($walker, 1);
 
-        $this->updateExperience($walker, $experience, ['description' => '  ', 'keep_media_ids' => '[]'])
+        $this->updateDiary($walker, $diary, ['description' => '  ', 'keep_media_ids' => '[]'])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['description']);
-        $this->assertSame(1, $experience->fresh()->getMedia(Experience::MEDIA_COLLECTION)->count());
+        $this->assertCount(1, $diary->fresh()->getMedia(Diary::MEDIA_COLLECTION));
     }
 
     public function test_modifica_oltre_sei_foto_rifiutata(): void
     {
         $walker = $this->createUserWithoutRole();
-        $experience = $this->experienceWithPhotos($walker, 5);
-        $keep = $experience->getMedia(Experience::MEDIA_COLLECTION)->pluck('id')->all();
+        $diary = $this->diaryWithPhotos($walker, 5);
+        $keep = $diary->getMedia(Diary::MEDIA_COLLECTION)->pluck('id')->all();
 
-        $this->updateExperience($walker, $experience, [
+        $this->updateDiary($walker, $diary, [
             'keep_media_ids' => json_encode($keep),
             'images' => [UploadedFile::fake()->image('a.jpg', 61, 62), UploadedFile::fake()->image('b.jpg', 71, 72)],
         ])->assertStatus(422)->assertJsonValidationErrors(['images']);
@@ -457,10 +493,10 @@ class ExperienceApiTest extends TestCase
     public function test_keep_media_ids_estranei_ignorati(): void
     {
         $walker = $this->createUserWithoutRole();
-        $experience = $this->experienceWithPhotos($walker, 1);
-        $foreign = $this->experienceWithPhotos($walker, 1)->getFirstMedia(Experience::MEDIA_COLLECTION);
+        $diary = $this->diaryWithPhotos($walker, 1);
+        $foreign = $this->diaryWithPhotos($walker, 1)->getFirstMedia(Diary::MEDIA_COLLECTION);
 
-        $this->updateExperience($walker, $experience, ['description' => 'x', 'keep_media_ids' => json_encode([$foreign->id])])
+        $this->updateDiary($walker, $diary, ['description' => 'x', 'keep_media_ids' => json_encode([$foreign->id])])
             ->assertOk()
             ->assertJsonCount(0, 'photos');
         $this->assertNotNull(Media::find($foreign->id));
@@ -468,66 +504,66 @@ class ExperienceApiTest extends TestCase
 
     public function test_modifica_esperienza_altrui_404(): void
     {
-        $experience = $this->experienceWithPhotos($this->createUserWithoutRole(), 1);
+        $diary = $this->diaryWithPhotos($this->createUserWithoutRole(), 1);
 
-        $this->updateExperience($this->createUserWithoutRole(), $experience, ['description' => 'x', 'keep_media_ids' => '[]'])
+        $this->updateDiary($this->createUserWithoutRole(), $diary, ['description' => 'x', 'keep_media_ids' => '[]'])
             ->assertStatus(404);
-        $this->assertSame('testo', $experience->fresh()->description);
+        $this->assertSame('testo', $diary->fresh()->description);
     }
 
     public function test_elimina_rimuove_file(): void
     {
         $walker = $this->createUserWithoutRole();
-        $experience = $this->experienceWithPhotos($walker, 2);
+        $diary = $this->diaryWithPhotos($walker, 2);
         $this->assertNotSame([], \Storage::disk('wmfe')->allFiles());
 
-        $this->actingAs($walker, 'api')->deleteJson("/api/experiences/{$experience->id}")->assertNoContent();
+        $this->actingAs($walker, 'api')->deleteJson("/api/diaries/{$diary->id}")->assertNoContent();
 
-        $this->assertSame(0, Experience::count());
+        $this->assertSame(0, Diary::count());
         $this->assertSame([], \Storage::disk('wmfe')->allFiles());
     }
 
     public function test_elimina_esperienza_altrui_404(): void
     {
-        $experience = $this->experienceWithPhotos($this->createUserWithoutRole(), 1);
+        $diary = $this->diaryWithPhotos($this->createUserWithoutRole(), 1);
 
-        $this->actingAs($this->createUserWithoutRole(), 'api')->deleteJson("/api/experiences/{$experience->id}")->assertStatus(404);
-        $this->assertSame(1, Experience::count());
+        $this->actingAs($this->createUserWithoutRole(), 'api')->deleteJson("/api/diaries/{$diary->id}")->assertStatus(404);
+        $this->assertSame(1, Diary::count());
     }
 
     public function test_modifica_toglie_e_ricarica_la_stessa_foto(): void
     {
         $walker = $this->createUserWithoutRole();
         $layer = $this->createLayer();
-        $experience = Experience::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id, 'description' => 'testo']);
+        $diary = Diary::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id, 'description' => 'testo']);
         $photo = UploadedFile::fake()->image('a.jpg', 33, 21);
-        app(ExperienceService::class)->storeImages($experience, [$photo]);
-        $oldId = $experience->fresh()->getFirstMedia(Experience::MEDIA_COLLECTION)->id;
+        app(DiaryService::class)->storeImages($diary, [$photo]);
+        $oldId = $diary->fresh()->getFirstMedia(Diary::MEDIA_COLLECTION)->id;
 
         // Stesso contenuto (stesso hash) ricaricato mentre la vecchia copia esce.
         $again = new UploadedFile($photo->getRealPath(), 'a-bis.jpg', 'image/jpeg', null, true);
-        $this->updateExperience($walker, $experience->fresh(), ['keep_media_ids' => '[]', 'images' => [$again]])
+        $this->updateDiary($walker, $diary->fresh(), ['keep_media_ids' => '[]', 'images' => [$again]])
             ->assertOk()
             ->assertJsonCount(1, 'photos');
 
-        $this->assertNotSame($oldId, $experience->fresh()->getFirstMedia(Experience::MEDIA_COLLECTION)->id);
+        $this->assertNotSame($oldId, $diary->fresh()->getFirstMedia(Diary::MEDIA_COLLECTION)->id);
     }
 
     public function test_modifica_con_seconda_foto_corrotta_non_cambia_nulla(): void
     {
         $walker = $this->createUserWithoutRole();
-        $experience = $this->experienceWithPhotos($walker, 1);
-        $keep = $experience->getFirstMedia(Experience::MEDIA_COLLECTION)->id;
+        $diary = $this->diaryWithPhotos($walker, 1);
+        $keep = $diary->getFirstMedia(Diary::MEDIA_COLLECTION)->id;
         $broken = $this->corruptJpeg();
 
-        $this->updateExperience($walker, $experience, [
+        $this->updateDiary($walker, $diary, [
             'description' => 'cambiato',
             'keep_media_ids' => json_encode([$keep]),
             'images' => [UploadedFile::fake()->image('ok.jpg', 81, 41), $broken],
         ])->assertStatus(422)->assertJsonValidationErrors(['images']);
 
-        $fresh = $experience->fresh();
-        $this->assertSame([$keep], $fresh->getMedia(Experience::MEDIA_COLLECTION)->pluck('id')->all());
+        $fresh = $diary->fresh();
+        $this->assertSame([$keep], $fresh->getMedia(Diary::MEDIA_COLLECTION)->pluck('id')->all());
         $this->assertSame('testo', $fresh->description);
         $this->assertCount(1, \Storage::disk('wmfe')->allFiles());
     }
@@ -536,9 +572,9 @@ class ExperienceApiTest extends TestCase
     {
         $walker = $this->createUserWithoutRole();
 
-        $this->actingAs($walker, 'api')->post('/api/experiences/abc', ['keep_media_ids' => '[]'], ['Accept' => 'application/json'])
+        $this->actingAs($walker, 'api')->post('/api/diaries/abc', ['keep_media_ids' => '[]'], ['Accept' => 'application/json'])
             ->assertStatus(404);
-        $this->actingAs($walker, 'api')->deleteJson('/api/experiences/abc')->assertStatus(404);
+        $this->actingAs($walker, 'api')->deleteJson('/api/diaries/abc')->assertStatus(404);
     }
 
     public function test_rifiuta_immagine_oltre_8000_pixel(): void
@@ -547,33 +583,33 @@ class ExperienceApiTest extends TestCase
         $walker = $this->createUserWithoutRole();
         $big = UploadedFile::fake()->image('lunga.png', 9000, 10);
 
-        $this->postExperience($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$big]])
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$big]])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['images.0']);
-        $this->assertSame(0, Experience::count());
+        $this->assertSame(0, Diary::count());
 
-        $experience = $this->experienceWithPhotos($walker, 0);
-        $this->updateExperience($walker, $experience, ['keep_media_ids' => '[]', 'images' => [UploadedFile::fake()->image('lunga.png', 9000, 10)]])
+        $diary = $this->diaryWithPhotos($walker, 0);
+        $this->updateDiary($walker, $diary, ['keep_media_ids' => '[]', 'images' => [UploadedFile::fake()->image('lunga.png', 9000, 10)]])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['images.0']);
     }
 
     public function test_interruttore_spento_da_404_anche_senza_autenticazione(): void
     {
-        config(['camminiditalia.experiences.enabled' => false]);
+        config(['camminiditalia.diaries.enabled' => false]);
         $walker = $this->createUserWithoutRole();
 
-        $this->getJson('/api/experiences')->assertStatus(404);
-        $this->postJson('/api/experiences', [])->assertStatus(404);
-        $this->actingAs($walker, 'api')->getJson('/api/experiences')->assertStatus(404);
+        $this->getJson('/api/diaries')->assertStatus(404);
+        $this->postJson('/api/diaries', [])->assertStatus(404);
+        $this->actingAs($walker, 'api')->getJson('/api/diaries')->assertStatus(404);
     }
 
     public function test_interruttore_acceso_senza_autenticazione_da_401(): void
     {
-        config(['camminiditalia.experiences.enabled' => true]);
+        config(['camminiditalia.diaries.enabled' => true]);
 
-        $this->getJson('/api/experiences')->assertStatus(401);
-        $this->deleteJson('/api/experiences/1')->assertStatus(401);
+        $this->getJson('/api/diaries')->assertStatus(401);
+        $this->deleteJson('/api/diaries/1')->assertStatus(401);
     }
 
     public function test_retry_con_uuid_esistente_rispetta_il_limite_di_sei_foto(): void
@@ -582,19 +618,19 @@ class ExperienceApiTest extends TestCase
         $walker = $this->createUserWithoutRole();
         $first = array_map(fn ($i) => UploadedFile::fake()->image("p{$i}.jpg", 20 + $i * 7, 20 + $i * 3), range(1, 5));
 
-        $this->postExperience($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => $first])->assertStatus(201);
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => $first])->assertStatus(201);
 
         // Retry: una delle 5 già salvate (doppione, non conta) più due nuove = 7 > 6.
         $again = new UploadedFile($first[0]->getRealPath(), 'p1.jpg', 'image/jpeg', null, true);
-        $this->postExperience($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [
             $again, UploadedFile::fake()->image('n1.jpg', 91, 13), UploadedFile::fake()->image('n2.jpg', 92, 14),
         ]])->assertStatus(422)->assertJsonValidationErrors(['images']);
 
-        $this->assertSame(1, Experience::count());
-        $this->assertSame(5, Experience::first()->getMedia(Experience::MEDIA_COLLECTION)->count());
+        $this->assertSame(1, Diary::count());
+        $this->assertCount(5, Diary::first()->getMedia(Diary::MEDIA_COLLECTION));
 
         // Doppione più una nuova = 6: accettato.
-        $this->postExperience($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [
             $again, UploadedFile::fake()->image('n1.jpg', 91, 13),
         ]])->assertStatus(200)->assertJsonCount(6, 'photos');
     }
@@ -603,12 +639,12 @@ class ExperienceApiTest extends TestCase
     {
         $walker = $this->createUserWithoutRole();
         $layer = $this->createLayer();
-        $linked = Experience::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id]);
-        Experience::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id]);
+        $linked = Diary::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id]);
+        Diary::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id]);
         $ugc = UgcTrack::withoutEvents(fn () => UgcTrack::factory()->create(['app_id' => App::first()->id, 'user_id' => $walker->id]));
         $linked->ugcTracks()->attach($ugc->id);
 
-        $this->actingAs($walker, 'api')->getJson("/api/experiences?ugc_track_id={$ugc->id}")
+        $this->actingAs($walker, 'api')->getJson("/api/diaries?ugc_track_id={$ugc->id}")
             ->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.id', $linked->id);
@@ -618,11 +654,11 @@ class ExperienceApiTest extends TestCase
     {
         $layer = $this->createLayer();
 
-        $id = $this->postExperience($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'x'])
+        $id = $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'x'])
             ->assertStatus(201)
             ->json('id');
 
-        Queue::assertPushed(LinkExperienceUgcTracksJob::class, fn (LinkExperienceUgcTracksJob $job) => $job->experienceId === $id);
+        Queue::assertPushed(LinkDiaryUgcTracksJob::class, fn (LinkDiaryUgcTracksJob $job) => $job->diaryId === $id);
     }
 
     public function test_nome_del_file_casuale_con_estensione_del_formato(): void
@@ -632,10 +668,10 @@ class ExperienceApiTest extends TestCase
         $png = UploadedFile::fake()->image('mario-rossi.png', 30, 30);
         $upload = new UploadedFile($png->getRealPath(), 'Mario Rossi.jpeg', 'image/jpeg', null, true);
 
-        $this->postExperience($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$upload]])
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'images' => [$upload]])
             ->assertStatus(201);
 
-        $media = Experience::first()->getFirstMedia(Experience::MEDIA_COLLECTION);
+        $media = Diary::first()->getFirstMedia(Diary::MEDIA_COLLECTION);
         $this->assertMatchesRegularExpression('/^[0-9a-f-]{36}\.png$/', $media->file_name);
         $this->assertStringNotContainsString('Mario', $media->getPathRelativeToRoot());
     }
@@ -643,17 +679,17 @@ class ExperienceApiTest extends TestCase
     public function test_formato_non_ricodificabile_rifiutato_senza_salvare_l_originale(): void
     {
         $walker = $this->createUserWithoutRole();
-        $experience = $this->experienceWithPhotos($walker, 0);
+        $diary = $this->diaryWithPhotos($walker, 0);
         $gif = UploadedFile::fake()->image('a.gif', 20, 20);
 
         try {
-            app(ExperienceService::class)->storeImages($experience, [$gif]);
+            app(DiaryService::class)->storeImages($diary, [$gif]);
             $this->fail('Attesa ValidationException');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('images', $e->errors());
         }
 
-        $this->assertSame(0, $experience->fresh()->getMedia(Experience::MEDIA_COLLECTION)->count());
+        $this->assertCount(0, $diary->fresh()->getMedia(Diary::MEDIA_COLLECTION));
         $this->assertSame([], \Storage::disk('wmfe')->allFiles());
     }
 }

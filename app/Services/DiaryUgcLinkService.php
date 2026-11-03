@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Experience;
+use App\Models\Diary;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -31,33 +31,33 @@ use Wm\WmPackage\Models\Layer;
  * 4. ancora: la data massima fra le candidate non successive alla creazione dell'esperienza
  *    (nessuna, nessun legame);
  * 5. si legano le candidate con data in `[ancora - N giorni, ancora]`, N da
- *    `camminiditalia.experiences.ugc_link_window_days`.
+ *    `camminiditalia.diaries.ugc_link_window_days`.
  *
  * Il legame è ricalcolato con `sync()`: ogni esecuzione sostituisce il precedente.
  */
-class ExperienceUgcLinkService
+class DiaryUgcLinkService
 {
     public function __construct(private StageValidationService $stageValidation) {}
 
     /**
      * Ricalcola e salva le registrazioni legate all'esperienza.
      */
-    public function link(Experience $experience): void
+    public function link(Diary $diary): void
     {
-        $experience->ugcTracks()->sync($this->resolveUgcTrackIds($experience));
+        $diary->ugcTracks()->sync($this->resolveUgcTrackIds($diary));
     }
 
     /**
      * @return int[]
      */
-    private function resolveUgcTrackIds(Experience $experience): array
+    private function resolveUgcTrackIds(Diary $diary): array
     {
-        $stageIds = $this->candidateStageIds($experience);
+        $stageIds = $this->candidateStageIds($diary);
         if ($stageIds === []) {
             return [];
         }
 
-        $walked = $this->stageValidation->stagesWalkedByTrack((int) $experience->user_id, $stageIds);
+        $walked = $this->stageValidation->stagesWalkedByTrack((int) $diary->user_id, $stageIds);
         if ($walked === []) {
             return [];
         }
@@ -74,14 +74,14 @@ class ExperienceUgcLinkService
             }
         }
 
-        $limit = $experience->created_at;
+        $limit = $diary->created_at;
         $before = array_filter($dated, fn (Carbon $d) => $d->lessThanOrEqualTo($limit));
         if ($before === []) {
             return [];
         }
 
         $anchor = collect($before)->max();
-        $from = $anchor->copy()->subDays((int) config('camminiditalia.experiences.ugc_link_window_days', 30));
+        $from = $anchor->copy()->subDays((int) config('camminiditalia.diaries.ugc_link_window_days', 30));
 
         return array_keys(array_filter($before, fn (Carbon $d) => $d->greaterThanOrEqualTo($from)));
     }
@@ -89,13 +89,13 @@ class ExperienceUgcLinkService
     /**
      * @return int[]
      */
-    private function candidateStageIds(Experience $experience): array
+    private function candidateStageIds(Diary $diary): array
     {
-        if ($experience->ec_track_id !== null) {
-            return [(int) $experience->ec_track_id];
+        if ($diary->ec_track_id !== null) {
+            return [(int) $diary->ec_track_id];
         }
 
-        $layer = Layer::find($experience->layer_id);
+        $layer = Layer::find($diary->layer_id);
 
         return $layer === null
             ? []

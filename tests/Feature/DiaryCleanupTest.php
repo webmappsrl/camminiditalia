@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Experience;
+use App\Models\Diary;
 use Illuminate\Bus\UniqueLock;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
@@ -21,7 +21,7 @@ use Wm\WmPackage\Models\User;
 use Wm\WmPackage\Services\PBFGeneratorService;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
-class ExperienceCleanupTest extends TestCase
+class DiaryCleanupTest extends TestCase
 {
     use DatabaseTransactions, FakesCertificationDisk, LayerTestHelpers;
 
@@ -34,7 +34,7 @@ class ExperienceCleanupTest extends TestCase
             App::factory()->create();
         }
 
-        // Experience non ha app_id: MediaObserver ripiega su app_id = 1 per i suoi media,
+        // Diary non ha app_id: MediaObserver ripiega su app_id = 1 per i suoi media,
         // e la FK media_app_id_foreign richiede che quell'App esista.
         if (App::find(1) === null) {
             App::factory()->create(['id' => 1]);
@@ -48,51 +48,51 @@ class ExperienceCleanupTest extends TestCase
     /**
      * Crea un'esperienza con una foto e verifica che il file esista sul disco.
      *
-     * @return array{0: Experience, 1: string}
+     * @return array{0: Diary, 1: string}
      */
-    private function createExperienceWithPhoto(int $userId, Layer $layer): array
+    private function createDiaryWithPhoto(int $userId, Layer $layer): array
     {
-        $experience = Experience::factory()->create(['user_id' => $userId, 'layer_id' => $layer->id]);
-        $experience->addMedia(UploadedFile::fake()->image('foto.jpg'))->toMediaCollection(Experience::MEDIA_COLLECTION);
+        $diary = Diary::factory()->create(['user_id' => $userId, 'layer_id' => $layer->id]);
+        $diary->addMedia(UploadedFile::fake()->image('foto.jpg'))->toMediaCollection(Diary::MEDIA_COLLECTION);
 
-        $path = $experience->getFirstMedia(Experience::MEDIA_COLLECTION)->getPathRelativeToRoot();
+        $path = $diary->getFirstMedia(Diary::MEDIA_COLLECTION)->getPathRelativeToRoot();
         Storage::disk('wmfe')->assertExists($path);
 
-        return [$experience, $path];
+        return [$diary, $path];
     }
 
-    private function assertExperienceRemoved(Experience $experience, string $path): void
+    private function assertDiaryRemoved(Diary $diary, string $path): void
     {
-        $this->assertDatabaseMissing('experiences', ['id' => $experience->id]);
-        $this->assertSame(0, Media::where('model_type', Experience::class)->count());
+        $this->assertDatabaseMissing('diaries', ['id' => $diary->id]);
+        $this->assertSame(0, Media::where('model_type', Diary::class)->count());
         Storage::disk('wmfe')->assertMissing($path);
     }
 
     public function test_cancellare_utente_rimuove_esperienze_e_file(): void
     {
         $user = User::factory()->create();
-        [$experience, $path] = $this->createExperienceWithPhoto($user->id, $this->createLayer());
+        [$diary, $path] = $this->createDiaryWithPhoto($user->id, $this->createLayer());
 
         User::find($user->id)->delete();
 
-        $this->assertExperienceRemoved($experience, $path);
+        $this->assertDiaryRemoved($diary, $path);
     }
 
     public function test_cancellare_utente_locale_rimuove_esperienze_e_file(): void
     {
         $user = User::factory()->create();
-        [$experience, $path] = $this->createExperienceWithPhoto($user->id, $this->createLayer());
+        [$diary, $path] = $this->createDiaryWithPhoto($user->id, $this->createLayer());
 
         \App\Models\User::find($user->id)->delete();
 
-        $this->assertExperienceRemoved($experience, $path);
+        $this->assertDiaryRemoved($diary, $path);
     }
 
     public function test_cancellare_layer_rimuove_esperienze_e_file(): void
     {
         $user = User::factory()->create();
         $layer = $this->createLayer();
-        [$experience, $path] = $this->createExperienceWithPhoto($user->id, $layer);
+        [$diary, $path] = $this->createDiaryWithPhoto($user->id, $layer);
 
         // LayerObserver::deleted() rigenera i PBF in modo sincrono: lo si isola con un mock.
         $pbfMock = Mockery::mock(PBFGeneratorService::class);
@@ -105,6 +105,6 @@ class ExperienceCleanupTest extends TestCase
         // Rilascia il lock unico di UpdateAppConfigJob, che sotto Queue::fake() resterebbe preso.
         app(UniqueLock::class)->release(new UpdateAppConfigJob($appId));
 
-        $this->assertExperienceRemoved($experience, $path);
+        $this->assertDiaryRemoved($diary, $path);
     }
 }

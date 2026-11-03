@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Experience;
+use App\Models\Diary;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Wm\WmPackage\Models\Layer;
@@ -12,7 +12,7 @@ use Wm\WmPackage\Models\Layer;
  * validazione si controlla che l'esperienza abbia un contenuto (testo o foto)
  * e che la tappa appartenga al cammino indicato.
  */
-class StoreExperienceRequest extends FormRequest
+class StoreDiaryRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -29,7 +29,8 @@ class StoreExperienceRequest extends FormRequest
             'layer_id' => ['nullable', 'integer', 'exists:layers,id'],
             'ec_track_id' => ['nullable', 'required_without:layer_id', 'integer', 'exists:ec_tracks,id'],
             'description' => ['nullable', 'string', 'max:5000'],
-            'images' => ['nullable', 'array', 'max:'.Experience::MAX_PHOTOS],
+            'publication_consent' => ['sometimes', 'boolean'],
+            'images' => ['nullable', 'array', 'max:'.Diary::MAX_PHOTOS],
             'images.*' => ['file', 'mimes:jpeg,jpg,png,webp', 'max:5120', 'dimensions:max_width=8000,max_height=8000'],
         ];
     }

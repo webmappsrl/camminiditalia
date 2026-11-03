@@ -3,13 +3,13 @@
 namespace App\Providers;
 
 use App\Models\CertificationRequest;
-use App\Models\Experience;
+use App\Models\Diary;
 use App\Models\TaxonomyPoiType;
 use App\Models\User;
 use App\Observers\CertificationRequestCleanupObserver;
+use App\Observers\DiaryCleanupObserver;
 use App\Observers\EcPoiValidatorLayerObserver;
 use App\Observers\EcTrackGeometryAttributesObserver;
-use App\Observers\ExperienceCleanupObserver;
 use App\Observers\LayerableObserver;
 use App\Observers\LayerAttributesObserver;
 use App\Observers\LayerObserver;
@@ -18,9 +18,9 @@ use App\Observers\PassportShareCleanupObserver;
 use App\Observers\UgcObserver;
 use App\Observers\UgcTrackMatchingRunObserver;
 use App\Policies\CertificationRequestPolicy;
+use App\Policies\DiaryPolicy;
 use App\Policies\EcPoiPolicy;
 use App\Policies\EcTrackPolicy;
-use App\Policies\ExperiencePolicy;
 use App\Policies\LayerPolicy;
 use App\Policies\TaxonomyPoiTypePolicy;
 use App\Policies\UgcPoiPolicy;
@@ -86,7 +86,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(EcPoi::class, EcPoiPolicy::class);
         Gate::policy(EcTrack::class, EcTrackPolicy::class);
         Gate::policy(CertificationRequest::class, CertificationRequestPolicy::class);
-        Gate::policy(Experience::class, ExperiencePolicy::class);
+        Gate::policy(Diary::class, DiaryPolicy::class);
 
         UgcPoi::observe(UgcObserver::class);
         UgcTrack::observe(UgcObserver::class);
@@ -115,9 +115,9 @@ class AppServiceProvider extends ServiceProvider
         Layer::observe(CertificationRequestCleanupObserver::class);
 
         // Esperienze (oc:8169): stessa doppia registrazione, per ripulire media e file.
-        WmUser::observe(ExperienceCleanupObserver::class);
-        User::observe(ExperienceCleanupObserver::class);
-        Layer::observe(ExperienceCleanupObserver::class);
+        WmUser::observe(DiaryCleanupObserver::class);
+        User::observe(DiaryCleanupObserver::class);
+        Layer::observe(DiaryCleanupObserver::class);
 
         // Condivisioni del passaporto (oc:8702, oc:8703): stessa doppia
         // registrazione per User ed EcTrack, perché gli eventi Eloquent sono
@@ -137,7 +137,7 @@ class AppServiceProvider extends ServiceProvider
         // Esperienze (oc:8169): limite con nome proprio, per lo stesso motivo di
         // `passport-route-share`: con `throttle:10,1` creazione e modifica
         // consumerebbero le richieste di certificazione e condivisione della tappa.
-        RateLimiter::for('experiences', fn (Request $request) => Limit::perMinute(10)
-            ->by('experiences:'.($request->user()?->id ?: $request->ip())));
+        RateLimiter::for('diaries', fn (Request $request) => Limit::perMinute(10)
+            ->by('diaries:'.($request->user()?->id ?: $request->ip())));
     }
 }

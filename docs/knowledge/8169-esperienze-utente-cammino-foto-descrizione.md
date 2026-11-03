@@ -1,4 +1,19 @@
-# Esperienze utente: modello, API e protezione delle foto
+# Diario del camminatore: modello, API e protezione delle foto
+
+## Ciclo 2 — «Il mio diario» (oc:8169, 3 novembre 2026)
+
+Il modello si chiama `Diary` (tabelle `diaries` e `diary_ugc_track`, API `/api/diaries`, limiter
+`diaries`, config `camminiditalia.diaries.*`, variabili `CAMMINIDITALIA_DIARIES_ENABLED` e
+`CAMMINIDITALIA_DIARY_LINK_DAYS`). Il resto della pagina descrive il primo ciclo con la parola
+«esperienza»; dove il secondo ciclo l'ha cambiato vale questa sezione.
+
+- **Consenso alla ripubblicazione** in `publication_consent` (default `false`), distinto da
+  `is_public`: `is_public` riguarda la lettura da parte degli altri utenti, il consenso i canali di
+  Cammini d'Italia. Si invia in creazione e in modifica (`null` = invariato) e torna nell'API. In Nova
+  è in sola lettura, con il filtro `DiaryPublicationConsentFilter`.
+- **Solo l'Administrator vede i diari**, con o senza consenso (`viewAny`, `scopeVisibleTo`,
+  `isVisibleTo`): il cliente non vuole che li vedano i gestori dei cammini (call del 3 novembre 2026).
+  Prima il Validator vedeva quelli pubblici dei propri cammini.
 
 ## Come funziona oggi
 

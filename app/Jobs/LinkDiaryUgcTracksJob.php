@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\Experience;
-use App\Services\ExperienceUgcLinkService;
+use App\Models\Diary;
+use App\Services\DiaryUgcLinkService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,24 +14,24 @@ use Illuminate\Queue\InteractsWithQueue;
  * Parte dopo il commit: la corrispondenza fra registrazioni e tappe può
  * arrivare dopo la creazione dell'esperienza, quindi il job rilegge tutto.
  */
-class LinkExperienceUgcTracksJob implements ShouldQueue
+class LinkDiaryUgcTracksJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable;
 
     public int $tries = 3;
 
-    public function __construct(public readonly int $experienceId)
+    public function __construct(public readonly int $diaryId)
     {
         // Parte solo a transazione chiusa (Queueable dichiara già la proprietà $afterCommit).
         $this->afterCommit = true;
     }
 
-    public function handle(ExperienceUgcLinkService $service): void
+    public function handle(DiaryUgcLinkService $service): void
     {
         // Esperienza cancellata nel frattempo: niente da fare.
-        $experience = Experience::find($this->experienceId);
-        if ($experience !== null) {
-            $service->link($experience);
+        $diary = Diary::find($this->diaryId);
+        if ($diary !== null) {
+            $service->link($diary);
         }
     }
 }

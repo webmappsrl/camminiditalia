@@ -8,9 +8,9 @@ use App\Models\User;
 use App\Nova\App;
 use App\Nova\CertificationRequest;
 use App\Nova\Dashboards\Main;
+use App\Nova\Diary;
 use App\Nova\EcPoi;
 use App\Nova\EcTrack;
-use App\Nova\Experience;
 use App\Nova\Layer;
 use App\Nova\Media;
 use App\Nova\PassportStage;
@@ -104,10 +104,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 MenuSection::make(__('Passport'), [
                     MenuItem::resource(CertificationRequest::class),
                     MenuItem::resource(PassportStage::class),
-                    // Esperienze (oc:8169): al Validator si mostrano solo quelle pubbliche,
-                    // che oggi non esistono, quindi la voce aprirebbe un elenco sempre vuoto.
-                    // Da riaccendere quando le esperienze potranno diventare pubbliche.
-                    MenuItem::resource(Experience::class)
+                    // Diari (oc:8169): solo l'Administrator, per scelta del cliente (call del
+                    // 3 novembre 2026): i validatori dei cammini non li vedono.
+                    MenuItem::resource(Diary::class)
                         ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
                 ])->icon('identification')
                     ->canSee(fn (Request $request) => $request->user()->hasAnyRole(['Administrator', 'Validator'])),

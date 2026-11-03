@@ -120,3 +120,156 @@ wm-package, perché è una personalizzazione di camminiditalia (scrum del 19/10)
 - `tests/`
 
 Aggiornati dopo l'implementazione: le deviazioni sono in [notes.md](notes.md).
+
+
+## Ciclo 2 — «Il mio diario» (3 novembre 2026)
+
+> Fonti: richiesta del cliente del 2 novembre 2026 nel ticket; call con Cammini d'Italia del 3 novembre
+> (tag Orchestrator 716, «[CALL][CAMMINIDITALIA][2026] Chiarimenti sul diario del cammino»); scrum del 3
+> novembre ore 11:37. Scadenza: 4 novembre 2026 ore 12, un giorno di sviluppo.
+
+### Cosa cambia
+
+1. **Rinomino in «diario», ovunque.** I testi visibili passano da «esperienza» a «diario» (sezione «Il mio
+   diario», «Racconta il tuo cammino», «Racconta questa tappa», «Nuova pagina di diario», …) in tutte e 7 le
+   lingue. Anche il codice si rinomina: `Experience` → `Diary` nel backend (modello, tabelle `diaries` e
+   `diary_ugc_track`, rotte `/api/diaries`, policy, richieste, controller, job, servizio di collegamento delle
+   tracce, risorsa Nova, config `camminiditalia.diaries.*`, variabile d'ambiente) e in wm-core (modello,
+   `DiaryService`, cartella `diaries/`, selettori `wm-diary-*`, flag `showDiaries`, store localforage). Il
+   branch non è mergiato né rilasciato: si rinomina la migration di creazione, non serve una migrazione dei
+   dati. È il primo passo, in un commit dedicato per repo.
+2. **Pulsante solo vicino al cammino.** Nel dettaglio del cammino e delle sue tappe, il pulsante per
+   scrivere un diario compare solo se l'utente è stato a **meno di 1 km** da una qualsiasi tappa del cammino
+   negli **ultimi 90 giorni**. Lo stato «cammino attivo» si salva sul telefono per `layerId` con la data, e
+   vale per il cammino e per tutte le sue tappe. Soglia e durata stanno in costanti.
+   **Quando e come si controlla:** un servizio di wm-core, attivo solo nella variante camminiditalia, ascolta
+   `GeolocationService.onLocationChange$` (mappa aperta o registrazione in corso), al massimo una volta ogni
+   pochi minuti, e controlla anche all'apertura del dettaglio. Prima scarta i cammini il cui `bbox`, allargato
+   di 1 km, non contiene la posizione (118 cammini, costo trascurabile); per il cammino candidato carica le
+   tappe con `EcService.getEcTrack` (cache in localforage) e misura la distanza minima dalla linea. Senza rete
+   e senza tappe in cache vale l'esito del `bbox`. Un cammino già attivo oggi non si ricontrolla. I diari già scritti si
+   vedono sempre. Nel Passaporto la regola della vicinanza non vale (vedi punto 5).
+3. **Bozza e invio offline.** Il testo e le foto del form si salvano sul telefono mentre si scrive, sia per un
+   diario nuovo sia per una modifica: chiudendo l'app non si perde nulla. Senza rete, un **diario nuovo** si
+   mette in coda (uuid, testo, foto come Blob) e parte da solo quando la rete torna; resta visibile nella
+   sezione con lo stato «In attesa di invio». La **modifica** di un diario già pubblicato resta bloccata senza
+   rete, come oggi, ma la bozza è salvata.
+   **Chiave e vita della bozza:** diario nuovo → `utente + cammino + tappa` (tappa «nessuna» per il cammino);
+   modifica → `utente + id del diario`. L'uuid si salva nella bozza e si riusa alla riapertura. La bozza si
+   cancella dopo la pubblicazione, dopo l'annullamento esplicito e quando il diario passa in coda. Il testo si
+   salva dopo una pausa nella scrittura, le foto solo quando si aggiungono o si tolgono.
+   **Utente e scadenza:** ogni bozza ed elemento in coda porta l'`userId` di chi l'ha scritto e si invia solo
+   con lo stesso utente loggato; quelli di altri utenti aspettano il loro rientro. Al logout con diari in coda
+   l'app avvisa: «Hai N diari in attesa di invio: se esci, partiranno al tuo prossimo accesso». All'avvio si
+   cancellano bozze ed elementi in coda con ultima modifica più vecchia di 90 giorni (costante). Lo stato
+   «cammino attivo» resta del telefono, non dell'utente.
+   **Avvio solo in camminiditalia:** il processore della coda e il servizio del «cammino attivo» si avviano
+   nel costruttore di `tabs.page.camminiditalia.ts` dell'app (già in `fileReplacements`, vivo per tutta la
+   sessione); negli altri shard non esistono. L'invio parte a evento: passaggio di `NetworkService.online$`
+   da falso a vero, login, scadenza delle attese crescenti dopo un errore. Nessun timer a coda vuota. Nella
+   webapp c'è solo la bozza nel form, senza processore della coda.
+4. **Consenso alla ripubblicazione.** Nel form, una spunta facoltativa, non selezionata di default: «Cammini
+   d'Italia può pubblicare il mio racconto sui suoi canali». Si salva nel campo dedicato
+   `publication_consent` (default `false`), distinto da `is_public`; si invia con la creazione e la modifica,
+   e torna nell'API. In Nova si vede in sola lettura, con un filtro.
+5. **Diario del cammino nel Passaporto anche a cammino iniziato.** Oggi il blocco del cammino nel
+   Passaporto sta nella sezione del traguardo (`passport-detail.component.html:55`, `*ngIf="vm.completed"`)
+   e compare solo a cammino completato. Si sposta perché compaia per ogni cammino con almeno una tappa
+   riconosciuta (`completedStages > 0`), senza la regola della vicinanza. Il diario della singola tappa nel
+   Passaporto resta com'è.
+6. **Nova solo per gli amministratori.** I diari li vedono solo gli Administrator (Cammini d'Italia e
+   Webmapp), con o senza consenso. Il Validator viene tolto da `viewAny` e da `visibleTo`.
+
+### Perché
+
+Il cliente ha validato il prototipo e ha chiesto una serie di modifiche (messaggio del 2 novembre),
+chiarite in call il 3 novembre. Webmapp copre un altro giorno di sviluppo: si fanno le richieste
+indispensabili e quelle più semplici. Il consenso è indicato dal cliente come «da fare subito», perché
+senza consenso non potrà riusare i racconti scritti prima.
+
+### Requisiti
+
+- [ ] Nessun testo visibile all'utente contiene più «esperienza» o «esperienze»; le 7 lingue hanno tutte
+      le chiavi nuove e nessuna chiave vecchia rimasta.
+- [ ] Backend e wm-core non contengono più `Experience`/`experience` nei nomi (classi, tabelle, rotte,
+      config, selettori), a parte i riferimenti storici nella documentazione del cantiere.
+- [ ] I test esistenti del backend passano dopo il rinomino.
+- [ ] Il pulsante compare sul cammino e sulle sue tappe solo se l'utente è stato entro 1 km da una tappa di
+      quel cammino negli ultimi 90 giorni; senza posizione o senza permesso di localizzazione non compare.
+- [ ] I diari già scritti restano visibili anche quando il pulsante non c'è.
+- [ ] Nel Passaporto il diario del cammino si può scrivere da quando c'è almeno una tappa riconosciuta,
+      senza regola della vicinanza; a cammino completato resta nel traguardo come oggi.
+- [ ] Il form salva testo e foto sul telefono mentre si scrive e li ripropone alla riapertura, per un
+      diario nuovo e per una modifica, con la propria chiave per contesto; la bozza si cancella dopo la
+      pubblicazione, l'annullamento o il passaggio in coda, e scade dopo 90 giorni.
+- [ ] Bozze ed elementi in coda di un utente non partono mai con il token di un altro; al logout con diari
+      in coda l'app avvisa.
+- [ ] Senza rete, «Pubblica» su un diario nuovo lo mette in coda e chiude il form con un messaggio chiaro;
+      al ritorno della rete parte il POST con lo stesso uuid, senza creare doppioni.
+- [ ] La spunta del consenso è facoltativa e non selezionata di default; il valore si salva e torna
+      dall'API, anche in modifica.
+- [ ] In Nova i diari li vede solo l'Administrator; il Validator non vede la risorsa.
+- [ ] [UX] Lo stato «In attesa di invio» è un'etichetta testuale con icona, non solo un colore, ed è
+      annunciato come stato (`role="status"`); scompare quando l'invio riesce.
+- [ ] [UX] Esiti dell'invio dalla coda: 401 → resta in coda e parte dopo il prossimo login; rete assente o
+      5xx → nuovo tentativo con attese crescenti (1, 5, 15 minuti, poi a ogni ritorno della rete); 422, 413,
+      404 → il diario si ferma come «Non inviato» e, toccandolo, si riapre nel form con testo, foto e il
+      messaggio d'errore, per correggerlo e ripubblicarlo, oppure eliminarlo.
+- [ ] [UX] La spunta ha l'etichetta visibile accanto, un'area di tocco di almeno 44×44 px, e il testo
+      completo non troncato.
+- [ ] [UX] Il passaggio da form a coda è confermato con un toast: «Sei offline: il diario partirà appena
+      torni online».
+
+### Rischi
+
+- **Rinomino esteso su un giorno di lavoro**: tocca molti file in due repo, e un rinomino a metà (backend su
+  `/api/diaries`, app su `/api/experiences`) fa sparire la funzione senza errori, perché il 404 vale come
+  «spenta dal backend». Mitigazione: il rinomino si fa per primo, backend e wm-core insieme, in un commit
+  dedicato per repo, chiuso con i test del backend e la build dell'app; o è completo o non si fa (in quel
+  caso si torna indietro su entrambi e resta «diario» solo nei testi visibili).
+- **Ordine dei lavori** (un giorno di sviluppo, scrum del 3 novembre ore 11:37): rinomino → consenso e Nova
+  → Passaporto a cammino iniziato → bozza e coda offline → pulsante vicino al cammino. L'ultimo è quello
+  che si rimanda con meno danni: la sezione resta visibile come oggi.
+- **Coda e logout, errori non risolvibili riprovando, avvio della coda, bozze sovrascritte o doppie**:
+  gestiti nei punti 3 e nei requisiti [UX] (userId, scadenza a 90 giorni, esiti per codice HTTP, avvio a
+  evento solo in camminiditalia, chiave e vita della bozza).
+- **Spec dei diari esclusi in silenzio**: `core/angular.json:198` e `core/tsconfig.spec.json:26` dell'app
+  puntano a `experiences/`; vanno aggiornati nel rinomino.
+- **Limite di upload in locale**: il container PHP ha `upload_max_filesize = 2M`, sotto i 5 MB delle regole;
+  in produzione va verificato nginx (già annotato in oc:8169).
+- **Doppio invio dalla coda** (rete instabile, app riaperta durante l'invio): si mitiga con l'uuid già
+  idempotente lato backend e con un solo invio alla volta.
+- **Foto in coda e spazio sul telefono**: al massimo 6 foto già ridimensionate per diario; la coda si
+  svuota a invio riuscito.
+- **Utente senza GPS**: chi non concede la posizione non vede mai il pulsante sul cammino. È voluto dal
+  cliente; il Passaporto resta la strada sempre disponibile.
+- [UX] **Pulsante che sparisce senza spiegazione**: chi ha già scritto da quel cammino e torna dopo 90
+  giorni non trova più il pulsante. Mitigato dal Passaporto, dove resta sempre.
+
+### Out of scope
+
+Rimandati, da rivalutare dopo questo ciclo: promemoria a fine cammino, diari nel profilo, editor con
+formattazione, foto nel testo e racconti per tappa nel diario del cammino, scheda con i dati del
+percorso, valutazioni, periodo di percorrenza per collegare le tracce, coda offline per le modifiche.
+Esclusi dallo scrum del 3 novembre: titolo e descrizione per ogni foto. Il blocco nella webapp è già
+attivo sul branch (`angular.json`, sostituzioni camminiditalia) e non richiede lavoro.
+
+### Moduli toccati
+
+**camminiditalia (backend)**: migration di creazione (`experiences` → `diaries`, `experience_ugc_track` →
+`diary_ugc_track`, colonna `publication_consent`), `app/Models/Experience.php` → `Diary.php`, policy,
+`Store/UpdateExperienceRequest` → `Store/UpdateDiaryRequest`, `ExperienceController` → `DiaryController`,
+rotte API, `LinkExperienceUgcTracksJob`, `ExperienceUgcLinkService`, `ExperienceService`, middleware
+`EnsureExperiencesEnabled` e `ProtectExperienceMedia`, observer, risorsa Nova e filtro del consenso,
+`config/camminiditalia.php`, factory e test.
+
+**wm-core**: `experiences/` → `diaries/` (modello, servizio, form, sezione, dettaglio), `track-properties`
+e `home-layer` (varianti camminiditalia, flag), Passaporto (punti di montaggio), `utils/localForage.ts`,
+file `localization/i18n/*.ts` (7 lingue), nuovo servizio per lo stato «cammino attivo» e per la coda.
+
+**webmapp-app**: puntatore di wm-core; `core/src/app/pages/tabs/tabs.page.camminiditalia.ts` (avvio dei due
+servizi); `core/angular.json` (`architect.test.options.include`, riga 198) e `core/tsconfig.spec.json`
+(riga 26), che puntano alla cartella `experiences/` e vanno portati a `diaries/`, altrimenti gli spec dei
+diari smettono di girare senza segnalarlo.
+
+**wm-webapp**: solo il puntatore di wm-core.

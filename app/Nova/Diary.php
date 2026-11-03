@@ -2,7 +2,8 @@
 
 namespace App\Nova;
 
-use App\Models\Experience as ExperienceModel;
+use App\Models\Diary as DiaryModel;
+use App\Nova\Filters\DiaryPublicationConsentFilter;
 use App\Support\EcTrackLabel;
 use App\Support\UserDisplay;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -20,16 +21,16 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 /**
  * Sezione Nova «Esperienze» (oc:8169). Sola lettura per tutti (creazione e
  * modifica solo via API), eliminazione solo per l'Administrator (vedi
- * ExperiencePolicy). Lo scoping delle query replica la policy tramite
- * Experience::scopeVisibleTo(), così un record estraneo risponde 404 anche
+ * DiaryPolicy). Lo scoping delle query replica la policy tramite
+ * Diary::scopeVisibleTo(), così un record estraneo risponde 404 anche
  * via /nova-api.
  */
-class Experience extends Resource
+class Diary extends Resource
 {
     /**
-     * @var class-string<ExperienceModel>
+     * @var class-string<DiaryModel>
      */
-    public static $model = ExperienceModel::class;
+    public static $model = DiaryModel::class;
 
     public static $title = 'id';
 
@@ -42,17 +43,17 @@ class Experience extends Resource
 
     public static function uriKey(): string
     {
-        return 'experiences';
+        return 'diaries';
     }
 
     public static function label(): string
     {
-        return __('Experiences');
+        return __('Diaries');
     }
 
     public static function singularLabel(): string
     {
-        return __('Experience');
+        return __('Diary');
     }
 
     public static function indexQuery(NovaRequest $request, Builder $query): Builder
@@ -79,7 +80,7 @@ class Experience extends Resource
     {
         $user = $request->user();
 
-        /** @var \Illuminate\Database\Eloquent\Builder<ExperienceModel> $query */
+        /** @var \Illuminate\Database\Eloquent\Builder<DiaryModel> $query */
         return $user ? $query->visibleTo($user) : $query->whereRaw('1 = 0');
     }
 
@@ -117,6 +118,9 @@ class Experience extends Resource
             Boolean::make(__('Public'), 'is_public')
                 ->readonly(),
 
+            Boolean::make(__('Publication consent'), 'publication_consent')
+                ->readonly(),
+
             DateTime::make(__('Date'), 'created_at')
                 ->sortable()
                 ->readonly(),
@@ -134,13 +138,13 @@ class Experience extends Resource
      * se l'utente può vedere l'esperienza: nessun URL deve uscire verso chi
      * non è autorizzato.
      */
-    protected function photosHtml(NovaRequest $request, ExperienceModel $resource): string
+    protected function photosHtml(NovaRequest $request, DiaryModel $resource): string
     {
         if (! $request->user()?->can('view', $resource)) {
             return '';
         }
 
-        $items = $resource->getMedia(ExperienceModel::MEDIA_COLLECTION)->map(function (Media $media) {
+        $items = $resource->getMedia(DiaryModel::MEDIA_COLLECTION)->map(function (Media $media) {
             $url = e($media->getUrl());
             $alt = e($media->file_name);
 
@@ -152,5 +156,13 @@ class Experience extends Resource
         return '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">'
             .$items
             .'</div>';
+    }
+
+    /**
+     * @return array<int, \Laravel\Nova\Filters\Filter>
+     */
+    public function filters(NovaRequest $request): array
+    {
+        return [new DiaryPublicationConsentFilter];
     }
 }

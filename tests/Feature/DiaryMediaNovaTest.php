@@ -3,10 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\CertificationRequest;
-use App\Models\Experience;
+use App\Models\Diary;
 use App\Models\User;
 use App\Nova\Media as NovaMedia;
-use App\Services\ExperienceService;
+use App\Services\DiaryService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
@@ -23,7 +23,7 @@ use Wm\WmPackage\Services\RolesAndPermissionsService;
  * l'Administrator; i media delle richieste di certificazione restano visibili
  * al Validator.
  */
-class ExperienceMediaNovaTest extends TestCase
+class DiaryMediaNovaTest extends TestCase
 {
     use DatabaseTransactions, FakesCertificationDisk, LayerTestHelpers;
 
@@ -50,9 +50,9 @@ class ExperienceMediaNovaTest extends TestCase
         $layer = $this->createLayer($this->createUserWithRole('Validator')->id);
         $walker = User::factory()->create();
 
-        $experience = Experience::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id]);
-        app(ExperienceService::class)->storeImages($experience, [UploadedFile::fake()->image('esperienza.jpg', 30, 30)]);
-        $experienceMedia = Media::query()->where('model_type', Experience::class)->where('model_id', $experience->id)->firstOrFail();
+        $diary = Diary::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id]);
+        app(DiaryService::class)->storeImages($diary, [UploadedFile::fake()->image('esperienza.jpg', 30, 30)]);
+        $diaryMedia = Media::query()->where('model_type', Diary::class)->where('model_id', $diary->id)->firstOrFail();
 
         $request = CertificationRequest::factory()->create([
             'user_id' => $walker->id,
@@ -63,7 +63,7 @@ class ExperienceMediaNovaTest extends TestCase
         $request->addMedia(UploadedFile::fake()->image('credenziale.jpg'))->toMediaCollection('default');
         $certificationMedia = Media::query()->where('model_type', CertificationRequest::class)->where('model_id', $request->id)->firstOrFail();
 
-        return [$experienceMedia, $certificationMedia];
+        return [$diaryMedia, $certificationMedia];
     }
 
     private function novaRequestFor(User $user): NovaRequest
@@ -76,12 +76,12 @@ class ExperienceMediaNovaTest extends TestCase
 
     public function test_query_di_nova_escludono_i_media_delle_esperienze_per_il_validator(): void
     {
-        [$experienceMedia, $certificationMedia] = $this->seedMedia();
+        [$diaryMedia, $certificationMedia] = $this->seedMedia();
         $validator = $this->createUserWithRole('Validator');
 
         foreach (['indexQuery', 'detailQuery', 'editQuery', 'replicateQuery', 'relatableQuery'] as $method) {
             $ids = NovaMedia::$method($this->novaRequestFor($validator), Media::query())
-                ->whereIn('id', [$experienceMedia->id, $certificationMedia->id])
+                ->whereIn('id', [$diaryMedia->id, $certificationMedia->id])
                 ->pluck('id')->all();
 
             $this->assertSame([$certificationMedia->id], $ids, $method);
@@ -90,43 +90,43 @@ class ExperienceMediaNovaTest extends TestCase
 
     public function test_query_di_nova_includono_i_media_delle_esperienze_per_l_administrator(): void
     {
-        [$experienceMedia, $certificationMedia] = $this->seedMedia();
+        [$diaryMedia, $certificationMedia] = $this->seedMedia();
         $admin = $this->createUserWithRole('Administrator');
 
         foreach (['indexQuery', 'detailQuery', 'editQuery', 'replicateQuery', 'relatableQuery'] as $method) {
             $ids = NovaMedia::$method($this->novaRequestFor($admin), Media::query())
-                ->whereIn('id', [$experienceMedia->id, $certificationMedia->id])
+                ->whereIn('id', [$diaryMedia->id, $certificationMedia->id])
                 ->pluck('id')->all();
 
-            $this->assertEqualsCanonicalizing([$experienceMedia->id, $certificationMedia->id], $ids, $method);
+            $this->assertEqualsCanonicalizing([$diaryMedia->id, $certificationMedia->id], $ids, $method);
         }
     }
 
     public function test_validator_non_vede_il_media_di_un_esperienza_via_nova_api(): void
     {
-        [$experienceMedia, $certificationMedia] = $this->seedMedia();
+        [$diaryMedia, $certificationMedia] = $this->seedMedia();
         $validator = $this->createUserWithRole('Validator');
 
         $this->assertContains(
-            $this->actingAs($validator)->getJson('/nova-api/media/'.$experienceMedia->id)->status(),
+            $this->actingAs($validator)->getJson('/nova-api/media/'.$diaryMedia->id)->status(),
             [403, 404],
         );
         $this->actingAs($validator)->getJson('/nova-api/media/'.$certificationMedia->id)->assertOk();
 
         // L'indice è ordinato per id decrescente: i due media appena creati stanno nella prima pagina.
         $ids = collect($this->actingAs($validator)->getJson('/nova-api/media')->assertOk()->json('resources'))->pluck('id.value');
-        $this->assertFalse($ids->contains($experienceMedia->id));
+        $this->assertFalse($ids->contains($diaryMedia->id));
         $this->assertTrue($ids->contains($certificationMedia->id));
     }
 
     public function test_administrator_vede_il_media_di_un_esperienza_via_nova_api(): void
     {
-        [$experienceMedia] = $this->seedMedia();
+        [$diaryMedia] = $this->seedMedia();
         $admin = $this->createUserWithRole('Administrator');
 
-        $this->actingAs($admin)->getJson('/nova-api/media/'.$experienceMedia->id)->assertOk();
+        $this->actingAs($admin)->getJson('/nova-api/media/'.$diaryMedia->id)->assertOk();
 
         $ids = collect($this->actingAs($admin)->getJson('/nova-api/media')->assertOk()->json('resources'))->pluck('id.value');
-        $this->assertTrue($ids->contains($experienceMedia->id));
+        $this->assertTrue($ids->contains($diaryMedia->id));
     }
 }

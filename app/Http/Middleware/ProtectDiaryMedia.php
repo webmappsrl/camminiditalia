@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Experience;
+use App\Models\Diary;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -18,20 +18,20 @@ use Wm\WmPackage\Models\Media;
  * l'esperienza è pubblica, cancellazione solo all'autore; altrimenti 404.
  * I media che non sono di un'esperienza passano invariati.
  */
-class ProtectExperienceMedia
+class ProtectDiaryMedia
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $media = $this->experienceMedia($request);
+        $media = $this->diaryMedia($request);
         if ($media === null) {
             return $next($request);
         }
 
         // Le route di lettura non passano da `auth:api`: l'utente si ricava dal token, se c'è.
         $user = auth('api')->user();
-        $experience = $media->model;
-        $isAuthor = $user !== null && $experience !== null && $experience->user_id === $user->getAuthIdentifier();
-        $canRead = $isAuthor || ($experience !== null && $experience->is_public);
+        $diary = $media->model instanceof Diary ? $media->model : null;
+        $isAuthor = $user !== null && $diary !== null && $diary->user_id === $user->getAuthIdentifier();
+        $canRead = $isAuthor || ($diary !== null && $diary->is_public);
 
         abort_unless($request->routeIs('*.ugc.media.destroy*') ? $isAuthor : $canRead, 404);
 
@@ -43,7 +43,7 @@ class ProtectExperienceMedia
      * L'id sta nel parametro `media` (binding di wm-package, già risolto o
      * no) oppure in `id` per le route `ec/media`.
      */
-    private function experienceMedia(Request $request): ?Media
+    private function diaryMedia(Request $request): ?Media
     {
         $route = $request->route();
         if ($route === null) {
@@ -61,7 +61,7 @@ class ProtectExperienceMedia
 
         return Media::query()
             ->whereKey((int) $id)
-            ->where('model_type', (new Experience)->getMorphClass())
+            ->where('model_type', (new Diary)->getMorphClass())
             ->first();
     }
 }

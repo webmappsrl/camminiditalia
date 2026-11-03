@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Experience;
+use App\Models\Diary;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -10,14 +10,14 @@ use Illuminate\Foundation\Http\FormRequest;
  * Modifica di un'esperienza (oc:8169). `keep_media_ids` è obbligatorio: stringa
  * JSON di interi (`"[]"` per «tieni nessuna foto»), così arriva anche vuoto in multipart.
  */
-class UpdateExperienceRequest extends FormRequest
+class UpdateDiaryRequest extends FormRequest
 {
-    public const MAX_PHOTOS = Experience::MAX_PHOTOS;
+    public const MAX_PHOTOS = Diary::MAX_PHOTOS;
 
     public function authorize(): bool
     {
         // Esperienza altrui: 404 prima della validazione, come se non esistesse.
-        abort_unless($this->route('experience')->user_id === $this->user()->id, 404);
+        abort_unless($this->route('diary')->user_id === $this->user()->id, 404);
 
         return true;
     }
@@ -29,6 +29,7 @@ class UpdateExperienceRequest extends FormRequest
     {
         return [
             'description' => ['nullable', 'string', 'max:5000'],
+            'publication_consent' => ['sometimes', 'boolean'],
             'keep_media_ids' => ['required', 'string'],
             'images' => ['nullable', 'array', 'max:'.self::MAX_PHOTOS],
             'images.*' => ['file', 'mimes:jpeg,jpg,png,webp', 'max:5120', 'dimensions:max_width=8000,max_height=8000'],
@@ -43,11 +44,11 @@ class UpdateExperienceRequest extends FormRequest
      */
     public function keepMediaIds(): array
     {
-        /** @var Experience $experience */
-        $experience = $this->route('experience');
+        /** @var Diary $diary */
+        $diary = $this->route('diary');
         $decoded = json_decode((string) $this->input('keep_media_ids'), true);
         $requested = is_array($decoded) ? array_map('intval', $decoded) : [];
-        $own = $experience->getMedia(Experience::MEDIA_COLLECTION)->pluck('id')->map(fn ($id) => (int) $id)->all();
+        $own = $diary->getMedia(Diary::MEDIA_COLLECTION)->pluck('id')->map(fn ($id) => (int) $id)->all();
 
         return array_values(array_intersect($requested, $own));
     }
@@ -69,17 +70,17 @@ class UpdateExperienceRequest extends FormRequest
                     return;
                 }
 
-                /** @var Experience $experience */
-                $experience = $this->route('experience');
+                /** @var Diary $diary */
+                $diary = $this->route('diary');
                 $kept = count($this->keepMediaIds());
                 $new = count((array) $this->file('images', []));
 
                 if ($kept + $new > self::MAX_PHOTOS) {
-                    $validator->errors()->add('images', __('An experience can have at most :max photos.', ['max' => self::MAX_PHOTOS]));
+                    $validator->errors()->add('images', __('A diary can have at most :max photos.', ['max' => self::MAX_PHOTOS]));
                 }
 
                 // Senza `description` nella richiesta il testo resta quello attuale.
-                $text = $this->exists('description') ? $this->input('description') : $experience->description;
+                $text = $this->exists('description') ? $this->input('description') : $diary->description;
                 if (trim((string) $text) === '' && $kept + $new === 0) {
                     $validator->errors()->add('description', __('Write a text or add at least one photo.'));
                 }

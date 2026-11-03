@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\Experience;
+use App\Models\Diary;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
  * `user_id` e `layer_id` non hanno un default: li passa sempre il chiamante.
  *
- * @extends Factory<Experience>
+ * @extends Factory<Diary>
  */
-class ExperienceFactory extends Factory
+class DiaryFactory extends Factory
 {
-    protected $model = Experience::class;
+    protected $model = Diary::class;
 
     /**
      * Stato di default: esperienza privata con uuid casuale.

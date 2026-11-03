@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('experiences', function (Blueprint $table) {
+        Schema::create('diaries', function (Blueprint $table) {
             $table->id();
             // Generato dall'app: rende idempotente la creazione lato client.
             $table->string('uuid');
@@ -18,6 +18,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             // Lettura pubblica futura (oc:8169): sempre false in questo ciclo.
             $table->boolean('is_public')->default(false);
+            // Consenso alla ripubblicazione sui canali di Cammini d'Italia (oc:8169, ciclo 2):
+            // distinto da is_public, che riguarda la lettura da parte degli altri utenti.
+            $table->boolean('publication_consent')->default(false);
             $table->timestamps();
 
             $table->unique(['user_id', 'uuid']);
@@ -27,6 +30,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('experiences');
+        Schema::dropIfExists('diaries');
     }
 };

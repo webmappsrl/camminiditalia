@@ -29,10 +29,11 @@ use Wm\WmPackage\Models\User;
  * @property ?int $ec_track_id
  * @property ?string $description
  * @property bool $is_public
+ * @property bool $publication_consent
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class Experience extends Model implements HasMedia
+class Diary extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
@@ -47,10 +48,12 @@ class Experience extends Model implements HasMedia
         'layer_id',
         'ec_track_id',
         'description',
+        'publication_consent',
     ];
 
     protected $casts = [
         'is_public' => 'boolean',
+        'publication_consent' => 'boolean',
     ];
 
     public function registerMediaCollections(): void
@@ -88,7 +91,10 @@ class Experience extends Model implements HasMedia
      */
     public function ecTrack(): BelongsTo
     {
-        return $this->belongsTo(config('wm-package.ec_track_model', EcTrack::class), 'ec_track_id');
+        /** @var class-string<EcTrack> $model */
+        $model = config('wm-package.ec_track_model', EcTrack::class);
+
+        return $this->belongsTo($model, 'ec_track_id');
     }
 
     /**
@@ -98,15 +104,16 @@ class Experience extends Model implements HasMedia
      */
     public function ugcTracks(): BelongsToMany
     {
-        return $this->belongsToMany(UgcTrack::class, 'experience_ugc_track');
+        return $this->belongsToMany(UgcTrack::class, 'diary_ugc_track');
     }
 
     /**
-     * Regola di visibilità unica: Administrator tutto, Validator solo le
-     * esperienze pubbliche dei layer di cui è proprietario, gli altri nulla.
+     * Regola di visibilità unica: solo l'Administrator vede i diari, pubblici o
+     * no, con o senza consenso; nessun altro ruolo, Validator compreso (oc:8169,
+     * call con Cammini d'Italia del 3 novembre 2026).
      *
-     * @param  Builder<Experience>  $query
-     * @return Builder<Experience>
+     * @param  Builder<Diary>  $query
+     * @return Builder<Diary>
      */
     public function scopeVisibleTo(Builder $query, User $user): Builder
     {
@@ -114,25 +121,12 @@ class Experience extends Model implements HasMedia
             return $query;
         }
 
-        if ($user->hasRole('Validator')) {
-            return $query
-                ->where('is_public', true)
-                ->whereHas('layer', fn ($q) => $q->where('user_id', $user->id));
-        }
-
         return $query->whereRaw('1 = 0');
     }
 
     public function isVisibleTo(User $user): bool
     {
-        if ($user->hasRole('Administrator')) {
-            return true;
-        }
-
-        return $user->hasRole('Validator')
-            && $this->is_public
-            && $this->layer !== null
-            && (int) $this->layer->user_id === (int) $user->id;
+        return $user->hasRole('Administrator');
     }
 
     /**
@@ -156,8 +150,9 @@ class Experience extends Model implements HasMedia
                 'name' => EcTrackLabel::for($this->ecTrack),
             ],
             'description' => $this->description,
-            'created_at' => $this->created_at?->toIso8601String(),
-            'updated_at' => $this->updated_at?->toIso8601String(),
+            'publication_consent' => (bool) $this->publication_consent,
+            'created_at' => $this->created_at->toIso8601String(),
+            'updated_at' => $this->updated_at->toIso8601String(),
             // Nessuna conversione registrata: la miniatura è l'immagine originale.
             'photos' => $this->getMedia(self::MEDIA_COLLECTION)
                 ->map(fn ($media) => [
@@ -177,6 +172,8 @@ class Experience extends Model implements HasMedia
     private function layerName(): string
     {
         $layer = $this->layer;
+        // a runtime il nome può arrivare come array di traduzioni, anche se il modello lo dichiara stringa
+        /** @var string|array<string, string>|null $name */
         $name = $layer->name;
 
         if (is_array($name)) {

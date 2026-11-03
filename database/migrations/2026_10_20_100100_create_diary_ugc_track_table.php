@@ -8,16 +8,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('experience_ugc_track', function (Blueprint $table) {
-            $table->foreignId('experience_id')->constrained('experiences')->cascadeOnDelete();
+        Schema::create('diary_ugc_track', function (Blueprint $table) {
+            $table->foreignId('diary_id')->constrained('diaries')->cascadeOnDelete();
             $table->foreignId('ugc_track_id')->constrained('ugc_tracks')->cascadeOnDelete();
 
-            $table->primary(['experience_id', 'ugc_track_id']);
+            $table->primary(['diary_id', 'ugc_track_id']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('experience_ugc_track');
+        Schema::dropIfExists('diary_ugc_track');
     }
 };

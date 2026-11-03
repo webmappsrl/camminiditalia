@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Middleware\EnsureExperiencesEnabled;
-use App\Http\Middleware\ProtectExperienceMedia;
+use App\Http\Middleware\EnsureDiariesEnabled;
+use App\Http\Middleware\ProtectDiaryMedia;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Foundation\Application;
@@ -24,10 +24,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // al middleware della route e chi non è autenticato riceverebbe 401 invece di 404.
         $middleware->prependToPriorityList(
             before: AuthenticatesRequests::class,
-            prepend: EnsureExperiencesEnabled::class,
+            prepend: EnsureDiariesEnabled::class,
         );
         // Foto delle esperienze (oc:8169) sulle API dei media di wm-package: vedi il middleware.
-        $middleware->appendToGroup('api', ProtectExperienceMedia::class);
+        $middleware->appendToGroup('api', ProtectDiaryMedia::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->renderable(function (PostTooLargeException $e, Request $request) {

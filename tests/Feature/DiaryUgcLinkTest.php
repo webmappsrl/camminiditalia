@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Jobs\LinkExperienceUgcTracksJob;
-use App\Models\Experience;
-use App\Services\ExperienceService;
-use App\Services\ExperienceUgcLinkService;
+use App\Jobs\LinkDiaryUgcTracksJob;
+use App\Models\Diary;
+use App\Services\DiaryService;
+use App\Services\DiaryUgcLinkService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -19,7 +19,7 @@ use Wm\WmPackage\Models\UgcTrack;
 use Wm\WmPackage\Services\Models\UgcTrackMatchingService;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
-class ExperienceUgcLinkTest extends TestCase
+class DiaryUgcLinkTest extends TestCase
 {
     use CreatesCertificationTracks, DatabaseTransactions, FakesCertificationDisk, LayerTestHelpers;
 
@@ -73,17 +73,17 @@ class ExperienceUgcLinkTest extends TestCase
         ]);
     }
 
-    private function experience(int $userId, int $layerId, ?int $ecTrackId, string $createdAt): Experience
+    private function diary(int $userId, int $layerId, ?int $ecTrackId, string $createdAt): Diary
     {
-        $e = Experience::factory()->create(['user_id' => $userId, 'layer_id' => $layerId, 'ec_track_id' => $ecTrackId]);
+        $e = Diary::factory()->create(['user_id' => $userId, 'layer_id' => $layerId, 'ec_track_id' => $ecTrackId]);
         $e->forceFill(['created_at' => $createdAt])->saveQuietly();
 
         return $e->fresh();
     }
 
-    private function runLink(Experience $e): array
+    private function runLink(Diary $e): array
     {
-        (new LinkExperienceUgcTracksJob($e->id))->handle(app(ExperienceUgcLinkService::class));
+        (new LinkDiaryUgcTracksJob($e->id))->handle(app(DiaryUgcLinkService::class));
 
         return $e->ugcTracks()->pluck('ugc_tracks.id')->map(fn ($i) => (int) $i)->sort()->values()->all();
     }
@@ -98,7 +98,7 @@ class ExperienceUgcLinkTest extends TestCase
         $other = $this->createUserWithoutRole();
         $this->recording($other->id, $track->id, '2026-06-11T08:00:00Z');
 
-        $e = $this->experience($user->id, $layer->id, $track->id, '2026-06-13 10:00:00');
+        $e = $this->diary($user->id, $layer->id, $track->id, '2026-06-13 10:00:00');
 
         $this->assertSame([$a->id, $b->id], $this->runLink($e));
     }
@@ -113,7 +113,7 @@ class ExperienceUgcLinkTest extends TestCase
             $ids[] = $this->recording($user->id, $track->id, $d.'T09:00:00Z')->id;
         }
 
-        $e = $this->experience($user->id, $layer->id, $track->id, '2026-08-30 10:00:00');
+        $e = $this->diary($user->id, $layer->id, $track->id, '2026-08-30 10:00:00');
 
         $this->assertSame($ids, $this->runLink($e));
     }
@@ -126,7 +126,7 @@ class ExperienceUgcLinkTest extends TestCase
         $anchor = $this->recording($user->id, $track->id, '2026-06-20T09:00:00Z');
         $this->recording($user->id, $track->id, '2026-05-01T09:00:00Z');
 
-        $e = $this->experience($user->id, $layer->id, $track->id, '2026-06-21 10:00:00');
+        $e = $this->diary($user->id, $layer->id, $track->id, '2026-06-21 10:00:00');
 
         $this->assertSame([$anchor->id], $this->runLink($e));
     }
@@ -139,7 +139,7 @@ class ExperienceUgcLinkTest extends TestCase
         $before = $this->recording($user->id, $track->id, '2026-06-10T09:00:00Z');
         $this->recording($user->id, $track->id, '2026-06-20T09:00:00Z');
 
-        $e = $this->experience($user->id, $layer->id, $track->id, '2026-06-15 10:00:00');
+        $e = $this->diary($user->id, $layer->id, $track->id, '2026-06-15 10:00:00');
 
         $this->assertSame([$before->id], $this->runLink($e));
     }
@@ -155,7 +155,7 @@ class ExperienceUgcLinkTest extends TestCase
         $b = $this->recording($user->id, $t2->id, '2026-06-11T09:00:00Z');
         $this->recording($user->id, $outside->id, '2026-06-11T10:00:00Z');
 
-        $e = $this->experience($user->id, $layer->id, null, '2026-06-12 10:00:00');
+        $e = $this->diary($user->id, $layer->id, null, '2026-06-12 10:00:00');
 
         $this->assertSame([$a->id, $b->id], $this->runLink($e));
     }
@@ -165,14 +165,14 @@ class ExperienceUgcLinkTest extends TestCase
         $user = $this->createUserWithoutRole();
         $layer = $this->createLayer();
         $track = $this->createTrack($user->id, 'Tappa 1', $layer);
-        $e = $this->experience($user->id, $layer->id, $track->id, '2026-06-15 10:00:00');
+        $e = $this->diary($user->id, $layer->id, $track->id, '2026-06-15 10:00:00');
         $this->assertSame([], $this->runLink($e));
 
         // La corrispondenza arriva dopo la creazione: la modifica rilancia il job e il legame compare.
         $ugc = $this->recording($user->id, $track->id, '2026-06-14T09:00:00Z');
-        app(ExperienceService::class)->update($e, 'nuovo testo', [], []);
+        app(DiaryService::class)->update($e, 'nuovo testo', [], []);
 
-        Queue::assertPushed(LinkExperienceUgcTracksJob::class, fn ($job) => $job->experienceId === $e->id);
+        Queue::assertPushed(LinkDiaryUgcTracksJob::class, fn ($job) => $job->diaryId === $e->id);
         $this->assertSame([$ugc->id], $this->runLink($e));
     }
 
@@ -193,9 +193,9 @@ class ExperienceUgcLinkTest extends TestCase
         $ugc = $this->recording($user->id, $stageA->id, '2026-06-10T08:00:00Z');
         $this->match($ugc, $stageB->id, [0], 10);
 
-        $onB = $this->experience($user->id, $layer->id, $stageB->id, '2026-06-10 20:00:00');
-        $onA = $this->experience($user->id, $layer->id, $stageA->id, '2026-06-10 20:00:00');
-        $onRoute = $this->experience($user->id, $layer->id, null, '2026-06-10 20:00:00');
+        $onB = $this->diary($user->id, $layer->id, $stageB->id, '2026-06-10 20:00:00');
+        $onA = $this->diary($user->id, $layer->id, $stageA->id, '2026-06-10 20:00:00');
+        $onRoute = $this->diary($user->id, $layer->id, null, '2026-06-10 20:00:00');
 
         $this->assertSame([], $this->runLink($onB));
         $this->assertSame([$ugc->id], $this->runLink($onA));
@@ -227,7 +227,7 @@ class ExperienceUgcLinkTest extends TestCase
         $uploaded = $this->recording($user->id, $stage->id, '2026-06-11T08:00:00Z');
         $uploaded->forceFill(['properties' => $uploaded->properties + ['_gpxType' => 'trk']])->saveQuietly();
 
-        $e = $this->experience($user->id, $layer->id, $stage->id, '2026-06-12 10:00:00');
+        $e = $this->diary($user->id, $layer->id, $stage->id, '2026-06-12 10:00:00');
 
         $this->assertSame([], $this->runLink($e));
     }
@@ -248,7 +248,7 @@ class ExperienceUgcLinkTest extends TestCase
         DB::table('ugc_track_ec_track_matches')->where('ugc_track_id', $justBelow->id)
             ->update(['matched_segments' => json_encode(range(0, 78)), 'total_segments' => 100]);
 
-        $e = $this->experience($user->id, $layer->id, $stage->id, '2026-06-12 10:00:00');
+        $e = $this->diary($user->id, $layer->id, $stage->id, '2026-06-12 10:00:00');
 
         $this->assertSame([$atThreshold->id], $this->runLink($e));
     }

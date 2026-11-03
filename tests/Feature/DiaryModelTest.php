@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Experience;
+use App\Models\Diary;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -13,7 +13,7 @@ use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
-class ExperienceModelTest extends TestCase
+class DiaryModelTest extends TestCase
 {
     use CreatesCertificationTracks, DatabaseTransactions, FakesCertificationDisk, LayerTestHelpers;
 
@@ -36,20 +36,22 @@ class ExperienceModelTest extends TestCase
         $validator = $this->createUserWithRole('Validator');
         $layer = $this->createLayer($validator->id);
         $walker = $this->createUserWithoutRole();
-        Experience::factory()->count(2)->create(['user_id' => $walker->id, 'layer_id' => $layer->id]);
+        Diary::factory()->count(2)->create(['user_id' => $walker->id, 'layer_id' => $layer->id]);
 
         $admin = $this->createUserWithRole('Administrator');
 
-        $this->assertSame(2, Experience::visibleTo($admin)->count());
-        $this->assertSame(0, Experience::visibleTo($validator)->count());
-        $this->assertSame(0, Experience::visibleTo($walker)->count());
+        $this->assertSame(2, Diary::visibleTo($admin)->count());
+        $this->assertSame(0, Diary::visibleTo($validator)->count());
+        $this->assertSame(0, Diary::visibleTo($walker)->count());
 
-        $first = Experience::first();
+        $first = Diary::first();
         $first->forceFill(['is_public' => true])->save();
 
-        $this->assertSame(1, Experience::visibleTo($validator)->count());
-        $this->assertTrue($first->isVisibleTo($validator));
-        $this->assertFalse(Experience::where('id', '!=', $first->id)->first()->isVisibleTo($validator));
+        // Solo gli amministratori vedono i diari, anche pubblici o con consenso (call del 3 novembre 2026).
+        $first->forceFill(['publication_consent' => true])->save();
+        $this->assertSame(0, Diary::visibleTo($validator)->count());
+        $this->assertFalse($first->isVisibleTo($validator));
+        $this->assertTrue($first->isVisibleTo($admin));
         $this->assertFalse($first->isVisibleTo($walker));
     }
 
@@ -59,13 +61,13 @@ class ExperienceModelTest extends TestCase
         $walker = $this->createUserWithoutRole();
         $track = $this->createTrack($walker->id, 'Tappa 1', $layer);
 
-        $experience = Experience::factory()->create([
+        $diary = Diary::factory()->create([
             'user_id' => $walker->id,
             'layer_id' => $layer->id,
             'ec_track_id' => $track->id,
         ]);
 
-        $data = $experience->toApiArray();
+        $data = $diary->toApiArray();
 
         $this->assertSame('Tappa 1', $data['ec_track']['name']);
         $this->assertSame($track->id, $data['ec_track']['id']);

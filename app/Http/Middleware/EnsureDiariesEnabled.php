@@ -8,14 +8,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Interruttore delle API delle esperienze (oc:8169): con
- * `camminiditalia.experiences.enabled` a false le route `api/experiences`
+ * `camminiditalia.diaries.enabled` a false le route `api/diaries`
  * rispondono 404, prima ancora dell'autenticazione.
  */
-class EnsureExperiencesEnabled
+class EnsureDiariesEnabled
 {
     public function handle(Request $request, Closure $next): Response
     {
-        abort_unless((bool) config('camminiditalia.experiences.enabled', true), 404);
+        abort_unless((bool) config('camminiditalia.diaries.enabled', true), 404);
 
         return $next($request);
     }

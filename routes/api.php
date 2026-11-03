@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\CertificationRequestController;
-use App\Http\Controllers\Api\ExperienceController;
+use App\Http\Controllers\Api\DiaryController;
 use App\Http\Controllers\Api\PassportRouteShareController;
 use App\Http\Controllers\Api\PassportStageShareController;
 use App\Http\Controllers\Api\StageProgressController;
-use App\Http\Middleware\EnsureExperiencesEnabled;
+use App\Http\Middleware\EnsureDiariesEnabled;
 use App\Http\Middleware\EnsurePassportEnabled;
 use Illuminate\Support\Facades\Route;
 
@@ -65,22 +65,22 @@ Route::get('/passport', [StageProgressController::class, 'passport'])
  * eliminazione, solo le proprie. L'interruttore viene prima dell'autenticazione:
  * spento, 404 anche a chi non è autenticato.
  */
-Route::name('camminiditalia.api.experiences.')
-    ->prefix('experiences')
-    ->middleware([EnsureExperiencesEnabled::class, 'auth:api'])
+Route::name('camminiditalia.api.diaries.')
+    ->prefix('diaries')
+    ->middleware([EnsureDiariesEnabled::class, 'auth:api'])
     ->group(function () {
-        Route::get('/', [ExperienceController::class, 'index'])->name('index');
+        Route::get('/', [DiaryController::class, 'index'])->name('index');
         // Upload di foto (ricodifica con GD): al più 10 richieste al minuto per utente,
-        // con un limite proprio (`experiences`) che non consuma quello del passaporto.
-        Route::post('/', [ExperienceController::class, 'store'])
-            ->middleware('throttle:experiences')
+        // con un limite proprio (`diaries`) che non consuma quello del passaporto.
+        Route::post('/', [DiaryController::class, 'store'])
+            ->middleware('throttle:diaries')
             ->name('store');
         // Binding implicito per id: il 404 sull'esperienza altrui sta in controller e request, non dipende dalla cache delle route.
-        Route::post('/{experience}', [ExperienceController::class, 'update'])
-            ->whereNumber('experience')
-            ->middleware('throttle:experiences')
+        Route::post('/{diary}', [DiaryController::class, 'update'])
+            ->whereNumber('diary')
+            ->middleware('throttle:diaries')
             ->name('update');
-        Route::delete('/{experience}', [ExperienceController::class, 'destroy'])
-            ->whereNumber('experience')
+        Route::delete('/{diary}', [DiaryController::class, 'destroy'])
+            ->whereNumber('diary')
             ->name('destroy');
     });
