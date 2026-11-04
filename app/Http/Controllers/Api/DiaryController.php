@@ -51,7 +51,7 @@ class DiaryController extends Controller
     {
         $diary = $this->service->create(
             $request->user(),
-            $request->safe()->only(['uuid', 'layer_id', 'ec_track_id', 'description', 'publication_consent']),
+            $request->safe()->only(['uuid', 'layer_id', 'ec_track_id', 'description', 'publication_consent', ...Diary::RATINGS]),
             (array) $request->file('images', []),
         );
 
@@ -75,6 +75,7 @@ class DiaryController extends Controller
             $request->keepMediaIds(),
             (array) $request->file('images', []),
             $request->exists('publication_consent') ? $request->boolean('publication_consent') : null,
+            $request->safe()->only(Diary::RATINGS),
         );
 
         return response()->json($diary->toApiArray());

@@ -273,3 +273,100 @@ servizi); `core/angular.json` (`architect.test.options.include`, riga 198) e `co
 diari smettono di girare senza segnalarlo.
 
 **wm-webapp**: solo il puntatore di wm-core.
+
+
+
+
+### Ciclo 2, aggiunte (3 novembre 2026, sera)
+
+Aree del tag 716 aggiunte dal dev a oc:8169 dopo il primo blocco, tutte **solo camminiditalia**.
+Prototipo: https://claude.ai/artifact/VKvfbYKfDCBaRQBUVyfcz7
+
+7. **Notifica di cammino completato** (al posto dell'invito nell'email). Un servizio di wm-core,
+   avviato da `tabs.page.camminiditalia.ts`, ascolta `PassportService.passportRoutes$()`: quando un
+   cammino passa a `completed` e non è fra quelli già visti (salvati sul telefono per utente), mostra
+   una scheda in alto (`ion-toast` personalizzato, persistente, chiudibile trascinandola su):
+   «Hai completato <cammino>!», «Guarda il traguardo e racconta il cammino nel diario», pulsanti
+   «Più tardi» e «Vai al traguardo», che apre il dettaglio del Passaporto di quel cammino. Alla prima
+   esecuzione per un utente i cammini già completati si segnano come visti senza notifica. Una scheda
+   alla volta.
+8. **Il mio diario nel profilo.** Nella variante camminiditalia del profilo, accanto al tab esistente,
+   un secondo tab «Il mio diario»; il primo diventa «I miei dati» (solo in camminiditalia). Il tab
+   elenca i diari raggruppati per cammino: una `wm-diaries-section` per cammino (`layerId`,
+   `layout="list"`, `showCreate=false`, titolo il nome del cammino). Rotta in un
+   `profile-routing.module.camminiditalia.ts` via `fileReplacements`, componente standalone: il modulo
+   e il routing condivisi del profilo non si toccano. Senza diari, un messaggio vuoto.
+   *(Superato in parte dal punto 11: la tab «I miei dati» è diventata «Account»; il componente non è
+   standalone, vedi notes.md.)*
+9. **Valutazioni** facoltative, uguali per diario del cammino e della tappa: Cammino (sulla tappa
+   «Tappa»), Ospitalità, Difficoltà percepita, da 1 a 5, con un'unica icona: il **timbro con lo
+   scarpone** (tavola «Scarponi di icons.json», variante B, nel canvas
+   https://claude.ai/artifact/PcgenGHpyScsnXuHk2eHnj). Tondo pieno nel colore dell'app, bordo interno
+   tratteggiato bianco, al centro lo scarpone `txn-boot` di `wm-package/resources/defaults/icons.json`
+   in bianco; il punto non dato è solo il contorno grigio con lo scarpone grigio chiaro. L'SVG si
+   copia nel componente di wm-core (quel file serve alle icone dei POI, non è caricabile da lì); in
+   piccolo, nel dettaglio, senza bordo tratteggiato. Nel form in pagina unica dopo le foto; un tocco sul valore già
+   scelto lo azzera.
+   **Animazione, solo alla selezione nel form:** toccando il valore N, i timbri da 1 a N si
+   «imprimono» uno dopo l'altro (60 ms di distanza), ciascuno da grande e leggermente ruotato a
+   dimensione normale con un piccolo rimbalzo (circa 250 ms: scala 1,4 → 0,9 → 1, rotazione
+   −12° → 0°). Abbassando il valore, i timbri oltre N tornano vuoti con una dissolvenza breve, senza
+   rimbalzo. Nessuna animazione all'apertura del form con valori già salvati né nel dettaglio. Con la
+   riduzione del movimento attiva nel sistema (`prefers-reduced-motion`) solo il cambio di colore. Nel dettaglio, solo quelle date. Backend: colonne `rating_route`,
+   `rating_hospitality`, `rating_difficulty` (interi 1-5, null) nella migration di creazione, regole
+   in creazione e modifica, API, Nova in sola lettura.
+10. **Scheda dati del percorso** nel dettaglio del diario, solo se quello che racconta è stato
+    percorso: diario della **tappa** a tappa completata, diario del **cammino** a cammino completato.
+    Mostra data (o date di inizio e fine), numero di giorni e km. **Prima i dati dell'utente, dove
+    mancano quelli del cammino:**
+    - **km della tappa:** la lunghezza delle tracce GPS dell'utente che l'hanno validata
+      (`PassportStage::ugcTracks()`, tabella `passport_stage_ugc_track`), se quelle tracce
+      appartengono solo a questa tappa; altrimenti (validazione manuale, nessuna traccia, oppure
+      una traccia registrata su più tappe insieme) la lunghezza della tappa.
+    - **km del cammino:** la lunghezza delle tracce dell'utente collegate alle tappe completate,
+      ciascuna contata una volta sola, più la lunghezza delle tappe completate senza traccia.
+    - **date e giorni, stessa regola:** tappa completata col GPS → i giorni delle registrazioni
+      collegate (data della traccia); tappa completata con la richiesta cartacea → i giorni da
+      `start_date` a `end_date` della richiesta che l'ha validata (`PassportStage::certificationRequest()`).
+      Per il cammino: dal primo all'ultimo giorno e numero di giorni distinti, unendo quelli di tutte
+      le tappe. Se una tappa non ha né tracce né richiesta, i suoi giorni mancano e la riga dei giorni
+      del cammino non si mostra (i km sì).
+    Backend: nella risposta di `GET /api/layer/{layer}/progress` si aggiungono per tappa
+    `user_distance` (km dalle tracce dell'utente, `null` se non applicabile) e `walked_dates` (le
+    date `Y-m-d` in cui è stata percorsa, vuoto se non si sanno), e per il cammino
+    `user_distance_total` (calcolato come sopra). Il frontend sceglie fra dato dell'utente e dato
+    del cammino. Senza
+    progresso (offline senza copia) la scheda non c'è.
+
+**Ordine**: profilo → valutazioni → notifica → scheda dati (la più incerta, si rimanda se manca tempo).
+
+**Rischi aggiunti**
+- Notifica: `passportRoutes$` si aggiorna al login, al ritorno in primo piano e all'apertura del
+  Passaporto, non in tempo reale: il completamento si vede alla prossima di queste occasioni.
+- Notifica alla prima esecuzione: senza il «già visti» iniziale, chi ha più cammini completati
+  riceverebbe più schede di fila.
+- Profilo: `ion-tabs` con rotte figlie; la variante del routing va dichiarata nelle configuration di
+  build e di serve.
+- Scheda dati, km dell'utente: una traccia registrata in un giorno solo su due tappe è collegata a
+  entrambe; senza la regola «una volta sola» i km del cammino si conterebbero due volte. Una traccia
+  con il GPS che salta può dare km gonfiati: si mostrano così come sono stati registrati.
+- Scheda dati: la `validated_at` di una tappa cartacea è la data di approvazione del gestore, non di
+  percorrenza: per questo i giorni vengono da `start_date`/`end_date` della richiesta, mai da
+  `validated_at`.
+- Scheda dati, giorni GPS: la data di una traccia è quella di inizio registrazione; una traccia che
+  passa la mezzanotte conta un giorno solo.
+
+11. **Profilo riorganizzato** (solo camminiditalia, aggiunto il 3 novembre 2026 dopo la prova del
+    tab «Il mio diario»: i pulsanti fissi in fondo coprivano la lista, e le informazioni erano
+    sparse in modo incoerente). La schermata di accesso e registrazione resta com'è.
+    - **Intestazione**: avatar, nome ed email come oggi; il tocco apre già la modifica del profilo.
+    - **Tab «Il mio diario»**, la prima e quella aperta di default da loggato.
+    - **Tab «Account»** al posto di «I miei dati», nell'ordine: Download (tracce scaricate, il
+      contenuto di oggi), Modifica consenso dati, Esci, Elimina account. Tutti nel flusso della
+      pagina, non più fissi in fondo: niente più sovrapposizioni. Da non loggato la tab mostra solo
+      i download, e «Il mio diario» non c'è.
+    - **Ingranaggio**: solo le impostazioni dell'app (lingua, GPS, schermo acceso, versione,
+      pagine); «Esci» si sposta in «Account». L'avviso dei diari in coda all'uscita resta uguale.
+    - Rischi: `SettingsComponent` è condiviso fra tutti gli shard; si nasconde «Esci» con un input
+      che vale `true` di default, così gli altri shard non cambiano. La logica di uscita si sposta
+      in un servizio dell'app usato da entrambi i punti.

@@ -25,7 +25,7 @@ class DiaryService
      * inviato, e aggiunge solo le foto mancanti. Se `layer_id` manca lo
      * ricava dalla tappa.
      *
-     * @param  array{uuid: string, layer_id?: int|string|null, ec_track_id?: int|string|null, description?: ?string, publication_consent?: bool|int|string|null}  $data
+     * @param  array{uuid: string, layer_id?: int|string|null, ec_track_id?: int|string|null, description?: ?string, publication_consent?: bool|int|string|null, rating_route?: int|string|null, rating_hospitality?: int|string|null, rating_difficulty?: int|string|null}  $data
      * @param  UploadedFile[]  $images
      */
     public function create(User $user, array $data, array $images): Diary
@@ -45,7 +45,7 @@ class DiaryService
                 'ec_track_id' => $ecTrackId,
                 'description' => $description !== '' ? $description : null,
                 'publication_consent' => (bool) ($data['publication_consent'] ?? false),
-            ],
+            ] + $this->ratings($data),
         );
 
         // Retry di un invio la cui risposta è andata persa: se l'utente nel frattempo ha corretto il
@@ -55,6 +55,9 @@ class DiaryService
         }
         if (! $diary->wasRecentlyCreated && array_key_exists('publication_consent', $data)) {
             $diary->update(['publication_consent' => (bool) $data['publication_consent']]);
+        }
+        if (! $diary->wasRecentlyCreated && $this->ratings($data) !== []) {
+            $diary->update($this->ratings($data));
         }
 
         try {
@@ -82,8 +85,9 @@ class DiaryService
      * @param  int[]  $keepMediaIds
      * @param  UploadedFile[]  $images
      * @param  ?bool  $publicationConsent  null lascia invariato il consenso
+     * @param  array<string, int|string|null>  $ratings  solo le valutazioni inviate; null le azzera
      */
-    public function update(Diary $diary, ?string $description, array $keepMediaIds, array $images, ?bool $publicationConsent = null): Diary
+    public function update(Diary $diary, ?string $description, array $keepMediaIds, array $images, ?bool $publicationConsent = null, array $ratings = []): Diary
     {
         $toRemove = $diary->getMedia(Diary::MEDIA_COLLECTION)
             ->reject(fn ($media) => in_array((int) $media->id, $keepMediaIds, true));
@@ -114,6 +118,7 @@ class DiaryService
         if ($publicationConsent !== null) {
             $attributes['publication_consent'] = $publicationConsent;
         }
+        $attributes += $this->ratings($ratings);
         $diary->update($attributes);
         $diary->unsetRelation('media');
 
@@ -238,5 +243,24 @@ class DiaryService
         }
 
         return $target;
+    }
+
+    /**
+     * Valutazioni presenti in `$data`, come interi o null (oc:8169, ciclo 2). Una chiave assente
+     * non compare: la valutazione resta invariata.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, ?int>
+     */
+    private function ratings(array $data): array
+    {
+        $ratings = [];
+        foreach (Diary::RATINGS as $key) {
+            if (array_key_exists($key, $data)) {
+                $ratings[$key] = $data[$key] === null || $data[$key] === '' ? null : (int) $data[$key];
+            }
+        }
+
+        return $ratings;
     }
 }

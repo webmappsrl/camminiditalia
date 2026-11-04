@@ -389,3 +389,225 @@ Algoritmo:
 - [ ] **Step 2:** aggiungi le sezioni «Ciclo 2» a `overview.md`, `plan.md`, `notes.md` del cantiere in wm-core e camminiditalia; aggiorna la pagina di conoscenza dei diari (oggi `docs/knowledge/8169-esperienze-utente-cammino-foto-descrizione.md`) e la frase superata sulla webapp.
 - [ ] **Step 3:** suite backend completa → PASS; `npm run test` nell'app → PASS.
 - [ ] **Step 4 (commit, dev):** `docs(oc:8169): ciclo 2 del diario` e puntatori.
+
+
+### Ciclo 2, aggiunte 7-10 — piano
+
+> Ticket: oc:8169 — overview: sezione «Ciclo 2, aggiunte» di overview.md
+
+**Vincoli comuni**
+- Tutto solo camminiditalia: varianti con `fileReplacements` (`core/angular.json`, configuration
+  `camminiditalia`; la serve la eredita via `buildTarget`) o servizi avviati da
+  `tabs.page.camminiditalia.ts`. Nessun controllo sullo shard nel codice condiviso.
+- i18n wm-core: chiave = testo italiano, 7 lingue (de, en, es, fr, it, pr, sq). Testi dell'app in
+  `core/src/assets/i18n`.
+- Spec nuovi: aggiungerli a `core/tsconfig.spec.json` e ad `architect.test.options.include` di
+  `core/angular.json`.
+- Test frontend: `cd core && npx ng test --karma-config <scratchpad>/karma.local.cjs` con Node 22.
+  Backend: `docker exec laravel-camminiditalia php artisan test --filter=<Test>`, poi `composer
+  format` e PHPStan.
+- Nessun commit automatico: i commit indicati sono per il dev (`feat(oc:8169): …`).
+
+**Ordine**: Task 1 profilo → Task 2-3 valutazioni → Task 4 notifica → Task 5-6 scheda dati.
+
+---
+
+#### Task 1 — Tab «Il mio diario» nel profilo (app)
+
+**File**
+- Crea `core/src/app/pages/profile/profile-routing.module.camminiditalia.ts`: come quello condiviso
+  più la figlia `{path: 'diary', component: ProfileDiaryTabComponent}`.
+- Crea `core/src/app/pages/profile/tabs/profile-diary-tab/profile-diary-tab.component.{ts,html,scss}`
+  (standalone, selettore `webmapp-profile-diary-tab`).
+- Modifica `core/src/app/pages/profile/profile.page.camminiditalia.html`: «I tuoi dati» → «I miei
+  dati», secondo `ion-tab-button` `tab="diary"` → `/profile/diary`, «Il mio diario».
+- Modifica `core/angular.json`: sostituzione `profile-routing.module.ts` →
+  `profile-routing.module.camminiditalia.ts` nella configuration `camminiditalia`.
+- i18n app: «I miei dati», «Il mio diario», «Non hai ancora scritto nessun diario».
+
+**Interfacce**
+- Consuma `DiaryService` (elenco dei diari dell'utente, già usato da `wm-diaries-section`), lo
+  store `ecTracks`/layer per il nome del cammino.
+- Produce `ProfileDiaryTabComponent` con `groups$: Observable<{layerId: number; title: string}[]>`:
+  un gruppo per `layerId` distinto dei diari dell'utente, in ordine di diario più recente.
+
+**Passi**
+1. Spec `profile-diary-tab.component.spec.ts`: con diari su layer 3 e 5 → due gruppi, il più recente
+   primo; senza diari → il messaggio vuoto; ogni gruppo rende una `wm-diaries-section` con
+   `layout="list"` e `showCreate=false`. Eseguirlo e vederlo fallire.
+2. Implementare il componente e il routing; eseguire lo spec, poi la build `--configuration=camminiditalia`
+   e quella di default (la default non deve includere il tab).
+3. Commit: `feat(oc:8169): tab «Il mio diario» nel profilo camminiditalia`.
+
+---
+
+#### Task 2 — Valutazioni, backend (camminiditalia)
+
+**File**
+- Modifica `database/migrations/2026_10_20_100000_create_diaries_table.php`: `rating_route`,
+  `rating_hospitality`, `rating_difficulty` `unsignedTinyInteger()->nullable()`. La migration non è
+  mai andata in produzione: in sviluppo `migrate:rollback --step=2 && migrate` (mai `migrate:fresh`).
+- `app/Models/Diary.php`: fillable e cast `integer`.
+- Request Store e Update: `nullable|integer|between:1,5` per i tre campi; in Update `''`/`null`
+  azzera.
+- Risorsa/serializzazione del `DiaryController`: i tre campi nella risposta.
+- `app/Nova/Diary.php`: tre campi `Number` in sola lettura.
+
+**Passi**
+1. Test in `tests/Feature/Diary*Test`: creazione con valutazioni 1 e 5 salvate; 0 e 6 → 422;
+   modifica con `null` azzera; risposta API con i tre campi. Eseguirli e vederli fallire.
+2. Implementare; test verdi, `composer format`, PHPStan.
+3. Commit: `feat(oc:8169): valutazioni del diario`.
+
+---
+
+#### Task 3 — Valutazioni, frontend (wm-core)
+
+**File**
+- `diaries/diary.model.ts`: `ratingRoute`, `ratingHospitality`, `ratingDifficulty` (`number | null`)
+  in `Diary` e `DiaryDraft`; `diary.service.ts` li manda in `_toFormData` (stringa vuota per `null`)
+  e li legge dalla risposta.
+- Crea `diaries/diary-rating/diary-rating.component.{ts,html,scss}`: standalone,
+  `wm-diary-rating`, `@Input() value: number | null`, `@Input() readonly = false`,
+  `@Input() size: 'form' | 'small'`, `@Output() valueChange`. SVG del timbro con `txn-boot`
+  (path copiato da `wm-package/resources/defaults/icons.json`), bordo tratteggiato solo in `form`.
+- `diary-form`: tre righe dopo le foto («Cammino» o «Tappa» se c'è `ecTrackId`, «Ospitalità»,
+  «Difficoltà percepita»); bozza e coda offline portano i valori.
+- `diary-detail`: solo le valutazioni date, `size="small"`, `readonly`.
+- i18n wm-core: «Valutazioni», «Cammino», «Tappa», «Ospitalità», «Difficoltà percepita».
+
+**Animazione** (solo `readonly=false`, solo al tocco): con Web Animations sui timbri da 1 a N che
+diventano pieni, uno ogni 60 ms, `scale(1.4) rotate(-12deg)` → `scale(0.9)` → `scale(1) rotate(0)`,
+250 ms, `easing: cubic-bezier(.2,.8,.3,1.2)`; quelli oltre N tornano vuoti con dissolvenza di
+120 ms. Nessuna animazione al primo render né con `prefers-reduced-motion: reduce`. Al termine
+`animation.cancel()` per non lasciare stili sopra a quelli del template (trappola nota delle
+animazioni Web Animations in `.claude/rules/avvisi-gps`).
+
+**Passi**
+1. Spec `diary-rating.component.spec.ts`: tocco sul 3 → emette 3; tocco sul 3 con valore 3 → emette
+   `null`; `readonly` non emette; al primo render con valore 4 non parte nessuna animazione
+   (spia su `Element.prototype.animate`); al tocco sul 4 partono 4 animazioni; con
+   `matchMedia('(prefers-reduced-motion: reduce)')` vero nessuna. Spec del form: i valori arrivano a
+   `_toFormData` e nella bozza. Spec del dettaglio: con solo `ratingHospitality` si vede una riga.
+   Eseguirli e vederli fallire.
+2. Implementare; spec verdi, suite intera.
+3. Commit: `feat(oc:8169): valutazioni con timbro animato nel form del diario`.
+
+---
+
+#### Task 4 — Notifica di cammino completato (wm-core + app)
+
+**File**
+- Crea `passport/route-completed-notice.service.ts`: `RouteCompletedNoticeService` con
+  `start(): void` (idempotente), che ascolta `PassportService.passportRoutes$()` filtrando
+  `completed`. Visti salvati in localforage, istanza nuova `device/completedRoutesSeen`, chiave per
+  utente (`u<id>`), valore `number[]` di layerId.
+  - Prima lettura per un utente senza chiave: segna come visti tutti i completati, nessuna scheda.
+  - Poi: per ogni completato non visto, uno alla volta, `ToastController.create` con
+    `position: 'top'`, `duration: 0`, `swipeGesture: 'vertical'`, `cssClass: 'wm-route-completed-toast'`,
+    titolo «Hai completato {{name}}!», testo «Guarda il traguardo e racconta il cammino nel
+    diario», bottoni «Più tardi» e «Vai al traguardo» (naviga al dettaglio del Passaporto del
+    cammino, rotta già usata dal tab Passaporto). Segna visto alla chiusura, in ogni modo.
+- `core/src/app/pages/tabs/tabs.page.camminiditalia.ts`: `start()` accanto agli altri servizi.
+- Stile in `_passport-theme.scss`: angoli arrotondati, ombra, icona del timbro.
+- i18n wm-core per i tre testi.
+
+**Passi**
+1. Spec `route-completed-notice.service.spec.ts`: prima esecuzione con due completati → nessun
+   toast, visti salvati; un cammino nuovo completato → un toast; due nuovi → il secondo dopo la
+   chiusura del primo; «Vai al traguardo» naviga; utente diverso → visti separati; logout → nessun
+   toast. Eseguirli e vederli fallire.
+2. Implementare; spec verdi, suite intera, build camminiditalia.
+3. Commit: `feat(oc:8169): avviso di cammino completato`.
+
+---
+
+#### Task 5 — Scheda dati, backend (camminiditalia)
+
+**File**
+- `app/Services/StageProgressService.php`, `progressFor()`:
+  - per tappa `user_distance`: km (arrotondati a 0,1) della somma
+    `ST_Length(ugc_tracks.geometry::geography)/1000` delle tracce in `passport_stage_ugc_track` della
+    sua `passport_stage`, **solo se** nessuna di quelle tracce è collegata ad altre `passport_stage`
+    dell'utente; altrimenti `null`. Una query sola per tutte le tappe del cammino (niente N+1).
+  - per tappa `walked_dates: string[]` (`Y-m-d`, ordinate, distinte): se ha tracce, la data di
+    inizio di ciascuna (orario di inizio nelle `properties` della traccia se presente, altrimenti
+    `created_at`), nel fuso `Europe/Rome`; se è validata da una richiesta cartacea
+    (`certification_request_id`), ogni giorno da `start_date` a `end_date`; altrimenti `[]`. Le
+    richieste caricate con una query sola.
+  - nella risposta `user_distance_total`: somma delle tracce distinte collegate alle tappe validate
+    del cammino + `distance` delle tappe validate senza tracce; `null` se nessuna tappa validata.
+
+**Passi**
+1. Test in `tests/Feature/StageProgress*Test`: tappa con una traccia propria → `user_distance` dalla
+   geometria e `walked_dates` col suo giorno; traccia condivisa da due tappe → `user_distance`
+   `null` su entrambe, nel totale contata una volta; tappa da richiesta cartacea dal 2026-05-01 al
+   2026-05-03 → `user_distance` `null`, tre date; tappa validata senza tracce né richiesta → `[]`.
+   Eseguirli e vederli fallire.
+2. Implementare; test verdi, `composer format`, PHPStan.
+3. Commit: `feat(oc:8169): km dell'utente nel progresso e date della certificazione`.
+
+---
+
+#### Task 6 — Scheda dati, frontend (wm-core)
+
+**File**
+- `passport.service.ts`: `userDistance?: number | null` e `walkedDates?: string[]` in
+  `PassportStage` (da `user_distance`, `walked_dates`), `userDistanceTotal?: number | null` in
+  `PassportProgress`. I tipi stanno in `@wm-types/passport` (submodule wm-types).
+- Crea in `diaries/diary-route-data.utils.ts`:
+  `diaryRouteData(progress: PassportProgress, diary: Diary): {km: number | null; from: string | null; to: string | null; days: number | null} | null`
+  - diario di tappa: `null` se la tappa non è `completed`; km = `userDistance ?? distance`; date e
+    giorni da `walkedDates` (vuoto → assenti).
+  - diario del cammino: `null` se il cammino non è completato; km = `userDistanceTotal ??
+    totalDistanceKm(stages)`; date e giorni dall'unione dei `walkedDates` di tutte le tappe, solo
+    se nessuna tappa ha `walkedDates` vuoto, altrimenti assenti.
+- `diary-detail`: blocco «Il tuo percorso» con le righe presenti, km con `passportKm`.
+- i18n wm-core: «Il tuo percorso», «km», «giorni», «dal {{from}} al {{to}}».
+
+**Passi**
+1. Spec `diary-route-data.utils.spec.ts` con le fixture di `passport-progress.fixtures.ts`: tappa
+   GPS con `userDistance` 12,3 e `distance` 14 → 12,3 e la sua data; tappa cartacea con tre date →
+   14 km, tre giorni; tappa non completata → `null`; cammino con tappe GPS e cartacee →
+   `userDistanceTotal`, giorni distinti dell'unione, prima e ultima data; una tappa senza date →
+   giorni e date assenti, km presenti; cammino non completato → `null`; backend vecchio senza i
+   campi nuovi → lunghezza del cammino, nessuna data. Eseguirli e
+   vederli fallire.
+2. Implementare; spec verdi, suite intera, build camminiditalia e default, build della webapp
+   camminiditalia.
+3. Commit: `feat(oc:8169): scheda dati del percorso nel diario`.
+
+---
+
+**Chiusura**: docs (sezioni del ciclo 2 in overview, plan, notes; knowledge page 8169), puntatori
+dei submodule nell'app e nella webapp, review del branch intero, poi aggiornamento di oc:8169.
+
+---
+
+#### Task 7 — Profilo riorganizzato (app, solo camminiditalia)
+
+**File**
+- Crea `core/src/app/services/logout.service.ts`: `LogoutService.confirmLogout(): Promise<boolean>`
+  con l'alert di oggi (avviso dei diari in coda compreso); `true` se l'utente ha confermato e il
+  logout è partito. `SettingsComponent.logout()` lo usa e poi chiude la modale.
+- `SettingsComponent`: `@Input() showLogout = true`; la voce «Esci» solo se `showLogout`.
+- Crea `core/src/app/pages/profile/tabs/profile-account-tab/` (componente non standalone in
+  `ProfileAccountTabModule`, come il tab del diario): sezioni Download (`wm-profile-data`),
+  Modifica consenso dati (`wm-privacy-agree-button`), Esci (solo da loggato), Elimina account
+  (`wm-profile-delete-button`), nel flusso, con margini laterali e spazio per la safe area.
+- `profile-routing.module.camminiditalia.ts`: figlie `diary` e `account`, `''` → `diary`.
+- `profile.page.camminiditalia.html`: tab «Il mio diario» (solo loggato) e «Account»; tolti i due
+  pulsanti fissi in fondo.
+- `profile.page.camminiditalia.ts`: al logout naviga a `/profile/account`; da non loggato,
+  entrando in `/profile/diary`, va ad `account`; l'ingranaggio apre `SettingsComponent` con
+  `showLogout: false`.
+- i18n app: «Account», «Download», «Esci».
+
+**Passi**
+1. Spec `logout.service.spec.ts`: senza diari in coda il messaggio è quello base; con 2 diari in
+   coda aggiunge l'avviso; conferma → `loadSignOuts` e `true`; annulla → nessuna azione e `false`.
+   Spec `profile-account-tab.component.spec.ts`: da loggato quattro sezioni in quest'ordine; da non
+   loggato solo i download; «Esci» chiama `confirmLogout`. Eseguirli e vederli fallire.
+2. Implementare; spec verdi, suite intera, build camminiditalia e default (la default deve avere
+   ancora «Esci» nell'ingranaggio).
+3. Commit: `feat(oc:8169): profilo camminiditalia con le tab Il mio diario e Account`.

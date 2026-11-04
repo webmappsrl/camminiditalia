@@ -2,12 +2,15 @@
 
 namespace App\Services;
 
+use App\Models\CertificationRequest;
 use App\Models\PassportStage;
 use App\Support\PassportLayer;
+use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\Layer;
@@ -138,7 +141,9 @@ class StageProgressService
                     ->where('v.user_id', '=', $user->id);
             })
             ->orderBy('lt.ec_track_id')
-            ->get(['lt.ec_track_id', 'lt.name_raw', 'lt.distance_km', 'v.validated_at', 'v.source', 'v.progress']);
+            ->get(['lt.ec_track_id', 'lt.name_raw', 'lt.distance_km', 'v.id as stage_id', 'v.validated_at', 'v.source', 'v.progress', 'v.certification_request_id']);
+
+        $walked = $this->walkedData($rows->filter(fn (object $row) => $row->validated_at !== null));
 
         // Una sola query per i model delle tappe (con media): niente N+1, e
         // solo le colonne di stageDetails(), senza geometria.
@@ -150,8 +155,9 @@ class StageProgressService
             ->keyBy('id');
 
         $tracks = $rows
-            ->map(function (object $row) use ($models) {
+            ->map(function (object $row) use ($models, $walked) {
                 $validated = $row->validated_at !== null;
+                $stageWalked = $validated ? ($walked['stages'][(int) $row->stage_id] ?? null) : null;
 
                 return [
                     'id' => (int) $row->ec_track_id,
@@ -161,6 +167,8 @@ class StageProgressService
                     'progress' => $this->trackProgress($validated, $row->progress ?? null),
                     'validated_at' => $validated ? $this->isoDate($row->validated_at) : null,
                     'source' => $validated ? $row->source : null,
+                    'user_distance' => $stageWalked['user_distance'] ?? null,
+                    'walked_dates' => $stageWalked['walked_dates'] ?? [],
                 ] + $this->stageDetails($models->get($row->ec_track_id))
                   + ['shareable' => $validated];
             })
@@ -168,7 +176,7 @@ class StageProgressService
 
         return ['layer_id' => $layer->id]
             + $this->progressFields($totals)
-            + ['tracks' => $tracks];
+            + ['user_distance_total' => $walked['total'], 'tracks' => $tracks];
     }
 
     /**
@@ -507,5 +515,117 @@ class StageProgressService
     private function isoDate(?string $value): ?string
     {
         return $value !== null ? Carbon::parse($value)->toIso8601String() : null;
+    }
+
+    /**
+     * Km e giorni percorsi dall'utente sulle tappe validate (oc:8169, ciclo 2), per la scheda dati
+     * del diario. Per tappa: `user_distance` dai km delle sue registrazioni, solo se nessuna di
+     * quelle è collegata anche ad altre tappe (altrimenti `null`, e vale la lunghezza della tappa);
+     * `walked_dates` dai giorni delle registrazioni oppure, per la validazione cartacea, dai giorni
+     * da `start_date` a `end_date` della richiesta. Per il cammino `total`: km delle registrazioni
+     * distinte più la lunghezza delle tappe validate senza registrazioni, `null` se nessuna tappa è
+     * validata. I km di una registrazione sono `stats.distance` (regola di wm-package), altrimenti
+     * la lunghezza della geometria; il giorno è quello del primo punto, nel fuso di Roma.
+     *
+     * @param  Collection<int, \stdClass>  $validatedRows  righe di progressFor() con la tappa validata
+     * @return array{stages: array<int, array{user_distance: ?float, walked_dates: array<int, string>}>, total: ?float}
+     */
+    private function walkedData(Collection $validatedRows): array
+    {
+        if ($validatedRows->isEmpty()) {
+            return ['stages' => [], 'total' => null];
+        }
+
+        $stageIds = $validatedRows->pluck('stage_id')->map(fn ($id) => (int) $id)->all();
+        $links = DB::table('passport_stage_ugc_track as l')
+            ->join('ugc_tracks as u', 'u.id', '=', 'l.ugc_track_id')
+            ->whereIn('l.passport_stage_id', $stageIds)
+            ->get([
+                'l.passport_stage_id',
+                'u.id as ugc_track_id',
+                DB::raw("COALESCE(NULLIF(u.properties->'stats'->>'distance', '')::float, ST_Length(u.geometry::geography) / 1000) as km"),
+                DB::raw("u.properties->'locations'->0->>'time' as first_time"),
+                DB::raw("u.properties->>'createdAt' as created_prop"),
+                'u.created_at',
+            ]);
+
+        $ugcIds = $links->pluck('ugc_track_id')->unique()->values()->all();
+        /** @var array<int, int> $linkCounts */
+        $linkCounts = $ugcIds === [] ? [] : DB::table('passport_stage_ugc_track')
+            ->whereIn('ugc_track_id', $ugcIds)
+            ->groupBy('ugc_track_id')
+            ->selectRaw('ugc_track_id, count(*) as links')
+            ->pluck('links', 'ugc_track_id')
+            ->map(fn ($n) => (int) $n)
+            ->all();
+
+        $requestIds = $validatedRows->pluck('certification_request_id')->filter()->unique()->values()->all();
+        $requests = $requestIds === [] ? collect() : CertificationRequest::query()
+            ->whereIn('id', $requestIds)
+            ->get(['id', 'start_date', 'end_date'])
+            ->keyBy('id');
+
+        $byStage = $links->groupBy('passport_stage_id');
+        $stages = [];
+        $ugcKm = [];
+        $routeKmWithoutRecordings = 0.0;
+        foreach ($validatedRows as $row) {
+            $stageId = (int) $row->stage_id;
+            $own = $byStage->get($stageId, collect());
+            $dates = [];
+            $exclusive = $own->isNotEmpty();
+            $km = 0.0;
+            foreach ($own as $link) {
+                $ugcKm[(int) $link->ugc_track_id] = (float) $link->km;
+                $km += (float) $link->km;
+                $exclusive = $exclusive && ($linkCounts[(int) $link->ugc_track_id] ?? 0) === 1;
+                $date = $this->recordingDate($link);
+                if ($date !== null) {
+                    $dates[] = $date;
+                }
+            }
+            if ($own->isEmpty()) {
+                $routeKmWithoutRecordings += (float) $row->distance_km;
+                $request = $row->certification_request_id !== null ? $requests->get((int) $row->certification_request_id) : null;
+                if ($request instanceof CertificationRequest) {
+                    foreach (CarbonPeriod::create($request->start_date, $request->end_date) as $day) {
+                        $dates[] = $day->format('Y-m-d');
+                    }
+                }
+            }
+            $dates = array_values(array_unique($dates));
+            sort($dates);
+            $stages[$stageId] = [
+                'user_distance' => $exclusive ? round($km, 1) : null,
+                'walked_dates' => $dates,
+            ];
+        }
+
+        return [
+            'stages' => $stages,
+            'total' => round(array_sum($ugcKm) + $routeKmWithoutRecordings, 1),
+        ];
+    }
+
+    /**
+     * Giorno di una registrazione nel fuso di Roma: primo punto, poi `createdAt`, poi la riga.
+     */
+    private function recordingDate(object $link): ?string
+    {
+        $tz = 'Europe/Rome';
+        if (is_numeric($link->first_time)) {
+            return Carbon::createFromTimestampMs((float) $link->first_time)->setTimezone($tz)->format('Y-m-d');
+        }
+        foreach ([$link->created_prop, $link->created_at] as $value) {
+            if (is_string($value) && $value !== '') {
+                try {
+                    return Carbon::parse($value)->setTimezone($tz)->format('Y-m-d');
+                } catch (\Throwable) {
+                    continue;
+                }
+            }
+        }
+
+        return null;
     }
 }

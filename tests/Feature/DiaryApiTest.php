@@ -110,6 +110,52 @@ class DiaryApiTest extends TestCase
             ->assertJsonPath('publication_consent', false);
     }
 
+    public function test_crea_con_valutazioni(): void
+    {
+        $layer = $this->createLayer();
+        $walker = $this->createUserWithoutRole();
+
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'Bel giro', 'rating_route' => '5', 'rating_hospitality' => '1'])
+            ->assertStatus(201)
+            ->assertJsonPath('rating_route', 5)
+            ->assertJsonPath('rating_hospitality', 1)
+            ->assertJsonPath('rating_difficulty', null);
+
+        $diary = Diary::where('uuid', self::UUID_A)->first();
+        $this->assertSame(5, $diary->rating_route);
+        $this->assertSame(1, $diary->rating_hospitality);
+        $this->assertNull($diary->rating_difficulty);
+    }
+
+    public function test_valutazioni_fuori_scala_rifiutate(): void
+    {
+        $layer = $this->createLayer();
+        $walker = $this->createUserWithoutRole();
+
+        $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'Bel giro', 'rating_route' => '0', 'rating_difficulty' => '6'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['rating_route', 'rating_difficulty']);
+    }
+
+    public function test_modifica_cambia_e_azzera_le_valutazioni(): void
+    {
+        $layer = $this->createLayer();
+        $walker = $this->createUserWithoutRole();
+        $diary = Diary::factory()->create(['user_id' => $walker->id, 'layer_id' => $layer->id, 'description' => 'Bel giro', 'rating_route' => 4, 'rating_hospitality' => 3]);
+
+        $this->actingAs($walker, 'api')
+            ->postJson("/api/diaries/{$diary->id}", ['description' => 'Bel giro', 'keep_media_ids' => '[]', 'rating_route' => '', 'rating_difficulty' => '2'])
+            ->assertOk()
+            ->assertJsonPath('rating_route', null)
+            ->assertJsonPath('rating_hospitality', 3)
+            ->assertJsonPath('rating_difficulty', 2);
+
+        $fresh = $diary->fresh();
+        $this->assertNull($fresh->rating_route);
+        $this->assertSame(3, $fresh->rating_hospitality);
+        $this->assertSame(2, $fresh->rating_difficulty);
+    }
+
     public function test_modifica_cambia_il_consenso(): void
     {
         $layer = $this->createLayer();

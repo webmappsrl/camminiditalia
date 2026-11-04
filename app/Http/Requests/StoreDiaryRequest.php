@@ -30,6 +30,9 @@ class StoreDiaryRequest extends FormRequest
             'ec_track_id' => ['nullable', 'required_without:layer_id', 'integer', 'exists:ec_tracks,id'],
             'description' => ['nullable', 'string', 'max:5000'],
             'publication_consent' => ['sometimes', 'boolean'],
+            'rating_route' => ['sometimes', 'nullable', 'integer', 'between:1,5'],
+            'rating_hospitality' => ['sometimes', 'nullable', 'integer', 'between:1,5'],
+            'rating_difficulty' => ['sometimes', 'nullable', 'integer', 'between:1,5'],
             'images' => ['nullable', 'array', 'max:'.Diary::MAX_PHOTOS],
             'images.*' => ['file', 'mimes:jpeg,jpg,png,webp', 'max:5120', 'dimensions:max_width=8000,max_height=8000'],
         ];

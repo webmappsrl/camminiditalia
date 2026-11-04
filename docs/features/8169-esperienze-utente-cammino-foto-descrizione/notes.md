@@ -118,3 +118,88 @@ Ridisegnato dopo la review finale. Il piano leggeva le tappe di ogni cammino da 
 - Prova offline su dispositivo reale.
 - Minori rimandati: ripristino della bozza in corsa con la digitazione e object URL non revocati; chiave della bozza diversa aprendo la tappa con o senza cammino; diari in coda invisibili se la sezione è nascosta; pulsante visibile un attimo prima del primo valore; nella webapp le bozze non scadono; sulla tappa si confronta solo la sua linea.
 - Aree del tag 716 da rivalutare: promemoria a fine cammino, diari nel profilo, editor, scheda dati, valutazioni, periodo di percorrenza.
+
+
+### Aggiunte 7-10 (3 novembre 2026, sera)
+
+**Deviazioni dal piano e decisioni prese durante l'esecuzione**
+
+- **Tab «Il mio diario», componente non standalone.** Il piano lo voleva standalone con
+  `WmCoreModule` fra gli import; ma qualunque file che importa `WmCoreModule` sotto Karma carica
+  `custom-tracks.draw.directive.ts` → `graphhopper-js-api-client` e si blocca
+  (`ReferenceError: GraphHopperRouting is not defined`, trappola già nota in map-core). Il
+  componente è dichiarato in `ProfileDiaryTabModule`, importato solo dal routing di camminiditalia;
+  lo spec lo dichiara da solo con `CUSTOM_ELEMENTS_SCHEMA`.
+- **`wm-diary-rating` non standalone**, dichiarato in `WmCoreModule` come gli altri componenti dei
+  diari: la pipe finta dei test (`FakeTransPipe`) non è standalone.
+- **Valutazioni come oggetto `ratings`** (`route`, `hospitality`, `difficulty`) invece di tre campi
+  piatti: passano uguali da diario, bozza, coda offline e form. Le bozze e gli elementi in coda
+  salvati prima non hanno il campo: valgono «non date».
+- **Animazione delle valutazioni**: si animano solo i timbri che cambiano (da 1 a 4 si animano il
+  2, il 3 e il 4), non tutti da 1 a N, per non ripetere l'animazione su quelli già pieni.
+- **Avviso di cammino completato, «visto» alla comparsa** e non alla chiusura: se l'app viene
+  chiusa con la scheda aperta, la notifica non si ripresenta a ogni avvio.
+- **Stile della scheda** in `tabs.page.camminiditalia.scss` dell'app, non in wm-core: il toast è un
+  overlay globale e quel foglio è caricato solo in camminiditalia.
+- **Campi nuovi del progresso nei tipi del Passaporto** (`userDistance`, `walkedDates`,
+  `userDistanceTotal`) aggiunti con un'estensione del modulo `@wm-types/passport` in
+  `wm-core/passport/passport-walked.ts`, non in wm-types: wm-types è in detached HEAD con una
+  modifica locale del dev, e un quarto repo da committare a ridosso della scadenza non valeva.
+  **Debito**: spostarli in `wm-types/src/passport.ts` e togliere il file.
+- **Km di una registrazione** nel backend: `properties.stats.distance` (regola di wm-package, la
+  stessa dell'app), altrimenti la lunghezza della geometria. **Giorno**: tempo del primo punto,
+  poi `properties.createdAt`, poi `created_at`, nel fuso di Roma.
+- **Database di sviluppo**: le tre colonne delle valutazioni aggiunte con `Schema::table` invece
+  del rollback delle migration, che avrebbe cancellato i 2 diari di prova del dev. Lo schema
+  coincide con la migration modificata; il database dei test è stato rigenerato.
+- **Test di forma esatta** del progresso (`StageProgressApiTest`, `StageProgressServiceTest`)
+  aggiornati con i campi nuovi.
+- **Non coperto da test**: la lettura di `user_distance`/`walked_dates` in
+  `PassportService._toProgress` — `passport.service.spec.ts` non è negli elenchi degli spec
+  dell'app e quindi non gira.
+- **Build della webapp** non rifatta: il wm-core della webapp è un checkout separato, si verifica
+  quando si aggiorna il puntatore dopo il commit.
+
+**Profilo riorganizzato (punto 11, variante A del prototipo)**
+- La tab «I miei dati» diventa «Account» (rotta `account`); `profile-data` resta come
+  reindirizzamento per i link già in giro. La prima tab da loggato è «Il mio diario».
+- «Esci» passa nella tab «Account»; nell'ingranaggio si nasconde con `showLogout: false`, input di
+  `SettingsComponent` che vale `true` di default: negli altri shard l'ingranaggio non cambia.
+- La conferma di uscita (con l'avviso dei diari in coda) è in `LogoutService`, usato da
+  ingranaggio e tab.
+- Le sezioni della tab hanno i titoli Download, Privacy, Sessione; il titolo interno
+  «Downloads» di `wm-profile-data` è nascosto nella tab per non ripeterlo.
+- Lo spazio di 150px in fondo al tab del diario è tolto: i pulsanti fissi non ci sono più.
+
+**Prova a schermo e review finale (4 novembre 2026)**
+- **Animazione delle valutazioni che non partiva** (segnalata dal dev nella prova). Nel form il
+  getter delle righe delle valutazioni restituiva un array nuovo a ogni controllo e `*ngFor` non
+  aveva `trackBy`: a ogni tocco `wm-diary-rating` veniva distrutto e ricreato, e l'animazione
+  partiva su elementi già tolti dalla pagina. Righe tenute in cache (ricalcolate solo se cambia la
+  prima etichetta, «Cammino» o «Tappa») e `trackBy` sulla chiave. Test che falliva prima.
+- **Tab «Account» come voci di elenco**, come nella variante A del prototipo, non come pulsanti.
+  Consenso dati con `AuthService.showPrivacyAgreeAlert()`; «Elimina account» chiama il metodo di un
+  `wm-profile-delete-button` nascosto (`@ViewChild`), così l'avviso con la conferma «delete
+  account» resta uno solo, quello di wm-core. Approvato dal dev; l'alternativa era spostare
+  l'avviso in un servizio di wm-core. Niente attributo `color` sulla riga di «Elimina account»:
+  colorerebbe tutta la riga, il rosso è su testo e freccia via variabili CSS.
+- **Avviso di cammino completato**: pulsanti sotto il testo (`layout: 'stacked'`), perché
+  affiancati stringevano titolo e messaggio a poche lettere per riga; colore dell'app
+  (`--ion-color-primary`) al posto del verde.
+- **Review finale, corretti con test che fallivano prima**:
+  - riaprendo un diario in coda rifiutato dal server le valutazioni non passavano nella bozza;
+  - nella scheda «Il tuo percorso» di un cammino completato per gruppi (varianti) date, giorni e
+    km di riserva contavano anche le varianti non percorse: ora solo le tappe completate;
+  - chiudendo un avviso mentre il Passaporto riemette i cammini potevano comparire due avvisi
+    insieme, anche dello stesso cammino: il servizio segna il cammino in preparazione prima del
+    primo `await`, e lo libera anche se il salvataggio dei visti fallisce.
+- **Migration**: le colonne delle valutazioni restano nella migration di creazione della tabella,
+  già pushata sul branch remoto. Decisione del dev: un database che l'avesse già eseguita non
+  avrebbe le colonne.
+- **Minori rimandati dalla review**: titolo «Hai completato !» se il cammino non è fra i layer
+  caricati; la tab «Il mio diario» non mostra i diari in coda (con il primo diario scritto offline
+  dice «Non hai ancora scritto nessun diario»); i cammini della tab sono ordinati per ultima
+  modifica; aprendo l'app direttamente sul profilo prima che il login sia ripristinato si finisce
+  su «Account».
+- Suite dell'app 478/478, backend 902/902; build camminiditalia e default compilate, tab e avviso
+  presenti solo nella prima.

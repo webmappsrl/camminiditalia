@@ -139,5 +139,8 @@
     "keep_media_ids must be a JSON array of integers.": "keep_media_ids deve essere un array JSON di numeri interi.",
     "Publication consent": "Consenso alla pubblicazione",
     "With consent": "Con consenso",
-    "Without consent": "Senza consenso"
+    "Without consent": "Senza consenso",
+    "Route rating": "Valutazione del cammino",
+    "Hospitality rating": "Valutazione dell'ospitalità",
+    "Perceived difficulty": "Difficoltà percepita"
 }

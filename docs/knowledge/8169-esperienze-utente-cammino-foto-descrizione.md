@@ -15,6 +15,24 @@ Il modello si chiama `Diary` (tabelle `diaries` e `diary_ugc_track`, API `/api/d
   `isVisibleTo`): il cliente non vuole che li vedano i gestori dei cammini (call del 3 novembre 2026).
   Prima il Validator vedeva quelli pubblici dei propri cammini.
 
+### Aggiunte del 4 novembre 2026
+
+- **Valutazioni** `rating_route`, `rating_hospitality`, `rating_difficulty` (interi da 1 a 5,
+  `null` = non date), nella migration di creazione della tabella. In creazione e in modifica
+  (`Diary::RATINGS`, `safe()->only`): una chiave assente non cambia il valore, una vuota lo azzera.
+  In Nova in sola lettura, nascoste dall'elenco.
+- **Progresso del cammino** (`StageProgressService`, `GET /api/layer/{layer}/progress`): per tappa
+  `user_distance` e `walked_dates`, per il cammino `user_distance_total`.
+  - **Km dell'utente**: `properties.stats.distance` della registrazione (la regola di wm-package),
+    altrimenti la lunghezza della geometria. Una tappa ha `user_distance` solo se nessuna delle sue
+    registrazioni è collegata anche ad altre tappe; il totale somma ogni registrazione una volta
+    sola, più la lunghezza delle tappe validate senza registrazione, `null` se nessuna tappa è
+    validata.
+  - **Giorni**: per una registrazione il giorno del primo punto, poi `createdAt`, poi `created_at`,
+    nel fuso di Roma (una registrazione che passa la mezzanotte conta un giorno solo). Per una tappa
+    cartacea tutti i giorni da `start_date` a `end_date` della richiesta che l'ha validata, **mai
+    `validated_at`**, che è la data di approvazione del gestore.
+
 ## Come funziona oggi
 
 Un'esperienza è un testo e fino a 6 foto scritti da un utente su un cammino o su una sua tappa.

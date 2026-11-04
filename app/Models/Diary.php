@@ -30,6 +30,9 @@ use Wm\WmPackage\Models\User;
  * @property ?string $description
  * @property bool $is_public
  * @property bool $publication_consent
+ * @property ?int $rating_route
+ * @property ?int $rating_hospitality
+ * @property ?int $rating_difficulty
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
@@ -49,11 +52,20 @@ class Diary extends Model implements HasMedia
         'ec_track_id',
         'description',
         'publication_consent',
+        'rating_route',
+        'rating_hospitality',
+        'rating_difficulty',
     ];
+
+    /** Valutazioni facoltative da 1 a 5 (oc:8169, ciclo 2). */
+    public const RATINGS = ['rating_route', 'rating_hospitality', 'rating_difficulty'];
 
     protected $casts = [
         'is_public' => 'boolean',
         'publication_consent' => 'boolean',
+        'rating_route' => 'integer',
+        'rating_hospitality' => 'integer',
+        'rating_difficulty' => 'integer',
     ];
 
     public function registerMediaCollections(): void
@@ -151,6 +163,9 @@ class Diary extends Model implements HasMedia
             ],
             'description' => $this->description,
             'publication_consent' => (bool) $this->publication_consent,
+            'rating_route' => $this->rating_route,
+            'rating_hospitality' => $this->rating_hospitality,
+            'rating_difficulty' => $this->rating_difficulty,
             'created_at' => $this->created_at->toIso8601String(),
             'updated_at' => $this->updated_at->toIso8601String(),
             // Nessuna conversione registrata: la miniatura è l'immagine originale.

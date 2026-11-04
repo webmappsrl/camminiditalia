@@ -21,6 +21,10 @@ return new class extends Migration
             // Consenso alla ripubblicazione sui canali di Cammini d'Italia (oc:8169, ciclo 2):
             // distinto da is_public, che riguarda la lettura da parte degli altri utenti.
             $table->boolean('publication_consent')->default(false);
+            // Valutazioni facoltative da 1 a 5 (oc:8169, ciclo 2): sulla tappa «Cammino» vale «Tappa».
+            $table->unsignedTinyInteger('rating_route')->nullable();
+            $table->unsignedTinyInteger('rating_hospitality')->nullable();
+            $table->unsignedTinyInteger('rating_difficulty')->nullable();
             $table->timestamps();
 
             $table->unique(['user_id', 'uuid']);

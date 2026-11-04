@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Filters\Filter;
@@ -121,6 +122,18 @@ class Diary extends Resource
 
             Boolean::make(__('Publication consent'), 'publication_consent')
                 ->readonly(),
+
+            Number::make(__('Route rating'), 'rating_route')
+                ->readonly()
+                ->hideFromIndex(),
+
+            Number::make(__('Hospitality rating'), 'rating_hospitality')
+                ->readonly()
+                ->hideFromIndex(),
+
+            Number::make(__('Perceived difficulty'), 'rating_difficulty')
+                ->readonly()
+                ->hideFromIndex(),
 
             DateTime::make(__('Date'), 'created_at')
                 ->sortable()
