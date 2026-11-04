@@ -203,3 +203,60 @@ Ridisegnato dopo la review finale. Il piano leggeva le tappe di ogni cammino da 
   su «Account».
 - Suite dell'app 478/478, backend 902/902; build camminiditalia e default compilate, tab e avviso
   presenti solo nella prima.
+
+
+## Ciclo 3 — Editor del racconto (4 novembre 2026)
+
+### Divergenze dal piano, task per task
+
+#### Task 3 — nessuna migration di conversione
+La migration che convertiva in HTML i racconti scritti in testo semplice è stata scritta, provata e
+poi tolta su richiesta del dev: la funzione dei diari non è ancora né in produzione né sul dev, quindi
+non ci sono dati da convertire, e come negli altri cicli le modifiche allo schema stanno nella
+migration di creazione. I 7 diari del database locale sono già HTML (la conversione era stata
+eseguita prima di toglierla); dalla tabella `migrations` locale è stata tolta la sua riga. Il servizio
+`DiaryTextService` converte comunque il testo semplice che arriva dall'app (casella di ripiego).
+
+### Bug trovati
+- Prova a schermo: con la barra dell'editor a `top: 0` il testo scorreva nei 16 px sopra la barra,
+  perché il padding di `ion-content` sta dentro l'area che scorre. Corretto con
+  `top: calc(-1 * var(--padding-top))` sulla barra e `scroll-padding-top` su
+  `ion-content.wm-diary-form::part(scroll)`.
+- Review finale, corretti con test che fallivano prima:
+  - un racconto di soli spazi non separabili (`<p>&nbsp;</p>`, le righe vuote incollate da Word)
+    passava la regola «testo o foto» sia nel backend (`trim` di PHP non toglie U+00A0) sia
+    nell'app («Pubblica» guardava la stringa HTML): ora conta il testo visibile in entrambi;
+  - una `description` non testuale (`description[]=x`) dava 500 invece di 422, e un HTML di
+    diversi MB veniva ripulito prima di ogni controllo di lunghezza: ora si ripulisce solo una
+    stringa entro i 100.000 caratteri, il resto lo rifiutano le regole `string` e `max`.
+- PHPStan: un `?->` inutile in `DiaryTextService`, corretto.
+
+### Decisioni
+- Il ciclo si fa nonostante l'indicazione dello scrum del 3 novembre (richieste nuove non pagate,
+  da mettere in backlog): decisione del dev.
+- Stima del ciclo saltata su richiesta del dev; quella indipendente era di 5,61 h
+  (0,31 h di pianificazione misurata + 5,3 h).
+- `composer require` ha portato HTMLPurifier da 4.19.0 a 4.19.1 (patch del 15/09/2026) e ha
+  scritto la versione di wm-package nel lock come `dev-<hash>` perché il submodule è in detached
+  HEAD: rimessa a mano a `dev-develop`.
+- Il testo semplice si riconosce nel backend solo dal primo carattere diverso da `<`: serve per la
+  casella di ripiego. Un testo semplice che inizia con `<` perde quel pezzo.
+- Ricerca in Nova con `searchableColumns()` e `Column::raw(regexp_replace(...))`: funziona solo su
+  PostgreSQL.
+- Messaggi del backend solo in `it.json`, come gli altri messaggi del diario (l'inglese è la chiave).
+- Numeri del contatore formattati con `toLocaleString('it-IT')` in tutte le lingue.
+- Test scritti dopo il codice in due punti (spec dell'editor, test di Nova): il fallimento è stato
+  verificato a posteriori, riaccendendo il sottolineato e rimettendo il file Nova di HEAD.
+
+### Follow-up
+- Prova sul dispositivo vero (iOS e Android): barra attaccata in alto con la tastiera aperta, riga di
+  scrittura non coperta, niente zoom al tocco, collegamenti aperti nel browser.
+- Webapp: i pacchetti Tiptap sono installati; il puntatore di wm-core si aggiorna con il rilascio.
+- Il ciclo 3 deve uscire insieme ai cicli 1 e 2: un'app senza l'editor mostrerebbe i tag.
+- Minori rimandati dalla review: modifica nella casella di ripiego che perde la formattazione senza
+  avviso; un'email scritta senza `mailto:` diventa `https://utente@dominio` e un indirizzo con la
+  porta viene rifiutato, e l'avviso del collegamento non dice perché resta aperto; chiamata statica
+  a `HasEmbeddableRichText::buildRichTextPurifier()` deprecata da PHP (serve una factory in
+  wm-package); la ricerca in Nova non decodifica le entità («A & B» non trova `A &amp; B`).
+- Foto dentro il testo: stesso formato HTML, ma servirà un riferimento ai media (non l'URL) e un
+  elenco di tag più largo nel purifier.

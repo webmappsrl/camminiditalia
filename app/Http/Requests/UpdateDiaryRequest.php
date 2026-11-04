@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Diary;
+use App\Services\DiaryTextService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,10 +26,31 @@ class UpdateDiaryRequest extends FormRequest
     /**
      * @return array<string, mixed>
      */
+    /**
+     * Il racconto si ripulisce prima della validazione (oc:8169, ciclo 3): i limiti valgono
+     * sull'HTML che verrà salvato, e un racconto di soli paragrafi vuoti diventa `null`.
+     */
+    protected function prepareForValidation(): void
+    {
+        $description = $this->input('description');
+        // un valore non testuale o enorme non si ripulisce: lo rifiutano le regole `string` e `max`
+        if (is_string($description) && strlen($description) <= DiaryTextService::MAX_HTML) {
+            $this->merge(['description' => app(DiaryTextService::class)->clean($description)]);
+        }
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return ['description.max' => __('The story is too long.')];
+    }
+
     public function rules(): array
     {
         return [
-            'description' => ['nullable', 'string', 'max:5000'],
+            'description' => ['nullable', 'string', 'max:'.DiaryTextService::MAX_HTML],
             'publication_consent' => ['sometimes', 'boolean'],
             'rating_route' => ['sometimes', 'nullable', 'integer', 'between:1,5'],
             'rating_hospitality' => ['sometimes', 'nullable', 'integer', 'between:1,5'],
@@ -82,8 +104,15 @@ class UpdateDiaryRequest extends FormRequest
                     $validator->errors()->add('images', __('A diary can have at most :max photos.', ['max' => self::MAX_PHOTOS]));
                 }
 
+                $description = $this->input('description');
+                if ($description !== null && app(DiaryTextService::class)->visibleLength($description) > DiaryTextService::MAX_VISIBLE) {
+                    $validator->errors()->add('description', __('The story can be at most 20,000 characters long.'));
+
+                    return;
+                }
+
                 // Senza `description` nella richiesta il testo resta quello attuale.
-                $text = $this->exists('description') ? $this->input('description') : $diary->description;
+                $text = $this->exists('description') ? $description : $diary->description;
                 if (trim((string) $text) === '' && $kept + $new === 0) {
                     $validator->errors()->add('description', __('Write a text or add at least one photo.'));
                 }

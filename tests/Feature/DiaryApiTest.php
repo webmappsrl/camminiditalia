@@ -6,6 +6,7 @@ use App\Jobs\LinkDiaryUgcTracksJob;
 use App\Models\Diary;
 use App\Models\EcTrack;
 use App\Services\DiaryService;
+use App\Services\DiaryTextService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
@@ -179,7 +180,7 @@ class DiaryApiTest extends TestCase
             ->assertStatus(201)
             ->assertJsonPath('layer.id', $layer->id)
             ->assertJsonPath('ec_track', null)
-            ->assertJsonPath('description', 'Bel giro');
+            ->assertJsonPath('description', '<p>Bel giro</p>');
     }
 
     public function test_crea_da_tappa_senza_layer_ricava_il_cammino(): void
@@ -226,6 +227,102 @@ class DiaryApiTest extends TestCase
             ->assertJsonValidationErrors(['description']);
     }
 
+    public function test_crea_ripulisce_il_racconto_in_html(): void
+    {
+        $layer = $this->createLayer();
+
+        $this->postDiary($this->createUserWithoutRole(), [
+            'uuid' => self::UUID_A, 'layer_id' => $layer->id,
+            'description' => '<h2>Giorno 1</h2><p onclick="x()">Ciao <strong>tu</strong></p><script>alert(1)</script>',
+        ])->assertStatus(201)
+            ->assertJsonPath('description', '<h2>Giorno 1</h2><p>Ciao <strong>tu</strong></p>');
+    }
+
+    public function test_crea_converte_il_testo_semplice_in_paragrafi(): void
+    {
+        $layer = $this->createLayer();
+
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => "Uno\n\nDue & tre"])
+            ->assertStatus(201)
+            ->assertJsonPath('description', '<p>Uno</p><p>Due &amp; tre</p>');
+    }
+
+    public function test_accetta_ventimila_caratteri_visibili(): void
+    {
+        $layer = $this->createLayer();
+
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => '<p>'.str_repeat('a', 20000).'</p>'])
+            ->assertStatus(201);
+    }
+
+    public function test_rifiuta_oltre_ventimila_caratteri_visibili(): void
+    {
+        $layer = $this->createLayer();
+
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => '<p>'.str_repeat('a', 20001).'</p>'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['description' => 'The story can be at most 20,000 characters long.']);
+    }
+
+    public function test_rifiuta_html_troppo_lungo_anche_con_poco_testo(): void
+    {
+        $layer = $this->createLayer();
+
+        $this->postDiary($this->createUserWithoutRole(), [
+            'uuid' => self::UUID_A, 'layer_id' => $layer->id,
+            'description' => str_repeat('<p><strong><em>a</em></strong></p>', 4000),
+        ])->assertStatus(422)
+            ->assertJsonValidationErrors(['description' => 'The story is too long.']);
+    }
+
+    public function test_rifiuta_solo_paragrafi_vuoti_senza_foto(): void
+    {
+        $layer = $this->createLayer();
+
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => '<p></p><p> </p><p><br></p>'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['description' => 'Write a text or add at least one photo.']);
+    }
+
+    public function test_rifiuta_racconto_non_testuale_con_422(): void
+    {
+        $layer = $this->createLayer();
+
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => ['x']])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['description']);
+    }
+
+    public function test_html_enorme_si_rifiuta_senza_ripulirlo(): void
+    {
+        $this->spy(DiaryTextService::class);
+        $layer = $this->createLayer();
+
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => '<p>'.str_repeat('a', 300000).'</p>'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['description' => 'The story is too long.']);
+
+        app(DiaryTextService::class)->shouldNotHaveReceived('clean');
+    }
+
+    public function test_modifica_ripulisce_e_controlla_i_limiti(): void
+    {
+        $walker = $this->createUserWithoutRole();
+        $diary = $this->diaryWithPhotos($walker, 0);
+
+        $this->updateDiary($walker, $diary, ['description' => '<p>Ok <img src=x onerror=y></p>', 'keep_media_ids' => '[]'])
+            ->assertOk()
+            ->assertJsonPath('description', '<p>Ok </p>');
+
+        $this->updateDiary($walker, $diary, ['description' => '<p>'.str_repeat('a', 20001).'</p>', 'keep_media_ids' => '[]'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['description' => 'The story can be at most 20,000 characters long.']);
+
+        $this->updateDiary($walker, $diary, ['description' => '<p></p>', 'keep_media_ids' => '[]'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['description' => 'Write a text or add at least one photo.']);
+    }
+
     public function test_rifiuta_sette_foto(): void
     {
         $layer = $this->createLayer();
@@ -262,7 +359,7 @@ class DiaryApiTest extends TestCase
         $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'primo testo'])->assertStatus(201);
         $this->postDiary($walker, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'testo corretto'])
             ->assertStatus(200)
-            ->assertJsonPath('description', 'testo corretto');
+            ->assertJsonPath('description', '<p>testo corretto</p>');
 
         $this->assertSame(1, Diary::count());
     }
@@ -473,7 +570,7 @@ class DiaryApiTest extends TestCase
 
         $this->updateDiary($walker, $diary, ['description' => 'nuovo', 'keep_media_ids' => json_encode([$first->id])])
             ->assertOk()
-            ->assertJsonPath('description', 'nuovo')
+            ->assertJsonPath('description', '<p>nuovo</p>')
             ->assertJsonCount(1, 'photos')
             ->assertJsonPath('photos.0.id', $first->id);
 

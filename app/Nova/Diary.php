@@ -4,10 +4,12 @@ namespace App\Nova;
 
 use App\Models\Diary as DiaryModel;
 use App\Nova\Filters\DiaryPublicationConsentFilter;
+use App\Services\DiaryTextService;
 use App\Support\EcTrackLabel;
 use App\Support\UserDisplay;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
@@ -15,9 +17,9 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Filters\Filter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Query\Search\Column;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
@@ -36,7 +38,16 @@ class Diary extends Resource
 
     public static $title = 'id';
 
-    public static $search = ['id', 'description'];
+    /**
+     * Ricerca per id o nel testo del racconto senza i tag (oc:8169, ciclo 3): con un LIKE sull'HTML
+     * «strong» troverebbe ogni diario formattato.
+     *
+     * @return array<int, string|Column>
+     */
+    public static function searchableColumns(): array
+    {
+        return ['id', Column::raw("regexp_replace(coalesce(description, ''), '<[^>]+>', ' ', 'g')")];
+    }
 
     /**
      * @var array<int, string>
@@ -113,9 +124,16 @@ class Diary extends Resource
             Text::make(__('Stage'), fn ($resource) => $resource->ecTrack ? EcTrackLabel::for($resource->ecTrack) : null)
                 ->exceptOnForms(),
 
-            Textarea::make(__('Text'), 'description')
-                ->readonly()
-                ->alwaysShow(),
+            // Il racconto è HTML (oc:8169, ciclo 3): nel dettaglio formattato e ripulito di nuovo al
+            // momento di mostrarlo, senza fidarsi del dato salvato; nell'elenco l'estratto.
+            Text::make(__('Text'), fn ($resource) => app(DiaryTextService::class)->clean($resource->description))
+                ->asHtml()
+                ->onlyOnDetail(),
+
+            Text::make(__('Text'), fn ($resource) => $resource->description
+                ? Str::limit(app(DiaryTextService::class)->plainText($resource->description), 80)
+                : null)
+                ->onlyOnIndex(),
 
             Boolean::make(__('Public'), 'is_public')
                 ->readonly(),

@@ -132,6 +132,8 @@
     "Date": "Data",
     "Recordings": "Registrazioni",
     "Write a text or add at least one photo.": "Scrivi un testo o aggiungi almeno una foto.",
+    "The story can be at most 20,000 characters long.": "Il racconto può avere al massimo 20.000 caratteri.",
+    "The story is too long.": "Il racconto è troppo lungo.",
     "The stage does not belong to any route.": "La tappa non appartiene a nessun cammino.",
     "The stage does not belong to this route.": "La tappa non appartiene a questo cammino.",
     "The photo could not be processed.": "Non è stato possibile elaborare la foto.",

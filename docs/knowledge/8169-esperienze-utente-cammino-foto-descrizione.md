@@ -1,5 +1,22 @@
 # Diario del camminatore: modello, API e protezione delle foto
 
+## Ciclo 3 — Racconto in HTML (oc:8169, 4 novembre 2026)
+
+Il resto della pagina descrive i cicli precedenti; dove questo ciclo cambia il formato del racconto (prima testo semplice, ora HTML) vale questa sezione.
+
+- **`description` è sempre HTML ripulito** da `DiaryTextService`: HTMLPurifier di wm-package
+  (`HasEmbeddableRichText::buildRichTextPurifier()`, nessun iframe) con un elenco chiuso di tag; i
+  collegamenti relativi o con schemi diversi da http/https/mailto perdono il tag (HTMLPurifier filtra
+  solo gli schemi); un testo che non inizia con `<` è testo semplice e diventa paragrafi.
+- **La pulizia avviene in `prepareForValidation()`** delle due richieste, così i limiti valgono
+  sull'HTML che si salva: 20.000 caratteri di testo visibile (spazi non separabili esclusi) e 100.000
+  di HTML. Un valore non testuale o più lungo di 100.000 non si ripulisce: lo rifiutano `string` e
+  `max`, senza far girare il purifier su diversi MB.
+- **Nova** ripulisce di nuovo il racconto quando lo mostra (`asHtml` non si fida del dato salvato),
+  mostra un estratto nell'elenco e cerca con `regexp_replace` sul testo senza tag (solo PostgreSQL;
+  le entità non si decodificano).
+- Nessuna migration di conversione: la funzione non è ancora né in produzione né sul dev.
+
 ## Ciclo 2 — «Il mio diario» (oc:8169, 3 novembre 2026)
 
 Il modello si chiama `Diary` (tabelle `diaries` e `diary_ugc_track`, API `/api/diaries`, limiter

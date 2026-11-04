@@ -611,3 +611,224 @@ dei submodule nell'app e nella webapp, review del branch intero, poi aggiornamen
 2. Implementare; spec verdi, suite intera, build camminiditalia e default (la default deve avere
    ancora «Esci» nell'ingranaggio).
 3. Commit: `feat(oc:8169): profilo camminiditalia con le tab Il mio diario e Account`.
+
+
+## Ciclo 3 — Editor del racconto — piano (4 novembre 2026)
+
+> Ticket: oc:8169 — spec: sezione «Ciclo 3 — Editor del racconto» di overview.md
+
+> **Per chi esegue:** superpowers:executing-plans, task per task, passi a checkbox. **Webmapp:** nessun
+> `git commit`, `git add`, `git push` o branch durante l'esecuzione; i passi «Commit» sono istruzioni
+> per il dev, dopo il review-gate.
+
+**Goal:** racconto del diario scritto con un editor formattato (Tiptap), salvato come HTML ripulito e
+mostrato uguale nel dettaglio.
+
+**Architecture:** il backend camminiditalia ripulisce e misura `description` in un servizio sul
+purifier di wm-package, prima della validazione; `description` è sempre HTML (una migration converte
+i diari vecchi). In wm-core l'editor `wm-diary-editor` produce l'HTML, le utils del testo danno
+estratti e conteggi, il dettaglio mostra l'HTML con lo stesso foglio di stile.
+
+**Tech Stack:** Laravel 11 + Nova 5 + HTMLPurifier 4.19 (via wm-package), Angular 20 + Ionic 8 +
+Tiptap 3.32.0, Karma/Jasmine, PHPUnit in Docker.
+
+### Global Constraints
+
+- Tag ammessi: `p`, `br`, `strong`, `em`, `s`, `h2`, `h3`, `ul`, `ol`, `li`, `blockquote`, `hr`,
+  `a[href]` con schema `http`, `https`, `mailto`; i link relativi perdono il tag e tengono il testo.
+- Limiti: 20.000 caratteri di testo visibile, 100.000 di HTML.
+- `description` è sempre HTML: nessuna regola di riconoscimento del formato, né in PHP né in TS.
+- Barra: 12 bottoni in quest'ordine — grassetto, corsivo, barrato, titolo (h2), sottotitolo (h3),
+  elenco puntato, elenco numerato, citazione, collegamento, linea, annulla, ripeti.
+- i18n wm-core: chiave = testo italiano, 7 file (de, en, es, fr, it, pr, sq); backend: chiave
+  inglese in `resources/lang/*.json`.
+- Tiptap 3.32.0 bloccato, in app e webapp.
+- Comandi: backend `docker exec laravel-camminiditalia php artisan test --filter=<Test>`, poi
+  `docker exec laravel-camminiditalia composer format` e PHPStan; frontend da `core/` con Node 22:
+  `npx ng test --karma-config <scratchpad>/karma.local.cjs --watch=false --include=<cartella>`.
+
+### Review Focus
+
+1. Testo incollato da Word o da una pagina web con colori, caratteri e immagini → resta solo la
+   formattazione ammessa (test nel Task 4).
+2. Collegamento scritto `www.camminiditalia.it` o `camminiditalia.it/x` → salvato come
+   `https://…` e aperto nel browser (Task 4 e 5).
+3. Tocco su una parola in grassetto dentro un collegamento nel dettaglio → si apre il browser, l'app
+   resta dov'è (Task 5).
+4. Racconto con `&`, `<`, emoji e virgolette → nel dettaglio e negli estratti appare com'è scritto,
+   senza `&amp;` (Task 1 e 3).
+5. Editor che contiene solo paragrafi vuoti o spazi, con zero foto → «Scrivi un testo o aggiungi
+   almeno una foto», sia nell'app sia nel backend (Task 2 e 4).
+
+---
+
+### Task 1: Pulizia e misura del testo del diario (camminiditalia)
+
+**Files:**
+- Create: `app/Services/DiaryTextService.php`
+- Test: `tests/Unit/DiaryTextServiceTest.php`
+- Modify: `composer.json` (`"ezyang/htmlpurifier": "^4.19"` fra i require), `composer.lock`
+
+**Interfaces:**
+- Produces: `DiaryTextService::clean(?string $text): ?string` (HTML ripulito, `null` se non resta
+  testo visibile), `DiaryTextService::visibleLength(string $html): int` (caratteri, `mb_strlen`),
+  `DiaryTextService::plainText(string $html): string` (blocchi separati da spazio, entità decodificate),
+  costanti `MAX_VISIBLE = 20000`, `MAX_HTML = 100000`.
+
+- [ ] **Step 1: test che falliscono** — `DiaryTextServiceTest`:
+  `clean('<p>Ciao <strong>tu</strong></p>')` resta uguale; `<script>`, `onclick`, `style`, `<img>`,
+  `<u>`, `<span>` spariscono e il loro testo resta; `<a href="javascript:alert(1)">x</a>` e
+  `<a href="/rel">x</a>` diventano `x`; `<a href="https://a.it">x</a>` resta; testo senza tag
+  `"Primo\n\nSecondo & <ciao>"` diventa `<p>Primo</p><p>Secondo &amp; &lt;ciao&gt;</p>`;
+  `clean('<p></p><p> </p>')` è `null`; `visibleLength('<p>a &amp; b</p>')` è 5;
+  `plainText('<h2>Giorno 1</h2><p>Via</p>')` è `'Giorno 1 Via'`.
+- [ ] **Step 2:** `docker exec laravel-camminiditalia php artisan test --filter=DiaryTextServiceTest`
+  → FAIL (classe assente).
+- [ ] **Step 3:** implementa. Purifier da
+  `HasEmbeddableRichText::buildRichTextPurifier(<tag ammessi>, '%^$%')` (nessun iframe), tenuto in
+  una proprietà statica. Testo senza `<` → paragrafi su righe vuote, `\n` → `<br>`, con
+  `htmlspecialchars` prima del purifier. Dopo il purifier, `<a>` con `href` non assoluto si
+  sostituisce col suo contenuto (DOMDocument). `null` se `visibleLength` è 0.
+- [ ] **Step 4:** stesso comando → PASS; `composer format`.
+- [ ] **Step 5 (dev):** commit con Task 2 e 3.
+
+### Task 2: Validazione e salvataggio (camminiditalia)
+
+**Files:**
+- Modify: `app/Http/Requests/StoreDiaryRequest.php`, `app/Http/Requests/UpdateDiaryRequest.php`,
+  `resources/lang/{it,en,de,es,fr}.json`
+- Test: `tests/Feature/DiaryApiTest.php`
+
+**Interfaces:**
+- Consumes: `DiaryTextService` del Task 1.
+
+- [ ] **Step 1: test che falliscono** in `DiaryApiTest`: POST con
+  `description = '<p>Ciao</p><script>x</script>'` salva `<p>Ciao</p>`; testo semplice salvato in
+  paragrafi; 20.001 caratteri visibili in un `<p>` → 422 su `description` con «The story can be at
+  most 20,000 characters long.»; 20.000 visibili → 201; HTML oltre 100.000 con testo sotto il limite
+  (`<p><strong><em>a</em></strong></p>` ripetuto 4.000 volte: 104.000 caratteri di HTML, 4.000
+  visibili) → 422 con «The story is too long.»; `'<p></p>'` senza foto → 422 «Write a text or add at least one
+  photo.»; PUT con gli stessi casi.
+- [ ] **Step 2:** `--filter=DiaryApiTest` → FAIL.
+- [ ] **Step 3:** in entrambe le richieste `prepareForValidation()` sostituisce `description` con
+  `DiaryTextService::clean()` se la chiave è presente; regola `max:100000` col messaggio «The story
+  is too long.»; in `after()` il limite dei 20.000 con `visibleLength()` e la regola testo-o-foto su
+  `description !== null`. Messaggi tradotti in `resources/lang/*.json` (it: «Il racconto può avere
+  al massimo 20.000 caratteri.», «Il racconto è troppo lungo.»).
+- [ ] **Step 4:** `--filter=DiaryApiTest` → PASS; tutta la suite `php artisan test` verde.
+
+### Task 3: Migration dei diari esistenti e Nova (camminiditalia)
+
+> ⚠️ L'implementazione ha deviato da questo task: [notes.md](notes.md#task-3--nessuna-migration-di-conversione)
+
+**Files:**
+- Create: `database/migrations/2026_11_04_100000_convert_diary_descriptions_to_html.php`
+- Modify: `app/Nova/Diary.php`
+- Test: `tests/Feature/DiaryDescriptionMigrationTest.php`
+
+**Interfaces:**
+- Consumes: `DiaryTextService::clean()`, `plainText()`.
+
+- [ ] **Step 1: test che fallisce** — un diario con `description = "Riga\n\nAltra & co"` scritto
+  direttamente nel DB; eseguita la migration (`require` del file e `->up()`), diventa
+  `<p>Riga</p><p>Altra &amp; co</p>`; un diario già HTML (`<p>x</p>`) non cambia.
+- [ ] **Step 2:** `--filter=DiaryDescriptionMigrationTest` → FAIL.
+- [ ] **Step 3:** la migration scorre i diari a blocchi (`chunkById`) e salva `clean()` solo se il
+  valore cambia, senza toccare `updated_at` (`saveQuietly` con `timestamps = false` o query
+  builder). `down()` vuoto con un commento: la conversione non si annulla.
+- [ ] **Step 4:** Nova: nel dettaglio `Textarea` diventa un campo con
+  `->displayUsing(fn ($v) => app(DiaryTextService::class)->clean($v))->asHtml()`, solo dettaglio;
+  nell'elenco un `Text` con `plainText()` troncato a 80 caratteri; `applySearch()` sovrascritto:
+  `id` uguale oppure
+  `regexp_replace(description, '<[^>]+>', ' ', 'g') ILIKE ?`; tolto `description` da `$search`.
+- [ ] **Step 5:** test → PASS; `php artisan migrate` sul DB di sviluppo (7 diari) e controllo in
+  Nova; suite completa, `composer format`, PHPStan.
+- [ ] **Step 6 (dev):** commit `feat(oc:8169): racconto del diario in HTML ripulito, limiti e Nova`.
+
+### Task 4: Testo del diario ed editor (wm-core)
+
+**Files:**
+- Modify: `diaries/diary-text.utils.ts`, `diaries/diary-text.utils.spec.ts`,
+  `diaries/diary-editor/diary-editor.component.{ts,html,scss}`, `diaries/_diary-rich-text.scss`
+- Create: `diaries/diary-editor/diary-editor.component.spec.ts`
+
+**Interfaces:**
+- Produces in `diary-text.utils.ts` (togliere `isRichDiaryText` e `diaryTextToHtml`):
+  `trimDiaryHtml(html: string): string`, `diaryTextExcerpt(html: string | null | undefined): string`,
+  `diaryVisibleLength(html: string | null | undefined): number`,
+  `diaryPlainText(html: string | null | undefined): string` (blocchi separati da riga vuota, per la
+  casella di ripiego), `normalizeDiaryLink(url: string): string | null` (`null` se vuoto o con schema
+  non ammesso), costanti `DIARY_MAX_VISIBLE = 20000`.
+- Produces in `WmDiaryEditorComponent`: input `value`, `placeholder`, `inputId`; output
+  `valueChange: EventEmitter<string>` (HTML senza paragrafi vuoti finali, `''` se vuoto) e
+  `lengthChange: EventEmitter<number>` (testo visibile); proprietà `fallback: boolean`.
+
+- [ ] **Step 1: test che falliscono.** Utils: `normalizeDiaryLink('www.a.it')` →
+  `'https://www.a.it'`; `'mailto:x@y.it'` resta; `'javascript:alert(1)'` → `null`; `'  '` → `null`;
+  `diaryVisibleLength('<p>a &amp; b</p>')` → 5; `diaryPlainText('<h2>A</h2><p>B</p>')` → `'A\n\nB'`;
+  estratto con `&amp;` → `&`. Editor (fixture con `LangService` e `AlertController` finti): dopo il
+  caricamento ci sono 12 bottoni con `aria-label` nell'ordine dei Global Constraints e nessuno
+  «Sottolineato»; `value = '<p>Ciao</p>'` → l'area contiene «Ciao»; il comando sottolineato non è
+  registrato (`editor.can().toggleUnderline` assente o falso); incollare
+  `<p style="color:red"><span>x</span><img src="a.png"></p>` → `valueChange` emette `<p>x</p>`;
+  con l'import di Tiptap che fallisce (`spyOn` sul metodo `_loadTiptap`) → `fallback` vero e
+  compare una `textarea` con `diaryPlainText(value)`, il cui input emette testo semplice.
+- [ ] **Step 2:** `--include=src/app/shared/wm-core/projects/wm-core/src/diaries` → FAIL.
+- [ ] **Step 3:** implementa. Il caricamento di Tiptap va in un metodo `protected _loadTiptap()` per
+  poterlo far fallire nei test. `StarterKit.configure({underline: false, code: false, codeBlock:
+  false, heading: {levels: [2, 3]}, link: {openOnClick: false, autolink: true, defaultProtocol:
+  'https', protocols: ['mailto']}})`; il bottone collegamento usa `normalizeDiaryLink`, e con
+  `null` non salva e richiede l'indirizzo. Barra `position: sticky; top: 0` con sfondo pieno,
+  bottoni `min-width/height: 44px`, `aria-pressed` solo sugli stili, stato attivo con sfondo;
+  area di scrittura a 16 px (in `_diary-rich-text.scss` per entrambi, editor e dettaglio).
+- [ ] **Step 4:** stesso comando → PASS.
+
+### Task 5: Form, dettaglio, estratti e testi (wm-core)
+
+**Files:**
+- Modify: `diaries/diary-form/diary-form.component.{ts,html,scss}`,
+  `diaries/diary-detail/diary-detail.component.{ts,html}`, `diaries/diaries-section/*`,
+  `localization/i18n/{de,en,es,fr,it,pr,sq}.ts`
+- Test: `diary-form.component.spec.ts`, `diary-detail.component.spec.ts`,
+  `diaries-section.component.spec.ts`
+
+**Interfaces:**
+- Consumes: `WmDiaryEditorComponent` (`valueChange`, `lengthChange`), utils del Task 4.
+
+- [ ] **Step 1: test che falliscono.** Form: con `lengthChange` a 20.001 il contatore ha la classe
+  `is-over`, compare «Il racconto può avere al massimo 20.000 caratteri» vicino al campo e il
+  bottone di invio è disabilitato; a 18.000 (90%) il contatore ha `aria-live="polite"`, sotto no;
+  testo vuoto e zero foto → invio disabilitato come oggi. Dettaglio: `description` HTML finisce in
+  `.wm-diary-detail-text` così com'è (senza conversione); tocco su un `<strong>` dentro
+  `<a href="https://a.it">` → `window.open('https://a.it', '_blank')` (spia) e `preventDefault`;
+  `mailto:` → assegnazione a `location.href` tramite un metodo `_openMailto` spiato. Sezione:
+  l'estratto di `<p>A &amp; B</p>` è «A & B».
+- [ ] **Step 2:** test della cartella `diaries` → FAIL.
+- [ ] **Step 3:** implementa. Contatore «{{n}} / {{max}}» sotto l'editor con `toLocaleString` della
+  lingua; il dettaglio usa `diary.description` diretto in `[innerHTML]` e un `(click)` sul
+  contenitore con `closest('a')`. Testi nuovi nei 7 file i18n: Grassetto, Corsivo, Barrato, Titolo,
+  Sottotitolo, Elenco puntato, Elenco numerato, Citazione, Collegamento, Linea di separazione,
+  Ripeti, Formattazione, Indirizzo del collegamento, «{{n}} / {{max}}», «Il racconto può avere al
+  massimo 20.000 caratteri» (Annulla e Conferma esistono già: verificare).
+- [ ] **Step 4:** test della cartella → PASS; suite completa dell'app verde.
+- [ ] **Step 5 (dev):** commit wm-core `feat(oc:8169): editor del racconto con formattazione`.
+
+### Task 6: Pacchetti, build e prova sul dispositivo (app e webapp)
+
+**Files:**
+- Modify: `core/package.json`, `core/package-lock.json` (app, già fatto nella prova: verificare le
+  quattro versioni 3.32.0); `package.json`, `package-lock.json` della webapp.
+
+- [ ] **Step 1:** webapp: `npm install --save-exact @tiptap/core@3.32.0 @tiptap/pm@3.32.0
+  @tiptap/starter-kit@3.32.0 @tiptap/extensions@3.32.0` (Node 22). Non si aggiorna ancora il
+  puntatore di wm-core nella webapp: si fa con il rilascio.
+- [ ] **Step 2:** app: build `--configuration=camminiditalia` e default → entrambe compilano; il
+  bundle iniziale (`main`) non contiene `ProseMirror` (`grep -c ProseMirror main*.js` → 0).
+- [ ] **Step 3:** prova a schermo (server di sviluppo e Chrome headless con l'utente di prova):
+  racconto lungo con tutti i 12 bottoni, collegamento `www…`, incolla con colori, salvataggio,
+  dettaglio uguale, estratti, Nova.
+- [ ] **Step 4:** prova sul dispositivo (iOS e Android, a cura del dev): barra attaccata in alto
+  con la tastiera aperta, riga di scrittura non coperta, nessuno zoom al tocco, collegamento aperto
+  nel browser.
+- [ ] **Step 5 (dev):** commit app `feat(oc:8169): editor del racconto, pacchetti Tiptap e
+  puntatore wm-core`; webapp `chore(oc:8169): pacchetti Tiptap per wm-core`.

@@ -370,3 +370,155 @@ Prototipo: https://claude.ai/artifact/VKvfbYKfDCBaRQBUVyfcz7
     - Rischi: `SettingsComponent` è condiviso fra tutti gli shard; si nasconde «Esci» con un input
       che vale `true` di default, così gli altri shard non cambiano. La logica di uscita si sposta
       in un servizio dell'app usato da entrambi i punti.
+
+
+## Ciclo 3 — Editor del racconto (4 novembre 2026)
+
+> Fonti: messaggio del cliente del 2 novembre 2026 nel ticket (§3.1, «un editor più ricco di una
+> semplice casella di testo», riferimento Substack); call con Cammini d'Italia del 3 novembre (tag
+> Orchestrator 716): Davide Nanna chiede opzioni «tipo grassetto e cose del genere». Prova tecnica
+> con Tiptap fatta la notte del 4 novembre e approvata dal dev. Allo scrum del 3 novembre Giuseppe
+> Bonfanti aveva indicato le richieste nuove come non pagate e da mettere in backlog: il dev ha
+> deciso di procedere comunque.
+
+### Cosa cambia
+
+Il racconto del diario si scrive con un editor che formatta il testo mentre si scrive, al posto
+della casella di testo semplice, e si legge nel dettaglio del diario esattamente com'è stato
+scritto: titoli, grassetto, elenchi e citazioni compresi. Da questo ciclo `description` è
+**sempre HTML**, ripulito dal backend: il testo semplice che arriva viene convertito in paragrafi.
+I diari già scritti non si convertono con una migration: la funzione non è ancora né in produzione
+né sul dev, e i diari del database locale sono stati convertiti a mano. Niente regola per
+riconoscere il formato. Le foto restano nella galleria
+come oggi.
+
+### Perché
+
+È il punto che il cliente indica come più importante. Un racconto di un cammino di più giorni è
+lungo, e senza titoli, elenchi e grassetto diventa un muro di testo, sia per chi lo scrive sia per
+Cammini d'Italia, che lo ripubblica (blog, Substack, social) quando c'è il consenso. Tiptap salva
+HTML: è lo stesso formato che servirà per le foto dentro il testo, quindi i racconti scritti da ora
+non andranno convertiti in seguito.
+
+### Requisiti
+
+**Editor (wm-core, `wm-diary-editor`)**
+- [ ] Tiptap 3.32.0 (`@tiptap/core`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/extensions`,
+      versione bloccata), caricato solo all'apertura del form con `import()` dinamico.
+- [ ] Barra con 12 bottoni, in quest'ordine: grassetto, corsivo, barrato, titolo, sottotitolo,
+      elenco puntato, elenco numerato, citazione, collegamento, linea di separazione, annulla,
+      ripeti. Niente sottolineato, colori, allineamento: le estensioni dello `StarterKit` non
+      ammesse (sottolineato, codice) sono spente anche nelle scorciatoie da tastiera, così l'editor
+      non produce nulla che il backend poi scarta.
+- [ ] La barra sta in cima al riquadro del racconto e, mentre si scorre un racconto lungo, resta
+      attaccata in alto (sticky) finché il riquadro è visibile.
+- [ ] Collegamenti: un avviso chiede l'indirizzo; sono ammessi solo `http`, `https` e `mailto`;
+      un indirizzo senza protocollo (`www.camminiditalia.it`) diventa `https://…`. Vuoto toglie
+      il collegamento.
+- [ ] Contatore del testo visibile sotto l'editor («1.234 / 20.000»). Oltre i 20.000 caratteri il
+      contatore diventa rosso, compare il messaggio vicino al campo e «Pubblica»/«Salva» si
+      disabilita.
+- [ ] L'HTML salvato non ha paragrafi vuoti in fondo; un editor vuoto vale testo vuoto, quindi
+      «testo o almeno una foto» continua a funzionare.
+- [ ] Incollare testo da altre app tiene solo le formattazioni ammesse: niente colori, caratteri,
+      immagini.
+- [ ] Se Tiptap non si carica (PWA senza rete al primo uso), il form mostra la casella di testo
+      semplice di oggi, e il racconto si scrive e si salva lo stesso.
+- [ ] Bozza e coda offline salvano l'HTML così com'è (nessun cambio di formato).
+
+**Dettaglio, schede ed estratti (wm-core)**
+- [ ] Il dettaglio mostra l'HTML con `[innerHTML]` (ripulito anche da Angular) e lo stesso foglio di
+      stile dell'editor (`_diary-rich-text.scss`). Nessuna regola di riconoscimento del formato:
+      `description` è HTML.
+- [ ] I collegamenti nel dettaglio si aprono nel browser del telefono (`window.open(url,
+      '_blank')`, come gli altri link esterni di wm-core), non dentro l'app; il tocco si intercetta
+      anche dentro un collegamento in grassetto (`closest('a')`), e `mailto:` si apre come
+      `location.href`.
+- [ ] Le schede del carosello, l'elenco della tappa, il profilo e i diari in coda mostrano
+      l'estratto in testo semplice, senza tag.
+
+**Backend (camminiditalia)**
+- [ ] `description` ripulita con HTMLPurifier, riusando
+      `HasEmbeddableRichText::buildRichTextPurifier()` di wm-package (nessuna seconda
+      configurazione), con un elenco chiuso: `p`, `br`, `strong`, `em`, `s`, `h2`, `h3`, `ul`,
+      `ol`, `li`, `blockquote`, `hr`, `a` con solo `href` assoluto (`http`, `https`, `mailto`; i
+      relativi spariscono). Tutto il resto (script, attributi `on…`, stili, immagini,
+      `javascript:`) sparisce. La cache del purifier sta in `storage/`, non in `vendor/`.
+- [ ] Il testo semplice che arriva (senza tag) si converte in paragrafi prima della pulizia, con i
+      caratteri speciali protetti.
+- [ ] Limiti: 20.000 caratteri di testo visibile (dopo la pulizia, senza tag, con le entità
+      decodificate) e 100.000 caratteri di HTML. Messaggi d'errore distinti.
+- [ ] La regola «scrivi un testo o aggiungi almeno una foto» conta il testo visibile: `<p></p>` è
+      vuoto.
+- [ ] Nova: nel dettaglio il racconto formattato, ripulito di nuovo al momento di mostrarlo
+      (`asHtml` non si fida del dato salvato); nell'elenco l'estratto in testo semplice; la ricerca
+      non cerca dentro i tag.
+
+**Comuni**
+- [ ] Testi nuovi (etichette dei bottoni, avviso del collegamento, contatore, messaggi di limite)
+      in tutte e 7 le lingue di wm-core, chiave = testo italiano; messaggi del backend in
+      `resources/lang`.
+- [ ] Webapp: i pacchetti Tiptap si aggiungono anche al `package.json` della webapp, perché
+      `WmCoreModule` dichiara l'editor e la build senza pacchetti non compila; il form nella
+      webapp non c'è, non cambia altro.
+- [ ] Test: editor (valore in ingresso e in uscita, paragrafi vuoti, contatore, ripiego senza
+      Tiptap, sottolineato spento), funzioni del testo, estratti, link del dettaglio; backend:
+      pulizia (script, `onclick`, `javascript:`, link relativi, immagini, stili, `<u>`), testo
+      semplice convertito, limiti, regola testo-o-foto.
+
+**[UX]**
+- [ ] [UX] Ogni bottone ha un'area di tocco di almeno 44×44 px, `aria-label` tradotto, e
+      `aria-pressed` per gli stili attivi; lo stato attivo si vede con sfondo e colore, non solo
+      col colore.
+- [ ] [UX] La barra sticky non copre la riga in cui si scrive: lo spazio della barra si riserva
+      sull'elemento che scorre davvero (lo scroll di `ion-content` è interno), verificato sul
+      dispositivo.
+- [ ] [UX] Il testo dell'area di scrittura è di almeno 16 px, altrimenti iOS ingrandisce la pagina
+      al tocco (oggi nella prova è 15 px).
+- [ ] [UX] Il contatore viene letto dagli screen reader solo vicino al limite (dal 90%), non a
+      ogni carattere.
+- [ ] [UX] L'etichetta «Il tuo racconto» resta visibile sopra l'editor; il segnaposto non la
+      sostituisce.
+
+### Rischi
+
+- **[UX] Tastiera e barra sticky su iOS dentro la WebView:** la barra può finire sotto l'intestazione
+  del form o saltare quando si apre la tastiera. Mitigazione: prova sul dispositivo vero prima del
+  commit.
+- **Codice malevolo nel racconto (XSS):** l'HTML arriva dall'utente. Mitigazione: pulizia nel
+  backend con elenco chiuso, e `[innerHTML]` di Angular che ripulisce di nuovo; mai
+  `wm-inner-html`, che usa `bypassSecurityTrustHtml`. Bozza e coda non sono ripulite finché non
+  arrivano al server, ma le vede solo chi le ha scritte.
+- **Primo uso senza rete nella PWA:** il pezzo di codice di Tiptap non è ancora scaricato e l'editor
+  non parte. Mitigazione: ripiego sulla casella di testo semplice. Nell'app nativa il codice è nel
+  pacchetto.
+- **Peso:** circa 140 KB compressi in più, scaricati solo all'apertura del form; il bundle
+  iniziale non cambia.
+- **Formato del campo `description`:** passa da testo a HTML per tutti i diari. Oggi lo leggono
+  solo l'app, la webapp (che non mostra i diari) e Nova; un futuro uso «Di tutti» o un export
+  parte dall'HTML ripulito o dall'estratto.
+- **Rilascio:** il ciclo 3 deve uscire insieme ai cicli 1 e 2 (nessuno è in `main`): un'app senza
+  l'editor mostrerebbe i tag nei racconti. Tornare indietro dopo il rilascio vorrebbe dire una
+  conversione dei dati con perdita di titoli, elenchi e collegamenti.
+- **Limite di tempo:** il giorno di sviluppo pagato è finito; il ciclo si fa per decisione del dev.
+
+### Out of scope
+
+- Foto dentro il testo (ciclo successivo, stesso formato HTML).
+- Racconto per tappe dentro il diario del cammino.
+- Titolo del diario, titolo/descrizione/tappa per ogni foto.
+- Form del diario nella webapp (scrivere da PC).
+
+### Moduli toccati
+
+- **camminiditalia:** `composer.json`/`composer.lock`; nuovo servizio di pulizia del testo del
+  diario (`app/Services/DiaryTextService.php` o simile) sul purifier di wm-package;
+  `StoreDiaryRequest`, `UpdateDiaryRequest`, `DiaryService`; `app/Nova/Diary.php`;
+  `resources/lang/*.json`; test in `tests/Feature/DiaryApiTest.php` e un test unitario del
+  servizio.
+- **wm-core:** `diaries/diary-editor/` (componente, template, stili, spec), `diaries/diary-text.utils.ts`
+  (+ spec), `diaries/_diary-rich-text.scss`, `diary-form` (template, contatore, limite),
+  `diary-detail` (HTML e collegamenti), `diaries-section` (estratti), `wm-core.module.ts`,
+  `localization/i18n/*.ts`.
+- **app:** `core/package.json`, `core/package-lock.json`.
+- **webapp:** `package.json`, `package-lock.json` (con l'aggiornamento del puntatore di wm-core).
