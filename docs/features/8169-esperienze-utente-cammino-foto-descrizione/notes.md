@@ -260,3 +260,50 @@ eseguita prima di toglierla); dalla tabella `migrations` locale è stata tolta l
   wm-package); la ricerca in Nova non decodifica le entità («A & B» non trova `A &amp; B`).
 - Foto dentro il testo: stesso formato HTML, ma servirà un riferimento ai media (non l'URL) e un
   elenco di tag più largo nel purifier.
+
+
+## Ciclo 4 — Date di percorrenza del diario (4 novembre 2026)
+
+### Divergenze dal piano, task per task
+Nessuna divergenza sostanziale. Aggiunte rispetto al piano:
+- Task 1: anche i km della tappa (`user_distance`) e il totale del cammino vengono solo dalle
+  registrazioni dell'ultima percorrenza, altrimenti due giri della stessa tappa si sommavano.
+- Task 4: `passport/passport-form` e `shared/date-range-picker` aggiunti agli elenchi degli spec
+  (`core/tsconfig.spec.json`, `core/angular.json`): lo spec del form della richiesta cartacea
+  (32 test) prima non girava da nessuna parte.
+- Task 5: tolti dallo spec del form della richiesta i test del vecchio calendario a due campi; i due
+  sulla chiusura del foglio durante l'animazione sono passati nel componente nuovo, che ne ha
+  ereditato la logica (`_dismissExpected`). Stili del vecchio calendario tolti dopo aver verificato
+  che nessun tema dei clienti li usa.
+
+### Bug trovati
+- Challenge sull'overview: la tabella `passport_stage_ugc_track` contiene le registrazioni di ogni
+  anno (`StageValidationService.php:343`), quindi le date note mescolavano più percorrenze; da qui
+  la regola dell'ultima percorrenza, applicata anche alla scheda del ciclo 2.
+- Review finale, corretti con test che fallivano prima: il back hardware con il calendario aperto
+  chiudeva tutto il diario (mancava `closeOverlay` nel form); il dettaglio del diario del cammino
+  senza date proprie univa i giorni di più percorrenze.
+- Screenshot con il calendario blu: tema non ancora caricato nella sessione headless; ricontrollato,
+  i colori sono quelli dell'app.
+
+### Decisioni
+- Il dev ha cambiato le scelte durante la challenge: le date scritte decidono il periodo (prima si
+  sommavano a quelle note), il margine è di un giorno (prima tre), le date si salvano solo se il
+  campo è stato toccato.
+- Colonne nella migration di creazione, su richiesta del dev; database locale allineato con
+  `Schema::table`, quello dei test con `migrate:fresh --env=testing`.
+- Calendario unico per diario e richiesta cartacea (richiesta del dev), con il payload della
+  richiesta invariato.
+- `PassportService` nel form del diario come parametro `@Optional` del costruttore: gli spec creano
+  il form con `new`.
+- Stima saltata, come nel ciclo 3.
+
+### Follow-up
+- Prova sul dispositivo vero: calendario su iOS e Android, back hardware con il foglio aperto.
+- Richiesta cartacea non provata a schermo dopo il cambio del calendario (coperta dai test).
+- Minore rimandato: «Svuota» su un campo solo precompilato invia date vuote, e dettaglio e
+  collegamento tornano all'ultima percorrenza, quindi le date «ricompaiono».
+- Da verificare: una tappa validata con richiesta cartacea che ha anche legami GPS di anni precedenti
+  prende le date dalle registrazioni e non dalla richiesta (comportamento precedente al ciclo).
+- Il collegamento si ricalcola solo alla modifica del diario: registrazioni sincronizzate dopo, o
+  tappe validate dopo, non si legano finché il diario non viene modificato.

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Jobs\LinkDiaryUgcTracksJob;
 use App\Models\Diary;
+use App\Models\PassportStage;
 use App\Services\DiaryService;
 use App\Services\DiaryUgcLinkService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -86,6 +87,65 @@ class DiaryUgcLinkTest extends TestCase
         (new LinkDiaryUgcTracksJob($e->id))->handle(app(DiaryUgcLinkService::class));
 
         return $e->ugcTracks()->pluck('ugc_tracks.id')->map(fn ($i) => (int) $i)->sort()->values()->all();
+    }
+
+    /** Tappa validata col GPS dalle registrazioni date (oc:8169, ciclo 4). */
+    private function validatedBy(int $userId, int $layerId, int $ecTrackId, array $ugcs): void
+    {
+        $stage = PassportStage::create([
+            'user_id' => $userId, 'ec_track_id' => $ecTrackId, 'layer_id' => $layerId,
+            'source' => PassportStage::SOURCE_GPS, 'validated_at' => now(),
+        ]);
+        foreach ($ugcs as $ugc) {
+            DB::table('passport_stage_ugc_track')->insert(['passport_stage_id' => $stage->id, 'ugc_track_id' => $ugc->id]);
+        }
+    }
+
+    public function test_con_date_scritte_lega_solo_il_periodo_con_un_giorno_di_margine(): void
+    {
+        $user = $this->createUserWithoutRole();
+        $layer = $this->createLayer();
+        $track = $this->createTrack($user->id, 'Tappa 1', $layer);
+        $dayBefore = $this->recording($user->id, $track->id, '2026-05-09T08:00:00Z');
+        $inside = $this->recording($user->id, $track->id, '2026-05-11T08:00:00Z');
+        $this->recording($user->id, $track->id, '2026-05-08T08:00:00Z');
+        // registrata dopo la creazione del diario: con le date conta lo stesso
+        $later = $this->recording($user->id, $track->id, '2026-05-13T08:00:00Z');
+
+        $e = $this->diary($user->id, $layer->id, $track->id, '2026-05-12 10:00:00');
+        $e->update(['walk_start_date' => '2026-05-10', 'walk_end_date' => '2026-05-12']);
+
+        $this->assertSame([$dayBefore->id, $inside->id, $later->id], $this->runLink($e->fresh()));
+    }
+
+    public function test_senza_date_scritte_usa_l_ultima_percorrenza(): void
+    {
+        $user = $this->createUserWithoutRole();
+        $layer = $this->createLayer();
+        $track = $this->createTrack($user->id, 'Tappa 1', $layer);
+        $old = $this->recording($user->id, $track->id, '2024-05-10T08:00:00Z');
+        $new = $this->recording($user->id, $track->id, '2026-05-10T08:00:00Z');
+        $old->update(['properties' => ['locations' => [['latitude' => 44.0, 'longitude' => 11.0, 'time' => strtotime('2024-05-10T08:00:00Z') * 1000]]]]);
+        $new->update(['properties' => ['locations' => [['latitude' => 44.0, 'longitude' => 11.0, 'time' => strtotime('2026-05-10T08:00:00Z') * 1000]]]]);
+        $this->validatedBy($user->id, $layer->id, $track->id, [$old, $new]);
+
+        $e = $this->diary($user->id, $layer->id, $track->id, '2026-06-01 10:00:00');
+
+        $this->assertSame([$new->id], $this->runLink($e));
+    }
+
+    public function test_il_giorno_di_una_registrazione_e_quello_di_roma(): void
+    {
+        $user = $this->createUserWithoutRole();
+        $layer = $this->createLayer();
+        $track = $this->createTrack($user->id, 'Tappa 1', $layer);
+        // 22:30 UTC del 9 maggio = 00:30 del 10 a Roma: con il periodo 11-12 maggio è il giorno prima, dentro il margine
+        $ugc = $this->recording($user->id, $track->id, '2026-05-09T22:30:00Z');
+
+        $e = $this->diary($user->id, $layer->id, $track->id, '2026-05-13 10:00:00');
+        $e->update(['walk_start_date' => '2026-05-11', 'walk_end_date' => '2026-05-12']);
+
+        $this->assertSame([$ugc->id], $this->runLink($e->fresh()));
     }
 
     public function test_lega_registrazioni_della_tappa_nella_finestra(): void

@@ -838,6 +838,23 @@ class StageProgressServiceTest extends TestCase
         $this->assertSame(19.5, $progress['user_distance_total']);
     }
 
+    public function test_two_walks_years_apart_keep_only_the_latest(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $walker = User::factory()->create();
+        $layer = $this->createLayer($owner->id);
+        $track = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 14]]);
+        $stage = $this->validate($walker, $track, $layer, PassportStage::SOURCE_GPS);
+        $this->recording($walker, [$stage], 13.0, '2024-05-10T08:00:00Z');
+        $this->recording($walker, [$stage], 12.0, '2026-05-10T08:00:00Z');
+
+        $tracks = $this->tracksById($this->service->progressFor($walker, $layer));
+
+        $this->assertSame(['2026-05-10'], $tracks[$track->id]['walked_dates']);
+        // i km sono quelli dell'ultima percorrenza, non la somma delle due
+        $this->assertSame(12.0, $tracks[$track->id]['user_distance']);
+    }
+
     public function test_paper_stage_uses_request_dates_and_route_distance(): void
     {
         $owner = $this->createUserWithRole('Validator');

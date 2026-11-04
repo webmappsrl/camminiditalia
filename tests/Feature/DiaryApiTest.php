@@ -323,6 +323,65 @@ class DiaryApiTest extends TestCase
             ->assertJsonValidationErrors(['description' => 'Write a text or add at least one photo.']);
     }
 
+    public function test_crea_con_le_date_di_percorrenza(): void
+    {
+        $layer = $this->createLayer();
+
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'x', 'walk_start_date' => '2026-05-10', 'walk_end_date' => '2026-05-12'])
+            ->assertStatus(201)
+            ->assertJsonPath('walk_start_date', '2026-05-10')
+            ->assertJsonPath('walk_end_date', '2026-05-12');
+    }
+
+    public function test_solo_la_data_di_inizio_lascia_la_fine_vuota(): void
+    {
+        $layer = $this->createLayer();
+
+        $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'x', 'walk_start_date' => '2026-05-10'])
+            ->assertStatus(201)
+            ->assertJsonPath('walk_start_date', '2026-05-10')
+            ->assertJsonPath('walk_end_date', null);
+    }
+
+    public function test_rifiuta_fine_prima_dell_inizio_e_date_future(): void
+    {
+        $layer = $this->createLayer();
+        $user = $this->createUserWithoutRole();
+
+        $this->postDiary($user, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'x', 'walk_start_date' => '2026-05-12', 'walk_end_date' => '2026-05-10'])
+            ->assertStatus(422)->assertJsonValidationErrors(['walk_end_date']);
+
+        $tomorrow = now('Europe/Rome')->addDay()->format('Y-m-d');
+        $this->postDiary($user, ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'x', 'walk_start_date' => $tomorrow])
+            ->assertStatus(422)->assertJsonValidationErrors(['walk_start_date']);
+    }
+
+    public function test_oggi_si_calcola_nel_fuso_di_roma(): void
+    {
+        // 23:30 UTC del 9 maggio: a Roma è già il 10
+        \Carbon\Carbon::setTestNow('2026-05-09 23:30:00 UTC');
+        try {
+            $layer = $this->createLayer();
+            $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'x', 'walk_start_date' => '2026-05-10'])
+                ->assertStatus(201);
+        } finally {
+            \Carbon\Carbon::setTestNow();
+        }
+    }
+
+    public function test_modifica_le_date_solo_se_inviate(): void
+    {
+        $walker = $this->createUserWithoutRole();
+        $diary = $this->diaryWithPhotos($walker, 0);
+        $diary->update(['walk_start_date' => '2026-05-10', 'walk_end_date' => '2026-05-12']);
+
+        $this->updateDiary($walker, $diary, ['description' => 'nuovo', 'keep_media_ids' => '[]'])
+            ->assertOk()->assertJsonPath('walk_start_date', '2026-05-10')->assertJsonPath('walk_end_date', '2026-05-12');
+
+        $this->updateDiary($walker, $diary, ['keep_media_ids' => '[]', 'walk_start_date' => '', 'walk_end_date' => ''])
+            ->assertOk()->assertJsonPath('walk_start_date', null)->assertJsonPath('walk_end_date', null);
+    }
+
     public function test_rifiuta_sette_foto(): void
     {
         $layer = $this->createLayer();

@@ -55,6 +55,9 @@ class UpdateDiaryRequest extends FormRequest
             'rating_route' => ['sometimes', 'nullable', 'integer', 'between:1,5'],
             'rating_hospitality' => ['sometimes', 'nullable', 'integer', 'between:1,5'],
             'rating_difficulty' => ['sometimes', 'nullable', 'integer', 'between:1,5'],
+            // date di percorrenza (oc:8169, ciclo 4): «oggi» nel fuso di Roma, non del server
+            'walk_start_date' => ['sometimes', 'nullable', 'date_format:Y-m-d', 'before_or_equal:'.now('Europe/Rome')->format('Y-m-d')],
+            'walk_end_date' => ['sometimes', 'nullable', 'date_format:Y-m-d', 'after_or_equal:walk_start_date', 'before_or_equal:'.now('Europe/Rome')->format('Y-m-d')],
             'keep_media_ids' => ['required', 'string'],
             'images' => ['nullable', 'array', 'max:'.self::MAX_PHOTOS],
             'images.*' => ['file', 'mimes:jpeg,jpg,png,webp', 'max:5120', 'dimensions:max_width=8000,max_height=8000'],

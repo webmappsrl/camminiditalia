@@ -3,10 +3,13 @@
 namespace App\Services;
 
 use App\Models\Diary;
+use App\Support\UgcRecordingDate;
+use App\Support\WalkPeriods;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\User;
 
 /**
  * Collega un'esperienza alle registrazioni (UgcTrack) del suo autore (oc:8169).
@@ -33,11 +36,21 @@ use Wm\WmPackage\Models\Layer;
  * 5. si legano le candidate con data in `[ancora - N giorni, ancora]`, N da
  *    `camminiditalia.diaries.ugc_link_window_days`.
  *
+ * Ciclo 4: i punti 3-5 valgono solo senza date. Con le date scritte nel diario, oppure senza ma con
+ * l'ultima percorrenza nota dal Passaporto, si legano le candidate registrate in quei giorni ±1
+ * (giorno del primo punto nel fuso di Roma, come nel Passaporto), senza il limite della creazione.
+ *
  * Il legame è ricalcolato con `sync()`: ogni esecuzione sostituisce il precedente.
  */
 class DiaryUgcLinkService
 {
-    public function __construct(private StageValidationService $stageValidation) {}
+    /** Giorni di margine prima e dopo il periodo (oc:8169, ciclo 4). */
+    public const MARGIN_DAYS = 1;
+
+    public function __construct(
+        private StageValidationService $stageValidation,
+        private StageProgressService $stageProgress,
+    ) {}
 
     /**
      * Ricalcola e salva le registrazioni legate all'esperienza.
@@ -64,7 +77,28 @@ class DiaryUgcLinkService
 
         $rows = DB::table('ugc_tracks')
             ->whereIn('id', array_keys($walked))
-            ->get(['id', 'properties', 'created_at']);
+            ->get([
+                'id', 'properties', 'created_at',
+                DB::raw("properties->'locations'->0->>'time' as first_time"),
+                DB::raw("properties->>'createdAt' as created_prop"),
+            ]);
+
+        // Ciclo 4: con un periodo (date scritte, altrimenti ultima percorrenza nota) si legano le
+        // registrazioni di quei giorni ±1, anche se successive alla creazione del diario.
+        $period = $this->period($diary, $stageIds);
+        if ($period !== null) {
+            [$from, $to] = $period;
+            $ids = [];
+            foreach ($rows as $row) {
+                $day = UgcRecordingDate::day($row->first_time, $row->created_prop, $row->created_at);
+                if ($day !== null && $day >= $from && $day <= $to) {
+                    $ids[] = (int) $row->id;
+                }
+            }
+            sort($ids);
+
+            return $ids;
+        }
 
         $dated = [];
         foreach ($rows as $row) {
@@ -84,6 +118,55 @@ class DiaryUgcLinkService
         $from = $anchor->copy()->subDays((int) config('camminiditalia.diaries.ugc_link_window_days', 30));
 
         return array_keys(array_filter($before, fn (Carbon $d) => $d->greaterThanOrEqualTo($from)));
+    }
+
+    /**
+     * Periodo di ricerca con il margine: le date scritte nel diario, altrimenti l'ultima percorrenza
+     * delle tappe candidate.
+     *
+     * @param  int[]  $stageIds
+     * @return array{0: string, 1: string}|null `[da, a]` in `Y-m-d`, `null` senza date
+     */
+    private function period(Diary $diary, array $stageIds): ?array
+    {
+        $start = $diary->walk_start_date?->format('Y-m-d');
+        $end = $diary->walk_end_date?->format('Y-m-d') ?? $start;
+        if ($start === null) {
+            $known = $this->knownDates($diary, $stageIds);
+            if ($known === []) {
+                return null;
+            }
+            [$start, $end] = [$known[0], $known[count($known) - 1]];
+        }
+        $margin = self::MARGIN_DAYS;
+
+        return [
+            Carbon::parse($start)->subDays($margin)->format('Y-m-d'),
+            Carbon::parse((string) $end)->addDays($margin)->format('Y-m-d'),
+        ];
+    }
+
+    /**
+     * Giorni dell'ultima percorrenza nota delle tappe candidate, dal progresso del Passaporto.
+     *
+     * @param  int[]  $stageIds
+     * @return array<int, string>
+     */
+    private function knownDates(Diary $diary, array $stageIds): array
+    {
+        $user = User::find($diary->user_id);
+        $layer = Layer::find($diary->layer_id);
+        if ($user === null || $layer === null) {
+            return [];
+        }
+        $dates = [];
+        foreach ($this->stageProgress->progressFor($user, $layer)['tracks'] as $track) {
+            if (in_array((int) $track['id'], $stageIds, true)) {
+                $dates = array_merge($dates, $track['walked_dates']);
+            }
+        }
+
+        return WalkPeriods::latest($dates);
     }
 
     /**

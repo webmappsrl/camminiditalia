@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\CertificationRequest;
 use App\Models\PassportStage;
 use App\Support\PassportLayer;
+use App\Support\UgcRecordingDate;
+use App\Support\WalkPeriods;
 use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -571,7 +573,10 @@ class StageProgressService
         $routeKmWithoutRecordings = 0.0;
         foreach ($validatedRows as $row) {
             $stageId = (int) $row->stage_id;
-            $own = $byStage->get($stageId, collect());
+            $all = $byStage->get($stageId, collect());
+            // solo l'ultima percorrenza (ciclo 4): i legami contengono le registrazioni di ogni anno
+            $latest = WalkPeriods::latest($all->map(fn ($link) => $this->recordingDate($link))->filter()->values()->all());
+            $own = $all->filter(fn ($link) => in_array($this->recordingDate($link), $latest, true));
             $dates = [];
             $exclusive = $own->isNotEmpty();
             $km = 0.0;
@@ -579,12 +584,9 @@ class StageProgressService
                 $ugcKm[(int) $link->ugc_track_id] = (float) $link->km;
                 $km += (float) $link->km;
                 $exclusive = $exclusive && ($linkCounts[(int) $link->ugc_track_id] ?? 0) === 1;
-                $date = $this->recordingDate($link);
-                if ($date !== null) {
-                    $dates[] = $date;
-                }
+                $dates[] = (string) $this->recordingDate($link);
             }
-            if ($own->isEmpty()) {
+            if ($all->isEmpty()) {
                 $routeKmWithoutRecordings += (float) $row->distance_km;
                 $request = $row->certification_request_id !== null ? $requests->get((int) $row->certification_request_id) : null;
                 if ($request instanceof CertificationRequest) {
@@ -612,20 +614,6 @@ class StageProgressService
      */
     private function recordingDate(object $link): ?string
     {
-        $tz = 'Europe/Rome';
-        if (is_numeric($link->first_time)) {
-            return Carbon::createFromTimestampMs((float) $link->first_time)->setTimezone($tz)->format('Y-m-d');
-        }
-        foreach ([$link->created_prop, $link->created_at] as $value) {
-            if (is_string($value) && $value !== '') {
-                try {
-                    return Carbon::parse($value)->setTimezone($tz)->format('Y-m-d');
-                } catch (\Throwable) {
-                    continue;
-                }
-            }
-        }
-
-        return null;
+        return UgcRecordingDate::day($link->first_time, $link->created_prop, $link->created_at);
     }
 }

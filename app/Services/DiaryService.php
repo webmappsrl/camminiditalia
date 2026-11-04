@@ -45,7 +45,7 @@ class DiaryService
                 'ec_track_id' => $ecTrackId,
                 'description' => $description !== '' ? $description : null,
                 'publication_consent' => (bool) ($data['publication_consent'] ?? false),
-            ] + $this->ratings($data),
+            ] + $this->extraFields($data),
         );
 
         // Retry di un invio la cui risposta è andata persa: se l'utente nel frattempo ha corretto il
@@ -56,8 +56,8 @@ class DiaryService
         if (! $diary->wasRecentlyCreated && array_key_exists('publication_consent', $data)) {
             $diary->update(['publication_consent' => (bool) $data['publication_consent']]);
         }
-        if (! $diary->wasRecentlyCreated && $this->ratings($data) !== []) {
-            $diary->update($this->ratings($data));
+        if (! $diary->wasRecentlyCreated && $this->extraFields($data) !== []) {
+            $diary->update($this->extraFields($data));
         }
 
         try {
@@ -85,7 +85,7 @@ class DiaryService
      * @param  int[]  $keepMediaIds
      * @param  UploadedFile[]  $images
      * @param  ?bool  $publicationConsent  null lascia invariato il consenso
-     * @param  array<string, int|string|null>  $ratings  solo le valutazioni inviate; null le azzera
+     * @param  array<string, int|string|null>  $ratings  solo le valutazioni e le date di percorrenza inviate; null le azzera
      */
     public function update(Diary $diary, ?string $description, array $keepMediaIds, array $images, ?bool $publicationConsent = null, array $ratings = []): Diary
     {
@@ -118,7 +118,7 @@ class DiaryService
         if ($publicationConsent !== null) {
             $attributes['publication_consent'] = $publicationConsent;
         }
-        $attributes += $this->ratings($ratings);
+        $attributes += $this->extraFields($ratings);
         $diary->update($attributes);
         $diary->unsetRelation('media');
 
@@ -262,5 +262,24 @@ class DiaryService
         }
 
         return $ratings;
+    }
+
+    /**
+     * Valutazioni e date di percorrenza inviate (oc:8169, cicli 2 e 4): solo le chiavi presenti,
+     * vuoto = azzera.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, int|string|null>
+     */
+    private function extraFields(array $data): array
+    {
+        $fields = $this->ratings($data);
+        foreach (Diary::WALK_DATES as $key) {
+            if (array_key_exists($key, $data)) {
+                $fields[$key] = $data[$key] === null || $data[$key] === '' ? null : (string) $data[$key];
+            }
+        }
+
+        return $fields;
     }
 }

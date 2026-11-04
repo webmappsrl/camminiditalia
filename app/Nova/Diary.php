@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -134,6 +135,14 @@ class Diary extends Resource
                 ? Str::limit(app(DiaryTextService::class)->plainText($resource->description), 80)
                 : null)
                 ->onlyOnIndex(),
+
+            Date::make(__('Walked from'), 'walk_start_date')
+                ->readonly()
+                ->hideFromIndex(),
+
+            Date::make(__('Walked until'), 'walk_end_date')
+                ->readonly()
+                ->hideFromIndex(),
 
             Boolean::make(__('Public'), 'is_public')
                 ->readonly(),

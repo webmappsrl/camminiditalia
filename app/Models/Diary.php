@@ -55,7 +55,12 @@ class Diary extends Model implements HasMedia
         'rating_route',
         'rating_hospitality',
         'rating_difficulty',
+        'walk_start_date',
+        'walk_end_date',
     ];
+
+    /** Date di percorrenza scritte dall'utente (oc:8169, ciclo 4). */
+    public const WALK_DATES = ['walk_start_date', 'walk_end_date'];
 
     /** Valutazioni facoltative da 1 a 5 (oc:8169, ciclo 2). */
     public const RATINGS = ['rating_route', 'rating_hospitality', 'rating_difficulty'];
@@ -66,6 +71,8 @@ class Diary extends Model implements HasMedia
         'rating_route' => 'integer',
         'rating_hospitality' => 'integer',
         'rating_difficulty' => 'integer',
+        'walk_start_date' => 'date:Y-m-d',
+        'walk_end_date' => 'date:Y-m-d',
     ];
 
     public function registerMediaCollections(): void
@@ -166,6 +173,8 @@ class Diary extends Model implements HasMedia
             'rating_route' => $this->rating_route,
             'rating_hospitality' => $this->rating_hospitality,
             'rating_difficulty' => $this->rating_difficulty,
+            'walk_start_date' => $this->walk_start_date?->format('Y-m-d'),
+            'walk_end_date' => $this->walk_end_date?->format('Y-m-d'),
             'created_at' => $this->created_at->toIso8601String(),
             'updated_at' => $this->updated_at->toIso8601String(),
             // Nessuna conversione registrata: la miniatura è l'immagine originale.

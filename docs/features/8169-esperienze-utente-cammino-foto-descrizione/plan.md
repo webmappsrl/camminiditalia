@@ -832,3 +832,191 @@ Tiptap 3.32.0, Karma/Jasmine, PHPUnit in Docker.
   nel browser.
 - [ ] **Step 5 (dev):** commit app `feat(oc:8169): editor del racconto, pacchetti Tiptap e
   puntatore wm-core`; webapp `chore(oc:8169): pacchetti Tiptap per wm-core`.
+
+
+## Ciclo 4 — Date di percorrenza del diario — piano (4 novembre 2026)
+
+> Ticket: oc:8169 — spec: sezione «Ciclo 4 — Date di percorrenza del diario» di overview.md
+
+> **Per chi esegue:** superpowers:executing-plans, task per task. **Webmapp:** nessun commit, add,
+> push o branch durante l'esecuzione; i passi «Commit» sono istruzioni per il dev.
+
+**Goal:** date di percorrenza nel diario con un calendario a intervallo, collegamento delle
+registrazioni sul periodo delle date (ultima percorrenza o date scritte, ±1 giorno).
+
+**Architecture:** nel backend un helper delle percorrenze (raggruppa i giorni, tiene l'ultima) usato
+da `StageProgressService` e da `DiaryUgcLinkService`, e un helper unico per il giorno di una
+registrazione; nel diario due colonne di data. In wm-core un componente `wm-date-range-picker`
+(stato e testi in funzioni pure), usato dal form del diario e da quello della richiesta cartacea.
+
+### Global Constraints
+
+- Percorrenze: due giorni a più di 30 giorni di distanza sono percorrenze diverse; si usa la più
+  recente. Margine del collegamento: 1 giorno prima e dopo.
+- Precedenza del periodo: date scritte nel diario → ultima percorrenza nota → 30 giorni (metodo
+  attuale, invariato).
+- Date sempre stringhe `AAAA-MM-GG`; «oggi» nel fuso `Europe/Rome`.
+- Il diario salva date proprie solo se il campo è stato toccato; un campo svuotato invia valori vuoti.
+- Form della richiesta cartacea: payload invariato (`start_date`, `end_date` entrambe obbligatorie;
+  un giorno solo le rende uguali).
+- i18n wm-core: chiave = testo italiano, 7 lingue; backend: `it.json`.
+- Colonne nella migration di creazione `2026_10_20_100000_create_diaries_table.php`; database locale
+  allineato a mano con `Schema::table`; database dei test con `migrate:fresh --env=testing`.
+
+### Review Focus
+
+1. Stessa tappa percorsa a maggio 2024 e maggio 2026 → date note, scheda e collegamento solo del 2026
+   (Task 1 e 3).
+2. Intervallo scelto toccando due volte lo stesso giorno → un giorno, senza stato sfasato (Task 4).
+3. Diario scritto alle 00:30 italiane con «oggi» → accettato (Task 2).
+4. Diario aperto in modifica senza date proprie e salvato senza toccare il campo → nessuna data
+   salvata (Task 6).
+5. Richiesta cartacea di un solo giorno → `start_date` = `end_date`, testo «Solo il …» visibile
+   prima della conferma (Task 4 e 5).
+
+---
+
+### Task 1: Percorrenze e giorno di una registrazione (camminiditalia)
+
+**Files:**
+- Create: `app/Support/WalkPeriods.php`, `app/Support/UgcRecordingDate.php`
+- Modify: `app/Services/StageProgressService.php` (`walkedData`, `recordingDate` → helper)
+- Test: `tests/Unit/Support/WalkPeriodsTest.php`, `tests/Feature/StageProgressServiceTest.php`
+
+**Interfaces:**
+- Produces: `WalkPeriods::latest(array $dates): array` (giorni `Y-m-d` dell'ultima percorrenza,
+  ordinati; gap > 30 giorni separa), `WalkPeriods::GAP_DAYS = 30`;
+  `UgcRecordingDate::day(?string $firstPointMs, ?string $createdProp, ?string $createdAt): ?string`
+  (primo punto, poi `createdAt`, poi la riga; fuso di Roma).
+
+- [ ] **Step 1:** test che falliscono: `latest(['2024-05-10','2026-05-10','2026-05-11'])` →
+  `['2026-05-10','2026-05-11']`; `latest(['2026-04-01','2026-05-01'])` (30 giorni) → entrambe;
+  `latest([])` → `[]`; in `StageProgressServiceTest` una tappa con due registrazioni a due anni di
+  distanza ha `walked_dates` solo dell'ultima.
+- [ ] **Step 2:** `--filter='WalkPeriodsTest|StageProgressServiceTest'` → FAIL.
+- [ ] **Step 3:** implementa; in `walkedData` le date di ogni tappa passano da `WalkPeriods::latest`;
+  `recordingDate` delega a `UgcRecordingDate::day`.
+- [ ] **Step 4:** stesso comando → PASS.
+
+### Task 2: Date nel diario (camminiditalia)
+
+**Files:**
+- Modify: `database/migrations/2026_10_20_100000_create_diaries_table.php` (`walk_start_date`,
+  `walk_end_date` `date` nullable), `app/Models/Diary.php` (fillable, cast `date:Y-m-d`,
+  `toApiArray`), `Store/UpdateDiaryRequest`, `DiaryController`, `DiaryService`, `app/Nova/Diary.php`,
+  `resources/lang/it.json`
+- Test: `tests/Feature/DiaryApiTest.php`
+
+**Interfaces:**
+- Produces: API `walk_start_date`, `walk_end_date` (`Y-m-d` o `null`), in ingresso facoltative
+  (`sometimes|nullable|date_format:Y-m-d`), `walk_end_date` ≥ `walk_start_date`; nessuna data dopo
+  «oggi» a Roma (`today('Europe/Rome')`). Assenti in modifica = invariate; vuote = tolte.
+
+- [ ] **Step 1:** test che falliscono: crea con le due date → salvate e restituite; solo l'inizio →
+  fine `null`; fine prima dell'inizio → 422; domani (Roma) → 422; oggi a Roma con l'orologio fermo
+  alle 23:30 UTC del giorno prima (`Carbon::setTestNow`) → 201; modifica senza le chiavi → date
+  invariate; modifica con chiavi vuote → `null`.
+- [ ] **Step 2:** `--filter=DiaryApiTest` → FAIL.
+- [ ] **Step 3:** implementa; database locale con `Schema::table`, test con
+  `migrate:fresh --env=testing`; Nova: due `Date` in sola lettura, nascosti dall'elenco.
+- [ ] **Step 4:** → PASS.
+
+### Task 3: Collegamento sul periodo delle date (camminiditalia)
+
+**Files:**
+- Modify: `app/Services/DiaryUgcLinkService.php`
+- Test: `tests/Feature/DiaryUgcLinkServiceTest.php` (esistente o nuovo, secondo la cartella)
+
+**Interfaces:**
+- Consumes: `WalkPeriods::latest`, `UgcRecordingDate::day`, `StageProgressService::progressFor`
+  (per le `walked_dates` della tappa o di tutte le tappe del cammino).
+
+- [ ] **Step 1:** test che falliscono: con `walk_start_date`/`walk_end_date` si legano solo le
+  registrazioni nel periodo ±1 giorno (una del giorno prima sì, due giorni prima no), anche se
+  successive alla creazione del diario; senza date scritte e con due percorrenze (2024 e 2026) si
+  legano solo quelle del 2026; senza nessuna data vale il metodo dei 30 giorni (test esistenti verdi);
+  una registrazione delle 00:30 italiane conta per quel giorno.
+- [ ] **Step 2:** → FAIL.
+- [ ] **Step 3:** `resolveUgcTrackIds`: candidate come oggi; periodo = date scritte, altrimenti
+  `WalkPeriods::latest` delle `walked_dates` (della tappa o unite su tutte le tappe), ±1 giorno;
+  altrimenti il ramo attuale. Giorno di ogni candidata con `UgcRecordingDate::day`.
+- [ ] **Step 4:** → PASS; suite completa, `composer format`, PHPStan.
+- [ ] **Step 5 (dev):** commit `feat(oc:8169): date di percorrenza del diario e collegamento sul periodo`.
+
+### Task 4: Calendario a intervallo (wm-core)
+
+**Files:**
+- Create: `shared/date-range-picker/date-range-picker.component.{ts,html,scss,spec.ts}`,
+  `shared/date-range-picker/date-range.utils.ts` (+ spec)
+- Modify: `shared/shared.module.ts` (dichiarazione ed export), i18n
+
+**Interfaces:**
+- Produces: `interface DateRange { start: string; end: string }`;
+  `nextRange(current: DateRange | null, picking: 'start' | 'end', day: string): {range: DateRange; picking: 'start' | 'end'}`
+  (primo tocco inizio, secondo fine con scambio se prima, stesso giorno = un giorno, terzo ricomincia);
+  `daysBetween(range: DateRange): string[]`; `formatDateRange(range: DateRange | null, locale: string): string`
+  («10 – 12 maggio 2026», «30 aprile – 2 maggio 2026», «30 dicembre 2025 – 2 gennaio 2026»,
+  «10 maggio 2026»); `describeDateRange(range, locale)` per il testo sotto il calendario
+  («Dal 10 al 12 maggio», «Solo il 10 maggio»).
+  Componente `wm-date-range-picker`: input `value: DateRange | null`, `max: string`, `label`,
+  `placeholder`, `invalid`, `clearable`; output `valueChange: EventEmitter<DateRange | null>`.
+  `ion-datetime` con `[multiple]="true"`: a ogni `ionChange` si ricava il giorno toccato confrontando
+  il nuovo array col precedente, si applica `nextRange`, si reimposta il valore ai soli estremi e si
+  colorano i giorni in mezzo con `highlightedDates`.
+
+- [ ] **Step 1:** test che falliscono delle utils (sequenze di tocchi, scambio, stesso giorno,
+  ricomincia, formati nei tre casi e giorno singolo) e del componente (campo che apre il foglio,
+  «Conferma» emette l'intervallo, «Annulla» no, svuota emette `null`, testo sotto il calendario).
+- [ ] **Step 2:** `--include=…/shared/date-range-picker` (aggiungere la cartella agli elenchi degli
+  spec se non è coperta da `shared`) → FAIL.
+- [ ] **Step 3:** implementa; lingua da `intlLocale(langSvc.currentLang)`, `firstDayOfWeek` 1, `max`
+  da passare; campo di almeno 44 px.
+- [ ] **Step 4:** → PASS.
+
+### Task 5: Richiesta cartacea con il calendario a intervallo (wm-core)
+
+**Files:**
+- Modify: `passport/passport-form/passport-form.component.{ts,html,scss,spec.ts}`
+
+- [ ] **Step 1:** test che falliscono: scegliendo 10–12 maggio il payload ha `startDate`
+  `2026-05-10` e `endDate` `2026-05-12`, come oggi; un giorno solo → le due date uguali; senza date
+  l'invio resta bloccato con lo stesso messaggio di oggi; i due campi separati non ci sono più.
+- [ ] **Step 2:** test del passaporto → FAIL.
+- [ ] **Step 3:** sostituisce i due bottoni e la modale con `wm-date-range-picker`, che scrive nei
+  due `FormControl` esistenti; toglie `openCalendar`/`confirmDate`/`pendingDate` non più usati.
+- [ ] **Step 4:** → PASS.
+
+### Task 6: Date nel diario: form, invio, dettaglio (wm-core)
+
+**Files:**
+- Modify: `diaries/diary.model.ts`, `diary.service.ts`, `diary-draft.store.ts`,
+  `diary-outbox.service.ts`, `diary-form/*`, `diary-route-data.utils.ts`, `diary-detail/*`,
+  `diaries-section` (riapertura di un non inviato), i18n
+- Test: gli spec corrispondenti
+
+**Interfaces:**
+- Produces: `Diary.walkDates?: DateRange | null`; `DiaryDraft.walkDates?: DateRange | null` dove
+  `undefined` = campo non toccato (non si invia) e `null` = svuotato (si inviano vuote);
+  `diaryKnownWalk(progress, ecTrackId | null): DateRange | null` (date della tappa o unite su tutte
+  le tappe, ultima percorrenza con gap 30 giorni, come nel backend).
+
+- [ ] **Step 1:** test che falliscono: il servizio invia `walk_start_date`/`walk_end_date` solo con
+  `walkDates` definito (vuote con `null`) e li legge dall'API; bozza e coda li conservano (anche nella
+  riapertura di un non inviato); il form precompila dall'ultima percorrenza un campo non toccato e non
+  sovrascrive un campo toccato; con date proprie mostra quelle; avviso se le date non toccano l'ultima
+  percorrenza entro un giorno; `diaryRouteData` usa le date del diario prima di quelle note e c'è
+  anche a percorso non completato (senza km).
+- [ ] **Step 2:** test della cartella `diaries` → FAIL.
+- [ ] **Step 3:** implementa; campo «Quando l'hai percorso» dopo il racconto, `clearable`;
+  testi nuovi nelle 7 lingue.
+- [ ] **Step 4:** → PASS; suite completa dell'app.
+- [ ] **Step 5 (dev):** commit wm-core `feat(oc:8169): date di percorrenza nel diario e calendario a intervallo`.
+
+### Task 7: Verifica
+
+- [ ] Build di produzione camminiditalia e default.
+- [ ] Prova a schermo con l'utente di prova: diario nuovo con il campo precompilato, scelta di un
+  intervallo, salvataggio, dettaglio, registrazioni legate; richiesta cartacea con un intervallo e con
+  un giorno (payload nella rete del browser).
+- [ ] Prova sul dispositivo (a cura del dev): calendario su iOS e Android.
+- [ ] **Commit (dev):** app con il puntatore di wm-core.

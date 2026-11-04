@@ -522,3 +522,139 @@ non andranno convertiti in seguito.
   `localization/i18n/*.ts`.
 - **app:** `core/package.json`, `core/package-lock.json`.
 - **webapp:** `package.json`, `package-lock.json` (con l'aggiornamento del puntatore di wm-core).
+
+
+## Ciclo 4 — Date di percorrenza del diario (4 novembre 2026)
+
+> Fonti: messaggio del cliente del 2 novembre nel ticket (§3.4 «possibilità di inserire data di
+> percorrenza e mostrare quella», §4.1 «collegare automaticamente al diario le tracce GPS registrate
+> nel periodo indicato dall'utente o comunque le più vicine»); call del 3 novembre (tag 716), Davide
+> Nanna: «gli facciamo selezionare a lui il periodo di percorrenza». Richiesta del dev del 4 novembre.
+
+### Cosa cambia
+
+Nel form del diario c'è un campo «Quando l'hai percorso», un calendario a intervallo: primo tocco il
+giorno d'inizio, secondo tocco quello di fine, i giorni in mezzo colorati; un tocco solo è un giorno.
+Il campo è facoltativo, sempre visibile, e arriva già compilato con le date dell'ultima percorrenza
+nota dal Passaporto (giorni delle registrazioni GPS sulle tappe, o periodo della richiesta cartacea).
+Le registrazioni si legano al diario cercandole nel periodo delle date scritte, o se non ci sono in
+quello dell'ultima percorrenza, con un giorno di margine, invece che nei 30 giorni prima dell'ultima
+registrazione; i 30 giorni restano solo quando non c'è nessuna data. Il dettaglio mostra le date
+scritte nel diario, altrimenti quelle dell'ultima percorrenza. Lo stesso calendario sostituisce i due campi di data
+del form della richiesta cartacea del Passaporto, che invia `start_date` ed `end_date` come oggi.
+
+### Perché
+
+Il cliente vuole che il diario dica quando è stato percorso il cammino e che le registrazioni legate
+siano quelle di quella percorrenza: chi fa lo stesso cammino due volte oggi si ritrova legate le
+registrazioni sbagliate, e chi racconta una tappa senza GPS non ha nessuna data.
+
+### Requisiti
+
+**Date note e date del diario**
+- [ ] Date note di un diario: per la tappa, i giorni in cui risulta percorsa (`walked_dates` del
+      progresso: giorni delle registrazioni legate alla tappa, oppure da `start_date` a `end_date`
+      della richiesta cartacea); per il cammino, quelli di tutte le tappe validate.
+- [ ] **Solo l'ultima percorrenza:** la tabella dei legami tappa-registrazione contiene tutte le
+      registrazioni dell'utente su quella tappa, di qualsiasi anno (`StageValidationService.php:343`),
+      quindi i giorni noti si dividono in percorrenze (due giorni a più di 30 giorni di distanza
+      sono percorrenze diverse) e si usa la più recente. Vale per `walked_dates` del progresso,
+      quindi anche per la scheda «Il tuo percorso» del ciclo 2, per la precompilazione e per il
+      collegamento.
+- [ ] Il diario ha `walk_start_date` e `walk_end_date` (date, facoltative; la fine vuota vale un
+      giorno solo). Validazione: nessuna data futura con «oggi» nel fuso di Roma, fine non prima
+      dell'inizio. Nell'API, nella bozza e nella coda offline.
+- [ ] Il diario salva date proprie **solo se l'utente ha toccato il campo**; senza, collegamento e
+      dettaglio usano l'ultima percorrenza ricalcolata ogni volta.
+- [ ] Colonne aggiunte nella migration di creazione della tabella (la funzione non è ancora né in
+      produzione né sul dev); il database locale si allinea a mano.
+
+**Collegamento delle registrazioni (backend, `DiaryUgcLinkService`)**
+- [ ] Registrazioni candidate come oggi (quelle che hanno percorso la tappa o una tappa del
+      cammino, criterio del Passaporto).
+- [ ] Periodo di ricerca:
+      1. con date scritte nel diario: il periodo scritto;
+      2. senza date scritte, con date note: l'ultima percorrenza;
+      3. senza nessuna data: il metodo attuale (30 giorni prima dell'ultima registrazione).
+      In 1 e 2 il periodo si allarga di un giorno prima e uno dopo e non vale il limite «solo
+      registrazioni precedenti alla creazione del diario».
+- [ ] Il giorno di una registrazione si calcola come nelle date note (primo punto nel fuso di Roma,
+      poi `createdAt`, poi la riga), non più da `createdAt` interpretato in UTC.
+- [ ] Il collegamento si ricalcola a ogni creazione e modifica del diario, come oggi.
+
+**Form del diario (wm-core)**
+- [ ] Campo «Quando l'hai percorso» dopo il racconto, precompilato con l'ultima percorrenza (dal
+      primo all'ultimo giorno), modificabile, svuotabile. Un diario con date proprie le mostra.
+- [ ] La precompilazione arriva dalla rete: se l'utente ha già toccato il campo non lo sovrascrive.
+- [ ] Se le date scelte non toccano l'ultima percorrenza (entro un giorno), un avviso che non
+      blocca: «Le date sono lontane da quelle del tuo Passaporto ({{date}})».
+- [ ] Le date si inviano come `walk_start_date`/`walk_end_date` solo se il campo è stato toccato
+      (svuotarlo invia valori vuoti); entrano in bozza e in coda offline.
+
+**Calendario a intervallo (wm-core, componente nuovo e riusabile)**
+- [ ] Un campo che apre un `ion-datetime` in un foglio dal basso; primo tocco inizio, secondo fine
+      (se prima dell'inizio, si scambiano; lo stesso giorno chiude un intervallo di un giorno),
+      terzo tocco ricomincia; giorni in mezzo colorati con `highlightedDates`; giorni futuri
+      disattivati; «Conferma» e «Annulla». Selezione multipla di Ionic come base, perché un tocco
+      sullo stesso giorno in selezione singola non emette `ionChange`.
+- [ ] Sotto il calendario l'intervallo scelto per esteso («Dal 10 al 12 maggio», «Solo il 10 maggio»).
+- [ ] Nel campo chiuso: «10 – 12 maggio 2026», «30 aprile – 2 maggio 2026», «30 dicembre 2025 –
+      2 gennaio 2026», «10 maggio 2026» per un giorno, segnaposto se vuoto; date sempre come stringhe
+      `AAAA-MM-GG`, mai convertite in UTC; lingua del calendario quella dell'app.
+- [ ] Usato nel form della richiesta cartacea al posto dei due campi: un giorno solo invia
+      `start_date` = `end_date`; obbligatorio come oggi; i dati inviati non cambiano.
+
+**Dettaglio del diario**
+- [ ] La scheda «Il tuo percorso» prende le date dal diario se ci sono, altrimenti l'ultima
+      percorrenza;
+      compare anche per tappe e cammini non completati purché ci sia una data (i km solo, come oggi,
+      a percorso completato).
+
+**Comuni**
+- [ ] Testi nuovi nelle 7 lingue di wm-core; messaggi del backend in `it.json`.
+- [ ] Test: periodo di ricerca nei tre casi e con date lontane, margine di un giorno, validazione
+      delle date; calendario (tocchi, scambio, ricomincia, giorno singolo, futuri disattivati);
+      form del diario (precompilazione, avviso, invio); form del Passaporto (stesso payload di oggi);
+      dettaglio (date del diario prima di quelle note).
+
+**[UX]**
+- [ ] [UX] Il campo è un bottone di almeno 44 px con l'etichetta visibile; il calendario annuncia
+      inizio e fine scelti (testo sotto il calendario, «Dal 10 al 12 maggio»), non solo col colore.
+- [ ] [UX] Un tasto per svuotare il campo del diario, che è facoltativo.
+
+### Rischi
+
+- **[UX] `highlightedDates` e i tocchi su iOS:** l'aspetto dei giorni colorati può cambiare fra
+  piattaforme. Mitigazione: prova sul dispositivo.
+- **Form della richiesta cartacea:** è di un altro lavoro (oc:8761) e non dipende dai diari, quindi
+  cambiarne il campo tocca una funzione che può uscire per conto suo. Mitigazione: test che il payload resti identico, e la validazione
+  «obbligatorio, fine non prima dell'inizio» invariata.
+- **Date note che cambiano dopo:** una tappa validata dopo la scrittura del diario cambia le date note,
+  ma il collegamento si ricalcola solo alla prossima modifica del diario (limite già noto del
+  ciclo 1).
+- **Un giorno di margine:** un errore di due o più giorni su una data scritta non lega le
+  registrazioni giuste; si corregge cambiando la data, e l'avviso «date lontane» lo segnala.
+- **Percorrenze separate da 30 giorni:** un cammino fatto a tratti a più di un mese di distanza
+  conta come percorrenze diverse, e la precompilazione propone solo l'ultimo tratto; l'utente può
+  allargare il periodo.
+- **Richiesta cartacea con un tocco solo:** diventa una richiesta di un giorno; l'intervallo scritto
+  sotto il calendario lo rende visibile prima di confermare.
+- **Registrazioni sincronizzate dopo il diario:** non si legano finché il diario non viene
+  modificato (limite già noto).
+- **Tempo:** il giorno di sviluppo pagato è finito; il ciclo si fa per decisione del dev.
+
+### Out of scope
+
+- Ricalcolo del collegamento quando cambiano le validazioni del Passaporto o arrivano registrazioni
+  nuove.
+- Riavvio di un badge già completato per una seconda percorrenza.
+- Date per ogni foto.
+
+### Moduli toccati
+
+- **camminiditalia:** migration di creazione della tabella dei diari, `Diary`, `Store/UpdateDiaryRequest`,
+  `DiaryController`, `DiaryService`, `DiaryUgcLinkService`, il calcolo delle date note (estratto da
+  `StageProgressService::walkedData` per riusarlo), Nova (date in sola lettura), `it.json`, test.
+- **wm-core:** componente nuovo del calendario a intervallo (cartella `shared/` o `passport/`),
+  `diaries/diary.model.ts`, `diary.service.ts`, bozza e coda, `diary-form`, `diary-route-data.utils`,
+  `diary-detail`, `passport/passport-form`, `wm-core.module.ts`, i18n.

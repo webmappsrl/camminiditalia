@@ -25,6 +25,9 @@ return new class extends Migration
             $table->unsignedTinyInteger('rating_route')->nullable();
             $table->unsignedTinyInteger('rating_hospitality')->nullable();
             $table->unsignedTinyInteger('rating_difficulty')->nullable();
+            // Date di percorrenza scritte dall'utente (oc:8169, ciclo 4): fine vuota = un giorno solo.
+            $table->date('walk_start_date')->nullable();
+            $table->date('walk_end_date')->nullable();
             $table->timestamps();
 
             $table->unique(['user_id', 'uuid']);

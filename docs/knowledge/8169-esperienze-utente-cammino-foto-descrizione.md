@@ -1,5 +1,23 @@
 # Diario del camminatore: modello, API e protezione delle foto
 
+## Ciclo 4 — Date di percorrenza e collegamento (oc:8169, 4 novembre 2026)
+
+Il resto della pagina descrive i cicli precedenti; per il collegamento delle registrazioni e le date
+note vale questa sezione.
+
+- **Solo l'ultima percorrenza.** `passport_stage_ugc_track` contiene tutte le registrazioni
+  dell'utente su una tappa, di qualsiasi anno (`StageValidationService::syncUgcTracks`): le date note
+  (`walked_dates`) e i km di una tappa vengono solo da quelle dell'ultima percorrenza
+  (`App\Support\WalkPeriods::latest`, giorni a più di 30 giorni di distanza = percorrenze diverse).
+  Vale per la scheda del diario e per il collegamento.
+- **Date del diario** `walk_start_date`/`walk_end_date` (fine vuota = un giorno), validate con «oggi»
+  nel fuso di Roma: l'applicazione è in UTC, e fra mezzanotte e le 2 italiane «oggi» sarebbe ieri.
+- **Collegamento delle registrazioni** (`DiaryUgcLinkService`): periodo = date scritte, altrimenti
+  ultima percorrenza delle tappe candidate, ±1 giorno, senza il limite della creazione del diario;
+  senza nessuna data, i 30 giorni prima dell'ultima registrazione. Il giorno di una registrazione è
+  uno solo per Passaporto e diari (`App\Support\UgcRecordingDate`: primo punto, poi `createdAt`,
+  poi la riga, nel fuso di Roma).
+
 ## Ciclo 3 — Racconto in HTML (oc:8169, 4 novembre 2026)
 
 Il resto della pagina descrive i cicli precedenti; dove questo ciclo cambia il formato del racconto (prima testo semplice, ora HTML) vale questa sezione.
