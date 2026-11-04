@@ -340,3 +340,21 @@ Nessuna divergenza sostanziale. Aggiunte rispetto al piano:
   import non usati, chiave dell'avviso al logout in wm-core invece che nell'app, rimandi ⚠️ mancanti
   nel piano per le deviazioni dei cicli 2b e 4, note della webapp ferme al ciclo 1, avviso al logout
   non portato in `profile-popup` (montato solo nella webapp).
+
+## Dopo il rilascio in develop — racconto formattato in Nova (4 novembre 2026)
+
+Richiesta del dev dopo la demo sul server di sviluppo: nel dettaglio Nova il racconto arrivava come
+righe tutte uguali, perché il reset CSS di Nova toglie lo stile a titoli, elenchi e citazioni.
+
+- Foglio `resources/css/nova/diary-rich-text.css` registrato con `Nova::style` in
+  `NovaServiceProvider`; il campo del dettaglio (`App\Nova\Diary::detailText`) avvolge il racconto
+  ripulito in un riquadro con la classe `diary-rich-text`.
+- Sotto il riquadro, «Copia testo» e «Copia HTML» con le classi dei bottoni Nova già usate in
+  `certification-decision-confirm.js`; la copia la fa `resources/js/nova/diary-copy.js`.
+- Il testo semplice è costruito dallo script: `innerText` perdeva «•» e numeri degli elenchi. I link
+  tengono l'indirizzo fra parentesi.
+- Ripiego su `document.execCommand('copy')` se la clipboard API non è disponibile: deprecato, ma
+  ancora supportato dai browser.
+- Test: `DiaryNovaTextTest` (bottoni presenti, nessun bottone senza racconto, stile e script
+  caricati). Verifica a vista in Chrome headless con il CSS di Nova 5.7.6, tema chiaro e scuro; non
+  ancora nel Nova del server.

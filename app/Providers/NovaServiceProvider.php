@@ -48,6 +48,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::serving(function (ServingNova $event) {
             Nova::script('config-home-sorter', resource_path('js/nova/config-home-sorter.js'));
             Nova::script('certification-decision-confirm', resource_path('js/nova/certification-decision-confirm.js'));
+            Nova::style('diary-rich-text', resource_path('css/nova/diary-rich-text.css'));
+            Nova::script('diary-copy', resource_path('js/nova/diary-copy.js'));
         });
 
         // Queste route sovrascrivono quelle del wm-package permettendo

@@ -1,0 +1,96 @@
+/*
+ * Racconto del diario nel dettaglio Nova (oc:8169): il reset CSS di Nova toglie a titoli, elenchi
+ * e citazioni ogni stile, e il testo formattato nell'app arriverebbe come righe tutte uguali.
+ * Qui si ridà la formattazione, con gli stessi elementi ammessi da DiaryTextService.
+ */
+.diary-copy-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.diary-rich-text {
+    /* riquadro che fa vedere dove inizia e finisce il testo scritto dall'utente */
+    background: rgba(var(--colors-gray-50));
+    border: 1px solid rgba(var(--colors-gray-200));
+    border-radius: 0.5rem;
+    line-height: 1.6;
+    max-width: 48rem;
+    padding: 1rem 1.25rem;
+}
+
+.dark .diary-rich-text {
+    background: rgba(var(--colors-gray-900));
+    border-color: rgba(var(--colors-gray-700));
+}
+
+.diary-rich-text > :first-child {
+    margin-top: 0;
+}
+
+.diary-rich-text > :last-child {
+    margin-bottom: 0;
+}
+
+.diary-rich-text p {
+    margin: 0 0 0.75em;
+}
+
+.diary-rich-text h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 1.25em 0 0.5em;
+}
+
+.diary-rich-text h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 1.1em 0 0.4em;
+}
+
+.diary-rich-text ul,
+.diary-rich-text ol {
+    margin: 0 0 0.75em;
+    padding-left: 1.5em;
+}
+
+.diary-rich-text ul {
+    list-style: disc;
+}
+
+.diary-rich-text ol {
+    list-style: decimal;
+}
+
+.diary-rich-text li > p {
+    margin: 0;
+}
+
+.diary-rich-text blockquote {
+    border-left: 3px solid rgba(var(--colors-primary-500));
+    font-style: italic;
+    margin: 0 0 0.75em;
+    opacity: 0.85;
+    padding-left: 0.9em;
+}
+
+.diary-rich-text a {
+    color: rgba(var(--colors-primary-500));
+    text-decoration: underline;
+}
+
+.diary-rich-text hr {
+    border: 0;
+    border-top: 1px solid rgba(var(--colors-gray-300));
+    margin: 1.25em 0;
+}
+
+.dark .diary-rich-text hr {
+    border-top-color: rgba(var(--colors-gray-600));
+}
+
+.diary-rich-text s {
+    text-decoration: line-through;
+}

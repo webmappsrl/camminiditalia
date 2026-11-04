@@ -127,7 +127,9 @@ class Diary extends Resource
 
             // Il racconto è HTML (oc:8169, ciclo 3): nel dettaglio formattato e ripulito di nuovo al
             // momento di mostrarlo, senza fidarsi del dato salvato; nell'elenco l'estratto.
-            Text::make(__('Text'), fn ($resource) => app(DiaryTextService::class)->clean($resource->description))
+            Text::make(__('Text'), fn ($resource) => $resource->description
+                ? self::detailText(app(DiaryTextService::class)->clean($resource->description))
+                : null)
                 ->asHtml()
                 ->onlyOnDetail(),
 
@@ -172,6 +174,26 @@ class Diary extends Resource
 
             BelongsToMany::make(__('Recordings'), 'ugcTracks', UgcTrack::class),
         ];
+    }
+
+    /**
+     * Racconto ripulito nel dettaglio, con i bottoni per copiarlo come testo semplice o come HTML.
+     * La classe `diary-rich-text` aggancia resources/css/nova/diary-rich-text.css, che ridà lo stile
+     * tolto dal reset di Nova; i bottoni li gestisce resources/js/nova/diary-copy.js.
+     */
+    private static function detailText(string $html): string
+    {
+        // stesse classi dei bottoni Nova di resources/js/nova/certification-decision-confirm.js
+        $button = fn (string $kind, string $label) => '<button type="button" data-diary-copy="'.$kind.'"'
+            .' data-diary-copied="'.e(__('Copied')).'"'
+            .' class="shadow bg-primary-500 border border-primary-500 text-white hover:bg-primary-400 hover:border-primary-400'
+            .' appearance-none cursor-pointer rounded text-sm font-bold inline-flex items-center justify-center h-9 px-3">'
+            .e($label).'</button>';
+
+        return '<div class="diary-rich-text-box">'
+            .'<div class="diary-rich-text">'.$html.'</div>'
+            .'<div class="diary-copy-actions">'.$button('text', __('Copy text')).$button('html', __('Copy HTML')).'</div>'
+            .'</div>';
     }
 
     /**

@@ -33,6 +33,14 @@ Il resto della pagina descrive i cicli precedenti; dove questo ciclo cambia il f
 - **Nova** ripulisce di nuovo il racconto quando lo mostra (`asHtml` non si fida del dato salvato),
   mostra un estratto nell'elenco e cerca con `regexp_replace` sul testo senza tag (solo PostgreSQL;
   le entità non si decodificano).
+- **Nel dettaglio Nova il racconto ha uno stile suo** (`resources/css/nova/diary-rich-text.css`,
+  caricato da `NovaServiceProvider`): il reset CSS di Nova toglie a titoli, elenchi e citazioni ogni
+  stile, e senza il foglio il racconto formattato arriva come righe tutte uguali. Il testo sta in un
+  riquadro, così si vede dove inizia e finisce quello scritto dall'utente; sotto, «Copia testo» e
+  «Copia HTML» (`resources/js/nova/diary-copy.js`, un listener delegato perché il campo è reso con
+  `v-html`). Il testo semplice lo costruisce lo script, non `innerText`, che perderebbe i segni degli
+  elenchi: «•» e numeri sulle voci, «>» sulle citazioni, l'indirizzo dei link fra parentesi.
+  L'HTML copiato è quello già ripulito dal server.
 - Nessuna migration di conversione: la funzione non è ancora né in produzione né sul dev.
 
 ## Ciclo 2 — «Il mio diario» (oc:8169, 3 novembre 2026)

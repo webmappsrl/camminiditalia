@@ -6,6 +6,7 @@ use App\Models\Diary;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use Laravel\Nova\Nova;
 use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
@@ -51,7 +52,35 @@ class DiaryNovaTextTest extends TestCase
         $field = $this->field($this->actingAs($this->admin)->getJson("/nova-api/diaries/{$this->diary->id}")->assertOk()->json('resource.fields'));
 
         $this->assertTrue($field['asHtml']);
-        $this->assertSame('<h2>Giorno uno</h2><p>Partiti <strong>presto</strong></p>', $field['value']);
+        $this->assertStringContainsString('<div class="diary-rich-text"><h2>Giorno uno</h2><p>Partiti <strong>presto</strong></p></div>', $field['value']);
+        $this->assertStringNotContainsString('onerror', $field['value']);
+    }
+
+    public function test_dettaglio_ha_i_bottoni_per_copiare_testo_e_html(): void
+    {
+        $field = $this->field($this->actingAs($this->admin)->getJson("/nova-api/diaries/{$this->diary->id}")->assertOk()->json('resource.fields'));
+
+        $this->assertStringContainsString('data-diary-copy="text"', $field['value']);
+        $this->assertStringContainsString('data-diary-copy="html"', $field['value']);
+        $this->assertStringContainsString('>'.__('Copy text').'<', $field['value']);
+        $this->assertStringContainsString('>'.__('Copy HTML').'<', $field['value']);
+    }
+
+    public function test_dettaglio_senza_racconto_non_mostra_i_bottoni(): void
+    {
+        DB::table('diaries')->where('id', $this->diary->id)->update(['description' => null]);
+
+        $field = $this->field($this->actingAs($this->admin)->getJson("/nova-api/diaries/{$this->diary->id}")->assertOk()->json('resource.fields'));
+
+        $this->assertNull($field['value']);
+    }
+
+    public function test_nova_carica_stile_e_script_del_racconto(): void
+    {
+        $this->actingAs($this->admin)->get('/nova/resources/diaries/'.$this->diary->id)->assertOk();
+
+        $this->assertContains('diary-rich-text', collect(Nova::allStyles())->map(fn ($asset) => $asset->name())->all());
+        $this->assertContains('diary-copy', collect(Nova::allScripts())->map(fn ($asset) => $asset->name())->all());
     }
 
     public function test_elenco_mostra_l_estratto_senza_tag(): void
