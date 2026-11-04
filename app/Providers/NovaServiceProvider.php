@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Nova\App;
 use App\Nova\CertificationRequest;
 use App\Nova\Dashboards\Main;
+use App\Nova\Diary;
 use App\Nova\EcPoi;
 use App\Nova\EcTrack;
 use App\Nova\Layer;
@@ -103,6 +104,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 MenuSection::make(__('Passport'), [
                     MenuItem::resource(CertificationRequest::class),
                     MenuItem::resource(PassportStage::class),
+                    // Diari (oc:8169): solo l'Administrator, per scelta del cliente (call del
+                    // 3 novembre 2026): i validatori dei cammini non li vedono.
+                    MenuItem::resource(Diary::class)
+                        ->canSee(fn (Request $request) => $request->user()->hasRole('Administrator')),
                 ])->icon('identification')
                     ->canSee(fn (Request $request) => $request->user()->hasAnyRole(['Administrator', 'Validator'])),
 

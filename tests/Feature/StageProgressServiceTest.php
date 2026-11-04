@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\CertificationRequest;
 use App\Models\EcTrack;
 use App\Models\PassportStage;
 use App\Nova\Filters\PassportStageLayerFilter;
@@ -23,6 +24,7 @@ use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcTrack as WmEcTrack;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\Media;
+use Wm\WmPackage\Models\UgcTrack;
 use Wm\WmPackage\Models\User;
 use Wm\WmPackage\Nova\Traits\HasDemClassification;
 use Wm\WmPackage\Services\Models\MediaService;
@@ -469,7 +471,7 @@ class StageProgressServiceTest extends TestCase
         }
         $this->assertFalse($tracks[$empty->id]['shareable']);
         $this->assertSame(
-            ['id', 'name', 'distance', 'status', 'progress', 'validated_at', 'source', 'ref', 'from', 'to', 'ascent', 'descent', 'image', 'shareable'],
+            ['id', 'name', 'distance', 'status', 'progress', 'validated_at', 'source', 'user_distance', 'walked_dates', 'ref', 'from', 'to', 'ascent', 'descent', 'image', 'shareable'],
             array_keys($tracks[$empty->id]),
         );
     }
@@ -766,5 +768,146 @@ class StageProgressServiceTest extends TestCase
         $expected = (new MediaService)->getThumbnailUrl($secondMedia);
         $this->assertSame($expected, $tracks[$track->id]['image']);
         $this->assertSame($track->fresh()->toSearchableArray()['feature_image'], $tracks[$track->id]['image']);
+    }
+
+    /**
+     * Traccia registrata dall'utente e collegata alle tappe che ha validato (oc:8169, ciclo 2).
+     *
+     * @param  array<int, PassportStage>  $stages
+     */
+    private function recording(User $user, array $stages, ?float $statsKm, string $firstPointIso): UgcTrack
+    {
+        $properties = ['locations' => [['latitude' => 44.0, 'longitude' => 11.0, 'time' => Carbon::parse($firstPointIso)->getTimestampMs()]]];
+        if ($statsKm !== null) {
+            $properties['stats'] = ['distance' => $statsKm];
+        }
+        $ugc = UgcTrack::withoutEvents(fn () => UgcTrack::factory()->create([
+            'user_id' => $user->id,
+            'app_id' => App::first()->id,
+            'properties' => $properties,
+        ]));
+        foreach ($stages as $stage) {
+            DB::table('passport_stage_ugc_track')->insert(['passport_stage_id' => $stage->id, 'ugc_track_id' => $ugc->id]);
+        }
+
+        return $ugc;
+    }
+
+    /**
+     * @param  array<string, mixed>  $progress
+     * @return array<int, array<string, mixed>> id tappa => tappa
+     */
+    private function tracksById(array $progress): array
+    {
+        return collect($progress['tracks'])->keyBy('id')->all();
+    }
+
+    public function test_user_distance_and_dates_from_own_recording(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $walker = User::factory()->create();
+        $layer = $this->createLayer($owner->id);
+        $track = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 14]]);
+        $stage = $this->validate($walker, $track, $layer, PassportStage::SOURCE_GPS);
+        $this->recording($walker, [$stage], 12.34, '2026-05-01T22:30:00Z');
+
+        $tracks = $this->tracksById($this->service->progressFor($walker, $layer));
+
+        $this->assertSame(12.3, $tracks[$track->id]['user_distance']);
+        // 22:30 UTC è già il 2 maggio a Roma
+        $this->assertSame(['2026-05-02'], $tracks[$track->id]['walked_dates']);
+    }
+
+    public function test_recording_shared_by_two_stages_counts_once_in_total(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $walker = User::factory()->create();
+        $layer = $this->createLayer($owner->id);
+        $first = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 10]]);
+        $second = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 8]]);
+        $a = $this->validate($walker, $first, $layer, PassportStage::SOURCE_GPS);
+        $b = $this->validate($walker, $second, $layer, PassportStage::SOURCE_GPS);
+        $this->recording($walker, [$a, $b], 19.5, '2026-05-01T08:00:00Z');
+
+        $progress = $this->service->progressFor($walker, $layer);
+        $tracks = $this->tracksById($progress);
+
+        $this->assertNull($tracks[$first->id]['user_distance']);
+        $this->assertNull($tracks[$second->id]['user_distance']);
+        $this->assertSame(['2026-05-01'], $tracks[$first->id]['walked_dates']);
+        $this->assertSame(19.5, $progress['user_distance_total']);
+    }
+
+    public function test_two_walks_years_apart_keep_only_the_latest(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $walker = User::factory()->create();
+        $layer = $this->createLayer($owner->id);
+        $track = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 14]]);
+        $stage = $this->validate($walker, $track, $layer, PassportStage::SOURCE_GPS);
+        $this->recording($walker, [$stage], 13.0, '2024-05-10T08:00:00Z');
+        $this->recording($walker, [$stage], 12.0, '2026-05-10T08:00:00Z');
+
+        $tracks = $this->tracksById($this->service->progressFor($walker, $layer));
+
+        $this->assertSame(['2026-05-10'], $tracks[$track->id]['walked_dates']);
+        // i km sono quelli dell'ultima percorrenza, non la somma delle due
+        $this->assertSame(12.0, $tracks[$track->id]['user_distance']);
+    }
+
+    public function test_paper_stage_uses_request_dates_and_route_distance(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $walker = User::factory()->create();
+        $layer = $this->createLayer($owner->id);
+        $gps = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 10]]);
+        $paper = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 14]]);
+        $gpsStage = $this->validate($walker, $gps, $layer, PassportStage::SOURCE_GPS);
+        $this->recording($walker, [$gpsStage], 9.0, '2026-04-30T08:00:00Z');
+        $request = CertificationRequest::factory()->create([
+            'user_id' => $walker->id,
+            'layer_id' => $layer->id,
+            'status' => CertificationRequest::STATUS_APPROVED,
+            'start_date' => '2026-05-01',
+            'end_date' => '2026-05-03',
+        ]);
+        $paperStage = $this->validate($walker, $paper, $layer);
+        $paperStage->forceFill(['certification_request_id' => $request->id])->save();
+
+        $progress = $this->service->progressFor($walker, $layer);
+        $tracks = $this->tracksById($progress);
+
+        $this->assertNull($tracks[$paper->id]['user_distance']);
+        $this->assertSame(['2026-05-01', '2026-05-02', '2026-05-03'], $tracks[$paper->id]['walked_dates']);
+        $this->assertSame(23.0, $progress['user_distance_total']);
+    }
+
+    public function test_validated_stage_without_recording_or_request_has_no_dates(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $walker = User::factory()->create();
+        $layer = $this->createLayer($owner->id);
+        $track = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 10]]);
+        $this->validate($walker, $track, $layer);
+        $notWalked = $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 5]]);
+
+        $progress = $this->service->progressFor($walker, $layer);
+        $tracks = $this->tracksById($progress);
+
+        $this->assertSame([], $tracks[$track->id]['walked_dates']);
+        $this->assertNull($tracks[$track->id]['user_distance']);
+        $this->assertSame([], $tracks[$notWalked->id]['walked_dates']);
+        $this->assertSame(10.0, $progress['user_distance_total']);
+    }
+
+    public function test_user_distance_total_is_null_without_validated_stages(): void
+    {
+        $owner = $this->createUserWithRole('Validator');
+        $layer = $this->createLayer($owner->id);
+        $this->track($owner->id, [$layer], ['dem_data' => ['distance' => 10]]);
+
+        $progress = $this->service->progressFor(User::factory()->create(), $layer);
+
+        $this->assertNull($progress['user_distance_total']);
     }
 }

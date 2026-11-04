@@ -1,0 +1,209 @@
+<?php
+
+namespace App\Nova;
+
+use App\Models\Diary as DiaryModel;
+use App\Nova\Filters\DiaryPublicationConsentFilter;
+use App\Services\DiaryTextService;
+use App\Support\EcTrackLabel;
+use App\Support\UserDisplay;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Filters\Filter;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Query\Search\Column;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+/**
+ * Sezione Nova «Esperienze» (oc:8169). Sola lettura per tutti (creazione e
+ * modifica solo via API), eliminazione solo per l'Administrator (vedi
+ * DiaryPolicy). Lo scoping delle query replica la policy tramite
+ * Diary::scopeVisibleTo(), così un record estraneo risponde 404 anche
+ * via /nova-api.
+ */
+class Diary extends Resource
+{
+    /**
+     * @var class-string<DiaryModel>
+     */
+    public static $model = DiaryModel::class;
+
+    public static $title = 'id';
+
+    /**
+     * Ricerca per id o nel testo del racconto senza i tag (oc:8169, ciclo 3): con un LIKE sull'HTML
+     * «strong» troverebbe ogni diario formattato.
+     *
+     * @return array<int, string|Column>
+     */
+    public static function searchableColumns(): array
+    {
+        return ['id', Column::raw("regexp_replace(coalesce(description, ''), '<[^>]+>', ' ', 'g')")];
+    }
+
+    /**
+     * @var array<int, string>
+     */
+    public static $with = ['user', 'layer', 'ecTrack', 'media'];
+
+    public static function uriKey(): string
+    {
+        return 'diaries';
+    }
+
+    public static function label(): string
+    {
+        return __('Diaries');
+    }
+
+    public static function singularLabel(): string
+    {
+        return __('Diary');
+    }
+
+    public static function indexQuery(NovaRequest $request, Builder $query): Builder
+    {
+        return static::scopeForUser($request, $query);
+    }
+
+    public static function detailQuery(NovaRequest $request, Builder $query): Builder
+    {
+        return static::scopeForUser($request, parent::detailQuery($request, $query));
+    }
+
+    public static function editQuery(NovaRequest $request, Builder $query): Builder
+    {
+        return static::scopeForUser($request, parent::editQuery($request, $query));
+    }
+
+    public static function relatableQuery(NovaRequest $request, Builder $query): Builder
+    {
+        return static::scopeForUser($request, parent::relatableQuery($request, $query));
+    }
+
+    protected static function scopeForUser(NovaRequest $request, Builder $query): Builder
+    {
+        $user = $request->user();
+
+        /** @var \Illuminate\Database\Eloquent\Builder<DiaryModel> $query */
+        return $user ? $query->visibleTo($user) : $query->whereRaw('1 = 0');
+    }
+
+    public static function authorizedToCreate(Request $request): bool
+    {
+        return false;
+    }
+
+    public function fields(NovaRequest $request): array
+    {
+        return [
+            ID::make()->sortable(),
+
+            // Administrator: link alla risorsa User. Gli altri (Validator) vedono
+            // l'autore solo come testo: non devono poter aprire il profilo.
+            BelongsTo::make(__('User'), 'user', User::class)
+                ->readonly()
+                ->canSee(fn (Request $request) => (bool) $request->user()?->hasRole('Administrator')),
+
+            Text::make(__('User'), fn ($resource) => UserDisplay::withEmail($resource->user))
+                ->exceptOnForms()
+                ->canSee(fn (Request $request) => ! $request->user()?->hasRole('Administrator')),
+
+            BelongsTo::make(__('Route'), 'layer', Layer::class)
+                ->display(fn ($layer) => $layer->resource->getStringName())
+                ->readonly(),
+
+            Text::make(__('Stage'), fn ($resource) => $resource->ecTrack ? EcTrackLabel::for($resource->ecTrack) : null)
+                ->exceptOnForms(),
+
+            // Il racconto è HTML (oc:8169, ciclo 3): nel dettaglio formattato e ripulito di nuovo al
+            // momento di mostrarlo, senza fidarsi del dato salvato; nell'elenco l'estratto.
+            Text::make(__('Text'), fn ($resource) => app(DiaryTextService::class)->clean($resource->description))
+                ->asHtml()
+                ->onlyOnDetail(),
+
+            Text::make(__('Text'), fn ($resource) => $resource->description
+                ? Str::limit(app(DiaryTextService::class)->plainText($resource->description), 80)
+                : null)
+                ->onlyOnIndex(),
+
+            Date::make(__('Walked from'), 'walk_start_date')
+                ->readonly()
+                ->hideFromIndex(),
+
+            Date::make(__('Walked until'), 'walk_end_date')
+                ->readonly()
+                ->hideFromIndex(),
+
+            Boolean::make(__('Public'), 'is_public')
+                ->readonly(),
+
+            Boolean::make(__('Publication consent'), 'publication_consent')
+                ->readonly(),
+
+            Number::make(__('Route rating'), 'rating_route')
+                ->readonly()
+                ->hideFromIndex(),
+
+            Number::make(__('Hospitality rating'), 'rating_hospitality')
+                ->readonly()
+                ->hideFromIndex(),
+
+            Number::make(__('Perceived difficulty'), 'rating_difficulty')
+                ->readonly()
+                ->hideFromIndex(),
+
+            DateTime::make(__('Date'), 'created_at')
+                ->sortable()
+                ->readonly(),
+
+            Text::make(__('Photos'), fn ($resource) => $this->photosHtml($request, $resource))
+                ->asHtml()
+                ->onlyOnDetail(),
+
+            BelongsToMany::make(__('Recordings'), 'ugcTracks', UgcTrack::class),
+        ];
+    }
+
+    /**
+     * Griglia di miniature linkate alle foto. Gli URL vengono generati solo
+     * se l'utente può vedere l'esperienza: nessun URL deve uscire verso chi
+     * non è autorizzato.
+     */
+    protected function photosHtml(NovaRequest $request, DiaryModel $resource): string
+    {
+        if (! $request->user()?->can('view', $resource)) {
+            return '';
+        }
+
+        $items = $resource->getMedia(DiaryModel::MEDIA_COLLECTION)->map(function (Media $media) {
+            $url = e($media->getUrl());
+            $alt = e($media->file_name);
+
+            return '<a href="'.$url.'" target="_blank" rel="noopener noreferrer">'
+                .'<img src="'.$url.'" alt="'.$alt.'" style="width:100%;height:160px;object-fit:cover;border-radius:4px;">'
+                .'</a>';
+        })->implode('');
+
+        return '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">'
+            .$items
+            .'</div>';
+    }
+
+    /**
+     * @return array<int, Filter>
+     */
+    public function filters(NovaRequest $request): array
+    {
+        return [new DiaryPublicationConsentFilter];
+    }
+}
