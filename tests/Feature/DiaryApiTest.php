@@ -7,6 +7,7 @@ use App\Models\Diary;
 use App\Models\EcTrack;
 use App\Services\DiaryService;
 use App\Services\DiaryTextService;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
@@ -359,13 +360,13 @@ class DiaryApiTest extends TestCase
     public function test_oggi_si_calcola_nel_fuso_di_roma(): void
     {
         // 23:30 UTC del 9 maggio: a Roma è già il 10
-        \Carbon\Carbon::setTestNow('2026-05-09 23:30:00 UTC');
+        Carbon::setTestNow('2026-05-09 23:30:00 UTC');
         try {
             $layer = $this->createLayer();
             $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => 'x', 'walk_start_date' => '2026-05-10'])
                 ->assertStatus(201);
         } finally {
-            \Carbon\Carbon::setTestNow();
+            Carbon::setTestNow();
         }
     }
 
