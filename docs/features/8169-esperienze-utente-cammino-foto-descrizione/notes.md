@@ -303,7 +303,40 @@ Nessuna divergenza sostanziale. Aggiunte rispetto al piano:
 - Richiesta cartacea non provata a schermo dopo il cambio del calendario (coperta dai test).
 - Minore rimandato: «Svuota» su un campo solo precompilato invia date vuote, e dettaglio e
   collegamento tornano all'ultima percorrenza, quindi le date «ricompaiono».
-- Da verificare: una tappa validata con richiesta cartacea che ha anche legami GPS di anni precedenti
-  prende le date dalle registrazioni e non dalla richiesta (comportamento precedente al ciclo).
+- ~~Da verificare: tappa cartacea con legami GPS di anni precedenti~~ — confutato in review: le tappe
+  cartacee hanno `source = manual` e non hanno legami (vedi «Review del 4 novembre 2026»).
 - Il collegamento si ricalcola solo alla modifica del diario: registrazioni sincronizzate dopo, o
   tappe validate dopo, non si legano finché il diario non viene modificato.
+
+
+## Review del 4 novembre 2026 (wm-review-ticket, cinque finder)
+
+### Bloccanti corretti, con test che fallivano prima
+- **Pulsante del diario sbloccato senza confronto con le tappe:** il dettaglio del cammino valutava
+  a ogni emissione di `ecTracks`, anche con le tappe della ricerca precedente o vuote; con l'elenco
+  vuoto scattava il ripiego sul rettangolo e il cammino diventava attivo per 90 giorni. Ora
+  `evaluateLayer` non decide niente senza tappe e il dettaglio non valuta durante il caricamento
+  (`ecTracksLoading`).
+- **Scheda «Il tuo percorso» assente su un cammino iniziato senza date proprie:** ora mostra le date
+  dell'ultima percorrenza, senza km, come le propone il form (anche per una tappa in corso).
+
+### Confutato
+- La tappa validata con richiesta cartacea non può avere legami GPS: ha `source = manual`, escluso
+  dai legami (`StageValidationService.php:332-334`); nel database di sviluppo 4 tappe cartacee, 0
+  legami. Il «Da verificare» del ciclo 4 è chiuso.
+
+### Da fare prima del rilascio
+- Webapp: il puntatore di wm-core è al ciclo 2 (`ecf7bdd`) e mostrerebbe i tag dei racconti in HTML;
+  va portato all'ultimo commit di wm-core insieme al rilascio del backend.
+
+### Cleanup rimandati
+- All'eliminazione dell'account restano sul telefono bozze, coda offline e posizioni salvate.
+- I 90 giorni di cammino attivo partono dall'apertura del dettaglio, non dalla posizione vicina.
+- Nel ramo dei 30 giorni il giorno di una registrazione è ancora `createdAt` in UTC.
+- Duplicazioni fra `Store`/`UpdateDiaryRequest`, numeri scritti dentro i testi (20.000, 6 foto),
+  regole delle percorrenze e del testo visibile scritte sia in PHP sia in TS, diari dentro
+  `WmCoreModule` per tutti gli shard, tipi del Passaporto da spostare in wm-types, servizi avviati solo
+  dall'app (la webapp camminiditalia non ha coda né cammino attivo), commenti con «esperienza»,
+  import non usati, chiave dell'avviso al logout in wm-core invece che nell'app, rimandi ⚠️ mancanti
+  nel piano per le deviazioni dei cicli 2b e 4, note della webapp ferme al ciclo 1, avviso al logout
+  non portato in `profile-popup` (montato solo nella webapp).
