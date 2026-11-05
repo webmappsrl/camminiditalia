@@ -51,7 +51,11 @@ class EcTrackVariantObserverTest extends TestCase
 
     private function pushedLayerIds(): array
     {
-        return Queue::pushed(RecalculateLayerAttributesJob::class)
+        // Il fake dietro la facade: Queue::pushed() esiste solo sul QueueFake, e PHPStan non lo vede.
+        /** @var \Illuminate\Support\Testing\Fakes\QueueFake $queue */
+        $queue = Queue::getFacadeRoot();
+
+        return $queue->pushed(RecalculateLayerAttributesJob::class)
             ->map(fn ($job) => $job->layerId)
             ->sort()
             ->values()

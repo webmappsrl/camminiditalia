@@ -161,7 +161,7 @@ class LayerAttributesService
      */
     private function rootTrackIds(Layer $layer): array
     {
-        return $layer->id === null ? [] : app(StageProgressService::class)->rootTrackIds($layer->id);
+        return $layer->exists ? app(StageProgressService::class)->rootTrackIds($layer->id) : [];
     }
 
     /**
