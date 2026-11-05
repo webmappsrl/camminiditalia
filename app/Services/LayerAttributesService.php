@@ -120,10 +120,14 @@ class LayerAttributesService
      * un cammino senza distanza nota non deve entrare nel filtro "0-10 km".
      * Il controllo è su `null`, non sulla verità del valore, perché una
      * tappa con distanza legittima 0 deve comunque contribuire alla somma.
+     *
+     * Le varianti non si sommano (oc:8918): conta solo la principale di ogni gruppo, la stessa
+     * regola del passaporto (oc:8165), via StageProgressService::rootTrackIds().
      */
     public function totalDistance(Layer $layer): ?float
     {
-        $tracks = $layer->ecTracks()->get();
+        $rootIds = $this->rootTrackIds($layer);
+        $tracks = $layer->ecTracks()->get()->whereIn('id', $rootIds);
 
         if ($tracks->isEmpty()) {
             return null;
@@ -151,6 +155,16 @@ class LayerAttributesService
     }
 
     /**
+     * Gli id delle tappe radice del cammino (oc:8918); vuoto per un layer non ancora salvato.
+     *
+     * @return array<int, int>
+     */
+    private function rootTrackIds(Layer $layer): array
+    {
+        return $layer->id === null ? [] : app(StageProgressService::class)->rootTrackIds($layer->id);
+    }
+
+    /**
      * Numero di tappe del cammino.
      *
      * La "Durata" del filtro è il numero di tappe (una tappa = una
@@ -158,10 +172,13 @@ class LayerAttributesService
      * duration_forward/backward delle EcTrack stanno su un pivot
      * per-attività come stringhe e sono distinti per senso di marcia,
      * quindi non aggregabili in modo affidabile.
+     *
+     * Si contano i gruppi, non le tappe (oc:8918): una variante la cui principale è nello stesso
+     * cammino non è una tappa in più. Coincide con il `total` del passaporto.
      */
     public function stageCount(Layer $layer): ?int
     {
-        $count = $layer->ecTracks()->count();
+        $count = count($this->rootTrackIds($layer));
 
         return $count > 0 ? $count : null;
     }

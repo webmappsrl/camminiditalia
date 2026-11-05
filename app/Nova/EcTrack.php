@@ -144,7 +144,10 @@ class EcTrack extends WmNovaEcTrack
                     $trackId = $model->getKey();
 
                     if (blank($mainId)) {
-                        EcTrackVariant::whereKey($trackId)->delete();
+                        // Delete Eloquent della singola riga (la PK è ec_track_id), non da query
+                        // builder: solo così scatta EcTrackVariantObserver::deleted e il cammino
+                        // viene ricalcolato (oc:8918).
+                        EcTrackVariant::find($trackId)?->delete();
 
                         return;
                     }

@@ -73,6 +73,25 @@ class StageProgressService
     }
 
     /**
+     * Gli id delle tappe del layer che sono la radice del proprio gruppo (oc:8918): le principali
+     * e le tappe senza variante. Le varianti la cui principale sta nello stesso layer restano
+     * fuori, esattamente come nel totale del passaporto (oc:8165): `stage_count` e `distance` del
+     * cammino usano la stessa regola, senza ripeterla.
+     *
+     * @return array<int, int>
+     */
+    public function rootTrackIds(int $layerId): array
+    {
+        return DB::query()
+            ->fromSub($this->routeTracksQuery(), 'rt')
+            ->where('rt.layer_id', $layerId)
+            ->whereColumn('rt.ec_track_id', 'rt.root_ec_track_id')
+            ->pluck('rt.ec_track_id')
+            ->map(fn ($id) => (int) $id)
+            ->all();
+    }
+
+    /**
      * La radice del gruppo di una tappa dentro il suo cammino (oc:8165): la tappa principale se
      * è presente in **quel** cammino, altrimenti la tappa stessa.
      *

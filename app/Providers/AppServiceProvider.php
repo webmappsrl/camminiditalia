@@ -4,12 +4,14 @@ namespace App\Providers;
 
 use App\Models\CertificationRequest;
 use App\Models\Diary;
+use App\Models\EcTrackVariant;
 use App\Models\TaxonomyPoiType;
 use App\Models\User;
 use App\Observers\CertificationRequestCleanupObserver;
 use App\Observers\DiaryCleanupObserver;
 use App\Observers\EcPoiValidatorLayerObserver;
 use App\Observers\EcTrackGeometryAttributesObserver;
+use App\Observers\EcTrackVariantObserver;
 use App\Observers\LayerableObserver;
 use App\Observers\LayerAttributesObserver;
 use App\Observers\LayerObserver;
@@ -93,6 +95,7 @@ class AppServiceProvider extends ServiceProvider
         Layer::observe(LayerObserver::class);
         Layerable::observe(LayerableObserver::class);
         Layerable::observe(LayerAttributesObserver::class);
+        EcTrackVariant::observe(EcTrackVariantObserver::class);
         EcPoi::observe(EcPoiValidatorLayerObserver::class);
         \App\Models\EcPoi::observe(EcPoiValidatorLayerObserver::class);
         EcTrack::observe(EcTrackGeometryAttributesObserver::class);

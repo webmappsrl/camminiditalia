@@ -2,13 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\RecalculateLayerAttributesJob;
 use App\Models\EcTrackVariant;
 use App\Models\User;
 use App\Nova\EcTrack as EcTrackResource;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcTrack;
@@ -24,7 +27,7 @@ use Wm\WmPackage\Services\RolesAndPermissionsService;
  */
 class EcTrackVariantFieldTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseTransactions, LayerTestHelpers;
 
     private App $app_;
 
@@ -348,6 +351,22 @@ class EcTrackVariantFieldTest extends TestCase
         $this->fillVariant($stage, null, $this->validator);
 
         $this->assertFalse(EcTrackVariant::whereKey($stage->id)->exists());
+    }
+
+    public function test_clearing_the_field_queues_the_layer_recalculation()
+    {
+        $this->actingAs($this->admin);
+
+        $stage = $this->stage();
+        $main = $this->stage();
+        EcTrackVariant::create(['ec_track_id' => $stage->id, 'main_ec_track_id' => $main->id]);
+        Queue::fake();
+        // Sotto Queue::fake() il lock unique del job resta preso: lo si rilascia, come nei test dell'observer.
+        $this->releaseRecalculateLayerAttributesLock($this->layer->id);
+
+        $this->fillVariant($stage, null);
+
+        Queue::assertPushed(RecalculateLayerAttributesJob::class, fn ($job) => $job->layerId === $this->layer->id);
     }
 
     public function test_unchanged_value_is_not_rewritten()
