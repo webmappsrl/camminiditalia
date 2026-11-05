@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Testing\Fakes\QueueFake;
 use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
@@ -52,7 +53,7 @@ class EcTrackVariantObserverTest extends TestCase
     private function pushedLayerIds(): array
     {
         // Il fake dietro la facade: Queue::pushed() esiste solo sul QueueFake, e PHPStan non lo vede.
-        /** @var \Illuminate\Support\Testing\Fakes\QueueFake $queue */
+        /** @var QueueFake $queue */
         $queue = Queue::getFacadeRoot();
 
         return $queue->pushed(RecalculateLayerAttributesJob::class)
