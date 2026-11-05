@@ -296,14 +296,14 @@ class DiaryApiTest extends TestCase
 
     public function test_html_enorme_si_rifiuta_senza_ripulirlo(): void
     {
-        $this->spy(DiaryTextService::class);
+        $textService = $this->spy(DiaryTextService::class);
         $layer = $this->createLayer();
 
         $this->postDiary($this->createUserWithoutRole(), ['uuid' => self::UUID_A, 'layer_id' => $layer->id, 'description' => '<p>'.str_repeat('a', 300000).'</p>'])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['description' => 'The story is too long.']);
 
-        app(DiaryTextService::class)->shouldNotHaveReceived('clean');
+        $textService->shouldNotHaveReceived('clean');
     }
 
     public function test_modifica_ripulisce_e_controlla_i_limiti(): void

@@ -31,6 +31,8 @@ Vincoli che il codice da solo non spiega:
 - **I km di un gruppo sono quelli della sua tappa principale**, cioè del percorso ufficiale del cammino. Non c'è una risposta che vada bene per tutti — i due rami di partenza di Via Vandelli differiscono di 19 km — ma la principale è una scelta dichiarata dal gestore, mentre «la più lunga» sarebbe un artificio, e dà un totale uguale per chiunque guardi il cammino, anche prima di averlo percorso. Il prezzo: chi fa il ramo corto si vede attribuiti i km di quello ufficiale.
 - l'`id` delle righe della Lens è sintetico (`user_id << 32 | layer_id`): le righe non aprono il dettaglio di una validazione.
 
+**Attributi del cammino** (oc:8918). Anche `stage_count` e `distance` di `LayerAttributesService`, che alimentano la card del cammino nell'app e i filtri della home per tappe e km, contano un gruppo per tappa con i km della principale. Le radici le dà `StageProgressService::rootTrackIds()`, costruito sulla stessa `routeTracksQuery()` del passaporto: la regola resta in un posto solo. Dichiarare, cambiare o togliere una variante rimette in coda `RecalculateLayerAttributesJob` per i cammini coinvolti (`EcTrackVariantObserver`, compresi quelli della principale precedente).
+
 ## Perché così
 
 - **Due regole invece di una** (oc:8676): l'errore di assegnazione delle tappe (oc:8314) è un problema di dati del gestore e non deve pesare sull'utente finale, che deve vedere il cammino intero; il gestore invece resta limitato alle proprie tappe, come in oc:8671.
@@ -41,7 +43,8 @@ Vincoli che il codice da solo non spiega:
 - **Il ricalcolo non revoca una validazione** (oc:8165; confermata da oc:8809 anche per lo spegnimento del GPS di un cammino): togliere un traguardo già mostrato è il danno peggiore in un prodotto di questo tipo, e la causa non sarebbe nemmeno un comportamento della persona — è il gestore che ha modificato la mappa, o una regola di calcolo che è cambiata. Il prezzo accettato: una validazione può restare riferita a un tracciato diverso da quello di oggi, ed è il motivo per cui resta legata alla sua data.
 - **Varianti in una tabella a sé invece che in una colonna su `ec_tracks`** (oc:8165): quella tabella è di `wm-package`, e una colonna aggiunta da una migration del consumer fa divergere lo schema che il package pubblica.
 - **Il raggruppamento si fa al momento di contare, non quando si registra** (oc:8165): così la certificazione riporta la tappa davvero percorsa, e il passaporto e l'immagine di condivisione mostrano il percorso reale. Normalizzare verso la principale all'atto della scrittura avrebbe salvato un dato falso, irreversibile per la regola sopra.
-- **I controlli del campo «Variante di» scattano solo se il valore cambia** (oc:8862): nessun observer pulisce `ec_track_variants` quando una principale esce dal cammino, e un collegamento che l'admin ha fatto verso una tappa non del Validator deve restare salvabile da lui senza toccarlo. Il prezzo: un collegamento invariato non viene mai ricontrollato.
+- **I controlli del campo «Variante di» scattano solo se il valore cambia** (oc:8862): nessun observer pulisce `ec_track_variants` quando una principale esce dal cammino (l'observer di oc:8918 ricalcola gli attributi, non pulisce), e un collegamento che l'admin ha fatto verso una tappa non del Validator deve restare salvabile da lui senza toccarlo. Il prezzo: un collegamento invariato non viene mai ricontrollato.
+- **Attributi corretti nel backend, non letti dalle API del passaporto** (oc:8918): quelle richiedono il login e valgono solo per i cammini col passaporto acceso; la card in home la vede chiunque, e in produzione 12 dei 15 cammini con varianti non avevano il passaporto acceso (misurato il 05/11/2026).
 
 ## Come ci siamo arrivati
 

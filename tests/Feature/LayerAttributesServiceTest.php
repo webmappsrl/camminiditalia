@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\EcTrack;
+use App\Models\EcTrackVariant;
 use App\Services\LayerAttributesService;
+use App\Services\StageProgressService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -100,5 +102,53 @@ class LayerAttributesServiceTest extends TestCase
         $layer = $this->createLayer();
 
         $this->assertNull(app(LayerAttributesService::class)->stageCount($layer));
+    }
+
+    public function test_stage_count_excludes_variants_whose_main_is_in_the_same_layer(): void
+    {
+        $layer = $this->createLayer();
+        $tracks = EcTrack::factory()->count(3)->create(['properties' => []]);
+        $layer->ecTracks()->attach($tracks->pluck('id')->toArray());
+        EcTrackVariant::create(['ec_track_id' => $tracks[1]->id, 'main_ec_track_id' => $tracks[0]->id]);
+
+        $this->assertSame(2, app(LayerAttributesService::class)->stageCount($layer->fresh()));
+    }
+
+    public function test_stage_count_counts_variant_whose_main_is_outside_the_layer(): void
+    {
+        $layer = $this->createLayer();
+        $otherLayer = $this->createLayer();
+        $main = EcTrack::factory()->create(['properties' => []]);
+        $variant = EcTrack::factory()->create(['properties' => []]);
+        $otherLayer->ecTracks()->attach($main->id);
+        $layer->ecTracks()->attach($variant->id);
+        EcTrackVariant::create(['ec_track_id' => $variant->id, 'main_ec_track_id' => $main->id]);
+
+        $this->assertSame(1, app(LayerAttributesService::class)->stageCount($layer->fresh()));
+    }
+
+    public function test_total_distance_uses_only_the_main_of_each_group(): void
+    {
+        $layer = $this->createLayer();
+        $main = EcTrack::factory()->create(['properties' => ['manual_data' => ['distance' => 10.0]]]);
+        $variant = EcTrack::factory()->create(['properties' => ['manual_data' => ['distance' => 14.0]]]);
+        $other = EcTrack::factory()->create(['properties' => ['manual_data' => ['distance' => 5.0]]]);
+        $layer->ecTracks()->attach([$main->id, $variant->id, $other->id]);
+        EcTrackVariant::create(['ec_track_id' => $variant->id, 'main_ec_track_id' => $main->id]);
+
+        $this->assertSame(15.0, app(LayerAttributesService::class)->totalDistance($layer->fresh()));
+    }
+
+    public function test_stage_count_matches_passport_total(): void
+    {
+        $layer = $this->createLayer();
+        $tracks = EcTrack::factory()->count(3)->create(['properties' => []]);
+        $layer->ecTracks()->attach($tracks->pluck('id')->toArray());
+        EcTrackVariant::create(['ec_track_id' => $tracks[1]->id, 'main_ec_track_id' => $tracks[0]->id]);
+        $user = $this->createUserWithoutRole();
+
+        $progress = app(StageProgressService::class)->progressFor($user, $layer->fresh());
+
+        $this->assertSame($progress['total'], app(LayerAttributesService::class)->stageCount($layer->fresh()));
     }
 }

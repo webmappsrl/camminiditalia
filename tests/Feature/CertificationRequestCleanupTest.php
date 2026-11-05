@@ -109,7 +109,11 @@ class CertificationRequestCleanupTest extends TestCase
         // Il provider del guard `api` è configurato su App\Models\User (config/auth.php):
         // il token va generato a partire da quella classe, altrimenti il claim `prv`
         // (lock_subject) non combacia e la richiesta successiva risulta 401.
-        $token = JWTAuth::fromUser(\App\Models\User::find($user->id));
+        // L'istanza dietro la facade, tipizzata: la facade non dichiara fromUser() e PHPStan
+        // la segnalerebbe come metodo inesistente.
+        /** @var \Tymon\JWTAuth\JWTAuth $jwt */
+        $jwt = JWTAuth::getFacadeRoot();
+        $token = $jwt->fromUser(\App\Models\User::find($user->id));
 
         $response = $this->withHeaders(['Authorization' => "Bearer {$token}"])
             ->postJson('/api/auth/delete');
