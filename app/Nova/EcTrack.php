@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use App\Models\EcTrackVariant;
 use App\Nova\Traits\FiltersUsersByRoleTrait;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
@@ -43,6 +44,24 @@ class EcTrack extends WmNovaEcTrack
         }
 
         return $query->whereRaw('1=0');
+    }
+
+    /**
+     * Layer proposti dal bottone «Copia codice web component» (oc:8944): l'Administrator li vede
+     * tutti, ogni altro ruolo solo quelli di cui è owner, come nella index dei Layer
+     * (`App\Nova\Layer::indexQuery()`). Parte da `parent::`, che filtra già per il flag dell'App.
+     */
+    #[\Override]
+    protected function webComponentLayers(NovaRequest $request): Collection
+    {
+        $layers = parent::webComponentLayers($request);
+        $user = $request->user();
+
+        if ($user?->hasRole('Administrator')) {
+            return $layers;
+        }
+
+        return $layers->where('user_id', $user?->id)->values();
     }
 
     /**
