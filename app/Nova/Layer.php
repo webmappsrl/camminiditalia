@@ -17,6 +17,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
+use Laravel\Nova\Tabs\TabsGroup;
 use Outl1ne\MultiselectField\Multiselect;
 use Wm\WmPackage\Enums\OsmWalkingNetwork;
 use Wm\WmPackage\Enums\Season;
@@ -58,7 +59,15 @@ class Layer extends WmNovaLayer
         // (oc:8311). Verificato che nessun Layer ha valori impostati su queste
         // due relazioni, quindi la rimozione non nasconde dati esistenti.
         // Le relazioni restano sul modello: qui si nasconde solo il campo.
+        // Da oc:8910 il package raccoglie attività, zone e termini nella sezione «Filters»
+        // (TabsGroup con chiave `taxonomySectionKey()`): si nasconde anche quella, perché un
+        // filtro salvato su un layer in modalità auto lancerebbe l'assegnazione per tassonomia,
+        // che qui non vale (oc:8944).
         $fields = array_filter($fields, function ($field) {
+            if ($field instanceof TabsGroup && $field->attribute === self::taxonomySectionKey()) {
+                return false;
+            }
+
             return ! ($field instanceof MorphToMany
                 && in_array($field->attribute, ['taxonomyActivities', 'taxonomyWheres'], true));
         });

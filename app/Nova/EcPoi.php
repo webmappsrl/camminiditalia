@@ -94,6 +94,20 @@ class EcPoi extends WmNovaEcPoi
         return $user->hasRole('Validator') && $ecPoi->user_id === $user->id;
     }
 
+    /**
+     * La sezione «Taxonomies» di oc:8910 non compare su camminiditalia (oc:8944): sulla EcPoi la tassonomia usata
+     * davvero sono i tipi di POI, che hanno già il loro MorphToMany «Taxonomy Poi Types»; una
+     * seconda sezione con zone e attività confonderebbe il Validator.
+     * Restituire `[]` evita anche di costruirla, con le sue query, per poi scartarla.
+     *
+     * @return array<int, mixed>
+     */
+    #[\Override]
+    public function taxonomySectionFields(string $label = 'Taxonomies', string $default = 'General'): array
+    {
+        return [];
+    }
+
     public function fields(NovaRequest $request): array
     {
         $fields = array_map(function ($field) {
