@@ -94,6 +94,23 @@ class EcPoi extends WmNovaEcPoi
         return $user->hasRole('Validator') && $ecPoi->user_id === $user->id;
     }
 
+    /**
+     * Delle tassonomie storiche che il package dichiara, su un POI di Cammini d'Italia ha senso
+     * la sola «Tipi POI»: le Attività qui non si usano (oc:8951).
+     *
+     * Nessun dato si sposta — la dichiarazione punta alla relazione che il POI ha già — e la
+     * scelta di cosa tenere spetta allo shard: il package le elenca tutte, chi lo usa sottrae.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function legacyTaxonomies(): array
+    {
+        return array_values(array_filter(
+            parent::legacyTaxonomies(),
+            fn (array $taxonomy): bool => ($taxonomy['key'] ?? null) === 'poi_types'
+        ));
+    }
+
     public function fields(NovaRequest $request): array
     {
         $fields = array_map(function ($field) {
@@ -107,6 +124,15 @@ class EcPoi extends WmNovaEcPoi
 
             return $field;
         }, parent::fields($request));
+
+        // I Tipi POI si scelgono dalla sezione Tassonomie: la lista di attach del package
+        // sarebbe un secondo controllo sulla stessa relazione nella stessa pagina, e due
+        // controlli su una relazione sono il modo noto per perdere le associazioni al primo
+        // salvataggio — il campo che non mostra tutte le righe stacca le altre (oc:8951).
+        $fields = array_values(array_filter(
+            $fields,
+            fn ($field): bool => ($field->attribute ?? null) !== 'taxonomyPoiTypes'
+        ));
 
         if ($layerField = $this->layerAssignmentField($request)) {
             $fields[] = $layerField;

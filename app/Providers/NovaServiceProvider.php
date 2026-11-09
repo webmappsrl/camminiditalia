@@ -131,7 +131,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 // Wm\WmPackage\Policies\TaxonomyWherePolicy (viewAny/view per tutti,
                 // create/update/delete solo Administrator); il canSee qui limita solo
                 // la visibilità della voce di menu.
-                MenuSection::make('Taxonomies', [
+                MenuSection::make(__('Taxonomies'), [
                     MenuItem::resource(TaxonomyPoiType::class),
                     MenuItem::resource(TaxonomyTheme::class),
                     MenuItem::resource(TaxonomyWhere::class)
