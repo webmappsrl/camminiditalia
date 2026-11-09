@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\FormData;
-use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -42,6 +41,28 @@ class Layer extends WmNovaLayer
         return $query;
     }
 
+    /**
+     * Nessuna tassonomia storica fra i filtri del cammino.
+     *
+     * Attività e Zone non sono esposte sui cammini: in camminiditalia non vengono usate — la
+     * modalità automatica del layer assegna gli EC per proprietario e non passa dalla tassonomia
+     * (oc:8311), e fu verificato che nessun Layer aveva valori impostati su quelle relazioni.
+     *
+     * Dal package 1.6.1 la rimozione va fatta qui e non sui campi già costruiti: le opzioni di
+     * ogni tassonomia storica si ricavano con un SELECT su tutta la sua tabella, e per le Zone
+     * sono 7.930 righe con dentro le geometrie (104 MB). Quella query parte dentro
+     * parent::fields(), quindi un filtro a valle eviterebbe di disegnare il campo ma non di
+     * pagarlo, su ogni costruzione dei fields — index compresa (oc:8951).
+     *
+     * Le relazioni restano sul modello: qui non si dichiara il campo.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function legacyTaxonomies(): array
+    {
+        return [];
+    }
+
     public function fields(NovaRequest $request): array
     {
         $fields = parent::fields($request);
@@ -52,15 +73,12 @@ class Layer extends WmNovaLayer
             return ! ($field instanceof BelongsTo && $field->attribute === 'appOwner');
         });
 
-        // Attività e Taxonomy Where non sono esposte sui cammini: in
-        // camminiditalia non vengono usate — la modalità automatica del layer
-        // assegna gli EC per proprietario e non passa dalla tassonomia
-        // (oc:8311). Verificato che nessun Layer ha valori impostati su queste
-        // due relazioni, quindi la rimozione non nasconde dati esistenti.
-        // Le relazioni restano sul modello: qui si nasconde solo il campo.
+        // La sezione delle tassonomie del package (oc:8910) non arriva a schermo: con
+        // legacyTaxonomies() vuoto non ha più tab dentro, ma Wm\WmPackage\Nova\Layer::fields()
+        // chiama makeTaxonomySection() direttamente, quindi il TabsGroup esiste lo stesso e
+        // disegnerebbe una sezione vuota. Tab::group() mette la chiave in `attribute` (oc:8951).
         $fields = array_filter($fields, function ($field) {
-            return ! ($field instanceof MorphToMany
-                && in_array($field->attribute, ['taxonomyActivities', 'taxonomyWheres'], true));
+            return ($field->attribute ?? null) !== self::taxonomySectionKey();
         });
 
         // Modify layerOwner field to be visible only to admins
