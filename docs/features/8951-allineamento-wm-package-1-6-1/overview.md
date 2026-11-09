@@ -42,9 +42,10 @@ cui l'unica cosa cambiata è il package — se qualcosa si rompe, si sa dove gua
 
 - [ ] Il gitlink di `wm-package` punta a `origin/main` (release 1.6.1) e il submodule è
       allineato nel working tree.
-- [ ] Le tre migration del package sono pubblicate con
-      `wm-package:publish-missing-migrations` ed eseguite, in locale e in produzione. Non sono
-      opzionali: `LayerService` (`:401-404`, `:483-486`), gli Observer di `EcTrack`, `EcPoi` e
+- [ ] Le tre migration del package sono pubblicate in locale con
+      `wm-package:publish-missing-migrations` e **committate nel ticket**; sui server le esegue
+      il deploy, che lancia `php artisan migrate --force` dentro `scripts/deploy_prod.sh`. Non
+      sono opzionali: `LayerService` (`:401-404`, `:483-486`), gli Observer di `EcTrack`, `EcPoi` e
       `Layer`, `EcTrack` e `App` interrogano `taxonomy_termables`/`taxonomy_terms` nei percorsi
       normali, quindi senza quelle tabelle salvare un contenuto o ricalcolare un cammino va in
       errore SQL.
@@ -81,12 +82,13 @@ cui l'unica cosa cambiata è il package — se qualcosa si rompe, si sa dove gua
       possano ancora fare: detail ed edit di `EcTrack` ed `EcPoi` con le loro classificazioni,
       Field `LayerFeatures` sul `Layer` in modalità manuale, attach EcTrack↔EcPoi, Resource del
       passaporto, Resource UGC.
-- [ ] Rilascio in produzione con i passi post-deploy eseguiti e riportati sul ticket:
-      `wm-package:publish-missing-migrations` e `migrate` come primo passo, uno dietro l'altro,
-      poi riavvio di Horizon (il deploy non lo riavvia), poi
-      `php artisan scout:import "App\Models\EcTrack"` — **non** il reindex normale: i dynamic
+- [ ] Rilascio in produzione. Il deploy automatico fa già da sé `git submodule update`,
+      `composer install`, `php artisan migrate --force` e `horizon:terminate`, con l'app in
+      `down` per tutta la durata. **L'unico passo manuale è**
+      `php artisan scout:import "App\Models\EcTrack"` — non il reindex normale: i dynamic
       template dell'indice per `terms` non si applicano a un indice esistente, e un documento
-      rifiutato fa fallire il salvataggio in Nova — poi verifica degli artefatti pubblici.
+      rifiutato fa fallire il salvataggio in Nova. Poi verifica degli artefatti pubblici e della
+      index dei `Layer` in Nova.
 
 ## Rischi
 
@@ -105,13 +107,11 @@ parte. È anche l'unica forma che non muore in silenzio: il filtro di oggi cerca
 `taxonomyActivities` e `taxonomyWheres`, che dopo l'aggiornamento non esistono più, quindi e'
 già codice morto che nessun test segnala.
 
-**Finestra fra il deploy del codice e `migrate`.** Dal momento in cui il codice nuovo è sul
-server, `LayerService` (`:401-404`, `:483-486`), gli Observer di `EcTrack`, `EcPoi` e `Layer`,
-`EcTrack` e `App` interrogano tabelle che ancora non esistono: chi salva un contenuto in quei
-minuti prende un errore SQL. *Decisione del dev:* le migration si pubblicano direttamente sul
-server, come negli altri rilasci. *Mitigazione:* `wm-package:publish-missing-migrations` e
-`migrate` sono il primo passo della procedura post-deploy, uno dietro l'altro, senza nulla in
-mezzo.
+**Finestra fra il deploy del codice e `migrate`: non esiste.** Era stata scritta qui come
+rischio, sull'assunzione che le migration si eseguissero a mano dopo il deploy. Letto
+`scripts/deploy_prod.sh`, l'assunzione è falsa: il deploy mette l'app in `php artisan down`,
+esegue `migrate --force` e solo allora la rimette su. Nessuno può salvare un contenuto mentre le
+tabelle non ci sono.
 
 **Il confronto degli artefatti pubblici dà una conferma parziale.** Con le tabelle nuove vuote,
 `config.json` e i geojson sono identici a meno di una chiave vuota in più: il confronto passerà

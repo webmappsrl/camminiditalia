@@ -2,6 +2,19 @@
 
 # Notes — Allineamento wm-package a 1.6.1
 
+## Errori miei, corretti dopo che il dev li ha notati
+
+**La procedura post-deploy che avevo scritto era sbagliata in tre punti su quattro.** Avevo messo
+`publish-missing-migrations`, `migrate` e il riavvio di Horizon come passi manuali. Leggendo
+`scripts/deploy_prod.sh` — cosa che non avevo fatto — il deploy esegue da sé `git submodule
+update --init --recursive`, `composer install`, `php artisan migrate --force` e
+`horizon:terminate`, con l'app in `down` per tutta la durata. L'unico passo manuale vero è
+`scout:import`. Da qui discendono due correzioni: la procedura, e il «rischio finestra fra deploy
+e migrate», che non esiste perché l'app è in manutenzione mentre migra.
+
+La radice è una domanda mal posta a inizio sessione («le migration le pubblichiamo sul server o
+le committiamo?»), fatta senza aver prima letto lo script di deploy che rispondeva da sé.
+
 ## Deviazioni dal piano
 
 **Il piano prevedeva di correggere i test rotti dall'aggiornamento: non ce n'erano.** La suite è
@@ -81,9 +94,10 @@ l'ambiente.
   è stata saltata di proposito, non per dimenticanza.
 - **Stima saltata**, su indicazione del dev: `estimated_hours` non è stato scritto su
   Orchestrator.
-- **Le migration si pubblicano direttamente sul server**, non committate in anticipo. Lascia
-  aperta una finestra fra il deploy del codice e `migrate` in cui salvare un contenuto dà errore
-  SQL; si tiene corta eseguendo i due comandi di seguito.
+- **Le migration sono pubblicate in locale e committate nel ticket** (commit `a00571a`). A metà
+  sessione era stato deciso il contrario — pubblicarle sul server — ma è una decisione presa su
+  una mia domanda mal posta, e i fatti l'hanno superata: i file vanno nel commit, e sui server le
+  esegue il deploy.
 - **Criterio di accettazione del diff dato dal dev**: additivo si accetta, modificativo si porta
   a lui. Nessun cambiamento modificativo è emerso nei quattro punti che producono output.
 - **Un utente Administrator di prova** (`oc8951@local.test`) è stato creato sul database locale
