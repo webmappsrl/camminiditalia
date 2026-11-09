@@ -46,6 +46,21 @@ class EcTrack extends WmNovaEcTrack
     }
 
     /**
+     * Nessuna tassonomia storica nella sezione Tassonomie della tappa.
+     *
+     * Il package 1.6.1 ripropone lì le tassonomie dichiarate in `wm-package.legacy_taxonomies`
+     * — per noi le sole Attività — che però sono già gestite dalla loro relazione: il tab
+     * aggiungeva un secondo posto da cui modificare la stessa cosa. Resta il tab Generale con
+     * le Zone calcolate dalla geometria, che sono in sola lettura (oc:8951).
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function legacyTaxonomies(): array
+    {
+        return [];
+    }
+
+    /**
      * Get the fields displayed by the resource.
      */
     public function fields(NovaRequest $request): array
