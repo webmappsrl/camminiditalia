@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Nova\EcPoi as NovaEcPoi;
 use App\Nova\EcTrack as NovaEcTrack;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\Resources\MergeValue;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -88,7 +89,7 @@ class EcResourcesLegacyTaxonomiesTest extends TestCase
                     continue;
                 }
                 // Panel, Tab e TabsGroup estendono MergeValue: i campi stanno in ->data.
-                if ($item instanceof \Illuminate\Http\Resources\MergeValue) {
+                if ($item instanceof MergeValue) {
                     $walk($item->data);
 
                     continue;
