@@ -82,6 +82,23 @@ class EcTrack extends WmNovaEcTrack
     /**
      * Get the fields displayed by the resource.
      */
+    /**
+     * La query che riempie il menu «Layers» dell'attach (oc:8974).
+     *
+     * Nova la cerca per convenzione: `relatable` più il nome del modello al plurale
+     * (`AttachableRelation::attachableQueryMethod()`). Senza questo metodo il menu si porta
+     * dietro i layer interi, con l'eager load dichiarato dalla Resource (`$with`: tracce, POI,
+     * App, App associate): per disegnare un elenco di nomi significava leggere tutte le tracce
+     * del progetto, geometrie comprese. Per fare l'associazione servono l'id e il nome; `user_id`
+     * resta perché lo usano `indexQuery()` e l'autorizzazione.
+     */
+    public static function relatableLayers(NovaRequest $request, $query)
+    {
+        return $query
+            ->without(['ecTracks', 'ecPois', 'appOwner', 'associatedApps'])
+            ->select(['layers.id', 'layers.name', 'layers.user_id']);
+    }
+
     public function fields(NovaRequest $request): array
     {
         $fields = parent::fields($request);
@@ -112,14 +129,23 @@ class EcTrack extends WmNovaEcTrack
                     ->collapsedByDefault();
             }
 
-            // Il campo Layers (stesso bug del campo EcPois sopra) va nascosto
-            // per il Validator invece che corretto: un gestore di cammino non
+            // Il campo Layers ha lo stesso bug del campo EcPois sopra — in
+            // wm-package punta a Layer::class del package, privo degli override
+            // locali — ed è nascosto al Validator: un gestore di cammino non
             // deve poter fare attach/detach diretto del layer da qui,
             // l'associazione passa sempre dal pannello Layer/LayerFeatureController.
+            // Ripuntarlo alla Resource locale serve comunque, e non per i
+            // permessi: la Resource del package aggiunge le Zone fra le
+            // tassonomie storiche (wm-package Layer::legacyTaxonomies()), e Nova
+            // costruisce i campi della Resource una volta per ogni voce
+            // dell'elenco di attach. Con `taxonomy_wheres` piena quella pagina
+            // impiegava due minuti e il menu non si apriva (oc:8974).
             if ($field instanceof MorphToMany && $field->attribute === 'layers') {
-                $field->canSee(function () use ($currentUser) {
-                    return $currentUser && $currentUser->hasRole('Administrator');
-                });
+                return MorphToMany::make('Layers', 'layers', Layer::class)
+                    ->collapsedByDefault()
+                    ->canSee(function () use ($currentUser) {
+                        return $currentUser && $currentUser->hasRole('Administrator');
+                    });
             }
 
             return $field;
