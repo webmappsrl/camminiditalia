@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\EcTrack;
 use App\Nova\Layer;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Http;
@@ -51,7 +52,7 @@ class EcTrackLayersAttachableFieldTest extends TestCase
 
     private function layersField($user): ?MorphToMany
     {
-        $track = \App\Models\EcTrack::factory()->createQuietly(['user_id' => $user->id]);
+        $track = EcTrack::factory()->createQuietly(['user_id' => $user->id]);
 
         foreach ((new \App\Nova\EcTrack($track))->fields($this->novaRequestFor($user)) as $field) {
             if ($field instanceof MorphToMany && $field->attribute === 'layers') {
