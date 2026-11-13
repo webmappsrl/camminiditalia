@@ -95,6 +95,7 @@
     "The track does not cross any EcTrack": "The track does not cross any stage",
     "Variant of": "Variant of",
     "The stage this one is an alternative of: walking either of the two counts as the same stage of the route.": "The stage this one is an alternative of: walking either of the two counts as the same stage of the route.",
+    "This stage is not on any route yet: ask the administrator to add it to your route, then you can set «Variant of».": "This stage is not on any route yet: ask the administrator to add it to your route, then you can set «Variant of».",
     "A stage cannot be a variant of itself.": "A stage cannot be a variant of itself.",
     "The main stage is already a variant: variants live on a single level.": "The main stage is already a variant: variants live on a single level.",
     "This stage is already the main stage of other variants: it cannot become a variant itself.": "This stage is already the main stage of other variants: it cannot become a variant itself.",
