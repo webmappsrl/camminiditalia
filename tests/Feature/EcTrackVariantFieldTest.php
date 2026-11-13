@@ -402,4 +402,51 @@ class EcTrackVariantFieldTest extends TestCase
 
         $this->assertNull($field);
     }
+
+    public function test_variant_field_help_mentions_route_when_stage_has_no_layer(): void
+    {
+        $this->actingAs($this->validator);
+
+        $track = EcTrack::withoutEvents(fn () => EcTrack::factory()->create([
+            'app_id' => $this->app_->id,
+            'user_id' => $this->validator->id,
+            'properties' => [],
+            'osmid' => null,
+        ]));
+
+        $this->assertStringContainsString($this->noRouteHelp(), $this->serializedHelp($track));
+    }
+
+    public function test_variant_field_help_is_standard_when_stage_belongs_to_layer(): void
+    {
+        $this->actingAs($this->validator);
+
+        $track = $this->stage($this->validatorLayer(), $this->validator);
+
+        $help = $this->serializedHelp($track);
+
+        $this->assertStringNotContainsString($this->noRouteHelp(), $help);
+        $this->assertStringContainsString(
+            __('The stage this one is an alternative of: walking either of the two counts as the same stage of the route.'),
+            $help
+        );
+    }
+
+    private function noRouteHelp(): string
+    {
+        return __('This stage is not on any route yet: ask the administrator to add it to your route, then you can set «Variant of».');
+    }
+
+    /**
+     * L'help come arriva al frontend: una closure passata a help() verrebbe serializzata come
+     * `{}`, ed è per questo che si legge da jsonSerialize() e non da getHelpText() (oc:8976).
+     */
+    private function serializedHelp(EcTrack $track): string
+    {
+        $help = $this->variantField($track, $this->validator)->jsonSerialize()['helpText'] ?? null;
+
+        $this->assertIsString($help);
+
+        return $help;
+    }
 }

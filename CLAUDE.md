@@ -122,7 +122,8 @@ Tutte le mail del progetto hanno lo stesso design. Ogni vista in `resources/view
 
 Stanno in `.claude/rules/`, un file per soggetto, con il frontmatter `paths:` che le carica quando
 si toccano i file corrispondenti: `rate-limiter` (`throttle:10,1` condiviso fra le route, limiter con nome), `varianti-di-tappa`
-(scrivere `ec_track_variants` col query builder non fa scattare il ricalcolo del cammino).
+(scrivere `ec_track_variants` col query builder non fa scattare il ricalcolo del cammino), `nova`
+(`->help()` con una closure arriva al frontend come `{}`).
 
 ## Feature disponibili
 
@@ -178,6 +179,7 @@ si toccano i file corrispondenti: `rate-limiter` (`throttle:10,1` condiviso fra 
 | Attributi del cammino senza varianti | oc:8918 | `app/Services/LayerAttributesService.php`, `app/Observers/EcTrackVariantObserver.php` | Vedi [docs/knowledge/8676-passaporto-camminatore-tappe-percorse-e-validate-dellutente.md](docs/knowledge/8676-passaporto-camminatore-tappe-percorse-e-validate-dellutente.md) |
 | Allineamento wm-package a 1.6.1 e classificazioni dei contenuti in Nova | oc:8951 | gitlink `wm-package` + `wm-package/config/wm-package.php` e `resources/lang/*.json`, `app/Nova/{Layer,EcTrack,EcPoi}.php`, `app/Providers/NovaServiceProvider.php`, migration `zz_2026_11_0*` del modello unico | Il package dichiara le tassonomie storiche, lo shard sottrae: resta «Tipologia POI» sul POI, niente su tappa e cammino. Sul cammino la sezione non si costruisce affatto — le opzioni delle Zone sono 7.930 righe da 104 MB. Vedi [docs/knowledge/tassonomie-dei-contenuti-in-nova.md](docs/knowledge/tassonomie-dei-contenuti-in-nova.md) |
 | Bottone «Copia codice web component» sulla tappa | oc:8944 | `app/Nova/EcTrack.php`, `tests/Feature/EcTrackWebComponentLayersTest.php`, gitlink `wm-package`; grosso della logica in `wm-package` | Ai non-Administrator la select propone solo i layer di cui sono owner. Rilascio dopo oc:8937 (`track-id` in wm-elements). Vedi [docs/knowledge/8944-copia-codice-web-component-sulla-detail-view-della-ectrack.md](docs/knowledge/8944-copia-codice-web-component-sulla-detail-view-della-ectrack.md) |
+| Tappa del Validator associata al suo cammino alla creazione | oc:8976 | `app/Nova/EcTrack.php`, `app/Policies/EcTrackPolicy.php`, `resources/lang/{it,en,fr,es,de}.json` | Vedi [docs/knowledge/scoping-validator-risorse-nova.md](docs/knowledge/scoping-validator-risorse-nova.md) |
 
 ## Decisioni architetturali
 

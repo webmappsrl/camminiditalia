@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\EcTrack;
+use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class EcTrackPolicyTest extends TestCase
@@ -184,5 +185,37 @@ class EcTrackPolicyTest extends TestCase
         $guest = $this->makeUser('Guest');
         $ecTrack = $this->makeEcTrack();
         $this->assertFalse(Gate::forUser($guest)->allows('delete', $ecTrack));
+    }
+
+    // --- attach/detach layer (Nova pivot, oc:8976) ---
+
+    public function test_validator_can_attach_only_own_layer(): void
+    {
+        $validator = $this->makeUser('Validator');
+        $other = $this->makeUser('Validator');
+        $ecTrack = $this->makeEcTrack($validator->id);
+        $ownLayer = Layer::factory()->createQuietly(['user_id' => $validator->id]);
+        $foreignLayer = Layer::factory()->createQuietly(['user_id' => $other->id]);
+
+        $this->assertTrue(Gate::forUser($validator)->allows('attachLayer', [$ecTrack, $ownLayer]));
+        $this->assertFalse(Gate::forUser($validator)->allows('attachLayer', [$ecTrack, $foreignLayer]));
+    }
+
+    public function test_validator_cannot_detach_layer(): void
+    {
+        $validator = $this->makeUser('Validator');
+        $ecTrack = $this->makeEcTrack($validator->id);
+        $layer = Layer::factory()->createQuietly(['user_id' => $validator->id]);
+
+        $this->assertFalse(Gate::forUser($validator)->allows('detachLayer', [$ecTrack, $layer]));
+    }
+
+    public function test_administrator_can_detach_layer(): void
+    {
+        $admin = $this->makeUser('Administrator');
+        $ecTrack = $this->makeEcTrack();
+        $layer = Layer::factory()->createQuietly();
+
+        $this->assertTrue(Gate::forUser($admin)->allows('detachLayer', [$ecTrack, $layer]));
     }
 }

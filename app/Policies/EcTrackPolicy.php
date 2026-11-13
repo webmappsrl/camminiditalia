@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Wm\WmPackage\Models\EcTrack;
+use Wm\WmPackage\Models\Layer;
 
 /**
  * Override locale di Wm\WmPackage\Policies\EcTrackPolicy (oc:8181), necessario
@@ -62,5 +63,20 @@ class EcTrackPolicy
     public function forceDelete(User $user, EcTrack $ecTrack): bool
     {
         return false;
+    }
+
+    /**
+     * Nova pivot `layers`: solo l'Administrator (che passa da before()) stacca un cammino da una
+     * tappa; il Validator no (oc:8976).
+     */
+    public function detachLayer(User $user, EcTrack $ecTrack, Layer $layer): bool
+    {
+        return false;
+    }
+
+    /** Nova pivot `layers`: il Validator può agganciare solo il proprio cammino (oc:8976). */
+    public function attachLayer(User $user, EcTrack $ecTrack, Layer $layer): bool
+    {
+        return $user->hasRole('Validator') && $user->id === $layer->user_id;
     }
 }

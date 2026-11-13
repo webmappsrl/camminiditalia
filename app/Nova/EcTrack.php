@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use App\Models\EcTrackVariant;
 use App\Nova\Traits\FiltersUsersByRoleTrait;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Fields\BelongsTo;
@@ -11,11 +12,36 @@ use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Wm\WmPackage\Models\Layer as LayerModel;
 use Wm\WmPackage\Nova\EcTrack as WmNovaEcTrack;
 
 class EcTrack extends WmNovaEcTrack
 {
     use FiltersUsersByRoleTrait;
+
+    /**
+     * Un Validator con un solo cammino: la tappa entra subito nel layer così «Variante di»
+     * propone le tappe del cammino (oc:8976). Più di un layer o nessuno → nessun attach.
+     *
+     * Attach dalla relazione `layers()` (pivot Layerable), non da query builder: devono scattare
+     * gli observer del pivot (proprietà `layers`, geometria del layer, PBF, attributi del cammino).
+     * Il package non definisce un `afterCreate()`, quindi niente `parent::`.
+     */
+    public static function afterCreate(NovaRequest $request, Model $model): void
+    {
+        $user = $request->user();
+        if (! $user?->hasRole('Validator') || $user->hasRole('Administrator')) {
+            return;
+        }
+
+        $layerIds = LayerModel::query()->where('user_id', $user->id)->pluck('id');
+        if ($layerIds->count() !== 1) {
+            return;
+        }
+
+        /** @var \Wm\WmPackage\Models\EcTrack $model */
+        $model->layers()->attach($layerIds->first());
+    }
 
     /**
      * The model the resource corresponds to.
@@ -132,8 +158,8 @@ class EcTrack extends WmNovaEcTrack
             // Il campo Layers ha lo stesso bug del campo EcPois sopra — in
             // wm-package punta a Layer::class del package, privo degli override
             // locali — ed è nascosto al Validator: un gestore di cammino non
-            // deve poter fare attach/detach diretto del layer da qui,
-            // l'associazione passa sempre dal pannello Layer/LayerFeatureController.
+            // deve poter fare attach/detach diretto del layer da qui: le sue
+            // tappe nuove entrano nel suo cammino da sole, in afterCreate() (oc:8976).
             // Ripuntarlo alla Resource locale serve comunque, e non per i
             // permessi: la Resource del package aggiunge le Zone fra le
             // tassonomie storiche (wm-package Layer::legacyTaxonomies()), e Nova
@@ -222,7 +248,9 @@ class EcTrack extends WmNovaEcTrack
                     );
                 };
             })
-            ->help(__('The stage this one is an alternative of: walking either of the two counts as the same stage of the route.'))
+            // Stringa calcolata subito: Nova non esegue una closure passata a help(), la
+            // serializza come `{}` e il testo sparisce (oc:8976).
+            ->help($this->variantFieldHelp())
             // Nascosto su una tappa che è già principale di altre varianti: le varianti vivono
             // su un solo livello, e lasciare il campo vuol dire far scegliere al gestore un
             // valore che il guard del model rifiuta al salvataggio, con un errore 500 al posto
@@ -252,10 +280,7 @@ class EcTrack extends WmNovaEcTrack
 
         $morphClass = (new (config('wm-package.ec_track_model')))->getMorphClass();
 
-        $layerIds = DB::table('layerables')
-            ->where('layerable_id', $id)
-            ->where('layerable_type', $morphClass)
-            ->pluck('layer_id');
+        $layerIds = $this->layerIdsOfTrack($id);
 
         $options = DB::table('layerables')
             ->join('ec_tracks', 'ec_tracks.id', '=', 'layerables.layerable_id')
@@ -297,6 +322,36 @@ class EcTrack extends WmNovaEcTrack
     private function variantResourceId(): ?int
     {
         return $this->resource->exists ? (int) $this->resource->getKey() : null;
+    }
+
+    /**
+     * L'help del campo, con un avviso se la tappa non è in nessun cammino: senza layer le
+     * opzioni sono vuote (oc:8976). Il Validator non può associarla da sé (Field `Layers` e
+     * form del Layer gli sono preclusi), quindi l'avviso lo manda dall'amministratore.
+     */
+    private function variantFieldHelp(): string
+    {
+        $base = __('The stage this one is an alternative of: walking either of the two counts as the same stage of the route.');
+        $id = $this->variantResourceId();
+
+        if ($id !== null && $this->layerIdsOfTrack($id)->isEmpty()) {
+            return $base.' '.__('This stage is not on any route yet: ask the administrator to add it to your route, then you can set «Variant of».');
+        }
+
+        return $base;
+    }
+
+    /**
+     * I layer a cui la tappa è associata.
+     *
+     * @return Collection<int, int>
+     */
+    private function layerIdsOfTrack(int $id): Collection
+    {
+        return DB::table('layerables')
+            ->where('layerable_id', $id)
+            ->where('layerable_type', (new (config('wm-package.ec_track_model')))->getMorphClass())
+            ->pluck('layer_id');
     }
 
     /** Il nome della tappa nella lingua corrente, dal campo tradotto grezzo. */
