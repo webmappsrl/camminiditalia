@@ -87,6 +87,7 @@
     "The track does not cross any EcTrack": "La trace ne traverse aucune étape",
     "Variant of": "Variante de",
     "The stage this one is an alternative of: walking either of the two counts as the same stage of the route.": "L'étape dont celle-ci est une alternative : parcourir l'une ou l'autre compte comme la même étape du chemin.",
+    "This stage is not on any route yet: ask the administrator to add it to your route, then you can set «Variant of».": "Cette étape n'est encore sur aucun chemin : demandez à l'administrateur de l'ajouter à votre chemin, puis vous pourrez définir « Variante de ».",
     "A stage cannot be a variant of itself.": "Une étape ne peut pas être une variante d'elle-même.",
     "The main stage is already a variant: variants live on a single level.": "L'étape principale est déjà une variante : les variantes n'ont qu'un seul niveau.",
     "This stage is already the main stage of other variants: it cannot become a variant itself.": "Cette étape est déjà l'étape principale d'autres variantes : elle ne peut pas devenir elle-même une variante.",

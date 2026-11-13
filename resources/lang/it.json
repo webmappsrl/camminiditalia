@@ -121,6 +121,7 @@
     "The track does not cross any EcTrack": "La traccia non attraversa nessuna tappa",
     "Variant of": "Variante di",
     "The stage this one is an alternative of: walking either of the two counts as the same stage of the route.": "La tappa di cui questa è un'alternativa: percorrere l'una o l'altra vale come la stessa tappa del cammino.",
+    "This stage is not on any route yet: ask the administrator to add it to your route, then you can set «Variant of».": "Questa tappa non è ancora in nessun cammino: chiedi all'amministratore di aggiungerla al tuo cammino, poi potrai impostare «Variante di».",
     "A stage cannot be a variant of itself.": "Una tappa non può essere variante di sé stessa.",
     "The main stage is already a variant: variants live on a single level.": "La tappa principale è già una variante: le varianti vivono su un solo livello.",
     "This stage is already the main stage of other variants: it cannot become a variant itself.": "Questa tappa è già principale di altre varianti: non può diventare a sua volta una variante.",
