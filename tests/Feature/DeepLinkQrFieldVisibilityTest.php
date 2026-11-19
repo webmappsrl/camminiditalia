@@ -36,7 +36,7 @@ class DeepLinkQrFieldVisibilityTest extends TestCase
                 return 100;
             }
 
-            public function getTechData($geojson)
+            public function getTechData($geojson, ?int $timeout = null)
             {
                 return [
                     'geometry' => $geojson['geometry'] ?? ['type' => 'LineString', 'coordinates' => [[0, 0, 100], [1, 1, 100]]],
