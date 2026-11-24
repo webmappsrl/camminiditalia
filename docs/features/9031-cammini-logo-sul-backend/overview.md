@@ -47,7 +47,7 @@ titoli grandi, `primario-700` per il testo piccolo (`components/Palette`, `compo
 
 ## Requisiti
 
-- [ ] `resources/img/camminiditalia-logo.svg` contiene, in un unico `<svg>`:
+- [x] `resources/img/camminiditalia-logo.svg` contiene, in un unico `<svg>`:
   - il disco ufficiale, con forme e colori invariati: lo stesso SVG che camminiditalia.org mostra
     nell'header (verificato identico, `path` per `path`, al `logo.svg` del design system);
   - alla sua destra il nome «Cammini d'Italia» in Instrument Sans (il carattere dei titoli
@@ -59,25 +59,26 @@ titoli grandi, `primario-700` per il testo piccolo (`components/Palette`, `compo
     così segue anche la scelta manuale del tema
   - nessun attributo `id`: Nova inserisce l'SVG due volte nella stessa pagina, nell'header e nel
     menu mobile (`MainHeader.vue:21,101`)
-- [ ] Lo script che genera l'SVG (disco + testo convertito con `fonttools`) è salvato in
+- [x] Lo script che genera l'SVG (disco + testo convertito con `fonttools`, kerning applicato con
+      `uharfbuzz`) è salvato in
       `docs/features/9031-cammini-logo-sul-backend/`, così il logo si può rigenerare
-- [ ] L'altezza del logo è fissata con uno `style` sull'`<svg>`, che vince sulla classe `h-6`
+- [x] L'altezza del logo è fissata con uno `style` sull'`<svg>`, che vince sulla classe `h-6`
       che Nova aggiunge (`MainHeader.vue:21`, `Auth.vue:4` con `h-8`;
       `components/PassthroughLogo.vue` copia l'SVG così com'è). Largo al massimo 200 px: il link
       del logo è alto `h-12` e sta in un contenitore `lg:w-60` (240 px) meno `ml-2` e `px-4`
-      (`MainHeader.vue:14,18`)
-- [ ] `config/nova.php`: `brand.logo` punta a `resource_path('img/camminiditalia-logo.svg')`;
+      (`MainHeader.vue:15,18`)
+- [x] `config/nova.php`: `brand.logo` punta a `resource_path('img/camminiditalia-logo.svg')`;
       `brand.colors` resta com'è
-- [ ] Nessun CSS sull'header di Nova, né per il logo né per «Unregistered»
-- [ ] Il logo si vede proporzionato e leggibile nell'header e nella pagina di login, in tema
+- [x] Nessun CSS sull'header di Nova, né per il logo né per «Unregistered»
+- [x] Il logo si vede proporzionato e leggibile nell'header e nella pagina di login, in tema
       chiaro e scuro, a larghezza desktop, tablet (768–1023 px, dove il contenitore non ha
       larghezza fissa) e nel menu mobile
-- [ ] `.env-example` documenta `NOVA_LICENSE_KEY=` vuota, come promemoria per chi installa
-- [ ] Un test verifica che `Nova::logo()` restituisca un SVG valido con radice `<svg>`, senza
+- [x] `.env-example` documenta `NOVA_LICENSE_KEY=` vuota, come promemoria per chi installa
+- [x] Un test verifica che `Nova::logo()` restituisca un SVG valido con radice `<svg>`, senza
       attributi `id`, con l'unico `<style>` limitato a `cdi-logo-name`, e che il file esista
       (se manca, `Nova::logo()` restituisce il percorso come testo e il frontend di Nova non
       disegna nemmeno la pagina di login)
-- [ ] `docs/howto/licenza-nova.md` descrive la procedura con le fonti ufficiali
+- [x] `docs/howto/licenza-nova.md` descrive la procedura con le fonti ufficiali
       (https://nova.laravel.com/docs/v5/installation): production URL nella pagina della licenza
       («Add site»), chiave dedicata per shard («Create License Key»), `NOVA_LICENSE_KEY` nel `.env`
       del server, ricostruire la cache della config (il deploy esegue `php artisan optimize`,
@@ -111,4 +112,5 @@ Tutto nel repo principale `camminiditalia`; nessuna modifica a `wm-package`.
 - `.env-example`
 - `tests/Feature/NovaBrandLogoTest.php` (nuovo)
 - `docs/howto/licenza-nova.md` (nuovo)
+- `docs/knowledge/logo-nel-pannello-nova.md` (nuovo)
 - `docs/features/9031-cammini-logo-sul-backend/build-logo.py` (nuovo, script di generazione)

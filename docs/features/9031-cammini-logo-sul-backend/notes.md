@@ -17,12 +17,21 @@
   - Il font è sotto SIL OFL 1.1 (metadati `name` 13 e 14), che chiede di distribuirlo con copyright
     e licenza: per non portarsi dietro anche quelli, lo script lo riceve come percorso. File usato:
     `InstrumentSans-SemiBold.ttf` del design system di Cammini d'Italia, sha256
-    `cb2231708f82dfef7c92c9749cd76e456033b710c677841b01e3e200348394f2`
-    (anche su https://github.com/Instrument/instrument-sans).
+    `cb2231708f82dfef7c92c9749cd76e456033b710c677841b01e3e200348394f2`. Per rigenerare lo stesso
+    logo serve questo file: la SemiBold di https://github.com/Instrument/instrument-sans (branch
+    `master`, `fonts/ttf/`) è un'altra versione (sha256 `7151cf50…6e12`) e disegna in modo
+    diverso alcune lettere del nome, per esempio la «C», a parità di larghezza (review del
+    24/11/2026).
   - Il disco è l'SVG dell'header di camminiditalia.org, uguale `path` per `path` al `logo.svg` del
     design system; sha256 del file usato
     `c6aec2ed7c0ad884e7fa5b17c5eb8e01e34d13ee8588163fe1f9f82fbebec5e8`. I suoi `path` sono anche
     dentro `resources/img/camminiditalia-logo.svg`, quindi si possono estrarre da lì.
+- **Spazi nei `d` del disco normalizzati** (il piano diceva di non toccare `d`): lo script riduce
+  a uno gli spazi consecutivi (`build-logo.py:103`). La forma non cambia, ma il confronto con il
+  `logo.svg` del design system vale a meno degli spazi, non come testo identico.
+- **`width:auto` e `aria-label`** sulla radice dell'`<svg>`, in più rispetto al piano
+  (`build-logo.py:98-99`): la larghezza segue il `viewBox` e il nome è leggibile dagli screen
+  reader.
 
 ### Task 5 — Altezza e prova visiva
 

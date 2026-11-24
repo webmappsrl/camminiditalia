@@ -1,6 +1,7 @@
 """Genera resources/img/camminiditalia-logo.svg, il logo del pannello Nova (oc:9031).
 
-Il disco ufficiale di Cammini d'Italia resta invariato (path e colori copiati così come sono);
+Il disco ufficiale di Cammini d'Italia resta invariato (forme e colori copiati, nei `d` solo gli
+spazi consecutivi ridotti a uno);
 accanto, il nome «Cammini d'Italia» in Instrument Sans SemiBold, convertito in tracciati perché
 non dipenda dai font caricati da Nova. Il colore del nome cambia con il tema di Nova: la classe
 `dark` su <html> (ThemeDropdown.vue di Nova).
@@ -12,8 +13,10 @@ Uso, da fuori del progetto (nessuna dipendenza nel repo):
 
 - disco.svg: l'SVG del logo nell'header di camminiditalia.org (uguale a `logo.svg` del design
   system di Cammini d'Italia), viewBox 0 0 104 105;
-- InstrumentSans-SemiBold.ttf: dal design system o da https://github.com/Instrument/instrument-sans
-  (SIL Open Font License 1.1).
+- InstrumentSans-SemiBold.ttf: quello del design system di Cammini d'Italia (sha256 in
+  notes.md), SIL Open Font License 1.1. La SemiBold su https://github.com/Instrument/instrument-sans
+  è un'altra versione: disegna in modo diverso alcune lettere del nome e non riproduce il logo
+  committato.
 
 L'altezza delle maiuscole rispetto al disco si cambia con la variabile d'ambiente
 CAP_HEIGHT_RATIO (default 0.34). Lo script stampa la larghezza risultante: nell'header di Nova
