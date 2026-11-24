@@ -166,7 +166,9 @@ return [
     |
     */
     'brand' => [
-        //     'logo' => resource_path('/img/example-logo.svg'),
+        // Disco ufficiale + nome «Cammini d'Italia», generato da
+        // docs/features/9031-cammini-logo-sul-backend/build-logo.py (oc:9031)
+        'logo' => resource_path('img/camminiditalia-logo.svg'),
 
         'colors' => [
             '400' => '24, 182, 155, 0.5',
