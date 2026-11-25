@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Queue;
 use Tests\Feature\Helpers\LayerTestHelpers;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
+use Wm\WmPackage\Models\Layer;
+use Wm\WmPackage\Models\TaxonomyWhere;
 use Wm\WmPackage\Services\RolesAndPermissionsService;
 
 class LayerAttributesWheresTest extends TestCase
@@ -180,5 +182,95 @@ class LayerAttributesWheresTest extends TestCase
 
         $decoded = json_decode($first, true);
         $this->assertArrayNotHasKey('_admin_level', $decoded['name']);
+    }
+
+    public function test_wheres_uses_the_taxonomy_where_name_from_the_db(): void
+    {
+        $this->fakeBasilicataAsLucania();
+        $this->createRegion('R42', 4, ['it' => 'Basilicata', 'en' => 'Basilicata']);
+
+        $wheres = app(LayerAttributesService::class)->wheres($this->layerWithATrack());
+
+        $this->assertSame([[
+            'value' => 'basilicata',
+            'name' => ['it' => 'Basilicata', 'en' => 'Basilicata'],
+        ]], $wheres);
+    }
+
+    public function test_wheres_keeps_the_osmfeatures_name_without_a_taxonomy_where(): void
+    {
+        $this->fakeBasilicataAsLucania();
+
+        $wheres = app(LayerAttributesService::class)->wheres($this->layerWithATrack());
+
+        $this->assertSame('basilicata', $wheres[0]['value']);
+        $this->assertSame('Lucania', $wheres[0]['name']['it']);
+    }
+
+    public function test_wheres_value_does_not_depend_on_the_db_name(): void
+    {
+        $this->fakeBasilicataAsLucania();
+        $this->createRegion('R42', 4, ['it' => 'Basilicata', 'en' => 'Lucania Region']);
+
+        $wheres = app(LayerAttributesService::class)->wheres($this->layerWithATrack());
+
+        $this->assertSame('basilicata', $wheres[0]['value']);
+        $this->assertSame('Lucania Region', $wheres[0]['name']['en']);
+    }
+
+    public function test_wheres_ignores_non_region_taxonomy_wheres(): void
+    {
+        $this->fakeBasilicataAsLucania();
+        $this->createRegion('R42', 8, ['it' => 'Basilicata', 'en' => 'Basilicata']);
+
+        $wheres = app(LayerAttributesService::class)->wheres($this->layerWithATrack());
+
+        $this->assertSame('Lucania', $wheres[0]['name']['it']);
+    }
+
+    /**
+     * osmfeatures restituisce una sola regione, R42, con il nome italiano sbagliato: è il caso
+     * della Basilicata in camminiditalia (oc:8958).
+     */
+    private function fakeBasilicataAsLucania(): void
+    {
+        Http::fake(fn ($request) => Http::response([
+            'features' => $request['admin_level'] === 4 ? [[
+                'properties' => [
+                    'osmfeatures_id' => 'R42',
+                    'osm_tags' => [
+                        'name' => 'Basilicata',
+                        'name:it' => 'Lucania',
+                        'name:en' => 'Basilicata',
+                        'admin_level' => '4',
+                    ],
+                ],
+            ]] : [],
+        ], 200));
+    }
+
+    /**
+     * Crea una TaxonomyWhere con l'id osmfeatures e il livello amministrativo dati.
+     *
+     * @param  array<string, string>  $names
+     */
+    private function createRegion(string $osmfeaturesId, int $adminLevel, array $names): TaxonomyWhere
+    {
+        return TaxonomyWhere::create([
+            'name' => $names,
+            'properties' => ['osmfeatures_id' => $osmfeaturesId, 'admin_level' => $adminLevel],
+        ]);
+    }
+
+    /**
+     * Layer con una tappa, ricaricato: è l'ingresso di wheres().
+     */
+    private function layerWithATrack(): Layer
+    {
+        $layer = $this->createLayer();
+        $track = EcTrack::factory()->create(['properties' => []]);
+        $layer->ecTracks()->attach($track->id);
+
+        return $layer->fresh();
     }
 }

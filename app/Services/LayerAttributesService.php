@@ -11,6 +11,7 @@ use Wm\WmPackage\Http\Clients\OsmfeaturesClient;
 use Wm\WmPackage\Models\EcTrack;
 use Wm\WmPackage\Models\Layer;
 use Wm\WmPackage\Models\TaxonomyTheme;
+use Wm\WmPackage\Models\TaxonomyWhere;
 
 /**
  * Calcola i valori di filtro di un cammino (Layer) aggregando le sue tappe
@@ -501,6 +502,10 @@ class LayerAttributesService
      * dedupica per value e ordina per value — così ricalcoli identici
      * producono scritture identiche.
      *
+     * `value` si ricava dai nomi di osmfeatures; `name` invece si legge dal DB
+     * (TaxonomyWhere con lo stesso osmfeatures_id, una query), con ripiego sul
+     * nome di osmfeatures se la regione non c'è (oc:8958).
+     *
      * @param  array<string, array<string, mixed>>  $wheres
      * @return array<int, array{value: string, name: array<string, string>}>|null
      */
@@ -527,7 +532,10 @@ class LayerAttributesService
             }
 
             // Stessa forma { value, name } degli altri attributi, con value
-            // derivato dal nome inglese come per gli enum (season, shape).
+            // derivato dal nome inglese DI OSMFEATURES come per gli enum (season,
+            // shape). Non va riallineato al nome del DB applicato sotto: la
+            // stessa regione deve avere la stessa chiave su tutti i layer, anche
+            // su quelli non ancora ricalcolati (oc:8958).
             //
             // Non vengono esposti ne' admin_level (dopo il filtro qui sopra
             // vale sempre 4: campo costante, inutile al consumer) ne' il codice
@@ -557,7 +565,7 @@ class LayerAttributesService
 
             $seen[$value] = true;
 
-            $normalized[] = [
+            $normalized[(string) $identifier] = [
                 'value' => $value,
                 'name' => $data,
             ];
@@ -567,11 +575,70 @@ class LayerAttributesService
             return null;
         }
 
+        // I nomi mostrati vengono dalla TaxonomyWhere del DB, la stessa fonte del dettaglio della
+        // tappa: osmfeatures dice quali regioni attraversa il cammino, ma i suoi nomi (es.
+        // «Lucania», «Regione Autonoma Valle d'Aosta») non sono quelli che il cliente usa. Il value
+        // e' gia' calcolato sopra dai nomi di osmfeatures e non cambia: la stessa regione ha la
+        // stessa chiave su layer ricalcolati e no (oc:8958).
+        $dbNames = $this->regionNamesByOsmfeaturesId(array_map('strval', array_keys($normalized)));
+
+        foreach ($normalized as $identifier => $item) {
+            if (isset($dbNames[$identifier])) {
+                $normalized[$identifier]['name'] = $dbNames[$identifier];
+
+                continue;
+            }
+
+            Log::warning('LayerAttributesService::normalizeWheres: regione senza TaxonomyWhere, resta il nome di osmfeatures', [
+                'osmfeatures_id' => $identifier,
+            ]);
+        }
+
+        $normalized = array_values($normalized);
+
         // Ordinamento per codice OSM: rende la scrittura deterministica a
         // ricalcoli identici.
         usort($normalized, fn (array $a, array $b): int => strcmp($a['value'], $b['value']));
 
         return $normalized;
+    }
+
+    /**
+     * Nomi per lingua delle TaxonomyWhere regionali (admin_level 4) con gli id osmfeatures dati,
+     * in una sola query. Le where senza nessun nome non vuoto non compaiono: per quelle resta il
+     * nome di osmfeatures.
+     *
+     * @param  array<int, string>  $osmfeaturesIds
+     * @return array<string, array<string, string>> osmfeatures_id => [lingua => nome]
+     */
+    private function regionNamesByOsmfeaturesId(array $osmfeaturesIds): array
+    {
+        if ($osmfeaturesIds === []) {
+            return [];
+        }
+
+        $names = [];
+
+        TaxonomyWhere::query()
+            ->whereIn(DB::raw("properties->>'osmfeatures_id'"), $osmfeaturesIds)
+            ->whereRaw("properties->>'admin_level' = ?", [(string) self::ADMIN_LEVEL_REGION])
+            ->orderBy('id')
+            ->get()
+            ->each(function (TaxonomyWhere $taxonomyWhere) use (&$names) {
+                $id = (string) ($taxonomyWhere->properties['osmfeatures_id'] ?? '');
+                $translations = array_filter(
+                    $taxonomyWhere->getTranslations('name'),
+                    fn ($name) => is_string($name) && $name !== ''
+                );
+
+                // A parita' di id vince la where piu' vecchia: la scelta resta stabile fra un
+                // ricalcolo e l'altro anche se ci fossero duplicati.
+                if ($id !== '' && $translations !== [] && ! isset($names[$id])) {
+                    $names[$id] = $translations;
+                }
+            });
+
+        return $names;
     }
 
     /**
