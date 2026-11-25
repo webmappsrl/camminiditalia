@@ -2,21 +2,28 @@
 
 ## Come funziona oggi
 
-`config/nova.php` → `brand.logo` punta a `resources/img/camminiditalia-logo.svg`: il disco ufficiale
-di Cammini d'Italia e, accanto, il nome «Cammini d'Italia» in Instrument Sans SemiBold, convertito
-in tracciati. Il file si genera con `docs/features/9031-cammini-logo-sul-backend/build-logo.py`
-(istruzioni nel docstring), non si modifica a mano.
+`config/nova.php` → `brand.logo` punta a `resources/img/camminiditalia-logo.svg`: un SVG che
+incorpora come data URI (`<image href="data:image/png;base64,…">`) il **logo ufficiale mandato dal
+cliente**, disco e scritta «CAMMINI D'ITALIA» in grigio scuro (PNG 1080×328). L'originale è in
+`docs/features/9040-personalizzazione-laravel/logo-cliente.png`: per cambiare logo si rigenera
+l'SVG da lì. **Non usare `docs/features/9031-cammini-logo-sul-backend/build-logo.py`**: genera il
+logo di prova di oc:9031 e lo rimetterebbe senza errori.
 
 Vincoli che vengono da Nova 5 (`vendor/laravel/nova/resources/js`):
 
-- `PassthroughLogo.vue` inserisce l'SVG nella pagina con `innerHTML`, due volte (header e menu
-  mobile, `layouts/MainHeader.vue`): niente attributi `id` e niente `<style>` che tocchi altro
-  che la classe `cdi-logo-name`. `tests/Feature/NovaBrandLogoTest.php` lo verifica.
+- `Nova::logo()` (`vendor/laravel/nova/src/Nova.php:898-906`) legge il file con
+  `file_get_contents()` e `PassthroughLogo.vue` lo inserisce nella pagina con `innerHTML`, due
+  volte (header e menu mobile, `layouts/MainHeader.vue`): deve essere un SVG, un PNG grezzo non
+  funziona; niente attributi `id` e niente `<style>`. `tests/Feature/NovaBrandLogoTest.php` lo
+  verifica, e verifica anche che il PNG incorporato sia leggibile e 1080×328: un base64 troncato
+  non rompe l'XML, ma il logo sparisce.
 - Nova aggiunge all'`<svg>` la classe `h-6` (header) o `h-8` (login): l'altezza è fissata dallo
   `style` inline dell'`<svg>`, 36 px. Nell'header il link del logo ha 200 px utili di larghezza
-  (`lg:w-60` meno `ml-2` e `px-4`); il logo ne occupa 172.
-- Il tema scuro è la classe `dark` su `<html>` (`Dropdowns/ThemeDropdown.vue`): il colore del
-  nome cambia con `.dark .cdi-logo-name`.
+  (`lg:w-60` meno `ml-2` e `px-4`); il logo ne occupa circa 119.
+- Il data URI pesa circa 48 KB e arriva in ogni pagina HTML di Nova, login compresa (non è un
+  asset separato con la sua cache).
+- **Dark mode:** il tema scuro è la classe `dark` su `<html>`. Il PNG ha una sola versione, con la
+  scritta grigio scuro: sulla barra scura si legge male.
 - Se il file manca, `Nova::logo()` restituisce il percorso come testo e il frontend non disegna
   nemmeno la pagina di login.
 
@@ -25,19 +32,31 @@ La scritta «Unregistered» accanto al logo non riguarda il logo: è la licenza,
 
 ## Perché così
 
-- **Il nome accanto al disco è un'eccezione voluta al design system** (oc:9031). Il design system
-  di Cammini d'Italia vieta di «mettere accanto al disco un nome riscritto con un altro carattere»
-  (`project/03-logo.md`, `components/LogoUsi`). L'hanno deciso Carla Cupani e Rubens Garofalo per
-  allineare l'header a quello di osm2cai: all'altezza dell'header la scritta dentro il disco non
-  si legge. Chi ridisegna l'header non tolga il nome credendolo un errore.
-- **Colore del nome per tema** (oc:9031): `primario-700` `#BB4613` sul chiaro (5,25:1 sul bianco),
-  `primario` `#F07821` sullo scuro (5,16:1). È la regola del design system: `primario` solo per i
-  titoli grandi, `primario-700` per il testo piccolo. `primario` sul bianco sarebbe 2,83:1.
+- **Il PNG del cliente dentro un SVG, con lo stesso nome di file** (oc:9040): Nova vuole un SVG,
+  e il cliente ha mandato un PNG. Tenere `camminiditalia-logo.svg` lascia invariato
+  `config/nova.php`, come chiesto allo scrum del 25/11 («lo chiami esattamente come si chiamava il
+  logo prima»).
+- **Niente nome accanto al disco** (oc:9040): la scritta «CAMMINI D'ITALIA» è già nel logo del
+  cliente, ed è grande abbastanza da leggersi a 36 px di altezza (verificato riducendo il PNG).
 - **Tutto nell'SVG, niente CSS sull'header** (oc:9031): osm2cai aggiunge il nome con `::after` e
   selettori sull'HTML dell'header di Nova, che un aggiornamento può rompere senza errori.
 
+## Domande aperte
+
+- **Logo per il dark mode** (oc:9040): chiedere al cliente il logo in SVG, o una versione con la
+  scritta chiara.
+
 ## Come ci siamo arrivati
 
+- **Disco + nome «Cammini d'Italia» disegnato accanto, in SVG** (oc:9031, superato da oc:9040):
+  era un'eccezione voluta al design system di Cammini d'Italia, che vieta di «mettere accanto al
+  disco un nome riscritto con un altro carattere» (`project/03-logo.md`, `components/LogoUsi`);
+  l'avevano decisa Carla Cupani e Rubens Garofalo per allineare l'header a quello di osm2cai,
+  perché a quell'altezza la scritta dentro il disco non si legge. Il nome era in Instrument Sans
+  SemiBold convertito in tracciati, con colore per tema: `primario-700` `#BB4613` sul chiaro
+  (5,25:1 sul bianco), `primario` `#F07821` sullo scuro (5,16:1). Superato quando il cliente ha
+  mandato il logo definitivo con la scritta, e Peppe allo scrum del 25/11 ha detto di togliere il
+  nome perché già contenuto nel logo.
 - **Solo il disco** (oc:9031, scartato): conforme al design system, ma a 24–36 px la scritta dentro
   il disco non si legge.
 - **Nome in Instrument Sans Bold, maiuscole al 40% del disco** (oc:9031, scartato): troppo pesante a
