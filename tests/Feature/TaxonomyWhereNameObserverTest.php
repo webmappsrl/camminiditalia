@@ -123,11 +123,11 @@ class TaxonomyWhereNameObserverTest extends TestCase
         ]);
 
         DB::update(
-            "UPDATE taxonomy_wheres SET geometry = (
+            'UPDATE taxonomy_wheres SET geometry = (
                 SELECT ST_Multi(ST_Buffer(ST_Collect(t.geometry::geometry), 0.01))::geography
                 FROM ec_tracks t
                 JOIN layerables l ON l.layerable_id = t.id AND l.layer_id = ?
-            ) WHERE id = ?",
+            ) WHERE id = ?',
             [$layer->id, $taxonomyWhere->id]
         );
 
