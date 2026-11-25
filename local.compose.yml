@@ -4,7 +4,10 @@ services:
     # Copiato da develop.compose.yml/compose.yml senza estendere
     extra_hosts:
       - host.docker.internal:host-gateway
-    build: ./docker/configs/phpfpm
+    build:
+      context: ./docker/configs/phpfpm
+      additional_contexts:
+        wmpackage: ./wm-package/docker/render
     restart: always
     container_name: "php-${APP_NAME}"
     image: wm-phpfpm:8.4
@@ -88,7 +91,10 @@ services:
   # Init container per indicizzazione automatica di Scout
   # Esegue l'importazione di EcTrack in Elasticsearch all'avvio
   scout-init:
-    build: ./docker/configs/phpfpm
+    build:
+      context: ./docker/configs/phpfpm
+      additional_contexts:
+        wmpackage: ./wm-package/docker/render
     image: wm-phpfpm:8.4
     container_name: "scout-init-${APP_NAME}"
     depends_on:
@@ -156,7 +162,10 @@ services:
   # Servizi da develop.compose.yml (mantengono la catena di ereditarietà)
   # Server Laravel per ambiente local
   laravel:
-    build: ./docker/configs/phpfpm
+    build:
+      context: ./docker/configs/phpfpm
+      additional_contexts:
+        wmpackage: ./wm-package/docker/render
     container_name: "laravel-${APP_NAME}"
     image: wm-phpfpm:8.4
     command: php artisan serve --host 0.0.0.0 --port 8000
