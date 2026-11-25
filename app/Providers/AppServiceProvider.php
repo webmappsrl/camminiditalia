@@ -17,6 +17,8 @@ use App\Observers\LayerAttributesObserver;
 use App\Observers\LayerObserver;
 use App\Observers\PassportLayerObserver;
 use App\Observers\PassportShareCleanupObserver;
+use App\Observers\TaxonomyWhereNameObserver;
+use Wm\WmPackage\Models\TaxonomyWhere;
 use App\Observers\UgcObserver;
 use App\Observers\UgcTrackMatchingRunObserver;
 use App\Policies\CertificationRequestPolicy;
@@ -93,6 +95,7 @@ class AppServiceProvider extends ServiceProvider
         UgcPoi::observe(UgcObserver::class);
         UgcTrack::observe(UgcObserver::class);
         Layer::observe(LayerObserver::class);
+        TaxonomyWhere::observe(TaxonomyWhereNameObserver::class);
         Layerable::observe(LayerableObserver::class);
         Layerable::observe(LayerAttributesObserver::class);
         EcTrackVariant::observe(EcTrackVariantObserver::class);
