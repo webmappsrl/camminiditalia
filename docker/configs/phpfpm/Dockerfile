@@ -72,6 +72,10 @@ RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-w
     exif \
     pcntl 
 
+# TeX Live per la compilazione dei PDF di stampa (oc:8982): lo script e VERSION vengono dal package
+COPY --from=wmpackage install-deps.sh VERSION /tmp/wm-print/
+RUN bash /tmp/wm-print/install-deps.sh && rm -rf /tmp/wm-print
+
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && ln -s /usr/local/bin/composer /usr/bin/composer

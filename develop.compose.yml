@@ -66,7 +66,10 @@ services:
   horizon:
     extra_hosts:
       - host.docker.internal:host-gateway
-    build: ./docker/configs/phpfpm
+    build:
+      context: ./docker/configs/phpfpm
+      additional_contexts:
+        wmpackage: ./wm-package/docker/render
     restart: always
     container_name: "horizon-${APP_NAME}"
     image: wm-phpfpm:8.4
