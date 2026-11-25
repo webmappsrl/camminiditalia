@@ -166,8 +166,10 @@ return [
     |
     */
     'brand' => [
-        // Disco ufficiale + nome «Cammini d'Italia», generato da
-        // docs/features/9031-cammini-logo-sul-backend/build-logo.py (oc:9031)
+        // Logo ufficiale del cliente (disco + scritta): il PNG di
+        // docs/features/9040-personalizzazione-laravel/logo-cliente.png incorporato nell'SVG
+        // come data URI (oc:9040). Non rigenerarlo con build-logo.py di oc:9031: rimetterebbe
+        // il logo di prova.
         'logo' => resource_path('img/camminiditalia-logo.svg'),
 
         'colors' => [
