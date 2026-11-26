@@ -49,6 +49,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             Nova::script('config-home-sorter', resource_path('js/nova/config-home-sorter.js'));
             Nova::script('certification-decision-confirm', resource_path('js/nova/certification-decision-confirm.js'));
             Nova::style('diary-rich-text', resource_path('css/nova/diary-rich-text.css'));
+            // Colori e caratteri del design system di Cammini d'Italia (oc:9040).
+            Nova::style('camminiditalia-brand', resource_path('css/nova/brand.css'));
             Nova::script('diary-copy', resource_path('js/nova/diary-copy.js'));
         });
 

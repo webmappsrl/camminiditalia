@@ -172,10 +172,22 @@ return [
         // il logo di prova.
         'logo' => resource_path('img/camminiditalia-logo.svg'),
 
+        // Scala del `primario` del design system di Cammini d'Italia (oc:9040). 100, 300, 400,
+        // 500, 600 e 700 sono del design system; 50, 200, 800, 900 e 950 li abbiamo ricavati noi
+        // fra i valori vicini. Il bianco sui pulsanti #F07821 sta a 2,6:1: scelta consapevole,
+        // come sul sito.
         'colors' => [
-            '400' => '24, 182, 155, 0.5',
-            '500' => '24, 182, 155',
-            '600' => '24, 182, 155, 0.75',
+            '50' => '254, 246, 236',  // #FEF6EC, ricavato
+            '100' => '253, 237, 215', // #FDEDD7 primario-100
+            '200' => '250, 212, 169', // #FAD4A9, ricavato
+            '300' => '247, 187, 122', // #F7BB7A primario-300
+            '400' => '243, 149, 68',  // #F39544 primario-400
+            '500' => '240, 120, 33',  // #F07821 primario
+            '600' => '225, 93, 21',   // #E15D15 primario-600
+            '700' => '187, 70, 19',   // #BB4613 primario-700
+            '800' => '148, 56, 15',   // #94380F, ricavato
+            '900' => '120, 48, 15',   // #78300F, ricavato
+            '950' => '65, 22, 6',     // #411606, ricavato
         ],
     ],
 
