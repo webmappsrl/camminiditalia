@@ -21,9 +21,14 @@ Feature **mista**: logo, dashboard e scoping in camminiditalia; card della mappa
 3. **Statistiche tolte dalle pagine dei Layer.** La card delle statistiche non compare più né
    sopra l'index dei Layer (card aggregata) né nella detail view del singolo Layer (card del
    layer), per nessun ruolo. La mappa con le persone in tempo reale **resta** nella detail view.
-4. **Mappa dell'Administrator con tutte le persone su tutti i cammini: da valutare.** Richiede
-   codice nuovo in `wm-package` (posizioni PostHog di tutti i cammini, GeoJSON di tutti i
-   percorsi). Se risulta troppo complessa, ci si ferma e passa ad Alessandro.
+4. **Mappa dell'Administrator con tutte le persone su tutti i cammini** (seconda parte, Alessandro,
+   25/11). Nella dashboard l'Administrator vede, sotto la card aggregata, una mappa con i percorsi
+   di tutti i cammini e le persone degli ultimi 30 minuti che si trovano a meno di 50 m da un
+   cammino.
+5. **Le mappe della dashboard si aggiornano da sole** (seconda parte). Sia la mappa
+   dell'Administrator sia quella del Validator scaricano i percorsi una volta sola e riscaricano
+   le sole posizioni ogni 90 s, mentre la dashboard resta aperta. Supera la decisione della prima
+   parte (nessun aggiornamento automatico).
 
 ## Perché
 
@@ -34,6 +39,12 @@ si sostituisce tenendo lo stesso nome di file; le statistiche «sui layer», sia
 dell'Administrator sia quelle del Validator, si spostano con un «taglia e incolla» nella
 dashboard, «dove dovrebbe in realtà stare». Nella review dell'overview (25/11) Alessandro ha
 deciso: il Validator vede un solo layer, il primo; la mappa entra in questo ticket.
+
+Alle 12:12 del 25/11 si era deciso che la mappa la vedessero solo i Validator, per il dubbio sul
+costo di farla per tutta Italia; nella stessa call Peppe aveva però detto che vederla anche per
+Cammini d'Italia, «se a noi non ci costa», era utile. Alle 14:47 la mappa completa è rimasta come
+unica parte mancante. Il 25/11 Alessandro, che chiude il ticket, ha deciso di farla: i dati
+misurati (sotto, in Rischi) mostrano che il costo è contenuto.
 
 ## Requisiti
 
@@ -80,11 +91,25 @@ deciso: il Validator vede un solo layer, il primo; la mappa entra in questo tick
       l'elenco delle card. `wm-package` non si tocca per questo.
 - [ ] Il Field `FeatureCollectionMap` con i marker live nella detail view del Layer resta invariato.
 
-### Mappa dell'Administrator (da valutare)
-- [ ] Prima di scrivere codice: stimare il lavoro in `wm-package` (metodo pubblico per le
-      posizioni recenti di tutti i cammini, GeoJSON dei percorsi di tutti i layer, `LayerMapCard`
-      in modalità globale). Se è troppo, ci si ferma e si passa ad Alessandro; la dashboard
-      dell'Administrator resta con la sola card aggregata.
+### Mappa dell'Administrator (seconda parte)
+- [ ] **Administrator:** dopo `LayerAnalyticsCard::global()`, la `LayerMapCard` del package in
+      modalità globale (vedi overview in `wm-package`), se esiste almeno un Layer. Come per il
+      Validator, la mappa c'è anche con l'analytics spento: mostra comunque i percorsi.
+- [ ] La mappa globale disegna i percorsi di tutte le EC track associate ad almeno un layer,
+      semplificati a 0.0005° (circa 50 m) e senza quota, e le persone degli ultimi 30 minuti a meno
+      di 50 m da una di quelle tracce (stesso criterio della mappa del singolo layer), con il
+      limite di 500 persone già usato per il layer.
+- [ ] **Aggiornamento automatico** per entrambe le card della dashboard (Administrator e
+      Validator): percorsi scaricati una volta, posizioni riscaricate ogni 90 s (la durata della
+      cache delle posizioni), senza cambiare zoom e centro della mappa (la `View` di OpenLayers).
+- [ ] La mappa del Validator smette di prendere le posizioni dal GeoJSON del layer e le prende
+      dall'endpoint delle posizioni del suo layer: nessun pallino doppio.
+- [ ] Il Field `FeatureCollectionMap` nella detail view del Layer resta invariato (polling ogni
+      2 s compreso).
+- [ ] Gli endpoint nuovi delle posizioni sono protetti: login obbligatorio; l'endpoint globale e
+      quello dei percorsi di tutti i cammini solo per l'Administrator; quello di un layer per
+      l'Administrator o per il Validator proprietario del layer; altrimenti 403. La route esistente
+      `/nova-vendor/feature-collection-map/{model}/{id}` non si tocca (vedi Out of scope).
 
 ### Traduzioni e test
 - [ ] Chiave «Statistics» in `resources/lang/{it,en,fr,es,de}.json` (default effettivo
@@ -99,6 +124,12 @@ deciso: il Validator vede un solo layer, il primo; la mappa entra in questo tick
       Validator senza layer e Guest con dashboard vuota; analytics spento; nessuna card delle
       statistiche su `/nova-api/layers/cards` né sulla detail view del Layer; nessuna `help`;
       nome e `uriKey`.
+- [ ] Seconda parte: `LayerGlobalAnalyticsCardVisibilityTest` controlla anche la mappa globale
+      dell'Administrator (presente, assente senza layer, assente per il Validator);
+      `LayerMapCardTest` copre la modalità globale e gli URL delle posizioni; test nuovi sugli
+      endpoint delle posizioni e dei percorsi: 401/403 senza login, Validator su un layer non suo
+      e Validator sull'endpoint globale; 200 per l'Administrator e per il proprietario; persone
+      lontane dai cammini escluse. Nel consumer, perché i test del package non si caricano da qui.
 
 ## Rischi
 
@@ -119,6 +150,18 @@ deciso: il Validator vede un solo layer, il primo; la mappa entra in questo tick
 - **Logo in base64:** il PNG (35 KB) incorporato nell'SVG aggiunge circa 48 KB a ogni pagina HTML di
   Nova, login compresa, perché Nova inserisce il file nella pagina e non lo serve come asset
   separato. Accettato.
+- **Peso dei percorsi di tutti i cammini** (misurato sul DB locale, 25/11, 1.287 EC track): 29 MB
+  di GeoJSON senza semplificazione; semplificati a 0.0005° e senza quota 1,4 MB, 445 kB compressi
+  con gzip; la query impiega 0,28 s. Mitigazione: cache lunga sul server, separata da quella di
+  90 s delle posizioni, e percorsi scaricati una volta sola per apertura della dashboard. Che la
+  risposta arrivi compressa dipende dal web server, non dal codice.
+- **Filtro delle posizioni su tutti i cammini:** il controllo «a meno di 50 m da una traccia» passa
+  da le tracce di un solo layer a tutte le tracce dei layer, fino a 500 punti. `ec_tracks` ha
+  l'indice GiST su `geometry`; il tempo reale della query con PostHog vero non è misurabile in
+  locale (PostHog non configurato).
+- **Pagina di arrivo dopo il login:** la dashboard è la prima pagina di ogni Administrator e
+  Validator; con l'aggiornamento ogni 90 s ogni tab del browser aperto fa una richiesta leggera (solo
+  posizioni) ogni 90 s, servita dalla cache.
 - **`Dashboard::cards()` non riceve la request:** la scelta per ruolo usa `request()->user()`; i
   test devono passare da una richiesta HTTP autenticata, non chiamare `cards()` a vuoto.
 
@@ -128,6 +171,11 @@ deciso: il Validator vede un solo layer, il primo; la mappa entra in questo tick
 - Un modo per vedere le statistiche di un singolo cammino dopo lo spostamento (filtro per
   cammino nella card globale o altro): da chiarire con il cliente.
 - Spostare la dashboard «Statistiche» in `wm-package` per gli altri progetti.
+- Protezione della route esistente `/nova-vendor/feature-collection-map/{model}/{id}` (risponde
+  senza login e non controlla il record): da un ticket separato in `wm-package`, perché la usano
+  anche gli altri progetti; da segnalare nelle note dev.
+- Percorsi della mappa globale presi dai tile pbf dell'App: `FeatureCollectionMap.vue` oggi legge
+  solo GeoJSON; da valutare se i cammini crescono molto.
 
 ## Moduli toccati
 
@@ -135,12 +183,15 @@ deciso: il Validator vede un solo layer, il primo; la mappa entra in questo tick
 - `resources/img/camminiditalia-logo.svg` — sostituito
 - `docs/features/9040-personalizzazione-laravel/logo-cliente.png` — PNG originale del cliente
 - `config/nova.php` — solo il commento sopra `brand.logo`
-- `app/Nova/Dashboards/Main.php` — nome, `uriKey`, card per ruolo
+- `app/Nova/Dashboards/Main.php` — nome, `uriKey`, card per ruolo; seconda parte: mappa globale
+  per l'Administrator
 - `app/Nova/Layer.php` — `canSeeGlobalAnalyticsCard()` → `false`, override di `detailCards()`
 - `resources/lang/{it,en,fr,es,de}.json` — chiave «Statistics»
 - `tests/Feature/NovaBrandLogoTest.php`, `tests/Feature/LayerGlobalAnalyticsCardVisibilityTest.php`
 - `tests/Feature/LayerMapCardTest.php` — test della `LayerMapCard` del package (i test del package
-  non si caricano dal consumer: vedi `notes.md` del package)
+  non si caricano dal consumer: vedi `notes.md` del package); seconda parte: modalità globale
+- `tests/Feature/` — seconda parte: test nuovo sugli endpoint delle posizioni e dei percorsi
+  (autorizzazione, filtro a 50 m)
 - gitlink `wm-package`
 - `docs/knowledge/logo-nel-pannello-nova.md` — riscritta a fine lavoro: la regola «non togliere il
   nome accanto al disco» (oc:9031) passa in «Come ci siamo arrivati»

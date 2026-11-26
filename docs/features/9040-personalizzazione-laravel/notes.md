@@ -90,3 +90,59 @@
   chiara. Oggi la scritta grigio scuro del PNG si legge male sulla barra scura di Nova.
 - **Dashboard «Statistiche» in `wm-package`:** da valutare solo se la chiede anche un altro
   progetto.
+
+---
+
+# Seconda parte — mappa globale dell'Administrator e posizioni aggiornate (Alessandro, 25/11)
+
+Decisioni, divergenze e bug del codice del package: `wm-package/docs/features/9040-personalizzazione-laravel/notes.md`,
+«Seconda parte».
+
+## Divergenze dal piano, task per task
+
+### Task C2 posizioni e percorsi di tutti i cammini
+
+- I dati di test (EC track con geometria nota, risposta finta di PostHog) stanno nel trait
+  `tests/Feature/Concerns/BuildsLiveMapData.php`, usato da tre classi di test. Il trait fa
+  `Queue::fake()` prima di ogni test (`setUpBuildsLiveMapData()`): senza, creare una EC track
+  fa partire il calcolo DEM, che chiama un servizio esterno e fallisce.
+
+## Bug trovati
+
+- **`app/Providers/NovaServiceProvider.php:114`**: il `canSee` del menu «Passport» chiama
+  `$request->user()->hasAnyRole()` senza controllare che ci sia un utente. Quando una route Nova
+  risponde con un'eccezione HTTP senza login, Nova disegna la pagina d'errore con il menu e la
+  403 diventa un 500. Preesistente; gli endpoint nuovi lo evitano (vedi note del package). Da
+  correggere in un ticket separato.
+
+## Decisioni
+
+- **Stima della seconda parte saltata** su richiesta di Alessandro (proposta: 7,25h, non scritta
+  sul ticket).
+
+## Follow-up
+
+- Correggere `NovaServiceProvider.php:114` (vedi sopra).
+
+## Cleanup dopo la review (26/11)
+
+Il dettaglio è nel `notes.md` del package. Qui:
+
+- la mappa del Validator prende il percorso da `/nova-vendor/layer-analytics/{layer}/routes`;
+- «All routes» → «Tutti i cammini» (e fr, es, de) in `resources/lang/*.json`, come override della
+  traduzione neutra del package;
+- nuovo trait `tests/Feature/Concerns/CreatesUsersWithRole.php`: `userWithRole()` era copiato in
+  `LiveMapEndpointsTest`, `LayerGlobalAnalyticsCardVisibilityTest` e `LayerFiltersSectionTest`;
+- `BuildsLiveMapData::withoutPostHog()`;
+- test nuovi:
+  - `LiveMapEndpointsTest::test_guest_cannot_read_an_ownerless_layer`;
+  - le route del layer in `test_validator_reads_only_own_layer_positions`;
+  - `LayerMapCardTest`: `live_positions_url` null senza PostHog.
+- Moduli toccati da riportare nell'overview alla chiusura:
+  - `tests/Feature/Concerns/BuildsLiveMapData.php`
+  - `tests/Feature/Concerns/CreatesUsersWithRole.php`
+  - `tests/Feature/AllLayersLiveMapDataTest.php`
+  - `tests/Feature/LiveMapEndpointsTest.php`
+  - `tests/Feature/LayerFiltersSectionTest.php`
+  - `resources/lang/{it,fr,es,de}.json`
+

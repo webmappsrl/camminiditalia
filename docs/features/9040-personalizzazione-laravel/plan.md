@@ -127,3 +127,117 @@ File: `app/Nova/Dashboards/Main.php`
    (commit a sé, nella stessa PR), dopo il merge della PR del package
 4. `feat(oc:9040): mappa del layer nella dashboard del Validator` — Task 8
 5. `docs(oc:9040): documentazione logo e dashboard Statistiche` — Task 11 + `docs/features/9040-*`
+
+---
+
+# Seconda parte — mappa globale dell'Administrator e posizioni aggiornate (Alessandro, 25/11)
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** mappa di tutti i cammini nella dashboard dell'Administrator e mappe della dashboard che
+si aggiornano ogni 90 s.
+
+**Architecture:** codice quasi tutto in `wm-package` (vedi il suo `plan.md`, Seconda parte, task
+P1-P7); qui la card nella dashboard e i test di tutta la seconda parte, perché i test del package
+non si caricano dal consumer.
+
+**Spec:** `docs/features/9040-personalizzazione-laravel/overview.md` (Seconda parte).
+
+## Global Constraints
+
+- Stesso branch e stessa PR #110; **nessun commit durante l'esecuzione**; test con
+  `docker exec laravel-camminiditalia php artisan test --filter=…`.
+- PostHog nei test: `config(['services.posthog.host' => 'https://posthog.test', 'services.posthog.project_id' => '1', 'services.posthog.personal_api_key' => 'k'])`
+  e `Http::fake(['posthog.test/*' => Http::response(['results' => [[person_id, lat, lng, user_id], …]])])`.
+- Ordine: task del package prima dei test che li usano (TDD: il test C si scrive prima del task P
+  corrispondente).
+
+## Review Focus
+
+Vedi il piano del package: le stesse cinque condizioni, coperte dai test sotto e dalla verifica nel
+browser (Task C6).
+
+---
+
+### Task C1: accesso agli endpoint nuovi (prima di P4)
+
+**Files:** Create `tests/Feature/LiveMapEndpointsTest.php`
+
+- [ ] **Step 1:** test, sempre via HTTP:
+  - `test_global_live_positions_route_is_not_captured_by_layer_binding`: Administrator,
+    `GET /nova-vendor/layer-analytics/live-positions` → 200, `type` = `FeatureCollection`.
+  - `test_guest_without_login_gets_403` sui tre endpoint (`live-positions`, `all-routes`,
+    `{id}/live-positions`).
+  - `test_validator_cannot_read_global_endpoints` → 403 su `live-positions` e `all-routes`.
+  - `test_validator_reads_only_own_layer_positions` → 200 sul proprio layer, 403 su quello di un altro.
+  - `test_administrator_reads_any_layer_positions` → 200.
+- [ ] **Step 2:** falliscono (404); dopo P4 passano.
+
+### Task C2: posizioni e percorsi di tutti i cammini (prima di P1 e P3)
+
+> ⚠️ L'implementazione ha deviato da questo task: [notes.md](notes.md#task-c2-posizioni-e-percorsi-di-tutti-i-cammini)
+
+**Files:** Create `tests/Feature/AllLayersLiveMapDataTest.php`
+
+- [ ] **Step 1:** test:
+  - `test_positions_near_any_layer_track_are_kept`: due layer con una EC track ciascuno, PostHog
+    fake con tre persone (vicina alla traccia del layer A, vicina a quella del layer B, a 5 km da
+    tutto) → `getRecentUserPositionsOnAllLayers()` restituisce le prime due.
+  - `test_positions_near_a_track_without_layer_are_dropped`.
+  - `test_positions_are_empty_when_posthog_is_not_configured` → `[]`, nessuna richiesta HTTP.
+  - `test_positions_are_empty_without_layers`.
+  - `test_all_routes_contains_only_layer_tracks_in_2d`: traccia non associata assente; coordinate
+    con due valori e al massimo 5 decimali; `tooltip` = nome italiano.
+- [ ] **Step 2:** falliscono; dopo P1 e P3 passano.
+
+### Task C3: GeoJSON del layer con e senza posizioni (prima di P2)
+
+**Files:** Modify `tests/Feature/LayerMapCardTest.php` (o file nuovo `LayerLivePositionsGeojsonTest.php`)
+
+- [ ] `test_layer_geojson_keeps_live_positions_by_default`: PostHog fake con una persona vicina →
+  il GeoJSON della route `feature-collection-map/layers/{id}` contiene un Point con
+  `tooltip` = `Posizione utente (ultimi 30 minuti)`.
+- [ ] `test_layer_geojson_without_live_positions`: con `?without_live_positions=1` nessun Point live,
+  tracce presenti.
+
+### Task C4: `LayerMapCard` (prima di P6)
+
+**Files:** Modify `tests/Feature/LayerMapCardTest.php`
+
+- [ ] `test_card_points_to_the_layer_geojson` aggiornato: `geojson_url` con
+  `?without_live_positions=1`, `live_positions_url` = `/nova-vendor/layer-analytics/{id}/live-positions`.
+- [ ] `test_global_card_points_to_all_routes_and_global_positions`: URL globali, `title` tradotto
+  (`it` → «Tutti i cammini»), `resource_id` null.
+
+### Task C5: mappa globale nella dashboard
+
+**Files:** Modify `app/Nova/Dashboards/Main.php` (`administratorCards()`),
+`tests/Feature/LayerGlobalAnalyticsCardVisibilityTest.php`
+
+- [ ] **Step 1:** test:
+  - `test_administrator_sees_the_global_map`: con un Layer → `layer-map-card` con `geojson_url`
+    `/nova-vendor/layer-analytics/all-routes`, dopo la card globale, `onlyOnDetail` false.
+  - `test_administrator_sees_the_global_map_with_analytics_disabled`: mappa presente, card delle
+    statistiche assente.
+  - `test_administrator_without_layers_sees_no_map`.
+  - casi del Validator: la sua `layer-map-card` non è quella globale.
+- [ ] **Step 2:** `administratorCards()`: card globale come oggi, poi `LayerMapCard::global()` se
+  esiste almeno un Layer. Docblock della classe aggiornato.
+- [ ] **Step 3:** suite del ticket verde
+  (`--filter='LayerGlobalAnalyticsCardVisibility|LayerMapCard|LiveMapEndpoints|AllLayersLiveMapData|NovaBrandLogo'`).
+
+### Task C6: gitlink, verifica nel browser, documentazione
+
+- [ ] Gitlink `wm-package` sul commit finale del branch del package.
+- [ ] Nel browser, come Administrator e come Validator: mappa con percorsi, zoom e centro che non
+  cambiano dopo 90 s (Network: una richiesta `live-positions` ogni 90 s, nessuna `all-routes`
+  ripetuta); detail view del Layer invariata; navigando via dalla dashboard le richieste si fermano.
+- [ ] `docs/knowledge/dashboard-statistiche.md`: mappa dell'Administrator e aggiornamento ogni 90 s.
+- [ ] `notes.md`: decisioni della seconda parte (mappa per l'Administrator, B a 50 m, filtro a 50 m,
+  aggiornamento per entrambe, endpoint protetti) e misure.
+
+## Commit della seconda parte (dopo il review-gate)
+
+6. `chore(oc:9040): aggiorna wm-package con la mappa globale` — solo il puntatore
+7. `feat(oc:9040): mappa di tutti i cammini per l'Administrator nella dashboard Statistiche`
+8. `docs(oc:9040): documentazione della mappa globale`
