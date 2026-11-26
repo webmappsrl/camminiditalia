@@ -172,3 +172,6 @@ Il dettaglio è nel `notes.md` del package. Qui:
     design system scrive in `primario`; il contrasto più basso è una scelta di Alessandro.
   - **Cammini più frequentati:** `primario`, `primario-400` sul tema scuro.
   - **Box dei numeri e fondo delle barre:** `fondo` #F4F6F8.
+- **Knowledge in una pagina nuova**, `docs/knowledge/colori-e-caratteri-di-nova.md`, e non
+  rinominando `logo-nel-pannello-nova.md` come diceva il piano: la pagina del logo è citata nei
+  documenti chiusi di oc:9031, e rinominarla avrebbe rotto quei link.

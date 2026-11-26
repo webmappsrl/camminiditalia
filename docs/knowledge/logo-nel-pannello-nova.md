@@ -30,6 +30,8 @@ Vincoli che vengono da Nova 5 (`vendor/laravel/nova/resources/js`):
 La scritta «Unregistered» accanto al logo non riguarda il logo: è la licenza, vedi
 [docs/howto/licenza-nova.md](../howto/licenza-nova.md).
 
+Colori e caratteri dell'interfaccia di Nova: [colori-e-caratteri-di-nova.md](colori-e-caratteri-di-nova.md).
+
 ## Perché così
 
 - **Il PNG del cliente dentro un SVG, con lo stesso nome di file** (oc:9040): Nova vuole un SVG,
