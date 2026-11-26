@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Nova\Dashboards\Main;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
+use Tests\Feature\Concerns\CreatesUsersWithRole;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\Layer;
@@ -24,11 +25,14 @@ use Wm\WmPackage\Services\RolesAndPermissionsService;
  */
 class LayerGlobalAnalyticsCardVisibilityTest extends TestCase
 {
+    use CreatesUsersWithRole;
     use RefreshDatabase;
 
     private const ANALYTICS_CARD = 'layer-analytics-card';
 
     private const MAP_CARD = 'layer-map-card';
+
+    private const GLOBAL_ROUTES_URL = '/nova-vendor/layer-analytics/all-routes';
 
     protected function setUp(): void
     {
@@ -47,7 +51,37 @@ class LayerGlobalAnalyticsCardVisibilityTest extends TestCase
         $this->assertCount(1, $analytics);
         $this->assertSame('global', $analytics->first()['mode']);
         $this->assertFalse($analytics->first()['onlyOnDetail']);
-        $this->assertNotContains(self::MAP_CARD, $cards->pluck('component'));
+    }
+
+    public function test_administrator_sees_the_global_map_after_the_statistics(): void
+    {
+        $admin = $this->userWithRole('Administrator');
+        Layer::factory()->create(['user_id' => $admin->id, 'app_id' => $this->appWithAnalytics(true)->id]);
+
+        $cards = $this->dashboardCards($admin)->values();
+
+        $this->assertSame([self::ANALYTICS_CARD, self::MAP_CARD], $cards->pluck('component')->all());
+        $this->assertSame(self::GLOBAL_ROUTES_URL, $cards[1]['geojson_url']);
+        $this->assertSame([false], $cards->pluck('onlyOnDetail')->unique()->values()->all());
+    }
+
+    public function test_administrator_sees_the_global_map_with_analytics_disabled(): void
+    {
+        $admin = $this->userWithRole('Administrator');
+        Layer::factory()->create(['user_id' => $admin->id, 'app_id' => $this->appWithAnalytics(false)->id]);
+
+        $cards = $this->dashboardCards($admin);
+
+        $this->assertNotContains(self::ANALYTICS_CARD, $cards->pluck('component'));
+        $this->assertSame([self::GLOBAL_ROUTES_URL], $cards->where('component', self::MAP_CARD)->pluck('geojson_url')->values()->all());
+    }
+
+    public function test_administrator_without_layers_sees_no_map(): void
+    {
+        $admin = $this->userWithRole('Administrator');
+        $this->appWithAnalytics(true);
+
+        $this->assertNotContains(self::MAP_CARD, $this->dashboardCards($admin)->pluck('component'));
     }
 
     public function test_administrator_sees_no_card_when_analytics_is_disabled(): void
@@ -84,6 +118,7 @@ class LayerGlobalAnalyticsCardVisibilityTest extends TestCase
         $maps = $cards->where('component', self::MAP_CARD);
         $this->assertCount(1, $maps);
         $this->assertSame($first->id, $maps->first()['resource_id']);
+        $this->assertNotSame(self::GLOBAL_ROUTES_URL, $maps->first()['geojson_url']);
 
         // Il frontend di Nova, nelle dashboard, scarta le card con onlyOnDetail true
         // (Cards.vue): l'API le restituisce comunque, quindi va controllato qui.
@@ -156,14 +191,6 @@ class LayerGlobalAnalyticsCardVisibilityTest extends TestCase
 
         $this->assertSame(__('Statistics'), $dashboard->name());
         $this->assertSame('main', $dashboard->uriKey());
-    }
-
-    private function userWithRole(string $role): User
-    {
-        $user = User::factory()->create();
-        $user->assignRole($role);
-
-        return $user;
     }
 
     private function appWithAnalytics(bool $enabled): App

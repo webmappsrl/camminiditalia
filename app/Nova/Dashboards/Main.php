@@ -11,11 +11,14 @@ use Wm\WmPackage\Nova\Fields\FeatureCollectionMap\src\LayerMapCard;
 /**
  * Dashboard «Statistiche» (oc:9040): l'unico posto in cui si vedono le statistiche dei cammini.
  *
- * - Administrator: l'aggregato di tutti i cammini.
+ * - Administrator: l'aggregato di tutti i cammini e la mappa di tutti i cammini con le persone in
+ *   tempo reale.
  * - Validator: le statistiche e la mappa con le persone in tempo reale del suo primo layer, cioè
  *   quello con l'id più basso (la data in cui un layer viene assegnato a un Validator non è
  *   registrata).
  * - Altri ruoli: dashboard vuota.
+ *
+ * Le mappe scaricano i percorsi una volta e le posizioni ogni 90 secondi (LayerMapCard).
  */
 class Main extends Dashboard
 {
@@ -64,9 +67,17 @@ class Main extends Dashboard
     {
         $anyLayer = Layer::query()->first();
 
-        return $anyLayer && $this->analyticsEnabled($anyLayer)
-            ? [LayerAnalyticsCard::global()]
-            : [];
+        if ($anyLayer === null) {
+            return [];
+        }
+
+        $cards = $this->analyticsEnabled($anyLayer) ? [LayerAnalyticsCard::global()] : [];
+
+        // La mappa di tutti i cammini c'è anche con l'analytics spento, come quella del Validator:
+        // mostra comunque i percorsi (oc:9040, seconda parte).
+        $cards[] = LayerMapCard::global();
+
+        return $cards;
     }
 
     /**
