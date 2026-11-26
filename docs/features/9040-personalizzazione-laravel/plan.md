@@ -241,3 +241,86 @@ browser (Task C6).
 6. `chore(oc:9040): aggiorna wm-package con la mappa globale` — solo il puntatore
 7. `feat(oc:9040): mappa di tutti i cammini per l'Administrator nella dashboard Statistiche`
 8. `docs(oc:9040): documentazione della mappa globale`
+
+---
+
+# Terza parte — interfaccia di Nova con i colori e i caratteri del design system (Alessandro, 26/11)
+
+**Goal:** Nova con l'arancio, i grigi e i caratteri del design system nei due temi, card delle
+statistiche e tracce con i colori del brand.
+
+**Spec:** `overview.md`, sezione «Terza parte»; package: `wm-package/.../plan.md`, terza parte
+(Task P8 e P9, da fare prima di C8).
+
+## Global Constraints
+
+- Valori del design system (`tokens.json`):
+  - `primario`: 100 #FDEDD7, 300 #F7BB7A, 400 #F39544, 500 #F07821, 600 #E15D15, 700 #BB4613;
+  - `secondario`: 100 #E6E9EA, 200 #C7CCCD, 400 #6E7B7E, 500 #4C585B, 600 #354144, 700 #283335,
+    base #1D282B;
+  - `fondo` #F4F6F8, `chiaro-su-scuro` #F3F4F6.
+- Tonalità ricavate da noi:
+  - primario 50 #FEF6EC, 200 #FAD4A9, 800 #94380F, 900 #78300F, 950 #411606;
+  - grigi 50 #F9FAFB, 900 #141C1E, 950 #0B1011.
+- Grigi di Nova: 50 ricavato, 100 = `fondo`, 200 = `secondario-100`, 300 = `secondario-200`,
+  400 = `secondario-400`, 500 = `secondario-500`, 600 = `secondario-600`, 700 = `secondario-700`,
+  800 = `secondario`, 900 e 950 ricavati.
+- Nova vuole i colori come `r, g, b` (`brand.colors`).
+
+## Review Focus
+
+- Tema scuro: testo leggibile sui fondi `secondario`, numeri della card in `primario`.
+- Caratteri: Nunito Sans non deve restare in nessun componente (il CSS di Nova lo scrive in circa
+  90 regole, non in una variabile).
+- Font serviti dal nostro server: nessuna richiesta a Google Fonts.
+
+### Task C7: config del brand e test
+
+**Files:** `config/nova.php`, `config/wm-package.php`, `tests/Feature/NovaBrandTest.php` (nuovo).
+
+- [ ] Test, prima che falliscano:
+  - `test_primary_color_is_the_brand_orange`: `config('nova.brand.colors.500') === '240, 120, 33'`
+    e `700 === '187, 70, 19'`;
+  - `test_tracks_without_layer_color_use_the_configured_default`: layer senza `properties.color`,
+    tracce `strokeColor === '#F07821'`;
+  - `test_layer_color_wins_over_the_default`: con `properties.color` resta il suo;
+  - `test_all_routes_use_the_configured_default_and_follow_a_change`: `all-routes` in #F07821,
+    poi un'altra config dà subito l'altro colore.
+- [ ] `config/nova.php` → `brand.colors` 50…950 (Global Constraints).
+- [ ] `config/wm-package.php` (di camminiditalia) → `'map_default_track_color' => '#F07821'`.
+
+### Task C8: caratteri, grigi e variabili della card
+
+**Files:** `public/fonts/camminiditalia/` (nuova), `resources/css/nova/brand.css` (nuovo),
+`app/Providers/NovaServiceProvider.php`, `tests/Feature/NovaBrandTest.php`.
+
+- [ ] Test: `test_brand_stylesheet_is_registered` (`Nova::allStyles()` contiene
+      `camminiditalia-brand`).
+- [ ] Font del design system: DM Sans Regular, Italic, Medium, SemiBold e Bold; Instrument Sans
+      Medium, SemiBold e Bold, in `public/fonts/camminiditalia/`.
+- [ ] `brand.css`:
+  - `@font-face`;
+  - `--colors-gray-50…950` su `:root`;
+  - DM Sans su `body` e sugli elementi con Nunito Sans, Instrument Sans su `h1`, `h2`, `h3`;
+  - `--wm-analytics-*` su `:root` (accent `primario-700`, serie `primario`, `secondario`,
+    `primario-300`);
+  - su `.dark`: accent `primario`, serie iOS `chiaro-su-scuro`, fondi `secondario` e
+    `secondario-700`.
+- [ ] `Nova::style('camminiditalia-brand', resource_path('css/nova/brand.css'))`.
+
+### Task C9: gitlink, verifica e documentazione
+
+- [ ] Gitlink `wm-package` sul commit del package.
+- [ ] Suite completa, PHPStan e Pint sui file toccati.
+- [ ] Verifica nel browser (Alessandro): dashboard, una index e una detail view, nei due temi.
+- [ ] `docs/knowledge/logo-nel-pannello-nova.md` (diventa «brand nell'interfaccia di Nova»),
+      `wm-package/docs/knowledge/analytics-posthog.md` (variabili della card e colore delle tracce),
+      `notes.md`.
+
+## Commit della terza parte (dopo il review-gate)
+
+- wm-package: `feat(oc:9040): colori della card delle statistiche e delle tracce configurabili`.
+- camminiditalia, in ordine:
+  - `chore(oc:9040): aggiorna wm-package con i colori configurabili`;
+  - `feat(oc:9040): interfaccia di Nova con i colori e i caratteri del design system`;
+  - `docs(oc:9040): …`.

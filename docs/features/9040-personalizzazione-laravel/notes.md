@@ -146,3 +146,29 @@ Il dettaglio è nel `notes.md` del package. Qui:
   - `tests/Feature/LayerFiltersSectionTest.php`
   - `resources/lang/{it,fr,es,de}.json`
 
+
+## Terza parte — design system (26/11)
+
+- **Grigi di Nova spostati di un gradino rispetto al piano.** Il piano dava `gray-400` =
+  `secondario-400` #6E7B7E, molto più scuro del `gray-400` di Nova (148, 163, 184). Nel tema scuro
+  Nova scrive in `gray-400` su `gray-800`/`gray-900`, e #6E7B7E su #1D282B si legge male. In
+  `resources/css/nova/brand.css`:
+  - 400 = #9AA4A6, ricavato;
+  - 500…900 = `secondario-400`, `-500`, `-600`, `-700` e `secondario`;
+  - 950 ricavato.
+- **Font:** i TTF del design system, non convertiti in woff2, perché nel container non c'è un
+  convertitore e i file pesano circa 60 KB l'uno. `font-display: swap`.
+- **Tracce in arancio da `config/wm-package.php`** (override versionato, come le altre chiavi del
+  file), non da `.env`.
+- **Cambio di tema:** il grafico della card legge i colori quando viene disegnato. Passando da
+  chiaro a scuro senza ricaricare la pagina, le barre restano con i colori del tema precedente
+  fino al prossimo disegno (cambio di periodo o ricarica).
+- **Colori della card: «scala dell'arancio»** (Alessandro, 26/11), scelta fra cinque prove
+  nell'artifact «Prove colori Statistiche» (https://claude.ai/artifact/7PDenvjwbAiAW4NHdWBwTU).
+  Il piano metteva iOS in `secondario`, ma sullo schermo l'ardesia dominava le altre serie.
+  - **Serie, tema chiaro:** Android `primario-700`, iOS `primario`, Webapp `primario-300`.
+  - **Serie, tema scuro:** Android `primario-600`, iOS `primario-400`, Webapp `primario-100`.
+  - **Numeri:** `primario` e non `primario-700`. Sono testo grande, come i titoli del sito che il
+    design system scrive in `primario`; il contrasto più basso è una scelta di Alessandro.
+  - **Cammini più frequentati:** `primario`, `primario-400` sul tema scuro.
+  - **Box dei numeri e fondo delle barre:** `fondo` #F4F6F8.

@@ -201,3 +201,82 @@ misurati (sotto, in Rischi) mostrano che il costo è contenuto.
   segnalato nelle note dev del ticket
 
 **wm-package** — vedi la sua overview.
+
+---
+
+# Terza parte — interfaccia di Nova con i colori e i caratteri del design system (Alessandro, 26/11)
+
+Richiesta di Alessandro del 26/11, dentro oc:9040: rendere l'interfaccia di Nova compatibile con il design
+system di Cammini d'Italia (artifact «Design System», `project/README.md` e `project/tokens.json`).
+
+## Cosa cambia
+
+- **Colore principale di Nova = `primario` #F07821**, con la sua scala: `config/nova.php` →
+  `brand.colors` passa dalle 3 tonalità verde acqua di oggi (`24, 182, 155`) a tutte quelle che
+  Nova usa (`--colors-primary-50…950`, `vendor/laravel/nova/src/Nova.php:1217`). Valori del design
+  system per 100, 300, 400, 500, 600, 700; 50, 200, 800, 900, 950 ricavati da noi fra quelli
+  vicini.
+- **Grigi di Nova = scala del `secondario`** (#1D282B…), al posto del grigio-blu di Tailwind:
+  - fondo della pagina `fondo` #F4F6F8;
+  - bordi `secondario-100` e `secondario-200`;
+  - testo minore `secondario-400` e `secondario-500`;
+  - fondi scuri `secondario` e `secondario-700`.
+  Le tonalità che il design system non ha sono ricavate da noi.
+- **Caratteri:** DM Sans per il testo, Instrument Sans per i titoli, al posto di Nunito Sans.
+  Sono i file del design system (TTF, licenza OFL) serviti da `public/fonts/`, senza chiamare
+  Google Fonts.
+- **Tema scuro tenuto**, con l'arancio e la scala del `secondario`: il design system non ha un
+  tema scuro, i valori scuri li scegliamo noi.
+- **Card delle statistiche** con i colori del brand, tramite le variabili CSS che il package
+  aggiunge (vedi l'overview del package):
+  - i numeri grandi in `primario-700` #BB4613, perché il design system lo indica per scrivere in
+    arancio; sul tema scuro `primario`;
+  - le tre serie del grafico (Android, iOS, Webapp) con le tre serie del design system:
+    `primario`, `secondario` (chiaro-su-scuro sul tema scuro), `primario-300`.
+- **Tracce sulle mappe in `primario`** quando il layer non ha un colore suo: la nuova config del
+  package impostata a #F07821 in `config/wm-package.php`, versionata.
+
+## Perché
+
+- Nova oggi ha il verde acqua di Nova e i colori Tailwind della card, che non sono del
+  brand (screenshot di Alessandro del 26/11).
+- Decisioni di Alessandro del 26/11:
+  - primario #F07821 come nel design system, anche se il bianco sui pulsanti sta a 2,6:1;
+  - tema scuro tenuto;
+  - tracce in arancio, con il colore configurabile;
+  - nel package i colori restano quelli di oggi, modificabili tramite variabili.
+
+## Requisiti
+
+- Pulsanti, link, `MenuItem` attivo e focus di Nova in arancio #F07821, nei due temi.
+- Grigi, fondo e caratteri come sopra, nei due temi.
+- Card delle statistiche con i colori del brand nei due temi; l'export PNG con gli stessi colori.
+- Tracce in #F07821 su detail view del Layer, card del Validator e mappa di tutti i cammini,
+  tranne i layer con `properties.color`.
+- Nessun cambiamento a mappe e card degli altri progetti che usano il package.
+
+## Rischi
+
+- **Gli override sui grigi e sui caratteri toccano variabili e classi di Nova**: a ogni
+  aggiornamento di Nova vanno ricontrollati.
+- **Contrasto**: bianco su #F07821 a 2,6:1 e link arancio su bianco a 2,8:1, sotto AA. Scelta
+  consapevole di Alessandro.
+- **Il logo** ha la scritta grigio scuro e sul tema scuro si legge poco: resta la richiesta al
+  cliente di una versione chiara o SVG.
+- **I pallini verdi delle persone** restano verdi: non sono nel perimetro.
+
+## Out of scope
+
+- Colori delle mappe diversi dal colore di default delle tracce (pallini, POI, zone).
+- Il colore di una traccia preso dalla EcTrack (`TrackColor`) invece che dal layer.
+- Componenti Nova del package diversi dalla card delle statistiche.
+
+## Moduli toccati
+
+- `config/nova.php` (`brand.colors`)
+- `config/wm-package.php` (colore di default delle tracce)
+- `app/Providers/NovaServiceProvider.php` (`Nova::style`)
+- `resources/css/nova/brand.css` (nuovo)
+- `public/fonts/` (nuova)
+- gitlink `wm-package`
+- test in `tests/Feature/`
