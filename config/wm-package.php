@@ -28,4 +28,11 @@ return [
      | camminiditalia — qui, l'unico consumer che lo ha davvero, va a true.
      */
     'route_filter_analytics_enabled' => true,
+
+    /*
+     | Colore delle tracce sulle mappe di Nova quando il layer non ne ha uno suo
+     | (oc:9040): il `primario` del design system di Cammini d'Italia. Un layer
+     | con `properties.color` resta del suo colore.
+     */
+    'map_default_track_color' => '#F07821',
 ];

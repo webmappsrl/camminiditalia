@@ -1,0 +1,101 @@
+/*
+ * Interfaccia di Nova con il design system di Cammini d'Italia (oc:9040, terza parte).
+ *
+ * - Arancio: in config/nova.php (brand.colors), non qui.
+ * - Grigi di Nova: la scala del `secondario`. I valori del design system sono indicati; gli
+ *   altri li abbiamo ricavati noi. La scala è spostata di un gradino rispetto ai nomi del design
+ *   system perché la luminosità segua quella dei grigi di Nova: nel tema scuro Nova scrive in
+ *   gray-400 su gray-800/900.
+ * - Caratteri: DM Sans per il testo, Instrument Sans per i titoli, dai file del design system
+ *   (licenza OFL) in public/fonts/camminiditalia/. Il CSS di Nova scrive «Nunito Sans» in circa
+ *   90 regole e non in una variabile, per questo servono gli !important.
+ * - Card delle statistiche: le variabili --wm-analytics-* di wm-package.
+ *
+ * Il design system ha solo il tema chiaro: i valori del tema scuro li abbiamo scelti noi.
+ * A ogni aggiornamento di Nova va ricontrollato che variabili e classi esistano ancora.
+ */
+
+@font-face { font-family: "DM Sans"; src: url("/fonts/camminiditalia/DMSans-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "DM Sans"; src: url("/fonts/camminiditalia/DMSans-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "DM Sans"; src: url("/fonts/camminiditalia/DMSans-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "DM Sans"; src: url("/fonts/camminiditalia/DMSans-SemiBold.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "DM Sans"; src: url("/fonts/camminiditalia/DMSans-Bold.ttf") format("truetype"); font-weight: 700 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Instrument Sans"; src: url("/fonts/camminiditalia/InstrumentSans-Medium.ttf") format("truetype"); font-weight: 400 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Instrument Sans"; src: url("/fonts/camminiditalia/InstrumentSans-SemiBold.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Instrument Sans"; src: url("/fonts/camminiditalia/InstrumentSans-Bold.ttf") format("truetype"); font-weight: 700 900; font-style: normal; font-display: swap; }
+
+:root {
+    --cammini-font-testo: "DM Sans", Arial, sans-serif;
+    --cammini-font-titoli: "Instrument Sans", Arial, sans-serif;
+
+    --colors-gray-50: 249, 250, 251;   /* #F9FAFB ricavato */
+    --colors-gray-100: 244, 246, 248;  /* #F4F6F8 fondo */
+    --colors-gray-200: 230, 233, 234;  /* #E6E9EA secondario-100 */
+    --colors-gray-300: 199, 204, 205;  /* #C7CCCD secondario-200 */
+    --colors-gray-400: 154, 164, 166;  /* #9AA4A6 ricavato */
+    --colors-gray-500: 110, 123, 126;  /* #6E7B7E secondario-400 */
+    --colors-gray-600: 76, 88, 91;     /* #4C585B secondario-500 */
+    --colors-gray-700: 53, 65, 68;     /* #354144 secondario-600 */
+    --colors-gray-800: 40, 51, 53;     /* #283335 secondario-700 */
+    --colors-gray-900: 29, 40, 43;     /* #1D282B secondario */
+    --colors-gray-950: 20, 28, 30;     /* #141C1E ricavato */
+
+    /* Card delle statistiche, tema chiaro: la «scala dell'arancio» scelta da Alessandro il 26/11
+       (artifact «Prove colori Statistiche»). Le tre serie si distinguono per luminosità. */
+    --wm-analytics-accent: #f07821;          /* primario: numeri grandi, come i titoli del sito */
+    --wm-analytics-accent-presence: #f07821; /* primario */
+    --wm-analytics-android: #bb4613;         /* primario-700 */
+    --wm-analytics-ios: #f07821;             /* primario */
+    --wm-analytics-webapp: #f7bb7a;          /* primario-300 */
+    --wm-analytics-text: #1d282b;
+    --wm-analytics-text-muted: #4c585b;
+    --wm-analytics-text-disabled: #6e7b7e;
+    --wm-analytics-border: #c7cccd;
+    --wm-analytics-surface: #f4f6f8;         /* fondo */
+    --wm-analytics-control-bg: #ffffff;
+    --wm-analytics-badge-bg: #e6e9ea;
+    --wm-analytics-bar-bg: #f4f6f8;          /* fondo */
+    --wm-analytics-chart-text: #4c585b;
+    --wm-analytics-chart-grid: rgba(29, 40, 43, 0.08);
+    --wm-analytics-export-bg: #ffffff;
+}
+
+.dark {
+    /* Card delle statistiche, tema scuro (valori scelti da noi) */
+    --wm-analytics-accent: #f07821;          /* primario */
+    --wm-analytics-accent-presence: #f39544; /* primario-400 */
+    --wm-analytics-android: #e15d15;         /* primario-600 */
+    --wm-analytics-ios: #f39544;             /* primario-400 */
+    --wm-analytics-webapp: #fdedd7;          /* primario-100 */
+    --wm-analytics-text: #f3f4f6;
+    --wm-analytics-text-muted: #c7cccd;
+    --wm-analytics-text-disabled: #9aa4a6;
+    --wm-analytics-border: #4c585b;
+    --wm-analytics-surface: #1d282b;
+    --wm-analytics-control-bg: #1d282b;
+    --wm-analytics-badge-bg: #354144;
+    --wm-analytics-bar-bg: #354144;
+    --wm-analytics-chart-text: #c7cccd;
+    --wm-analytics-chart-grid: rgba(243, 244, 246, 0.1);
+    --wm-analytics-export-bg: #283335;
+}
+
+body,
+body * {
+    font-family: var(--cammini-font-testo) !important;
+}
+
+body h1,
+body h2,
+body h3 {
+    font-family: var(--cammini-font-titoli) !important;
+}
+
+body code,
+body pre,
+body kbd,
+body samp,
+body .font-mono,
+body .font-mono * {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
