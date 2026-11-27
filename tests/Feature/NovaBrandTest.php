@@ -65,6 +65,30 @@ class NovaBrandTest extends TestCase
         ));
     }
 
+    /**
+     * Favicon col disco di Cammini d'Italia su tutte le pagine di Nova, login compresa (oc:9040,
+     * quarta parte): Nova la lascia a resources/views/vendor/nova/partials/meta.blade.php.
+     */
+    public function test_nova_pages_declare_the_favicon(): void
+    {
+        // Nova calcola le sue variabili per il JavaScript una volta per processo e ci memorizza
+        // l'id dell'utente della prima richiesta: nella suite, una richiesta da ospite dopo un
+        // test con utente costruirebbe il menu senza utente e NovaServiceProvider risponderebbe
+        // 500 (hasAnyRole() su null). In produzione ogni richiesta riparte da zero.
+        Nova::$jsonVariables = [];
+
+        $this->get('/nova/login')
+            ->assertOk()
+            ->assertSee('<link rel="icon" type="image/png" sizes="32x32" href="/favicon-camminiditalia-32.png">', false)
+            ->assertSee('<link rel="apple-touch-icon" sizes="180x180" href="/favicon-camminiditalia-180.png">', false);
+
+        foreach ([32, 180] as $size) {
+            $file = public_path("favicon-camminiditalia-{$size}.png");
+            $this->assertFileExists($file);
+            $this->assertSame([$size, $size], array_slice(getimagesize($file), 0, 2));
+        }
+    }
+
     public function test_brand_stylesheet_is_registered(): void
     {
         $this->get('/nova/login');
