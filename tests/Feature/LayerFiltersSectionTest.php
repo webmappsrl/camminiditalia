@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Tests\Feature\Concerns\CreatesUsersWithRole;
 use Tests\TestCase;
 use Wm\WmPackage\Models\App;
 use Wm\WmPackage\Models\Layer;
@@ -24,6 +25,7 @@ use Wm\WmPackage\Services\RolesAndPermissionsService;
  */
 class LayerFiltersSectionTest extends TestCase
 {
+    use CreatesUsersWithRole;
     use DatabaseTransactions;
 
     protected function setUp(): void
@@ -88,13 +90,5 @@ class LayerFiltersSectionTest extends TestCase
         }
 
         return false;
-    }
-
-    private function userWithRole(string $role): User
-    {
-        $user = User::factory()->create();
-        $user->assignRole($role);
-
-        return $user;
     }
 }

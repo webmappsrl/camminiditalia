@@ -99,5 +99,8 @@
     "A stage cannot be a variant of itself.": "A stage cannot be a variant of itself.",
     "The main stage is already a variant: variants live on a single level.": "The main stage is already a variant: variants live on a single level.",
     "This stage is already the main stage of other variants: it cannot become a variant itself.": "This stage is already the main stage of other variants: it cannot become a variant itself.",
-    "The chosen main stage is not among the stages you can choose.": "The chosen main stage is not among the stages you can choose."
+    "The chosen main stage is not among the stages you can choose.": "The chosen main stage is not among the stages you can choose.",
+    "Statistics": "Statistics",
+    "user on the map": "person walking",
+    "users on the map": "people walking"
 }

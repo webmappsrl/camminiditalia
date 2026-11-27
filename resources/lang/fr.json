@@ -91,5 +91,9 @@
     "A stage cannot be a variant of itself.": "Une étape ne peut pas être une variante d'elle-même.",
     "The main stage is already a variant: variants live on a single level.": "L'étape principale est déjà une variante : les variantes n'ont qu'un seul niveau.",
     "This stage is already the main stage of other variants: it cannot become a variant itself.": "Cette étape est déjà l'étape principale d'autres variantes : elle ne peut pas devenir elle-même une variante.",
-    "The chosen main stage is not among the stages you can choose.": "L'étape principale choisie ne fait pas partie des étapes que vous pouvez indiquer."
+    "The chosen main stage is not among the stages you can choose.": "L'étape principale choisie ne fait pas partie des étapes que vous pouvez indiquer.",
+    "Statistics": "Statistiques",
+    "All routes": "Tous les chemins",
+    "user on the map": "personne en chemin",
+    "users on the map": "personnes en chemin"
 }

@@ -9,6 +9,7 @@ use App\Nova\Traits\FiltersUsersByRoleTrait;
 use App\Services\LayerAttributesService;
 use App\Support\PassportLayer;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Nova\Card;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\FormData;
@@ -23,6 +24,7 @@ use Wm\WmPackage\Jobs\UpdateAppConfigJob;
 use Wm\WmPackage\Nova\Actions\AddLayersToConfigHomeAction;
 use Wm\WmPackage\Nova\Actions\ExecuteEcTrackDataChainAction;
 use Wm\WmPackage\Nova\Actions\RegenerateLayerPbfAction;
+use Wm\WmPackage\Nova\Cards\LayerAnalytics\LayerAnalyticsCard;
 use Wm\WmPackage\Nova\Layer as WmNovaLayer;
 
 class Layer extends WmNovaLayer
@@ -811,11 +813,29 @@ class Layer extends WmNovaLayer
         return $actions;
     }
 
+    /**
+     * Le statistiche dei cammini stanno solo nella dashboard «Statistiche»
+     * (App\Nova\Dashboards\Main): sopra l'index dei Layer la card aggregata non c'è per nessuno
+     * (oc:9040).
+     */
     protected function canSeeGlobalAnalyticsCard(NovaRequest $request): bool
     {
-        $currentUser = $request->user();
+        return false;
+    }
 
-        return self::isAdministrator($currentUser);
+    /**
+     * Le card del package nella detail view del Layer, senza quella delle statistiche, che sta
+     * nella dashboard «Statistiche» (oc:9040). Si filtra l'elenco del package invece di
+     * riscriverlo, così le card che il package aggiungerà continuano a comparire.
+     *
+     * @return array<int, Card>
+     */
+    protected function detailCards(NovaRequest $request): array
+    {
+        return array_values(array_filter(
+            parent::detailCards($request),
+            static fn ($card) => ! $card instanceof LayerAnalyticsCard,
+        ));
     }
 
     private static function isAdministrator(?User $user): bool
