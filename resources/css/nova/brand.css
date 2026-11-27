@@ -99,3 +99,38 @@ body .font-mono,
 body .font-mono * {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
 }
+
+/*
+ * Logo del cammino accanto a Cammini d'Italia (oc:9040, quarta parte): l'SVG lo costruisce
+ * App\Support\NovaBrandLogo, solo per un Validator il cui primo cammino ha un logo. All'apertura
+ * della pagina Cammini d'Italia c'è intero; dopo 900 ms si rimpicciolisce al 60% con una scala
+ * uniforme (le proporzioni non cambiano) e compare il logo del cammino. Nova cambia pagina senza
+ * ricaricare l'header, quindi l'animazione parte solo all'apertura o alla ricarica.
+ */
+.cammini-brand-cdi {
+    transform-box: fill-box;
+    transform-origin: left center;
+    animation: cammini-brand-shrink 600ms cubic-bezier(0.4, 0, 0.2, 1) 900ms both;
+}
+
+.cammini-brand-after {
+    animation: cammini-brand-enter 450ms cubic-bezier(0.4, 0, 0.2, 1) 1300ms both;
+}
+
+@keyframes cammini-brand-shrink {
+    from { transform: scale(1); }
+    to { transform: scale(0.6); }
+}
+
+@keyframes cammini-brand-enter {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cammini-brand-cdi,
+    .cammini-brand-after {
+        animation-duration: 1ms;
+        animation-delay: 0ms;
+    }
+}

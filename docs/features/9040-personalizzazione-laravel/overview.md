@@ -280,3 +280,62 @@ system di Cammini d'Italia (artifact «Design System», `project/README.md` e `p
 - `public/fonts/` (nuova)
 - gitlink `wm-package`
 - test in `tests/Feature/`
+
+---
+
+# Quarta parte — logo del cammino, favicon e numero di utenti sulla mappa (Alessandro, 27/11)
+
+Tre richieste di Giuseppe ad Alessandro nella call interna del 26/11 delle 13:55 (trascrizione
+«scr-um w-ebmapp - 2026/11/26 13:55 CET»), da fare dopo la correzione delle statistiche.
+
+## Cosa cambia
+
+- **Logo del cammino accanto a quello di Cammini d'Italia, nell'header di Nova** («se sei loggato
+  come validator e hai un logo»; «No, no, accanto, accanto»).
+  - Vale per un Validator il cui primo layer (lo stesso della dashboard: `user_id` suo, `id` più
+    basso) ha il media `logo`.
+  - All'apertura della pagina c'è il logo di Cammini d'Italia intero, come oggi. Dopo circa un
+    secondo si rimpicciolisce al 60% (da 119 × 36 a 71 × 22 px) e accanto compare il logo del
+    cammino, in un box di 100 × 36 px. Le proporzioni dei due loghi non cambiano mai: solo una scala
+    uniforme. È l'«animata A» scelta da Alessandro il 27/11 nell'artifact «Logo del cammino in
+    Nova» (https://claude.ai/artifact/AFRQkabudmt9t6kcgAMFQF).
+  - Con «riduci movimento» attivo nel sistema si vede subito lo stato finale.
+  - Nova cambia pagina senza ricaricare l'header: l'animazione parte all'apertura o alla ricarica
+    della pagina, non a ogni click nel menu.
+  - Administrator, Guest e Validator senza logo: il logo di oggi.
+- **Favicon**: il disco del logo di Cammini d'Italia nella scheda del browser, su tutte le pagine di
+  Nova, login compresa («gli metti quella di cammini»). Oggi non c'è: `public/favicon.ico` è vuoto.
+- **Numero di utenti sotto la mappa**: nella legenda delle mappe della dashboard, accanto a
+  «Posizione utente (ultimi 30 minuti)», quanti sono («secondo me è utile dire anche quanti
+  sono… sia che sei su tutti, sia che sei su uno»; «vogliono vedere quanti utenti ci sono
+  nell'ultima mezz'ora»). Vale per la mappa di tutti i cammini e per quella del Validator, e si
+  aggiorna con le posizioni, ogni 90 s.
+
+## Requisiti
+
+- Il logo del cammino non deforma nessuno dei due loghi, in nessuna forma (quadrato, orizzontale,
+  verticale).
+- Il logo per utente non deve rompere la pagina se il media manca o non si carica: in quel caso
+  resta il logo di oggi.
+- Il numero conta le persone che la mappa mostra (stessa finestra di 30 minuti, stesso filtro a
+  50 m), quindi coincide sempre con i pallini.
+
+## Rischi
+
+- **I file dei loghi stanno sul disco `wmfe`**: in locale non ci sono (MinIO risponde 404), quindi
+  la verifica nel browser con un logo vero si fa su un ambiente con i media.
+- **`Nova::provideToScript()` con la chiave `logo`** sostituisce la variabile che Nova calcola da
+  `brand.logo`: a un aggiornamento di Nova va ricontrollato che la chiave si chiami ancora così.
+
+## Out of scope
+
+- Il logo del cammino per l'Administrator o per i cammini senza logo.
+- Il numero di utenti nella mappa della detail view del Layer.
+
+## Moduli toccati
+
+- camminiditalia: `app/Providers/NovaServiceProvider.php`, una classe in `app/Support/` per il logo,
+  `resources/css/nova/brand.css` (animazione), `resources/views/vendor/nova/partials/meta.blade.php`
+  (favicon), `public/` (immagini della favicon), `resources/lang/*.json`, test in `tests/Feature/`.
+- wm-package: `FeatureCollectionMap.vue`, `LayerMapCard.vue`, `LayerMapCard.php`, `dist/`,
+  `resources/lang/*.json`.

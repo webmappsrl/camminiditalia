@@ -175,3 +175,27 @@ Il dettaglio è nel `notes.md` del package. Qui:
 - **Knowledge in una pagina nuova**, `docs/knowledge/colori-e-caratteri-di-nova.md`, e non
   rinominando `logo-nel-pannello-nova.md` come diceva il piano: la pagina del logo è citata nei
   documenti chiusi di oc:9031, e rinominarla avrebbe rotto quei link.
+
+## Quarta parte — logo del cammino, favicon, numero di utenti (27/11)
+
+- **Legenda e numero di utenti solo in Cammini d'Italia** (Alessandro, 27/11): la `LayerMapCard`
+  è nel package, e gli altri progetti che la usano non devono vederli. `withLiveLegend()` li
+  accende insieme; la dashboard `Main` lo chiama per le due mappe. Di default la card mostra solo
+  la mappa con i pallini. Una sola variabile per il frontend, `show_live_legend`, vera solo se lo
+  shard la accende e PostHog è configurato (tolta `show_live_user_positions`, che diceva la stessa
+  cosa).
+- **Tutta la logica del live fuori dal componente della mappa** (idea di Alessandro, 27/11): per
+  ora no. La `LayerMapCard` resta nel package; resta da valutare una mappa generica (un layer
+  ricaricato ogni N secondi, legenda con campione a punto) con legenda e numero decisi dallo shard. La legenda della detail view del Layer (`DetailField.vue`) esisteva
+  prima di oc:9040 e resta com'è.
+- **Il numero sta su una riga a sé, sotto la legenda** (Alessandro, 27/11), non nella stessa riga.
+- **`FeatureCollectionMap.vue` emette `live-positions-loaded`** con il numero di posizioni
+  ricevute: due righe, nessun cambiamento a quello che la mappa disegna. Senza `livePositionsUrl`
+  (detail view e altri Field) non parte.
+- **Favicon: un test con `Nova::$jsonVariables = []`.** Nova calcola le variabili per il
+  JavaScript una volta per processo e ci memorizza l'id dell'utente della prima richiesta. Nella
+  suite, una richiesta da ospite dopo un test con utente costruisce il menu senza utente e
+  `NovaServiceProvider.php:114` risponde 500 (il follow-up già segnato). In produzione ogni
+  richiesta riparte da zero.
+- **Package su un branch nuovo**, `feature/oc-9040-numero-utenti-legenda`, da `develop`: la PR #353
+  è già mergiata.

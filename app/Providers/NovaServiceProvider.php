@@ -22,6 +22,7 @@ use App\Nova\Tile;
 use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
 use App\Nova\User as NovaUser;
+use App\Support\NovaBrandLogo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
@@ -51,6 +52,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             Nova::style('diary-rich-text', resource_path('css/nova/diary-rich-text.css'));
             // Colori e caratteri del design system di Cammini d'Italia (oc:9040).
             Nova::style('camminiditalia-brand', resource_path('css/nova/brand.css'));
+            // Logo dell'header per utente: accanto a Cammini d'Italia il logo del cammino del
+            // Validator (oc:9040). Sostituisce la variabile che Nova calcola da brand.logo.
+            Nova::provideToScript(['logo' => static fn ($request) => NovaBrandLogo::forUser($request->user())]);
             Nova::script('diary-copy', resource_path('js/nova/diary-copy.js'));
         });
 

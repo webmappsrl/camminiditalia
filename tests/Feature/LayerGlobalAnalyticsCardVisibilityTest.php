@@ -185,6 +185,34 @@ class LayerGlobalAnalyticsCardVisibilityTest extends TestCase
         $this->assertContains('api-links-card', $components);
     }
 
+    /**
+     * Legenda e numero di utenti sotto la mappa sono di Cammini d'Italia (oc:9040, quarta parte):
+     * la dashboard li accende su entrambe le mappe, quella di tutti i cammini e quella del Validator.
+     */
+    public function test_dashboard_maps_show_the_live_legend(): void
+    {
+        $this->appWithAnalytics(false);
+        // La legenda c'è solo con PostHog configurato: senza, non arriva nessuna posizione.
+        config([
+            'services.posthog.host' => 'https://posthog.test',
+            'services.posthog.project_id' => '1',
+            'services.posthog.personal_api_key' => 'test-key',
+        ]);
+
+        $admin = $this->userWithRole('Administrator');
+        Layer::factory()->create();
+        $adminMaps = $this->dashboardCards($admin)->where('component', self::MAP_CARD);
+
+        $validator = $this->userWithRole('Validator');
+        Layer::factory()->create(['user_id' => $validator->id]);
+        $validatorMaps = $this->dashboardCards($validator)->where('component', self::MAP_CARD);
+
+        $this->assertCount(1, $adminMaps);
+        $this->assertCount(1, $validatorMaps);
+        $this->assertTrue($adminMaps->first()['show_live_legend']);
+        $this->assertTrue($validatorMaps->first()['show_live_legend']);
+    }
+
     public function test_dashboard_is_named_statistics_and_keeps_the_main_uri_key(): void
     {
         $dashboard = new Main;

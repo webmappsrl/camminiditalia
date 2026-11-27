@@ -38,6 +38,15 @@ Cosa vede ciascun ruolo:
   voce «La stessa mappa in una card».
 - **«Tutti i cammini»**: il package traduce `All routes` in modo neutro («Tutti i percorsi»), e
   `resources/lang/{it,fr,es,de}.json` lo sovrascrive con le parole di Cammini d'Italia.
+- **Quante persone ci sono** (oc:9040, quarta parte): `Main` costruisce le due mappe con
+  `withLiveLegend()`, e sotto ogni mappa compare un box con il pallino delle persone (fa da
+  legenda), il numero e «persone in cammino negli ultimi 30 minuti», e a destra l'ora
+  dell'ultimo aggiornamento. «persona/persone in cammino» è un override di
+  `resources/lang/*.json` sulle chiavi neutre del package (`user on the map`, `users on the map`).
+  Il numero è quello dei pallini: persone con un evento `userMoved` negli ultimi 30 minuti, nella
+  loro ultima posizione, a meno di 50 m da una traccia (verificato il 27/11 sui dati veri: 6
+  persone attive, 2 vicine a un cammino, 2 contate). Il box compare dopo il primo caricamento
+  riuscito delle posizioni: se la prima richiesta fallisce non si vede.
 - **Pagine dei Layer:** niente statistiche. `App\Nova\Layer::canSeeGlobalAnalyticsCard()`
   restituisce `false` (index) e `App\Nova\Layer::detailCards()` toglie `LayerAnalyticsCard` dalle
   card del package (detail view), lasciando le altre. La mappa con le posizioni in tempo reale

@@ -93,5 +93,7 @@
     "This stage is already the main stage of other variants: it cannot become a variant itself.": "Esta etapa ya es la etapa principal de otras variantes: no puede convertirse a su vez en una variante.",
     "The chosen main stage is not among the stages you can choose.": "La etapa principal elegida no está entre las que puedes indicar.",
     "Statistics": "Estadísticas",
-    "All routes": "Todos los caminos"
+    "All routes": "Todos los caminos",
+    "user on the map": "persona en camino",
+    "users on the map": "personas en camino"
 }

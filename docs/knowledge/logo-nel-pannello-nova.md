@@ -32,7 +32,39 @@ La scritta «Unregistered» accanto al logo non riguarda il logo: è la licenza,
 
 Colori e caratteri dell'interfaccia di Nova: [colori-e-caratteri-di-nova.md](colori-e-caratteri-di-nova.md).
 
+### Logo del cammino accanto a Cammini d'Italia (oc:9040)
+
+- Per un Validator senza ruolo Administrator il cui primo layer (`user_id` suo, `id` più basso, come la dashboard) ha il
+  media `logo`, `App\Support\NovaBrandLogo::forUser()` costruisce un SVG con il logo di Cammini
+  d'Italia (la stessa immagine incorporata nel file di `brand.logo`) e il logo del cammino in un
+  `<image>` con l'URL del media, in un box di 100 × 36 px con `preserveAspectRatio="xMinYMid meet"`.
+  Per tutti gli altri, e se manca qualcosa, il file di `brand.logo` com'è.
+- Arriva a Nova con `Nova::provideToScript(['logo' => fn ($request) => …])` in `NovaServiceProvider`:
+  sostituisce la variabile che Nova calcola da `brand.logo` (`vendor/laravel/nova/src/Nova.php`,
+  `provideToScript()`), e Nova la risolve a ogni richiesta. **A un aggiornamento di Nova va
+  ricontrollato che la chiave si chiami ancora `logo`.**
+- L'animazione sta in `resources/css/nova/brand.css`, sulle classi `cammini-brand-cdi` e
+  `cammini-brand-after`, perché l'SVG non può avere `<style>`: dopo 900 ms Cammini d'Italia si
+  rimpicciolisce al 60% con una scala uniforme e compare il logo del cammino. Nova cambia pagina
+  senza ricaricare l'header, quindi parte solo all'apertura o alla ricarica; con «riduci movimento»
+  si vede subito lo stato finale.
+- I file dei loghi stanno sul disco `wmfe`: in locale non ci sono (dump senza media), quindi il box
+  del cammino resta vuoto.
+- Test: `tests/Feature/NovaRouteLogoTest.php`.
+
+### Favicon (oc:9040)
+
+Il disco di Cammini d'Italia, ritagliato con GD dal PNG del cliente, in
+`public/favicon-camminiditalia-32.png` e `-180.png` (apple-touch-icon), dichiarato in
+`resources/views/vendor/nova/partials/meta.blade.php`, il partial che Nova include nell'`<head>` di
+ogni pagina, login compresa. `public/favicon.ico` resta vuoto, com'era.
+
 ## Perché così
+
+- **Logo del cammino accanto, non al posto di Cammini d'Italia** (call interna del 26/11, Giuseppe:
+  «No, no, accanto, accanto»). Animazione scelta da Alessandro il 27/11 fra le prove dell'artifact
+  «Logo del cammino in Nova» (https://claude.ai/artifact/AFRQkabudmt9t6kcgAMFQF): nei 200 px
+  dell'header un logo orizzontale affiancato a quello intero diventava illeggibile.
 
 - **Il PNG del cliente dentro un SVG, con lo stesso nome di file** (oc:9040): Nova vuole un SVG,
   e il cliente ha mandato un PNG. Tenere `camminiditalia-logo.svg` lascia invariato
@@ -41,7 +73,7 @@ Colori e caratteri dell'interfaccia di Nova: [colori-e-caratteri-di-nova.md](col
 - **Niente nome accanto al disco** (oc:9040): la scritta «CAMMINI D'ITALIA» è già nel logo del
   cliente, ed è grande abbastanza da leggersi a 36 px di altezza (verificato riducendo il PNG).
 - **Tutto nell'SVG, niente CSS sull'header** (oc:9031): osm2cai aggiunge il nome con `::after` e
-  selettori sull'HTML dell'header di Nova, che un aggiornamento può rompere senza errori.
+  selettori sull'HTML dell'header di Nova, che un aggiornamento può rompere senza errori. Dal oc:9040 l'animazione del logo del cammino è in `brand.css`, ma su classi scritte dall'SVG stesso, non su selettori dell'header di Nova: quel rischio non c'è.
 
 ## Domande aperte
 

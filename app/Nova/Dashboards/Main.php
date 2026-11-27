@@ -75,7 +75,8 @@ class Main extends Dashboard
 
         // La mappa di tutti i cammini c'è anche con l'analytics spento, come quella del Validator:
         // mostra comunque i percorsi (oc:9040, seconda parte).
-        $cards[] = LayerMapCard::global();
+        // Legenda e numero di persone sotto la mappa: richiesta di Cammini d'Italia (oc:9040).
+        $cards[] = LayerMapCard::global()->withLiveLegend();
 
         return $cards;
     }
@@ -107,7 +108,7 @@ class Main extends Dashboard
         }
 
         // La mappa c'è anche con analytics spento: mostra comunque il percorso del cammino.
-        $cards[] = new LayerMapCard($firstLayer);
+        $cards[] = (new LayerMapCard($firstLayer))->withLiveLegend();
 
         return $cards;
     }

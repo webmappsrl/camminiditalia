@@ -100,33 +100,67 @@ class LayerMapCardTest extends TestCase
         return [$admin, $layer];
     }
 
-    public function test_card_announces_live_positions_only_when_posthog_is_configured(): void
+    public function test_card_polls_and_shows_the_legend_only_when_posthog_is_configured(): void
     {
         $layer = Layer::factory()->create();
 
         $this->mock(AnalyticsService::class)->shouldReceive('isConfigured')->andReturn(true);
-        $payload = (new LayerMapCard($layer))->jsonSerialize();
-        $this->assertTrue($payload['show_live_user_positions']);
+        $payload = (new LayerMapCard($layer))->withLiveLegend()->jsonSerialize();
+        $this->assertTrue($payload['show_live_legend']);
         $this->assertSame('/nova-vendor/layer-analytics/'.$layer->id.'/live-positions', $payload['live_positions_url']);
         $this->assertSame(AnalyticsService::LIVE_POSITIONS_CACHE_SECONDS, $payload['live_positions_refresh_seconds']);
 
         // Senza PostHog niente polling: l'endpoint risponderebbe sempre vuoto.
         $this->mock(AnalyticsService::class)->shouldReceive('isConfigured')->andReturn(false);
-        $payload = (new LayerMapCard($layer))->jsonSerialize();
-        $this->assertFalse($payload['show_live_user_positions']);
+        // Anche con withLiveLegend(): senza posizioni la legenda non avrebbe niente da spiegare.
+        $payload = (new LayerMapCard($layer))->withLiveLegend()->jsonSerialize();
+        $this->assertFalse($payload['show_live_legend']);
         $this->assertNull($payload['live_positions_url']);
         $this->assertNull(LayerMapCard::global()->jsonSerialize()['live_positions_url']);
     }
 
-    public function test_legend_label_is_translated(): void
+    /**
+     * Sotto la mappa un box con il pallino delle persone, quante sono e l'ora dell'ultimo
+     * aggiornamento (oc:9040, quarta parte): spento di default, perché è una richiesta di
+     * Cammini d'Italia e la card è nel package; lo accende chi costruisce la card. Il numero lo
+     * conta il componente sulle posizioni che riceve, i testi arrivano tradotti dalla card.
+     */
+    public function test_live_legend_is_off_by_default(): void
     {
-        $layer = Layer::factory()->create();
+        $this->assertFalse(LayerMapCard::global()->jsonSerialize()['show_live_legend']);
+        $this->assertFalse((new LayerMapCard(Layer::factory()->create()))->jsonSerialize()['show_live_legend']);
+    }
 
+    public function test_live_legend_texts_use_the_camminiditalia_wording(): void
+    {
         app()->setLocale('it');
+        $this->fakePostHogPositions([]);
 
-        $this->assertSame(
-            'Posizione utente (ultimi 30 minuti)',
-            (new LayerMapCard($layer))->jsonSerialize()['legend_label'],
-        );
+        $payload = LayerMapCard::global()->withLiveLegend()->jsonSerialize();
+
+        $this->assertTrue($payload['show_live_legend']);
+        $this->assertSame([
+            'one' => 'persona in cammino',
+            'other' => 'persone in cammino',
+            'window' => 'negli ultimi 30 minuti',
+            'updated' => 'aggiornato alle :time',
+        ], $payload['live_count_texts']);
+        $this->assertTrue((new LayerMapCard(Layer::factory()->create()))->withLiveLegend()->jsonSerialize()['show_live_legend']);
+    }
+
+    /**
+     * Il package è usato da altri progetti: le sue traduzioni non parlano di cammini, la parola la
+     * mette camminiditalia con le sue (resources/lang/*.json).
+     */
+    public function test_package_texts_do_not_mention_cammini(): void
+    {
+        foreach (['it', 'en', 'fr', 'es', 'de'] as $locale) {
+            $texts = json_decode((string) file_get_contents(base_path("wm-package/resources/lang/{$locale}.json")), true);
+
+            foreach (['user on the map', 'users on the map', 'in the last 30 minutes', 'Updated at :time'] as $key) {
+                $this->assertArrayHasKey($key, $texts, "{$locale}: manca «{$key}»");
+                $this->assertStringNotContainsStringIgnoringCase('cammin', $texts[$key], "{$locale}: «{$key}»");
+            }
+        }
     }
 }
