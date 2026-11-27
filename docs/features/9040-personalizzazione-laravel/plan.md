@@ -324,3 +324,74 @@ statistiche e tracce con i colori del brand.
   - `chore(oc:9040): aggiorna wm-package con i colori configurabili`;
   - `feat(oc:9040): interfaccia di Nova con i colori e i caratteri del design system`;
   - `docs(oc:9040): …`.
+
+---
+
+# Quarta parte — logo del cammino, favicon e numero di utenti (Alessandro, 27/11)
+
+**Spec:** `overview.md`, sezione «Quarta parte».
+
+## Global Constraints
+
+- Logo di Cammini d'Italia: 119 × 36 px pieno, al 60% alla fine (71 × 22 px). Logo del cammino in
+  un box di 100 × 36 px, `preserveAspectRatio="xMinYMid meet"`.
+- Animazione: inizio a 900 ms, durata 600 ms, curva `cubic-bezier(0.4, 0, 0.2, 1)` (quella del
+  design system); il logo del cammino compare da 1300 ms in 450 ms.
+- Il logo SVG non ha `id` né `<style>` (vincolo della pagina `logo-nel-pannello-nova.md`):
+  l'animazione sta in `brand.css`, su classi.
+
+## Review Focus
+
+- Validator con più layer: logo del primo, come la dashboard.
+- Media `logo` presente nel DB ma file non raggiungibile: il browser mostra il box vuoto, senza
+  errori; il logo di Cammini d'Italia resta.
+- Login: il logo resta quello di oggi (nessun utente).
+
+### Task C10: logo del cammino (camminiditalia)
+
+**Files:** `app/Support/NovaBrandLogo.php` (nuovo), `app/Providers/NovaServiceProvider.php`,
+`resources/css/nova/brand.css`, `tests/Feature/NovaBrandLogoTest.php`.
+
+- [ ] Test, prima che falliscano:
+  - `test_validator_with_route_logo_gets_combined_logo`: l'SVG contiene il logo di Cammini d'Italia
+    e un `<image>` con l'URL del media `logo` del primo layer;
+  - `test_administrator_and_validator_without_logo_get_the_default_logo`;
+  - `test_combined_logo_has_no_ids_and_no_style_elements`.
+- [ ] `NovaBrandLogo::forUser(?User): string` → SVG: per chi non ha il logo del cammino, il file di
+      oggi; altrimenti un `<svg viewBox="0 0 200 36">` con il logo di Cammini d'Italia (stessa
+      immagine incorporata) in un gruppo con classe `cammini-brand-cdi` e il logo del cammino in un
+      `<image>` con classe `cammini-brand-route`.
+- [ ] `Nova::serving`: `Nova::provideToScript(['logo' => fn ($request) => NovaBrandLogo::forUser($request->user())])`.
+- [ ] `brand.css`: animazioni sulle due classi, `prefers-reduced-motion` con lo stato finale.
+
+### Task C11: favicon (camminiditalia)
+
+**Files:** `public/favicon-camminiditalia.png` (32 e 180 px), `resources/views/vendor/nova/partials/meta.blade.php`,
+`tests/Feature/NovaBrandTest.php`.
+
+- [ ] Test: `test_nova_pages_declare_the_favicon` (login e dashboard contengono il `<link rel="icon">`).
+- [ ] Disco ritagliato con GD da `docs/features/9040-personalizzazione-laravel/logo-cliente.png`.
+- [ ] `meta.blade.php` con `<link rel="icon">` e `<link rel="apple-touch-icon">`.
+
+### Task P10: numero di utenti nella legenda (wm-package)
+
+**Files:** `FeatureCollectionMap.vue`, `LayerMapCard.vue`, `LayerMapCard.php`, `dist/`,
+`resources/lang/*.json`; test in camminiditalia `tests/Feature/LayerMapCardTest.php`.
+
+- [ ] Test: `LayerMapCard` espone `live_count_label` tradotto («Users in the last 30 minutes»).
+- [ ] `FeatureCollectionMap.vue` emette `live-positions-loaded` con il numero di feature a ogni
+      caricamento; `LayerMapCard.vue` lo mostra nella legenda: «Utenti negli ultimi 30 minuti: N».
+- [ ] `npm run prod`.
+
+### Task C12: verifica e documentazione
+
+- [ ] Suite completa, PHPStan, Pint sui file toccati; gitlink dopo il merge del package.
+- [ ] Verifica nel browser (Alessandro): Validator con logo su un ambiente con i media, login,
+      favicon, numero sotto le due mappe.
+- [ ] Knowledge: `logo-nel-pannello-nova.md`, `dashboard-statistiche.md`,
+      `wm-package/docs/knowledge/analytics-posthog.md`; `notes.md`.
+
+## Commit della quarta parte (dopo il review-gate)
+
+- wm-package: `feat(oc:9040): numero di utenti nella legenda della LayerMapCard`.
+- camminiditalia: `feat(oc:9040): logo del cammino accanto a Cammini d'Italia e favicon`, poi gitlink e docs.
