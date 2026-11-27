@@ -1,4 +1,5 @@
 > Ticket: oc:9050
+> Stato: Task 1 nella PR; Task 2 da eseguire dopo il deploy, senza divergenze finora
 
 # Modifiche alle tappe salvate in Nova non visibili in app — piano dello shard
 

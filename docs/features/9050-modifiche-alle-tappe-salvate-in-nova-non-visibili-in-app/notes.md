@@ -5,6 +5,19 @@
 
 ## Modifiche ai requisiti
 
+### 2026-11-27 — Recupero della produzione rimandato a dopo il deploy
+- **Requisito:** [R2](overview.md#r2)
+- **Effetto:** non fatto
+- **Decide:** dev (il recupero si fa a mano via ssh dopo il deploy del package)
+- **Perché:** al momento della PR il codice del package non è ancora in produzione: accodare ora la
+  pubblicazione riproporrebbe le stesse catene vecchie.
+
+### 2026-11-27 — Verifica in produzione rimandata a dopo il recupero
+- **Requisito:** [R3](overview.md#r3)
+- **Effetto:** non fatto
+- **Decide:** dev
+- **Perché:** dipende da [R2](overview.md#r2).
+
 ## Divergenze dal piano, task per task
 
 ## Bug trovati

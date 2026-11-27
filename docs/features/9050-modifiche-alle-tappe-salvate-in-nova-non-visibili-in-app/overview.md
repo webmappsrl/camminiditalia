@@ -1,5 +1,5 @@
 > Ticket: oc:9050
-> Stato: approvata il 2026-11-27
+> Stato: chiusa il 2026-11-27 · approvata il 2026-11-27
 
 # Modifiche alle tappe salvate in Nova non visibili in app
 
@@ -22,7 +22,7 @@ pubblicazione del JSON.
 Il 20/11 fra le 17:18 e le 18:01 l'utente `Cammini` (id 2) ha fatto 760 «Update» di EcTrack con la
 geometria cambiata: 395 catene si sono fermate in quell'ora. Il 25/11 lo stesso utente ha fatto 1.283
 «Update» delle sole `properties`, che hanno ripubblicato il JSON senza passare dall'elevation chart:
-la tappa 434 oggi è aggiornata. Restano indietro:
+la tappa 434 il 27/11 risulta aggiornata. Restano indietro:
 
 - il JSON di 19 tappe (166, 167, 378, 564, 936, 1025, 1205–1208, 1210–1218), 17 modificate il 26–27/11;
 - con ogni probabilità i PBF delle tappe la cui catena si è fermata, perché `GenerateEcTrackPBFBatch`
@@ -42,8 +42,11 @@ la tappa 434 oggi è aggiornata. Restano indietro:
 ## Requisiti
 
 - <a id="r1"></a>**R1** — Il gitlink `wm-package` punta a un commit che soddisfa i requisiti dell'overview del package (elevation chart fuori dalle catene, pubblicazione anche quando un job fallisce).
+  - Verifica: [wm-package/docs/features/9050-…/overview.md](../../../wm-package/docs/features/9050-modifiche-alle-tappe-salvate-in-nova-non-visibili-in-app/overview.md) › `R1`, `R2`, `R3` con i loro test
 - <a id="r2"></a>**R2** — Dopo il deploy, a mano via ssh: per ogni EcTrack ancora esistente con un fallimento di `UpdateEcTrackGenerateElevationChartImage` in `failed_jobs` (id deduplicati, senza filtro di data) si accodano i job di pubblicazione, poi un solo `DispatcherAppPbfsDebouncedJob` per l'App 1.
+  - Non fatto: [si fa dopo il deploy](notes.md#2026-11-27--recupero-della-produzione-rimandato-a-dopo-il-deploy)
 - <a id="r3"></a>**R3** — Finiti i job di [R2](#r2), in produzione nessuna EcTrack ha il JSON con `updated_at` precedente a quello del DB.
+  - Non fatto: [dipende dal recupero](notes.md#2026-11-27--verifica-in-produzione-rimandata-a-dopo-il-recupero)
 
 ## Rischi
 
@@ -65,3 +68,5 @@ la tappa 434 oggi è aggiornata. Restano indietro:
 ## Moduli toccati
 
 - gitlink `wm-package`
+- `CLAUDE.md` (riga in «Feature disponibili»)
+- `docs/features/9050-modifiche-alle-tappe-salvate-in-nova-non-visibili-in-app/`
